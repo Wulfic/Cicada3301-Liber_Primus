@@ -1,197 +1,158 @@
 """
-Check if P03 and P04 use F-skip with DIVINITY.
-Also run deeper F-skip analysis on all remaining unsolved pages with 
-ALL keywords (not just DIVINITY), exhaustive where possible.
+Test F-skip Vigenere on Pages 21-30 AND validation pages.
+F-skip: when decrypted value = 0 (F), don't advance key counter.
 """
-import os
-GP = {
-    '\u16A0':0,'\u16A2':1,'\u16A6':2,'\u16A9':3,'\u16B1':4,'\u16B3':5,'\u16B7':6,'\u16B9':7,
-    '\u16BB':8,'\u16BE':9,'\u16C1':10,'\u16C2':11,'\u16C4':11,
-    '\u16C7':12,'\u16C8':13,'\u16C9':14,'\u16CB':15,'\u16CF':16,'\u16D2':17,'\u16D6':18,
-    '\u16D7':19,'\u16DA':20,'\u16DD':21,'\u16DF':22,'\u16DE':23,'\u16AA':24,'\u16AB':25,
-    '\u16A3':26,'\u16E1':27,'\u16E0':28
+import os, sys
+from collections import Counter
+
+# ===== GP MAP (J-FIXED) =====
+GP_MAP = {
+    '\u16A0': 0, '\u16A2': 1, '\u16A6': 2, '\u16A9': 3, '\u16B1': 4,
+    '\u16B3': 5, '\u16B7': 6, '\u16B9': 7, '\u16BA': 8, '\u16BE': 9,
+    '\u16C1': 10, '\u16C4': 11, '\u16C7': 12, '\u16C8': 13, '\u16CB': 14,
+    '\u16CF': 15, '\u16D2': 16, '\u16D6': 17, '\u16D7': 18, '\u16DA': 19,
+    '\u16DE': 20, '\u16DF': 21, '\u16E0': 22, '\u16E1': 23, '\u16E3': 24,
+    '\u16E6': 25, '\u16E8': 26, '\u16EA': 27, '\u16EB': 28,
 }
-LAT = ['F','U','TH','O','R','C','G','W','H','N','I','J','EO','P','X','S','T','B','E','M','L','NG','OE','D','A','AE','Y','IA','EA']
-MOD = 29
-os.chdir(r'c:\Users\tyler\Repos\Cicada3301')
-
-DIGRAPHS_ORDERED = [('TH',2),('NG',21),('EA',28),('OE',22),('EO',12),('AE',25),('IA',27)]
-ENG2GP = {'A':24,'B':17,'C':5,'D':23,'E':18,'F':0,'G':6,'H':8,'I':10,'J':11,
-          'K':5,'L':20,'M':19,'N':9,'O':3,'P':13,'Q':5,'R':4,'S':15,'T':16,
-          'U':1,'V':1,'W':7,'X':14,'Y':26,'Z':15}
-
-def eng_to_gp(text):
-    result = []
-    i = 0; text = text.upper()
-    while i < len(text):
-        found = False
-        for dg, val in DIGRAPHS_ORDERED:
-            if text[i:i+len(dg)] == dg:
-                result.append(val)
-                i += len(dg)
-                found = True
-                break
-        if not found:
-            if text[i] in ENG2GP:
-                result.append(ENG2GP[text[i]])
-            i += 1
-    return result
-
-def gp_to_lat(vals):
-    return ''.join(LAT[v] for v in vals)
-
-def score_text(text):
-    s = 0
-    for w in ['WISDOM','THE','AND','THAT','WITH','FOR','ALL','YOU','NOT','THIS',
-              'WHICH','ARE','WITHIN','HOLY','LIVES','EACH','BEING','UNTO',
-              'YOURSELF','INTELLIGENCE','INSTRUCTION','COMMAND','YOUR','OWN',
-              'SELF','LAW','SACRED','DIVINITY','PILGRIM','TRUTH','BELIEVE',
-              'NOTHING','FIND','SEEK','WEB','DEEP','HASHES','EXISTS','END',
-              'PAGE','DUTY','EVERY','PRESERVE','WEAK','CONSUME','ENOUGH',
-              'FOLLOW','DOGMA','BELONG','CIRCUMFERENCE','LOSS','KOAN','MASTER',
-              'WHAT','HAVE','KNOW','TRUE','FROM','THEY','WILL','THEIR','HAS',
-              'WELCOME','STUDY','HERE','ASKED','STUDENT','NAME','CALLED',
-              'DOOR','WENT','DECIDED','MAN','CAME','SAID','TOLD','GIVE',
-              'VOICE','LESSON','DURING','JUST','WARNING','EXCEPT','BOOK',
-              'PRACTICE','THREE','BEHAVIORS','CAUSE','CONSUMPTION','WE',
-              'BECAUSE','TOO','MUCH','MOST','THINGS','WORTH','PRESERVING',
-              'TOTIENT','ENCRYPTED','SHOULD','PARABLE','LIKE','INSTAR',
-              'TUNNELING','SURFACE','MUST','SHED','EMERGE','OUR','SOME',
-              'TEST','YOUR','QUESTION','DO','FOUR','UNREASONABLE','DAY',
-              'STRUGGLE','SUFFERING','INNOCENCE','ILLUSIONS','CERTAINTY',
-              'REALITY','ULTIMATELY','DISCOVER','PILGRIMAGE','SHAPE',
-              'OURSELVES','REALITIES','JOURNEY','ARRIVE','OUTSIDE','GOING',
-              'NECESSARY','ALONG','WAY','TRIP','EASY']:
-        c = text.count(w)
-        s += c * len(w)
-    return s
-
-DIVINITY = eng_to_gp("DIVINITY")
+GP_LETTERS = ['F','U','TH','O','R','C','G','W','H','N','I','J','EO','P','X',
+              'S','T','B','E','M','L','NG','OE','D','A','AE','Y','IA','EA']
 
 def load_page(pn):
-    path = f'LiberPrimus/pages/page_{pn:02d}/runes.txt'
-    if not os.path.exists(path):
-        return None
-    with open(path, 'r', encoding='utf-8') as f:
-        raw = f.read()
-    return [GP[c] for c in raw if c in GP]
+    p = os.path.join(r"c:\Users\tyler\Repos\Cicada3301\LiberPrimus\pages", f"page_{pn:02d}", "runes.txt")
+    if not os.path.exists(p): return []
+    with open(p,'r',encoding='utf-8') as f: text = f.read()
+    return [GP_MAP[c] for c in text if c in GP_MAP]
 
-# ===== CHECK P03 and P04 =====
-print("="*80)
-print("CHECKING P03 AND P04 (already solved with DIVINITY)")
-print("="*80)
+def keyword_to_gp(word):
+    result = []; i = 0; word = word.upper()
+    while i < len(word):
+        if i+1 < len(word):
+            di = word[i:i+2]
+            dmap = {'TH':2,'EO':12,'NG':21,'OE':22,'AE':25,'IA':27,'IO':27,'EA':28}
+            if di in dmap:
+                result.append(dmap[di]); i += 2; continue
+        smap = {'F':0,'U':1,'V':1,'O':3,'R':4,'C':5,'K':5,'G':6,'W':7,'H':8,'N':9,
+                'I':10,'J':11,'P':13,'X':14,'S':15,'Z':15,'T':16,'B':17,'E':18,'M':19,
+                'L':20,'D':23,'A':24,'Y':26}
+        if word[i] in smap: result.append(smap[word[i]])
+        i += 1
+    return result
 
-for pn in [3, 4]:
+def ioc29(vals):
+    if len(vals) < 2: return 0
+    ct = Counter(vals); n = len(vals)
+    return 29 * sum(c*(c-1) for c in ct.values()) / (n*(n-1))
+
+def vals_to_text(vals):
+    return ''.join(GP_LETTERS[v].lower() for v in vals)
+
+def fskip_decrypt(cipher, key, mode='SUB', skip_val=0):
+    """Decrypt with F-skip: when plaintext = skip_val, don't advance key"""
+    result = []; key_idx = 0; kl = len(key)
+    for c in cipher:
+        k = key[key_idx % kl]
+        if mode == 'SUB': p = (c - k) % 29
+        elif mode == 'ADD': p = (c + k) % 29
+        elif mode == 'BEAU': p = (k - c) % 29
+        result.append(p)
+        if p != skip_val: key_idx += 1
+    return result
+
+def standard_decrypt(cipher, key, mode='SUB'):
+    result = []; kl = len(key)
+    for i, c in enumerate(cipher):
+        k = key[i % kl]
+        if mode == 'SUB': result.append((c - k) % 29)
+        elif mode == 'ADD': result.append((c + k) % 29)
+        elif mode == 'BEAU': result.append((k - c) % 29)
+    return result
+
+# ===== VALIDATION: P03 with DIVINITY =====
+print("=" * 80)
+print("VALIDATION: Known solutions with F-skip")
+print("=" * 80)
+
+divinity = keyword_to_gp('DIVINITY')
+print(f"DIVINITY key: {divinity}")
+
+for pn, desc in [(3, "Welcome"), (61, "Pilgrim")]:
     cipher = load_page(pn)
-    if cipher is None:
-        print(f"  P{pn:02d}: runes not found")
-        continue
-    N = len(cipher)
-    f_pos = [i for i in range(N) if cipher[i] == 0]
-    print(f"\n  P{pn:02d}: {N} runes, {len(f_pos)} F runes")
-    
-    # Standard Vigenère
-    for off in range(8):
-        dec = [(cipher[i] - DIVINITY[(i+off)%8]) % MOD for i in range(N)]
-        text = gp_to_lat(dec)
-        sc = score_text(text)
-        if sc > 20:
-            print(f"    Standard SUB off={off}: score={sc:3d} | {text[:80]}")
-    
-    # All-F-literal
-    for off in range(8):
-        dec = []; k = off
-        for i in range(N):
-            if cipher[i] == 0:
-                dec.append(0)
-            else:
-                dec.append((cipher[i] - DIVINITY[k%8]) % MOD)
-                k += 1
-        text = gp_to_lat(dec)
-        sc = score_text(text)
-        if sc > 20:
-            print(f"    F-skip SUB off={off}: score={sc:3d} | {text[:80]}")
+    if not cipher: continue
+    print(f"\nPage {pn}: {desc} ({len(cipher)} runes)")
+    for mode in ['SUB','ADD','BEAU']:
+        for off in range(len(divinity)):
+            shifted = divinity[off:] + divinity[:off]
+            d2 = fskip_decrypt(cipher, shifted, mode, skip_val=0)
+            ic2 = ioc29(d2)
+            if ic2 > 1.4:
+                t2 = vals_to_text(d2)[:80]
+                print(f"  {mode} off={off} Fskip: IoC={ic2:.4f} -> {t2}")
 
-# ===== Now check a broader set of unsolved pages =====
-print("\n" + "="*80)
-print("CHECKING ALL REMAINING UNSOLVED PAGES (18-54, 58, 60)")
-print("="*80)
+# ===== PAGES 21-30 WITH F-SKIP =====
+print("\n" + "=" * 80)
+print("PAGES 21-30: F-skip test with ALL keywords x ALL offsets")
+print("=" * 80)
 
-# Load all known keywords
-KEYWORDS = {
-    'DIVINITY': eng_to_gp('DIVINITY'),
-    'FIRFUMFERENFE': eng_to_gp('FIRFUMFERENFE'),
-    'CIRCUMFERENCE': eng_to_gp('CIRCUMFERENCE'),
-    'YAHEOOPYJ': [26,24,8,18,3,3,13,26,11],
-    'SACRED': eng_to_gp('SACRED'),
-    'PILGRIM': eng_to_gp('PILGRIM'),
-    'WISDOM': eng_to_gp('WISDOM'),
-    'TRUTH': eng_to_gp('TRUTH'),
-    'INSTAR': eng_to_gp('INSTAR'),
-    'INTUS': eng_to_gp('INTUS'),
-    'LIBER': eng_to_gp('LIBER'),
-    'CABAL': eng_to_gp('CABAL'),
-    'MOBIUS': eng_to_gp('MOBIUS'),
-    'SHADOW': eng_to_gp('SHADOW'),
-    'VOID': eng_to_gp('VOID'),
-    'AETHEREAL': eng_to_gp('AETHEREAL'),
-    'EMERGENCE': eng_to_gp('EMERGENCE'),
-    'CONSUMPTION': eng_to_gp('CONSUMPTION'),
-    'DECEPTION': eng_to_gp('DECEPTION'),
-    'PRESERVATION': eng_to_gp('PRESERVATION'),
-    'KOAN': eng_to_gp('KOAN'),
-    'WELCOME': eng_to_gp('WELCOME'),
-}
+KEYWORDS = ['CABAL','DIVINITY','SHADOWS','AETHEREAL','OBSCURA','MOURNFUL',
+            'VOID','CARNAL','MOBIUS','ANALOG','BUFFERS','FORM','DEOR',
+            'TOTIENT','ENCRYPT','FIRFUMFERENFE','YAHEOOPYJ','CONSUMPTION',
+            'PRESERVATION','ADHERENCE','CIRCUMFERENCE','PRIMALITY',
+            'PILGRIMAGE','INSTAR','WELCOME','WISDOM','INSTRUCTION']
 
-# Pages to test thoroughly
-pages_to_test = list(range(18, 55)) + [58, 60]
-# Skip already solved: 55-74 range
-
-for pn in pages_to_test:
+for pn in range(21, 31):
     cipher = load_page(pn)
-    if cipher is None or len(cipher) < 10:
-        continue
-    N = len(cipher)
-    f_pos = [i for i in range(N) if cipher[i] == 0]
-    n_f = len(f_pos)
+    if not cipher: continue
+    raw_ioc = ioc29(cipher)
+    print(f"\n--- Page {pn}: {len(cipher)} runes, raw IoC={raw_ioc:.4f} ---")
     
-    # Only do exhaustive if n_f <= 14 (keep manageable)
-    if n_f > 14 or n_f == 0:
-        continue  # Skip pages with too many F's for exhaustive search
+    hits = []
+    for kw in KEYWORDS:
+        key = keyword_to_gp(kw)
+        if not key: continue
+        for mode in ['SUB', 'ADD', 'BEAU']:
+            for off in range(len(key)):
+                shifted = key[off:] + key[:off]
+                # F-skip
+                d = fskip_decrypt(cipher, shifted, mode, 0)
+                ic = ioc29(d)
+                if ic > 1.3:
+                    hits.append((ic, kw, mode, off, 'Fskip', d))
+                # No skip
+                d2 = standard_decrypt(cipher, shifted, mode)
+                ic2 = ioc29(d2)
+                if ic2 > 1.3:
+                    hits.append((ic2, kw, mode, off, 'noSkip', d2))
     
-    best_page = []
-    
-    for kname, key in KEYWORDS.items():
-        kl = len(key)
-        
-        # Exhaustive F-skip
-        for f_mask in range(2**n_f):
-            lit_set = set()
-            for bit in range(n_f):
-                if f_mask & (1 << bit):
-                    lit_set.add(f_pos[bit])
-            
-            for off in range(kl):
-                for mode in ['SUB']:  # SUB only for speed
-                    dec = []
-                    k = off
-                    for i in range(N):
-                        if i in lit_set:
-                            dec.append(0)
-                        else:
-                            kv = key[k % kl]
-                            dec.append((cipher[i] - kv) % MOD)
-                            k += 1
-                    text = gp_to_lat(dec)
-                    sc = score_text(text)
-                    if sc >= 80:
-                        mask_str = format(f_mask, f'0{n_f}b')
-                        best_page.append((sc, kname, off, mask_str, text[:100]))
-    
-    if best_page:
-        best_page.sort(reverse=True)
-        print(f"\n  P{pn:02d} ({N} runes, {n_f} F): Top 3:")
-        for sc, kn, off, mask, text in best_page[:3]:
-            print(f"    score={sc:4d} {kn:15s} off={off} mask={mask}: {text}")
+    hits.sort(reverse=True)
+    for ic, kw, mode, off, sk, d in hits[:5]:
+        t = vals_to_text(d)
+        marker = " ** SIGNAL **" if ic > 1.5 else ""
+        print(f"  {kw} {mode} off={off} {sk}: IoC={ic:.4f}{marker}")
+        print(f"    {t[:80]}")
+    if not hits:
+        print(f"  No results above IoC=1.3")
 
-print("\n=== DONE ===")
+# ===== ALL PAGES 18-54: Quick scan with F-skip DIVINITY =====
+print("\n" + "=" * 80)
+print("QUICK SCAN: All pages 18-54 with DIVINITY F-skip (best offset)")
+print("=" * 80)
+
+for pn in range(18, 55):
+    cipher = load_page(pn)
+    if not cipher or len(cipher) < 20: continue
+    
+    best_ic = 0
+    best_info = None
+    for mode in ['SUB','ADD','BEAU']:
+        for off in range(len(divinity)):
+            shifted = divinity[off:] + divinity[:off]
+            d = fskip_decrypt(cipher, shifted, mode, 0)
+            ic = ioc29(d)
+            if ic > best_ic:
+                best_ic = ic
+                best_info = (mode, off, d)
+    
+    marker = " ** SIGNAL **" if best_ic > 1.5 else ""
+    if best_ic > 1.3 or pn in [18, 19, 20]:
+        t = vals_to_text(best_info[2])[:60] if best_info else ""
+        print(f"  Page {pn}: DIVINITY {best_info[0]} off={best_info[1]} IoC={best_ic:.4f}{marker} -> {t}")
