@@ -1,0 +1,1239 @@
+================================================================================
+FUNDAMENTAL CRYPTANALYSIS OF UNSOLVED LIBER PRIMUS PAGES
+================================================================================
+
+--- ENGLISH GP FREQUENCY FROM SOLVED PAGES ---
+Top 10 GP indices by frequency (from solved pages):
+  E   (idx 18): 0.0752
+  O   (idx  3): 0.0671
+  C   (idx  5): 0.0665
+  J   (idx 11): 0.0534
+  Y   (idx 26): 0.0453
+  L   (idx 20): 0.0441
+  A   (idx 24): 0.0441
+  I   (idx 10): 0.0435
+  N   (idx  9): 0.0429
+  P   (idx 13): 0.0429
+
+================================================================================
+KASISKI + FRIEDMAN ANALYSIS
+================================================================================
+
+============================================================
+PAGE 18: 260 runes, raw IoC=0.9862, chi┬▓=24.4
+============================================================
+
+  KASISKI top periods (by factor frequency):
+    Period   3:    1 factor hits
+    Period  53:    1 factor hits
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  53: avg column IoC = 1.8604
+    Period  86: avg column IoC = 1.7984
+    Period  60: avg column IoC = 1.7722
+    Period  64: avg column IoC = 1.6464
+    Period  51: avg column IoC = 1.5163
+    Period  68: avg column IoC = 1.4216
+    Period  20: avg column IoC = 1.4128
+    Period  50: avg column IoC = 1.4113
+    Period  72: avg column IoC = 1.4097
+    Period  59: avg column IoC = 1.3599
+    Period  75: avg column IoC = 1.3533
+    Period  58: avg column IoC = 1.3500
+    Period  71: avg column IoC = 1.2934
+    Period  30: avg column IoC = 1.2812
+    Period  43: avg column IoC = 1.2589
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  86: 13/174 matches, ratio=0.0747 (expected 0.0345)
+    Lag  60: 14/200 matches, ratio=0.0700 (expected 0.0345)
+    Lag  64: 13/196 matches, ratio=0.0663 (expected 0.0345)
+    Lag  97: 10/163 matches, ratio=0.0613 (expected 0.0345)
+    Lag  89: 10/171 matches, ratio=0.0585 (expected 0.0345)
+    Lag  77: 10/183 matches, ratio=0.0546 (expected 0.0345)
+    Lag  58: 11/202 matches, ratio=0.0545 (expected 0.0345)
+    Lag  20: 13/240 matches, ratio=0.0542 (expected 0.0345)
+    Lag  56: 11/204 matches, ratio=0.0539 (expected 0.0345)
+    Lag  53: 11/207 matches, ratio=0.0531 (expected 0.0345)
+
+============================================================
+PAGE 19: 271 runes, raw IoC=0.9972, chi┬▓=27.2
+============================================================
+
+  KASISKI top periods (by factor frequency):
+    Period   2:    1 factor hits
+    Period   3:    1 factor hits
+    Period   4:    1 factor hits
+    Period   5:    1 factor hits
+    Period  36:    1 factor hits
+    Period   6:    1 factor hits
+    Period   9:    1 factor hits
+    Period  10:    1 factor hits
+    Period  12:    1 factor hits
+    Period  45:    1 factor hits
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  77: avg column IoC = 1.5065
+    Period  84: avg column IoC = 1.4385
+    Period  47: avg column IoC = 1.4191
+    Period  75: avg column IoC = 1.3533
+    Period  54: avg column IoC = 1.3426
+    Period  66: avg column IoC = 1.3328
+    Period  56: avg column IoC = 1.2946
+    Period  87: avg column IoC = 1.2778
+    Period  80: avg column IoC = 1.2688
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  47: 15/224 matches, ratio=0.0670 (expected 0.0345)
+    Lag  48: 13/223 matches, ratio=0.0583 (expected 0.0345)
+    Lag  26: 14/245 matches, ratio=0.0571 (expected 0.0345)
+    Lag  75: 11/196 matches, ratio=0.0561 (expected 0.0345)
+    Lag  72: 11/199 matches, ratio=0.0553 (expected 0.0345)
+    Lag  17: 14/254 matches, ratio=0.0551 (expected 0.0345)
+    Lag  51: 12/220 matches, ratio=0.0545 (expected 0.0345)
+    Lag  84: 10/187 matches, ratio=0.0535 (expected 0.0345)
+    Lag  64: 11/207 matches, ratio=0.0531 (expected 0.0345)
+
+============================================================
+PAGE 20: 812 runes, raw IoC=0.9959, chi┬▓=24.6
+============================================================
+
+  KASISKI top periods (by factor frequency):
+    Period   3:    6 factor hits
+    Period   2:    6 factor hits
+    Period   4:    3 factor hits
+    Period   9:    2 factor hits
+    Period  25:    2 factor hits
+    Period   5:    2 factor hits
+    Period   8:    2 factor hits
+    Period   6:    2 factor hits
+    Period  93:    1 factor hits
+    Period  31:    1 factor hits
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period 123: avg column IoC = 1.3271
+
+  AUTOCORRELATION top 5 (none significantly above random):
+    Lag  99: 35/713 matches, ratio=0.0491
+    Lag  67: 35/745 matches, ratio=0.0470
+    Lag  18: 37/794 matches, ratio=0.0466
+    Lag   9: 37/803 matches, ratio=0.0461
+    Lag  91: 33/721 matches, ratio=0.0458
+
+============================================================
+PAGE 21: 273 runes, raw IoC=0.9959, chi┬▓=26.9
+============================================================
+
+  KASISKI: No repeated trigrams found
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  91: avg column IoC = 1.9121
+    Period  61: avg column IoC = 1.5530
+    Period  55: avg column IoC = 1.3709
+    Period  43: avg column IoC = 1.2589
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  61: 14/212 matches, ratio=0.0660 (expected 0.0345)
+    Lag   2: 16/271 matches, ratio=0.0590 (expected 0.0345)
+    Lag  98: 10/175 matches, ratio=0.0571 (expected 0.0345)
+    Lag  57: 12/216 matches, ratio=0.0556 (expected 0.0345)
+    Lag  91: 10/182 matches, ratio=0.0549 (expected 0.0345)
+    Lag  80: 10/193 matches, ratio=0.0518 (expected 0.0345)
+
+============================================================
+PAGE 22: 131 runes, raw IoC=1.0388, chi┬▓=33.0
+============================================================
+
+  KASISKI: No repeated trigrams found
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  42: avg column IoC = 2.3016
+    Period  25: avg column IoC = 1.6240
+    Period  33: avg column IoC = 1.4646
+    Period  22: avg column IoC = 1.3182
+    Period  37: avg column IoC = 1.3063
+    Period  11: avg column IoC = 1.2862
+    Period  20: avg column IoC = 1.2705
+    Period   5: avg column IoC = 1.2704
+    Period  23: avg column IoC = 1.2609
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  45: 7/86 matches, ratio=0.0814 (expected 0.0345)
+    Lag  20: 9/111 matches, ratio=0.0811 (expected 0.0345)
+    Lag   5: 10/126 matches, ratio=0.0794 (expected 0.0345)
+    Lag  42: 7/89 matches, ratio=0.0787 (expected 0.0345)
+    Lag  27: 7/104 matches, ratio=0.0673 (expected 0.0345)
+    Lag  25: 7/106 matches, ratio=0.0660 (expected 0.0345)
+    Lag  37: 6/94 matches, ratio=0.0638 (expected 0.0345)
+    Lag  33: 6/98 matches, ratio=0.0612 (expected 0.0345)
+    Lag  64: 4/67 matches, ratio=0.0597 (expected 0.0345)
+    Lag  47: 5/84 matches, ratio=0.0595 (expected 0.0345)
+
+============================================================
+PAGE 23: 333 runes, raw IoC=0.9910, chi┬▓=25.0
+============================================================
+
+  KASISKI top periods (by factor frequency):
+    Period  79:    3 factor hits
+    Period   2:    1 factor hits
+    Period   3:    1 factor hits
+    Period   4:    1 factor hits
+    Period   6:    1 factor hits
+    Period  38:    1 factor hits
+    Period  76:    1 factor hits
+    Period  12:    1 factor hits
+    Period  19:    1 factor hits
+    Period  57:    1 factor hits
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period 102: avg column IoC = 1.5637
+    Period 110: avg column IoC = 1.4939
+    Period  86: avg column IoC = 1.4612
+    Period  67: avg column IoC = 1.3274
+    Period  93: avg column IoC = 1.2993
+    Period  31: avg column IoC = 1.2983
+    Period  96: avg column IoC = 1.2587
+    Period 100: avg column IoC = 1.2567
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  19: 18/314 matches, ratio=0.0573 (expected 0.0345)
+    Lag  29: 17/304 matches, ratio=0.0559 (expected 0.0345)
+    Lag 100: 13/233 matches, ratio=0.0558 (expected 0.0345)
+    Lag  25: 17/308 matches, ratio=0.0552 (expected 0.0345)
+    Lag  31: 16/302 matches, ratio=0.0530 (expected 0.0345)
+    Lag  86: 13/247 matches, ratio=0.0526 (expected 0.0345)
+    Lag  46: 15/287 matches, ratio=0.0523 (expected 0.0345)
+    Lag   6: 17/327 matches, ratio=0.0520 (expected 0.0345)
+
+============================================================
+PAGE 24: 270 runes, raw IoC=0.9639, chi┬▓=18.3
+============================================================
+
+  KASISKI: No repeated trigrams found
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  51: avg column IoC = 1.4974
+    Period  53: avg column IoC = 1.3862
+    Period  85: avg column IoC = 1.3078
+    Period  73: avg column IoC = 1.2580
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  33: 16/237 matches, ratio=0.0675 (expected 0.0345)
+    Lag  86: 11/184 matches, ratio=0.0598 (expected 0.0345)
+    Lag  52: 13/218 matches, ratio=0.0596 (expected 0.0345)
+    Lag  17: 15/253 matches, ratio=0.0593 (expected 0.0345)
+    Lag 100: 10/170 matches, ratio=0.0588 (expected 0.0345)
+    Lag  62: 11/208 matches, ratio=0.0529 (expected 0.0345)
+    Lag  77: 10/193 matches, ratio=0.0518 (expected 0.0345)
+
+============================================================
+PAGE 25: 1729 runes, raw IoC=0.9994, chi┬▓=26.9
+============================================================
+
+  KASISKI top periods (by factor frequency):
+    Period   2:   28 factor hits
+    Period   3:   19 factor hits
+    Period   4:   16 factor hits
+    Period   5:   14 factor hits
+    Period   7:   11 factor hits
+    Period   8:    8 factor hits
+    Period  10:    8 factor hits
+    Period  19:    8 factor hits
+    Period   9:    7 factor hits
+    Period   6:    7 factor hits
+
+  FRIEDMAN top 10 periods (none above 1.25):
+    Period 149: avg column IoC = 1.1802
+    Period 136: avg column IoC = 1.1487
+    Period  61: avg column IoC = 1.1079
+    Period 122: avg column IoC = 1.1006
+    Period 103: avg column IoC = 1.1001
+    Period 121: avg column IoC = 1.0967
+    Period 120: avg column IoC = 1.0816
+    Period  96: avg column IoC = 1.0799
+    Period  98: avg column IoC = 1.0746
+    Period  68: avg column IoC = 1.0722
+
+  AUTOCORRELATION top 5 (none significantly above random):
+    Lag  24: 73/1705 matches, ratio=0.0428
+    Lag  74: 69/1655 matches, ratio=0.0417
+    Lag  14: 71/1715 matches, ratio=0.0414
+    Lag  33: 70/1696 matches, ratio=0.0413
+    Lag  25: 69/1704 matches, ratio=0.0405
+
+============================================================
+PAGE 26: 265 runes, raw IoC=0.9750, chi┬▓=21.4
+============================================================
+
+  KASISKI top periods (by factor frequency):
+    Period   3:    1 factor hits
+    Period   9:    1 factor hits
+    Period  17:    1 factor hits
+    Period  51:    1 factor hits
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  87: avg column IoC = 1.6667
+    Period  34: avg column IoC = 1.6246
+    Period  60: avg column IoC = 1.4822
+    Period  85: avg column IoC = 1.4784
+    Period  86: avg column IoC = 1.4612
+    Period  51: avg column IoC = 1.4595
+    Period  73: avg column IoC = 1.4566
+    Period  63: avg column IoC = 1.4116
+    Period  17: avg column IoC = 1.3850
+    Period  68: avg column IoC = 1.3505
+    Period  30: avg column IoC = 1.3426
+    Period  53: avg column IoC = 1.2585
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  92: 11/173 matches, ratio=0.0636 (expected 0.0345)
+    Lag  53: 13/212 matches, ratio=0.0613 (expected 0.0345)
+    Lag  37: 13/228 matches, ratio=0.0570 (expected 0.0345)
+    Lag  87: 10/178 matches, ratio=0.0562 (expected 0.0345)
+    Lag  86: 10/179 matches, ratio=0.0559 (expected 0.0345)
+    Lag  29: 13/236 matches, ratio=0.0551 (expected 0.0345)
+    Lag   8: 14/257 matches, ratio=0.0545 (expected 0.0345)
+    Lag  63: 11/202 matches, ratio=0.0545 (expected 0.0345)
+
+============================================================
+PAGE 27: 234 runes, raw IoC=0.9840, chi┬▓=24.3
+============================================================
+
+  KASISKI top periods (by factor frequency):
+    Period   7:    2 factor hits
+    Period   2:    2 factor hits
+    Period  23:    1 factor hits
+    Period  14:    1 factor hits
+    Period   4:    1 factor hits
+    Period  13:    1 factor hits
+    Period  52:    1 factor hits
+    Period  26:    1 factor hits
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  43: avg column IoC = 1.6860
+    Period  77: avg column IoC = 1.5693
+    Period  75: avg column IoC = 1.4822
+    Period  76: avg column IoC = 1.4627
+    Period  74: avg column IoC = 1.4369
+    Period  67: avg column IoC = 1.3706
+    Period  60: avg column IoC = 1.3694
+    Period  78: avg column IoC = 1.3632
+    Period  52: avg column IoC = 1.2827
+    Period  40: avg column IoC = 1.2567
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  80: 11/154 matches, ratio=0.0714 (expected 0.0345)
+    Lag  13: 15/221 matches, ratio=0.0679 (expected 0.0345)
+    Lag  75: 10/159 matches, ratio=0.0629 (expected 0.0345)
+    Lag  86: 9/148 matches, ratio=0.0608 (expected 0.0345)
+    Lag  98: 8/136 matches, ratio=0.0588 (expected 0.0345)
+    Lag  78: 9/156 matches, ratio=0.0577 (expected 0.0345)
+    Lag  60: 10/174 matches, ratio=0.0575 (expected 0.0345)
+    Lag  23: 12/211 matches, ratio=0.0569 (expected 0.0345)
+    Lag   2: 13/232 matches, ratio=0.0560 (expected 0.0345)
+    Lag  91: 8/143 matches, ratio=0.0559 (expected 0.0345)
+
+============================================================
+PAGE 28: 269 runes, raw IoC=0.9831, chi┬▓=23.5
+============================================================
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  81: avg column IoC = 1.5514
+    Period  86: avg column IoC = 1.4612
+    Period  47: avg column IoC = 1.4191
+    Period  73: avg column IoC = 1.3904
+    Period  87: avg column IoC = 1.2778
+    Period  88: avg column IoC = 1.2633
+    Period  77: avg column IoC = 1.2554
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  97: 13/172 matches, ratio=0.0756 (expected 0.0345)
+    Lag  94: 12/175 matches, ratio=0.0686 (expected 0.0345)
+    Lag  92: 12/177 matches, ratio=0.0678 (expected 0.0345)
+    Lag  73: 13/196 matches, ratio=0.0663 (expected 0.0345)
+    Lag  77: 12/192 matches, ratio=0.0625 (expected 0.0345)
+    Lag  33: 14/236 matches, ratio=0.0593 (expected 0.0345)
+    Lag  31: 14/238 matches, ratio=0.0588 (expected 0.0345)
+    Lag  59: 12/210 matches, ratio=0.0571 (expected 0.0345)
+    Lag  88: 10/181 matches, ratio=0.0552 (expected 0.0345)
+
+============================================================
+PAGE 29: 277 runes, raw IoC=0.9771, chi┬▓=21.7
+============================================================
+
+  KASISKI top periods (by factor frequency):
+    Period   2:    1 factor hits
+    Period   3:    1 factor hits
+    Period   6:    1 factor hits
+    Period   9:    1 factor hits
+    Period  18:    1 factor hits
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  76: avg column IoC = 1.8443
+    Period  69: avg column IoC = 1.4010
+    Period  24: avg column IoC = 1.3841
+    Period  68: avg column IoC = 1.3789
+    Period  48: avg column IoC = 1.3292
+    Period  38: avg column IoC = 1.3264
+    Period  12: avg column IoC = 1.2927
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag 100: 13/177 matches, ratio=0.0734 (expected 0.0345)
+    Lag  69: 15/208 matches, ratio=0.0721 (expected 0.0345)
+    Lag  24: 17/253 matches, ratio=0.0672 (expected 0.0345)
+    Lag  58: 13/219 matches, ratio=0.0594 (expected 0.0345)
+    Lag  36: 14/241 matches, ratio=0.0581 (expected 0.0345)
+    Lag  46: 13/231 matches, ratio=0.0563 (expected 0.0345)
+    Lag  96: 10/181 matches, ratio=0.0552 (expected 0.0345)
+    Lag  76: 11/201 matches, ratio=0.0547 (expected 0.0345)
+    Lag  91: 10/186 matches, ratio=0.0538 (expected 0.0345)
+
+============================================================
+PAGE 30: 263 runes, raw IoC=0.9890, chi┬▓=25.1
+============================================================
+
+  KASISKI: No repeated trigrams found
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  65: avg column IoC = 1.8738
+    Period  34: avg column IoC = 1.4114
+    Period  77: avg column IoC = 1.3810
+    Period  74: avg column IoC = 1.3716
+    Period  17: avg column IoC = 1.3078
+    Period  51: avg column IoC = 1.2889
+    Period  68: avg column IoC = 1.2794
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  65: 16/198 matches, ratio=0.0808 (expected 0.0345)
+    Lag  34: 14/229 matches, ratio=0.0611 (expected 0.0345)
+    Lag  90: 10/173 matches, ratio=0.0578 (expected 0.0345)
+    Lag  77: 10/186 matches, ratio=0.0538 (expected 0.0345)
+    Lag  38: 12/225 matches, ratio=0.0533 (expected 0.0345)
+    Lag  35: 12/228 matches, ratio=0.0526 (expected 0.0345)
+    Lag  53: 11/210 matches, ratio=0.0524 (expected 0.0345)
+
+============================================================
+PAGE 31: 269 runes, raw IoC=0.9558, chi┬▓=16.1
+============================================================
+
+  KASISKI: No repeated trigrams found
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  86: avg column IoC = 1.5174
+    Period  69: avg column IoC = 1.4710
+    Period  58: avg column IoC = 1.4333
+    Period  67: avg column IoC = 1.3706
+    Period  39: avg column IoC = 1.3455
+    Period  76: avg column IoC = 1.3355
+    Period  53: avg column IoC = 1.2767
+    Period  50: avg column IoC = 1.2567
+    Period  81: avg column IoC = 1.2531
+    Period  31: avg column IoC = 1.2510
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  39: 17/230 matches, ratio=0.0739 (expected 0.0345)
+    Lag  58: 15/211 matches, ratio=0.0711 (expected 0.0345)
+    Lag  44: 15/225 matches, ratio=0.0667 (expected 0.0345)
+    Lag  86: 11/183 matches, ratio=0.0601 (expected 0.0345)
+    Lag  32: 14/237 matches, ratio=0.0591 (expected 0.0345)
+    Lag  26: 14/243 matches, ratio=0.0576 (expected 0.0345)
+    Lag  12: 14/257 matches, ratio=0.0545 (expected 0.0345)
+    Lag  67: 11/202 matches, ratio=0.0545 (expected 0.0345)
+    Lag  64: 11/205 matches, ratio=0.0537 (expected 0.0345)
+
+============================================================
+PAGE 32: 1894 runes, raw IoC=1.0004, chi┬▓=28.7
+============================================================
+
+  KASISKI top periods (by factor frequency):
+    Period   2:   49 factor hits
+    Period   4:   30 factor hits
+    Period   3:   23 factor hits
+    Period   7:   14 factor hits
+    Period   6:   11 factor hits
+    Period  14:   11 factor hits
+    Period   8:   11 factor hits
+    Period   5:   11 factor hits
+    Period  10:   10 factor hits
+    Period  28:    9 factor hits
+
+  FRIEDMAN top 10 periods (none above 1.25):
+    Period 150: avg column IoC = 1.1501
+    Period 131: avg column IoC = 1.1145
+    Period  75: avg column IoC = 1.1141
+    Period 129: avg column IoC = 1.0965
+    Period  60: avg column IoC = 1.0942
+    Period 120: avg column IoC = 1.0912
+    Period  91: avg column IoC = 1.0882
+    Period  90: avg column IoC = 1.0692
+    Period 134: avg column IoC = 1.0658
+    Period  99: avg column IoC = 1.0657
+
+  AUTOCORRELATION top 5 (none significantly above random):
+    Lag   5: 86/1889 matches, ratio=0.0455
+    Lag  75: 80/1819 matches, ratio=0.0440
+    Lag  51: 80/1843 matches, ratio=0.0434
+    Lag  25: 81/1869 matches, ratio=0.0433
+    Lag  68: 79/1826 matches, ratio=0.0433
+
+============================================================
+PAGE 33: 214 runes, raw IoC=0.9594, chi┬▓=19.4
+============================================================
+
+  KASISKI: No repeated trigrams found
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  70: avg column IoC = 1.7952
+    Period  50: avg column IoC = 1.5080
+    Period  43: avg column IoC = 1.4837
+    Period  38: avg column IoC = 1.4500
+    Period  42: avg column IoC = 1.3579
+    Period  68: avg column IoC = 1.3505
+    Period  35: avg column IoC = 1.3494
+    Period  47: avg column IoC = 1.3369
+    Period  34: avg column IoC = 1.3322
+    Period  41: avg column IoC = 1.3203
+    Period  51: avg column IoC = 1.2889
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  97: 9/117 matches, ratio=0.0769 (expected 0.0345)
+    Lag  70: 10/144 matches, ratio=0.0694 (expected 0.0345)
+    Lag  38: 12/176 matches, ratio=0.0682 (expected 0.0345)
+    Lag  50: 11/164 matches, ratio=0.0671 (expected 0.0345)
+    Lag  93: 8/121 matches, ratio=0.0661 (expected 0.0345)
+    Lag  82: 8/132 matches, ratio=0.0606 (expected 0.0345)
+    Lag  84: 7/130 matches, ratio=0.0538 (expected 0.0345)
+    Lag  99: 6/115 matches, ratio=0.0522 (expected 0.0345)
+    Lag  79: 7/135 matches, ratio=0.0519 (expected 0.0345)
+
+============================================================
+PAGE 34: 261 runes, raw IoC=0.9675, chi┬▓=19.6
+============================================================
+
+  KASISKI top periods (by factor frequency):
+    Period  33:    1 factor hits
+    Period   2:    1 factor hits
+    Period   3:    1 factor hits
+    Period   4:    1 factor hits
+    Period  66:    1 factor hits
+    Period   6:    1 factor hits
+    Period  11:    1 factor hits
+    Period  44:    1 factor hits
+    Period  12:    1 factor hits
+    Period  22:    1 factor hits
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  79: avg column IoC = 2.1414
+    Period  83: avg column IoC = 1.8052
+    Period  73: avg column IoC = 1.6553
+    Period  87: avg column IoC = 1.4444
+    Period  75: avg column IoC = 1.4178
+    Period  80: avg column IoC = 1.3896
+    Period  44: avg column IoC = 1.3621
+    Period  50: avg column IoC = 1.3147
+    Period  51: avg column IoC = 1.3078
+    Period  67: avg column IoC = 1.2985
+    Period  54: avg column IoC = 1.2710
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  73: 16/188 matches, ratio=0.0851 (expected 0.0345)
+    Lag  79: 13/182 matches, ratio=0.0714 (expected 0.0345)
+    Lag  16: 16/245 matches, ratio=0.0653 (expected 0.0345)
+    Lag  51: 13/210 matches, ratio=0.0619 (expected 0.0345)
+    Lag  18: 14/243 matches, ratio=0.0576 (expected 0.0345)
+    Lag  99: 9/162 matches, ratio=0.0556 (expected 0.0345)
+    Lag  43: 12/218 matches, ratio=0.0550 (expected 0.0345)
+    Lag  19: 13/242 matches, ratio=0.0537 (expected 0.0345)
+    Lag  33: 12/228 matches, ratio=0.0526 (expected 0.0345)
+    Lag  49: 11/212 matches, ratio=0.0519 (expected 0.0345)
+
+============================================================
+PAGE 35: 271 runes, raw IoC=1.0146, chi┬▓=31.9
+============================================================
+
+  KASISKI top periods (by factor frequency):
+    Period   7:    2 factor hits
+    Period   5:    2 factor hits
+    Period   2:    2 factor hits
+    Period  19:    1 factor hits
+    Period   3:    1 factor hits
+    Period   9:    1 factor hits
+    Period  45:    1 factor hits
+    Period  15:    1 factor hits
+    Period  27:    1 factor hits
+    Period  94:    1 factor hits
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  70: avg column IoC = 1.7262
+    Period  52: avg column IoC = 1.5987
+    Period  89: avg column IoC = 1.5206
+    Period  26: avg column IoC = 1.3542
+    Period  72: avg column IoC = 1.3426
+    Period  81: avg column IoC = 1.3128
+    Period  49: avg column IoC = 1.3020
+    Period  35: avg column IoC = 1.3020
+    Period  56: avg column IoC = 1.2774
+    Period  69: avg column IoC = 1.2609
+    Period  29: avg column IoC = 1.2556
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  52: 15/219 matches, ratio=0.0685 (expected 0.0345)
+    Lag  29: 16/242 matches, ratio=0.0661 (expected 0.0345)
+    Lag  70: 13/201 matches, ratio=0.0647 (expected 0.0345)
+    Lag  53: 13/218 matches, ratio=0.0596 (expected 0.0345)
+    Lag  17: 14/254 matches, ratio=0.0551 (expected 0.0345)
+    Lag  89: 10/182 matches, ratio=0.0549 (expected 0.0345)
+    Lag  15: 14/256 matches, ratio=0.0547 (expected 0.0345)
+    Lag  69: 11/202 matches, ratio=0.0545 (expected 0.0345)
+    Lag  48: 12/223 matches, ratio=0.0538 (expected 0.0345)
+    Lag  25: 13/246 matches, ratio=0.0528 (expected 0.0345)
+
+============================================================
+PAGE 36: 238 runes, raw IoC=1.0437, chi┬▓=38.4
+============================================================
+
+  KASISKI top periods (by factor frequency):
+    Period  29:    1 factor hits
+    Period   7:    1 factor hits
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  54: avg column IoC = 1.5216
+    Period  61: avg column IoC = 1.4262
+    Period  73: avg column IoC = 1.3904
+    Period  29: avg column IoC = 1.3730
+    Period  59: avg column IoC = 1.3599
+    Period  63: avg column IoC = 1.3042
+    Period  67: avg column IoC = 1.2985
+    Period  47: avg column IoC = 1.2957
+    Period  18: avg column IoC = 1.2924
+    Period  27: avg column IoC = 1.2914
+    Period  60: avg column IoC = 1.2889
+    Period  44: avg column IoC = 1.2742
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  95: 10/143 matches, ratio=0.0699 (expected 0.0345)
+    Lag  54: 11/184 matches, ratio=0.0598 (expected 0.0345)
+    Lag  14: 13/224 matches, ratio=0.0580 (expected 0.0345)
+    Lag  27: 12/211 matches, ratio=0.0569 (expected 0.0345)
+    Lag   9: 13/229 matches, ratio=0.0568 (expected 0.0345)
+    Lag   5: 13/233 matches, ratio=0.0558 (expected 0.0345)
+    Lag  19: 12/219 matches, ratio=0.0548 (expected 0.0345)
+    Lag  72: 9/166 matches, ratio=0.0542 (expected 0.0345)
+    Lag  47: 10/191 matches, ratio=0.0524 (expected 0.0345)
+
+============================================================
+PAGE 37: 228 runes, raw IoC=0.9694, chi┬▓=21.0
+============================================================
+
+  KASISKI: No repeated trigrams found
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  45: avg column IoC = 1.5467
+    Period  60: avg column IoC = 1.3694
+    Period  69: avg column IoC = 1.3309
+    Period  70: avg column IoC = 1.3119
+    Period  50: avg column IoC = 1.2953
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  85: 11/143 matches, ratio=0.0769 (expected 0.0345)
+    Lag   9: 15/219 matches, ratio=0.0685 (expected 0.0345)
+    Lag   6: 15/222 matches, ratio=0.0676 (expected 0.0345)
+    Lag  94: 9/134 matches, ratio=0.0672 (expected 0.0345)
+    Lag  99: 8/129 matches, ratio=0.0620 (expected 0.0345)
+    Lag  90: 8/138 matches, ratio=0.0580 (expected 0.0345)
+    Lag  50: 10/178 matches, ratio=0.0562 (expected 0.0345)
+    Lag  31: 11/197 matches, ratio=0.0558 (expected 0.0345)
+    Lag  45: 10/183 matches, ratio=0.0546 (expected 0.0345)
+    Lag  60: 9/168 matches, ratio=0.0536 (expected 0.0345)
+
+============================================================
+PAGE 38: 228 runes, raw IoC=1.0198, chi┬▓=32.5
+============================================================
+
+  KASISKI: No repeated trigrams found
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  35: avg column IoC = 1.5388
+    Period  70: avg column IoC = 1.3119
+    Period  64: avg column IoC = 1.2839
+    Period  52: avg column IoC = 1.2641
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  79: 11/149 matches, ratio=0.0738 (expected 0.0345)
+    Lag  91: 10/137 matches, ratio=0.0730 (expected 0.0345)
+    Lag  32: 11/196 matches, ratio=0.0561 (expected 0.0345)
+    Lag  13: 12/215 matches, ratio=0.0558 (expected 0.0345)
+    Lag  48: 10/180 matches, ratio=0.0556 (expected 0.0345)
+    Lag  10: 12/218 matches, ratio=0.0550 (expected 0.0345)
+    Lag  44: 10/184 matches, ratio=0.0543 (expected 0.0345)
+    Lag  43: 10/185 matches, ratio=0.0541 (expected 0.0345)
+    Lag  22: 11/206 matches, ratio=0.0534 (expected 0.0345)
+    Lag  21: 11/207 matches, ratio=0.0531 (expected 0.0345)
+
+============================================================
+PAGE 39: 240 runes, raw IoC=1.0374, chi┬▓=36.9
+============================================================
+
+  KASISKI top periods (by factor frequency):
+    Period   2:    1 factor hits
+    Period   3:    1 factor hits
+    Period   6:    1 factor hits
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  78: avg column IoC = 1.5491
+    Period  68: avg column IoC = 1.4216
+    Period  62: avg column IoC = 1.4032
+    Period  69: avg column IoC = 1.4010
+    Period  31: avg column IoC = 1.3698
+    Period  80: avg column IoC = 1.3292
+    Period  72: avg column IoC = 1.2755
+    Period  53: avg column IoC = 1.2585
+    Period  57: avg column IoC = 1.2550
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag   6: 17/234 matches, ratio=0.0726 (expected 0.0345)
+    Lag  14: 14/226 matches, ratio=0.0619 (expected 0.0345)
+    Lag  62: 11/178 matches, ratio=0.0618 (expected 0.0345)
+    Lag  78: 10/162 matches, ratio=0.0617 (expected 0.0345)
+    Lag  18: 12/222 matches, ratio=0.0541 (expected 0.0345)
+    Lag  17: 12/223 matches, ratio=0.0538 (expected 0.0345)
+    Lag  49: 10/191 matches, ratio=0.0524 (expected 0.0345)
+    Lag  10: 12/230 matches, ratio=0.0522 (expected 0.0345)
+
+============================================================
+PAGE 40: 1021 runes, raw IoC=0.9946, chi┬▓=22.5
+============================================================
+
+  KASISKI top periods (by factor frequency):
+    Period   2:    7 factor hits
+    Period   3:    6 factor hits
+    Period   5:    5 factor hits
+    Period   6:    4 factor hits
+    Period   4:    3 factor hits
+    Period  10:    3 factor hits
+    Period  15:    3 factor hits
+    Period   7:    3 factor hits
+    Period  11:    3 factor hits
+    Period   9:    3 factor hits
+
+  FRIEDMAN top 10 periods (none above 1.25):
+    Period 132: avg column IoC = 1.1979
+    Period 147: avg column IoC = 1.1856
+    Period  87: avg column IoC = 1.1657
+    Period 130: avg column IoC = 1.1605
+    Period 109: avg column IoC = 1.1485
+    Period 125: avg column IoC = 1.1397
+    Period 129: avg column IoC = 1.1240
+    Period  65: avg column IoC = 1.1133
+    Period 114: avg column IoC = 1.1104
+    Period 135: avg column IoC = 1.0996
+
+  AUTOCORRELATION top 5 (none significantly above random):
+    Lag  38: 48/983 matches, ratio=0.0488
+    Lag  52: 47/969 matches, ratio=0.0485
+    Lag  96: 43/925 matches, ratio=0.0465
+    Lag  87: 43/934 matches, ratio=0.0460
+    Lag  72: 41/949 matches, ratio=0.0432
+
+============================================================
+PAGE 41: 273 runes, raw IoC=0.9607, chi┬▓=17.3
+============================================================
+
+  KASISKI top periods (by factor frequency):
+    Period   2:    1 factor hits
+    Period   4:    1 factor hits
+    Period   8:    1 factor hits
+    Period  13:    1 factor hits
+    Period  16:    1 factor hits
+    Period  52:    1 factor hits
+    Period  26:    1 factor hits
+    Period   3:    1 factor hits
+    Period   5:    1 factor hits
+    Period   9:    1 factor hits
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  65: avg column IoC = 1.4128
+    Period  72: avg column IoC = 1.4097
+    Period  57: avg column IoC = 1.3737
+    Period  45: avg column IoC = 1.2950
+    Period  51: avg column IoC = 1.2699
+    Period  48: avg column IoC = 1.2688
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  25: 15/248 matches, ratio=0.0605 (expected 0.0345)
+    Lag  27: 14/246 matches, ratio=0.0569 (expected 0.0345)
+    Lag  22: 14/251 matches, ratio=0.0558 (expected 0.0345)
+    Lag  57: 12/216 matches, ratio=0.0556 (expected 0.0345)
+    Lag  26: 13/247 matches, ratio=0.0526 (expected 0.0345)
+
+============================================================
+PAGE 42: 272 runes, raw IoC=0.9851, chi┬▓=24.0
+============================================================
+
+  KASISKI: No repeated trigrams found
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  88: avg column IoC = 1.6477
+    Period  83: avg column IoC = 1.5723
+    Period  61: avg column IoC = 1.4104
+    Period  84: avg column IoC = 1.3234
+    Period  39: avg column IoC = 1.2747
+    Period  41: avg column IoC = 1.2664
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  96: 13/176 matches, ratio=0.0739 (expected 0.0345)
+    Lag  33: 15/239 matches, ratio=0.0628 (expected 0.0345)
+    Lag  95: 11/177 matches, ratio=0.0621 (expected 0.0345)
+    Lag  94: 11/178 matches, ratio=0.0618 (expected 0.0345)
+    Lag  10: 16/262 matches, ratio=0.0611 (expected 0.0345)
+    Lag  88: 11/184 matches, ratio=0.0598 (expected 0.0345)
+    Lag  84: 11/188 matches, ratio=0.0585 (expected 0.0345)
+    Lag  83: 11/189 matches, ratio=0.0582 (expected 0.0345)
+    Lag  12: 15/260 matches, ratio=0.0577 (expected 0.0345)
+    Lag  72: 11/200 matches, ratio=0.0550 (expected 0.0345)
+
+============================================================
+PAGE 43: 274 runes, raw IoC=1.0437, chi┬▓=39.9
+============================================================
+
+  KASISKI top periods (by factor frequency):
+    Period   3:    1 factor hits
+    Period  93:    1 factor hits
+    Period  31:    1 factor hits
+    Period   2:    1 factor hits
+    Period  10:    1 factor hits
+    Period   5:    1 factor hits
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  71: avg column IoC = 1.9742
+    Period  75: avg column IoC = 1.4822
+    Period  84: avg column IoC = 1.4385
+    Period  68: avg column IoC = 1.4216
+    Period  88: avg column IoC = 1.3182
+    Period  53: avg column IoC = 1.3132
+    Period  63: avg column IoC = 1.3042
+    Period  66: avg column IoC = 1.2889
+    Period  46: avg column IoC = 1.2819
+    Period  81: avg column IoC = 1.2531
+    Period  33: avg column IoC = 1.2519
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  33: 17/241 matches, ratio=0.0705 (expected 0.0345)
+    Lag  12: 16/262 matches, ratio=0.0611 (expected 0.0345)
+    Lag   4: 16/270 matches, ratio=0.0593 (expected 0.0345)
+    Lag  66: 12/208 matches, ratio=0.0577 (expected 0.0345)
+    Lag  96: 10/178 matches, ratio=0.0562 (expected 0.0345)
+    Lag  57: 12/217 matches, ratio=0.0553 (expected 0.0345)
+    Lag  46: 12/228 matches, ratio=0.0526 (expected 0.0345)
+    Lag  84: 10/190 matches, ratio=0.0526 (expected 0.0345)
+    Lag   5: 14/269 matches, ratio=0.0520 (expected 0.0345)
+
+============================================================
+PAGE 44: 1433 runes, raw IoC=0.9914, chi┬▓=15.7
+============================================================
+
+  KASISKI top periods (by factor frequency):
+    Period   2:   15 factor hits
+    Period   3:   11 factor hits
+    Period   4:    8 factor hits
+    Period  13:    6 factor hits
+    Period   6:    5 factor hits
+    Period   9:    5 factor hits
+    Period   8:    4 factor hits
+    Period  16:    4 factor hits
+    Period  23:    3 factor hits
+    Period   7:    3 factor hits
+
+  FRIEDMAN top 10 periods (none above 1.25):
+    Period 148: avg column IoC = 1.1180
+    Period 135: avg column IoC = 1.1084
+    Period 150: avg column IoC = 1.1041
+    Period 120: avg column IoC = 1.0941
+    Period  60: avg column IoC = 1.0854
+    Period 146: avg column IoC = 1.0836
+    Period  69: avg column IoC = 1.0796
+    Period  90: avg column IoC = 1.0775
+    Period  92: avg column IoC = 1.0695
+    Period 122: avg column IoC = 1.0690
+
+  AUTOCORRELATION top 5 (none significantly above random):
+    Lag  96: 61/1337 matches, ratio=0.0456
+    Lag  86: 59/1347 matches, ratio=0.0438
+    Lag  58: 60/1375 matches, ratio=0.0436
+    Lag  78: 58/1355 matches, ratio=0.0428
+    Lag  12: 60/1421 matches, ratio=0.0422
+
+============================================================
+PAGE 45: 270 runes, raw IoC=0.9623, chi┬▓=17.9
+============================================================
+
+  KASISKI top periods (by factor frequency):
+    Period   2:    1 factor hits
+    Period   3:    1 factor hits
+    Period  34:    1 factor hits
+    Period   6:    1 factor hits
+    Period  17:    1 factor hits
+    Period  51:    1 factor hits
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  88: avg column IoC = 1.8125
+    Period  69: avg column IoC = 1.4010
+    Period  80: avg column IoC = 1.3896
+    Period  65: avg column IoC = 1.3533
+    Period  40: avg column IoC = 1.3395
+    Period  83: avg column IoC = 1.3394
+    Period  59: avg column IoC = 1.2780
+    Period  44: avg column IoC = 1.2617
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  88: 13/182 matches, ratio=0.0714 (expected 0.0345)
+    Lag  59: 13/211 matches, ratio=0.0616 (expected 0.0345)
+    Lag  54: 13/216 matches, ratio=0.0602 (expected 0.0345)
+    Lag  99: 10/171 matches, ratio=0.0585 (expected 0.0345)
+    Lag  94: 10/176 matches, ratio=0.0568 (expected 0.0345)
+    Lag  65: 11/205 matches, ratio=0.0537 (expected 0.0345)
+    Lag  62: 11/208 matches, ratio=0.0529 (expected 0.0345)
+
+============================================================
+PAGE 46: 270 runes, raw IoC=0.9751, chi┬▓=21.3
+============================================================
+
+  KASISKI top periods (by factor frequency):
+    Period   2:    2 factor hits
+    Period  89:    1 factor hits
+    Period   3:    1 factor hits
+    Period   6:    1 factor hits
+    Period   7:    1 factor hits
+    Period   9:    1 factor hits
+    Period  42:    1 factor hits
+    Period  14:    1 factor hits
+    Period  18:    1 factor hits
+    Period  21:    1 factor hits
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  69: avg column IoC = 1.7512
+    Period  78: avg column IoC = 1.4252
+    Period  65: avg column IoC = 1.3682
+    Period  68: avg column IoC = 1.3505
+    Period  73: avg column IoC = 1.3242
+    Period  74: avg column IoC = 1.3063
+    Period  58: avg column IoC = 1.3000
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag 100: 11/170 matches, ratio=0.0647 (expected 0.0345)
+    Lag  34: 14/236 matches, ratio=0.0593 (expected 0.0345)
+    Lag  58: 12/212 matches, ratio=0.0566 (expected 0.0345)
+    Lag  91: 10/179 matches, ratio=0.0559 (expected 0.0345)
+    Lag  13: 14/257 matches, ratio=0.0545 (expected 0.0345)
+    Lag  29: 13/241 matches, ratio=0.0539 (expected 0.0345)
+    Lag  65: 11/205 matches, ratio=0.0537 (expected 0.0345)
+    Lag  43: 12/227 matches, ratio=0.0529 (expected 0.0345)
+    Lag  78: 10/192 matches, ratio=0.0521 (expected 0.0345)
+
+============================================================
+PAGE 47: 274 runes, raw IoC=0.9785, chi┬▓=22.1
+============================================================
+
+  KASISKI: No repeated trigrams found
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  91: avg column IoC = 1.6996
+    Period  62: avg column IoC = 1.3253
+    Period  55: avg column IoC = 1.3182
+    Period  79: avg column IoC = 1.2848
+    Period  28: avg column IoC = 1.2716
+    Period  81: avg column IoC = 1.2531
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  91: 12/183 matches, ratio=0.0656 (expected 0.0345)
+    Lag  28: 15/246 matches, ratio=0.0610 (expected 0.0345)
+    Lag  37: 14/237 matches, ratio=0.0591 (expected 0.0345)
+    Lag  81: 11/193 matches, ratio=0.0570 (expected 0.0345)
+    Lag  40: 13/234 matches, ratio=0.0556 (expected 0.0345)
+    Lag  45: 12/229 matches, ratio=0.0524 (expected 0.0345)
+    Lag  25: 13/249 matches, ratio=0.0522 (expected 0.0345)
+
+============================================================
+PAGE 48: 271 runes, raw IoC=0.9948, chi┬▓=26.6
+============================================================
+
+  KASISKI top periods (by factor frequency):
+    Period   7:    2 factor hits
+    Period  17:    1 factor hits
+    Period   2:    1 factor hits
+    Period   3:    1 factor hits
+    Period   6:    1 factor hits
+    Period   9:    1 factor hits
+    Period  42:    1 factor hits
+    Period  14:    1 factor hits
+    Period  18:    1 factor hits
+    Period  21:    1 factor hits
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  58: avg column IoC = 1.5833
+    Period  87: avg column IoC = 1.5000
+    Period  53: avg column IoC = 1.4956
+    Period  78: avg column IoC = 1.4872
+    Period  79: avg column IoC = 1.4072
+    Period  83: avg column IoC = 1.3976
+    Period  29: avg column IoC = 1.3778
+    Period  75: avg column IoC = 1.3533
+    Period  69: avg column IoC = 1.3309
+    Period  59: avg column IoC = 1.3271
+    Period  71: avg column IoC = 1.2934
+    Period  41: avg column IoC = 1.2732
+    Period  80: avg column IoC = 1.2688
+    Period  31: avg column IoC = 1.2659
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  97: 11/174 matches, ratio=0.0632 (expected 0.0345)
+    Lag  96: 10/175 matches, ratio=0.0571 (expected 0.0345)
+    Lag  59: 12/212 matches, ratio=0.0566 (expected 0.0345)
+    Lag  41: 13/230 matches, ratio=0.0565 (expected 0.0345)
+    Lag  93: 10/178 matches, ratio=0.0562 (expected 0.0345)
+    Lag  19: 14/252 matches, ratio=0.0556 (expected 0.0345)
+    Lag  28: 13/243 matches, ratio=0.0535 (expected 0.0345)
+    Lag  78: 10/193 matches, ratio=0.0518 (expected 0.0345)
+
+============================================================
+PAGE 49: 66 runes, raw IoC=0.8247, chi┬▓=16.6
+============================================================
+
+  KASISKI: No repeated trigrams found
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  21: avg column IoC = 2.5317
+    Period  15: avg column IoC = 1.8689
+    Period  13: avg column IoC = 1.5615
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  21: 5/45 matches, ratio=0.1111 (expected 0.0345)
+    Lag  15: 5/51 matches, ratio=0.0980 (expected 0.0345)
+    Lag  33: 3/33 matches, ratio=0.0909 (expected 0.0345)
+    Lag  13: 4/53 matches, ratio=0.0755 (expected 0.0345)
+    Lag  20: 3/46 matches, ratio=0.0652 (expected 0.0345)
+    Lag  31: 2/35 matches, ratio=0.0571 (expected 0.0345)
+    Lag  30: 2/36 matches, ratio=0.0556 (expected 0.0345)
+    Lag  11: 3/55 matches, ratio=0.0545 (expected 0.0345)
+
+============================================================
+PAGE 50: 1468 runes, raw IoC=0.9951, chi┬▓=20.8
+============================================================
+
+  KASISKI top periods (by factor frequency):
+    Period   3:   24 factor hits
+    Period   2:   23 factor hits
+    Period   6:   15 factor hits
+    Period   9:   11 factor hits
+    Period   5:   11 factor hits
+    Period  27:    8 factor hits
+    Period   4:    7 factor hits
+    Period  83:    7 factor hits
+    Period  12:    6 factor hits
+    Period  18:    6 factor hits
+
+  FRIEDMAN top 10 periods (none above 1.25):
+    Period 121: avg column IoC = 1.1481
+    Period 135: avg column IoC = 1.1474
+    Period 149: avg column IoC = 1.1267
+    Period 142: avg column IoC = 1.1259
+    Period 146: avg column IoC = 1.1151
+    Period  73: avg column IoC = 1.1067
+    Period  90: avg column IoC = 1.0903
+    Period 105: avg column IoC = 1.0891
+    Period 122: avg column IoC = 1.0852
+    Period  88: avg column IoC = 1.0825
+
+  AUTOCORRELATION top 5 (none significantly above random):
+    Lag  99: 65/1369 matches, ratio=0.0475
+    Lag  29: 68/1439 matches, ratio=0.0473
+    Lag   6: 67/1462 matches, ratio=0.0458
+    Lag  73: 62/1395 matches, ratio=0.0444
+    Lag  53: 62/1415 matches, ratio=0.0438
+
+============================================================
+PAGE 51: 263 runes, raw IoC=0.9663, chi┬▓=19.2
+============================================================
+
+  KASISKI top periods (by factor frequency):
+    Period   2:    2 factor hits
+    Period   4:    2 factor hits
+    Period   8:    2 factor hits
+    Period  16:    2 factor hits
+    Period   7:    1 factor hits
+    Period  14:    1 factor hits
+    Period  56:    1 factor hits
+    Period  28:    1 factor hits
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  56: avg column IoC = 1.8815
+    Period  77: avg column IoC = 1.6320
+    Period  28: avg column IoC = 1.5593
+    Period  84: avg column IoC = 1.4960
+    Period  83: avg column IoC = 1.4558
+    Period  14: avg column IoC = 1.3154
+    Period  85: avg column IoC = 1.3078
+    Period  40: avg column IoC = 1.2705
+    Period  58: avg column IoC = 1.2667
+    Period  65: avg column IoC = 1.2641
+    Period   7: avg column IoC = 1.2595
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  56: 15/207 matches, ratio=0.0725 (expected 0.0345)
+    Lag  40: 15/223 matches, ratio=0.0673 (expected 0.0345)
+    Lag  77: 12/186 matches, ratio=0.0645 (expected 0.0345)
+    Lag  80: 10/183 matches, ratio=0.0546 (expected 0.0345)
+    Lag  24: 13/239 matches, ratio=0.0544 (expected 0.0345)
+    Lag  55: 11/208 matches, ratio=0.0529 (expected 0.0345)
+    Lag  91: 9/172 matches, ratio=0.0523 (expected 0.0345)
+    Lag  14: 13/249 matches, ratio=0.0522 (expected 0.0345)
+
+============================================================
+PAGE 52: 179 runes, raw IoC=0.9721, chi┬▓=23.0
+============================================================
+
+  KASISKI: No repeated trigrams found
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  30: avg column IoC = 1.5467
+    Period  45: avg column IoC = 1.5037
+    Period  44: avg column IoC = 1.4939
+    Period  37: avg column IoC = 1.4892
+    Period  18: avg column IoC = 1.4052
+    Period  46: avg column IoC = 1.3659
+    Period  15: avg column IoC = 1.3240
+    Period  32: avg column IoC = 1.2990
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  88: 8/91 matches, ratio=0.0879 (expected 0.0345)
+    Lag  56: 7/123 matches, ratio=0.0569 (expected 0.0345)
+    Lag  87: 5/92 matches, ratio=0.0543 (expected 0.0345)
+    Lag  46: 7/133 matches, ratio=0.0526 (expected 0.0345)
+    Lag  84: 5/95 matches, ratio=0.0526 (expected 0.0345)
+    Lag  83: 5/96 matches, ratio=0.0521 (expected 0.0345)
+
+============================================================
+PAGE 53: 232 runes, raw IoC=0.9610, chi┬▓=19.0
+============================================================
+
+  KASISKI: No repeated trigrams found
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  77: avg column IoC = 1.5065
+    Period  55: avg column IoC = 1.4412
+    Period  70: avg column IoC = 1.3810
+    Period  53: avg column IoC = 1.3497
+    Period  73: avg column IoC = 1.2580
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  64: 11/168 matches, ratio=0.0655 (expected 0.0345)
+    Lag  85: 9/147 matches, ratio=0.0612 (expected 0.0345)
+    Lag  56: 10/176 matches, ratio=0.0568 (expected 0.0345)
+    Lag  17: 12/215 matches, ratio=0.0558 (expected 0.0345)
+    Lag  87: 8/145 matches, ratio=0.0552 (expected 0.0345)
+    Lag  67: 9/165 matches, ratio=0.0545 (expected 0.0345)
+    Lag   3: 12/229 matches, ratio=0.0524 (expected 0.0345)
+    Lag  21: 11/211 matches, ratio=0.0521 (expected 0.0345)
+    Lag  59: 9/173 matches, ratio=0.0520 (expected 0.0345)
+    Lag  97: 7/135 matches, ratio=0.0519 (expected 0.0345)
+
+============================================================
+PAGE 54: 76 runes, raw IoC=1.0989, chi┬▓=35.4
+============================================================
+
+  KASISKI: No repeated trigrams found
+
+  FRIEDMAN periods with avg column IoC > 1.25:
+    Period  13: avg column IoC = 2.0077
+    Period  17: avg column IoC = 1.8765
+    Period  24: avg column IoC = 1.6111
+    Period  19: avg column IoC = 1.5263
+    Period  23: avg column IoC = 1.4710
+    Period  25: avg column IoC = 1.3533
+    Period   9: avg column IoC = 1.2914
+
+  AUTOCORRELATION peaks (ratio > 0.0517):
+    Lag  26: 5/50 matches, ratio=0.1000 (expected 0.0345)
+    Lag  19: 5/57 matches, ratio=0.0877 (expected 0.0345)
+    Lag  17: 5/59 matches, ratio=0.0847 (expected 0.0345)
+    Lag  11: 5/65 matches, ratio=0.0769 (expected 0.0345)
+    Lag  24: 4/52 matches, ratio=0.0769 (expected 0.0345)
+    Lag  34: 3/42 matches, ratio=0.0714 (expected 0.0345)
+    Lag   9: 4/67 matches, ratio=0.0597 (expected 0.0345)
+    Lag  25: 3/51 matches, ratio=0.0588 (expected 0.0345)
+    Lag  23: 3/53 matches, ratio=0.0566 (expected 0.0345)
+    Lag   2: 4/74 matches, ratio=0.0541 (expected 0.0345)
+
+================================================================================
+CROSS-PAGE CONCATENTATION FRIEDMAN TEST
+================================================================================
+
+All unsolved concatenated: 15872 runes
+
+  FRIEDMAN top 15 (none above 1.15):
+    Period 354: avg column IoC = 1.1047
+    Period 334: avg column IoC = 1.0514
+    Period 177: avg column IoC = 1.0492
+    Period 114: avg column IoC = 1.0361
+    Period 167: avg column IoC = 1.0284
+    Period 118: avg column IoC = 1.0248
+    Period 478: avg column IoC = 1.0247
+    Period 391: avg column IoC = 1.0240
+    Period 367: avg column IoC = 1.0199
+    Period  57: avg column IoC = 1.0194
+    Period 383: avg column IoC = 1.0184
+    Period 239: avg column IoC = 1.0182
+    Period  38: avg column IoC = 1.0180
+    Period 259: avg column IoC = 1.0172
+    Period 293: avg column IoC = 1.0164
+
+================================================================================
+DISTRIBUTION UNIFORMITY TEST
+================================================================================
+  Page 54: n=  76, IoC=1.0989, chi┬▓=35.4 
+
+  (Only showing pages with chi┬▓ > 41.34 or IoC > 1.05)
+  chi┬▓ critical value (df=28, ╬▒=0.05) = 41.34
+
+================================================================================
+SOLVED PAGE IoC FOR REFERENCE
+================================================================================
+  Page  3: n= 395, raw IoC=1.1836
+  Page  4: n= 122, raw IoC=1.1630
+  Page  5: n= 157, raw IoC=1.5227
+  Page 14: n= 320, raw IoC=1.1261
+  Page 15: n= 159, raw IoC=1.0435
+  Page 55: n=  85, raw IoC=0.9423
+  Page 56: n= 121, raw IoC=1.0585
+  Page 57: n=3008, raw IoC=1.0017
+  Page 59: n= 184, raw IoC=1.8569
+  Page 60: n=  13, raw IoC=0.7436
+  Page 61: n= 394, raw IoC=1.1837
+  Page 63: n= 157, raw IoC=1.5227
+  Page 64: n= 685, raw IoC=1.9356
+  Page 67: n=  38, raw IoC=1.1963
+  Page 68: n= 611, raw IoC=1.8525
+  Page 73: n=  86, raw IoC=0.9601
+  Page 74: n=  95, raw IoC=1.9160
+
+================================================================================
+XOR / DIFFERENCE BETWEEN CONSECUTIVE PAGES
+================================================================================
+  P53 vs P54: diff_IoC=0.9768, sum_IoC=1.1396 
+
+  (Only showing pairs where IoC > 1.1)
+
+================================================================================
+SAME-KEY-OFFSET TEST (pairs of pages at same presumed offset)
+================================================================================
+If two pages use the same key stream, their difference = plaintext1 - plaintext2
+
+  Page pairs with diff IoC > 1.2:
+    P27 - P44: diff IoC = 29.0000 (over 234 runes)
+    P29 - P54: diff IoC = 1.2923 (over 76 runes)
+    P31 - P49: diff IoC = 1.2709 (over 66 runes)
+    P34 - P49: diff IoC = 1.2033 (over 66 runes)
+
+================================================================================
+ANALYSIS COMPLETE
+================================================================================

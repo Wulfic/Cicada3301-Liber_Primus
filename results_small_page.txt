@@ -1,0 +1,126 @@
+================================================================================
+INTENSIVE SMALL PAGE ATTACK
+================================================================================
+
+--- VERIFY PAGE 17 (claimed: Vigenere reversed, key YAHEOOPYJ) ---
+Page 17: 729 runes
+  sub: IoC=0.992 score=1180
+  Text: EPIXOTXORFDPTEAHOEEAEXIAALEAGCIGIALXDWEBEOXNSDMXGXTGEOBOPNGEPBGYEINYJOEORTNGNGAIAEPAOUTHFEAIAOMTIEAWTHWCJETAFCPTHEAJOEEAASMHCNOJXUMEFIAENGOIASWONGEAEAFFITHTHUFDLUAAELIGCXYGMIANGROLBORBACTHTHCNGEOEOEFW
+  beaufort: IoC=0.992 score=915
+  Text: JTMSYPSYAEFGTPUNGWUJSTHCNUDAMDTHNSGOEJEOBSLXGISDSPDBEOYTHJTEODOJMLOEWYAEPHHCTHJTCYEAIAFUTHYIPMUOEIAOEAEJPCFATPNGUEWUCXINGALYESEAIJFTHJHYTHXOEYHUUFFMIAIAEAFGNEACRNMDASODITHHAEYNEOYAEEOCAIAIAAHJWWFOENGB
+  add: IoC=1.004 score=975
+  Text: EOOYNGNOEJYYDPFDCXMOEJHBJIACEOTHREANGIUUPAXGWOCIYLEOJIEAGWMLIAAIJEALHYTOBMYYIJHTHRAIEAEANGTGRNTIOOEYEXJBSIBDAFDXCHTNGECGSJSFCWANCWRAEYLNYMEACCYDOAENGBWFYIAEEXFOEEOLOOPLSDMIADNUJBEANGEEOIAAMTOEUIAEAUFM
+  reversed+sub: IoC=1.002 score=865
+  Text: IGWAIAAAEYYTHCCOEXNGOBMHTNTHNGOEMYBADOWRAMJLNNGIIEAOYWPJXYCMINGPWINGEOTOEAETHYIEAGINLBYBIAEYOEHBAETHMDFCJTHXAIXMCICUCTMTHBXHNGFSNGJANGAENGOLEATHUSHXTPLPRNNGSDWTHUEAYYFMCTHUMAIALEOWYMCSWAEOBAGCOEOXUEOS
+  reversed+beaufort: IoC=1.002 score=725
+  Text: MDOECTHCROOIAAAWSHYEOINGPLIAHWIOEOCGYOEAECIENLHMMUYOOETESOAIMHTOEMHBPWCJIAOMUDMLNEOOEOMROWNGEORIAIGFAEIASCMSIAMAEAAPIIAEOSNGHFXHECHRHYNUIAEAXNGSPTNTAELHXGOEIAEAUOOFIAIAEAICTHNBOEOIAXOERYEOCDAWYSEABXEO
+  reversed+add: IoC=0.993 score=955
+  Text: RAEDTHRUOELMAEANGFLIAFJEOTHGAENIAEATLIEPMXIUTCPOJYBCNDUGCRPEOAETEWFRJEADEAUSAEMREOEBSYXLIRSPFXDOEAEEOBMNGEHLNGRWPAYEOWJPPAJRAEAGNGECBSSHIYCEAAHTHROLYMUOXNPDNWCDLOEPAEHAEUAXCUTGEONGPOEYIEAENGFNLIAGHCYN
+  Period 9 column IoC: avg=1.023 (['0.96', '0.93', '1.07', '0.92', '0.99']...)
+  Period 3 column IoC: avg=0.985 (['0.98', '0.95', '1.02']...)
+  Period 6 column IoC: avg=0.970 (['1.04', '0.91', '0.94', '0.91', '0.99']...)
+  Period 18 column IoC: avg=0.991 (['1.03', '0.99', '0.85', '0.88', '0.78']...)
+  Period 27 column IoC: avg=0.998 (['0.83', '0.99', '0.91', '0.99', '0.99']...)
+
+================================================================================
+PAGE 54 INTENSIVE (73 runes, immediately before solved P55)
+================================================================================
+Page 54: 76 runes, 19 words
+Words: [1, 4, 2, 2, 6, 6, 2, 1, 12, 6, 4, 2, 7, 7, 2, 4, 2, 3, 3]
+Raw IoC: 1.099
+
+  Test A: Totient stream with offsets 0-200
+    offset=84 add: IoC=1.364 score=55
+      AOOTHOPMEAEOEOBSNFAEEOEFEAOELOIFBLJPYIYSEOFCOEOLOPWRFUPEOAEGALTLONEAXPLEOTCEOPHOELTFBUUOELBYOE
+    offset=250 add: IoC=1.353 score=170
+      OEUUDANPTTHENGMNEOITAREAYUPTGGPTHFNGPFTIAAEUYGGTUEANGSAUIMECOUUJWARJIIANGADTOEALEOFAEWUAPAA
+    offset=88 sub: IoC=1.302 score=100
+      AEIABAEXEEOCRBEOBEAYXEOHEAJOEEOTWXNGLOEHSOELOESTJYAEJJCEOOERLTOGRISYITIACREASLTUDAEEOOEEOOHSXSEAEOOE
+    offset=88 beaufort: IoC=1.302 score=115
+      RTHEORSJBAAEEOBEOUOSBNGUEWBPOESHNWNGXWNWXPEOREEABWAENPYDAEMXOMPTHAAEUXNPEAGRBWBYNGXSXUBWLO
+
+  Test B: Vigenere period 2 (841 keys)
+    No hits with IoC > 1.4
+
+  Test C: Vigenere period 3 (24389 keys)
+    No hits with IoC > 1.5
+
+  Test D: Autokey with seeds length 1-3, sub/beaufort
+    No hits
+
+  Test E: P54 as continuation/prefix of P55 totient stream
+
+  Test F: Various streams on P54
+
+================================================================================
+PAGE 49 INTENSIVE (66 runes)
+================================================================================
+Page 49: 66 runes, 20 words
+Words: [1, 2, 3, 2, 4, 6, 2, 3, 1, 3, 4, 6, 3, 3, 2, 2, 6, 5, 2, 6]
+Raw IoC: 0.825
+Single-rune words: [(0, 27), (23, 9)]
+
+  Test A: Caesar (29 shifts)
+
+  Test B: Vigenere period 2
+    No hits
+
+  Test C: Vigenere period 3
+    No hits
+
+  Test D: Totient/prime stream offsets 0-500
+    offset=413 add: IoC=1.501 score=30 -> GOFWGEEOPYESAEBMGEGEOPEODEJEOWJGAJUYGEOUFCAELMOEEOJBILGBEABCUEAYFBYOEFGLEESGIW
+    offset=256 sub: IoC=1.366 score=40 -> THTEAYJNAAAECNOEHDAEFEOIEOYFHXYYTEOEOTJAIASYNGHHUCTXITIAWEOBSIAJUEOAIAAGEAYYEOME
+    offset=256 beaufort: IoC=1.366 score=75 -> IAPUOELCCRALWNGGRFBMBOFNGSOOPBBPECTHXOLDNGNGEAAPSMPTHOEBEOXTHEEABCTHCDUOOBIBFFAE
+    offset=353 add: IoC=1.366 score=160 -> THEAAELDTHAECXTHEAOYYROTHXNGSTHPEOBHYMOEAHTHTHOEOASXJOIATHOELGDJNGAEAOYFBOEOEOEY
+    offset=128 add: IoC=1.352 score=85 -> EAAEABTATMEAAMIABDGLJAEUAECMOEMRGNIATAEMUYARJAELDLTJMGRMOOEUFAEDRCLIAIAEANBMTHEA
+
+  Test E: Autokey seeds 1-2
+    No hits
+
+================================================================================
+PAGE 22 INTENSIVE (131 runes, Friedman ~19)
+================================================================================
+Page 22: 131 runes, 32 words
+Words: [2, 2, 2, 6, 2, 6, 2, 5, 4, 2, 2, 11, 1, 7, 11, 4, 3, 12, 3, 3, 2, 2, 5, 4, 4, 3, 1, 6, 5, 3, 3, 3]
+Raw IoC: 1.039
+
+  Test A: Column IoC for periods 2-40
+    Period 5: avg=1.270 min_col_len=26
+    Period 9: avg=1.180 min_col_len=14
+    Period 10: avg=1.243 min_col_len=13
+    Period 11: avg=1.286 min_col_len=11
+    Period 15: avg=1.158 min_col_len=8
+    Period 20: avg=1.270 min_col_len=6
+    Period 22: avg=1.318 min_col_len=5
+    Period 23: avg=1.261 min_col_len=5
+    Period 24: avg=1.168 min_col_len=5
+    Period 25: avg=1.624 min_col_len=5
+    Period 26: avg=1.190 min_col_len=5
+    Period 27: avg=1.387 min_col_len=4
+    Period 29: avg=1.547 min_col_len=4
+    Period 32: avg=1.933 min_col_len=4
+
+  Test B: Vigenere period 2 brute force
+    No hits
+
+  Test C: Totient stream offsets
+    No hits
+
+  Test D: Autokey all seeds
+    No hits
+
+================================================================================
+KEYWORD VIGENERE ON PAGES 49, 54, 22
+Testing known Cicada-related keywords as Vigenere keys
+================================================================================
+  P49 'CONSUMPTION' add: IoC=1.338 score=100
+    ONGLSNGEODNGLASWOEAJWXEOGLLWNGEOUCOGIEONGNGBCIAWNGAENDIAMIDCERAEOLSULINUTHIIAEOAEDNGTO
+
+================================================================================
+P49: Vigenere period 4 hill climb
+================================================================================
+
+================================================================================
+ANALYSIS COMPLETE
+================================================================================

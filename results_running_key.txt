@@ -1,0 +1,237 @@
+================================================================================
+RUNNING KEY CIPHER ATTACK ON LIBER PRIMUS UNSOLVED PAGES
+================================================================================
+
+Loaded 38 unsolved pages
+  Page 17: 729 runes
+  Page 18: 260 runes
+  Page 19: 271 runes
+  Page 20: 812 runes
+  Page 21: 273 runes
+  Page 22: 131 runes
+  Page 23: 333 runes
+  Page 24: 270 runes
+  Page 25: 1729 runes
+  Page 26: 265 runes
+  Page 27: 234 runes
+  Page 28: 269 runes
+  Page 29: 277 runes
+  Page 30: 263 runes
+  Page 31: 269 runes
+  Page 32: 1894 runes
+  Page 33: 214 runes
+  Page 34: 261 runes
+  Page 35: 271 runes
+  Page 36: 238 runes
+  Page 37: 228 runes
+  Page 38: 228 runes
+  Page 39: 240 runes
+  Page 40: 1021 runes
+  Page 41: 273 runes
+  Page 42: 272 runes
+  Page 43: 274 runes
+  Page 44: 1433 runes
+  Page 45: 270 runes
+  Page 46: 270 runes
+  Page 47: 274 runes
+  Page 48: 271 runes
+  Page 49: 66 runes
+  Page 50: 1468 runes
+  Page 51: 263 runes
+  Page 52: 179 runes
+  Page 53: 232 runes
+  Page 54: 76 runes
+
+Liber AL vel Legis: 8752 shifts (simple), 8192 shifts (digraph)
+Self-Reliance: 43905 shifts (simple), 41734 shifts (digraph)
+Solved Pages: 523 shifts (simple), 501 shifts (digraph)
+All Combined: 53180 shifts (simple), 50427 shifts (digraph)
+Deor Poem: 2279 shifts (simple), 2135 shifts (digraph)
+
+Total key streams to test: 18
+
+================================================================================
+PHASE 1: Systematic scan - all pages ╫ all keys ╫ all modes
+================================================================================
+
+--- Page 32 (1894 runes) ---
+
+--- Page 25 (1729 runes) ---
+
+--- Page 50 (1468 runes) ---
+
+--- Page 44 (1433 runes) ---
+
+--- Page 40 (1021 runes) ---
+
+--- Page 20 (812 runes) ---
+
+--- Page 17 (729 runes) ---
+
+--- Page 23 (333 runes) ---
+
+--- Page 29 (277 runes) ---
+
+--- Page 43 (274 runes) ---
+
+================================================================================
+PHASE 2: Extended offset scan for literary texts
+================================================================================
+
+--- Page 32 (1894 runes) - Extended scan ---
+  LiberAL_simple sub: best IoC=1.013 (below threshold)
+  LiberAL_simple beaufort: best IoC=1.013 (below threshold)
+  LiberAL_simple add: best IoC=1.011 (below threshold)
+  LiberAL_digraph sub: best IoC=1.017 (below threshold)
+  LiberAL_digraph beaufort: best IoC=1.017 (below threshold)
+  LiberAL_digraph add: best IoC=1.020 (below threshold)
+  SelfReliance_simple sub: best IoC=1.015 (below threshold)
+  SelfReliance_simple beaufort: best IoC=1.015 (below threshold)
+  SelfReliance_simple add: best IoC=1.015 (below threshold)
+  SelfReliance_digraph sub: best IoC=1.014 (below threshold)
+  SelfReliance_digraph beaufort: best IoC=1.014 (below threshold)
+  SelfReliance_digraph add: best IoC=1.014 (below threshold)
+  AllCombined_simple sub: best IoC=1.018 (below threshold)
+  AllCombined_simple beaufort: best IoC=1.018 (below threshold)
+  AllCombined_simple add: best IoC=1.017 (below threshold)
+  AllCombined_digraph sub: best IoC=1.014 (below threshold)
+  AllCombined_digraph beaufort: best IoC=1.014 (below threshold)
+  AllCombined_digraph add: best IoC=1.014 (below threshold)
+  Deor_simple sub: best IoC=1.013 (below threshold)
+  Deor_simple beaufort: best IoC=1.013 (below threshold)
+  Deor_simple add: best IoC=1.012 (below threshold)
+  Deor_digraph sub: best IoC=1.012 (below threshold)
+  Deor_digraph beaufort: best IoC=1.012 (below threshold)
+  Deor_digraph add: best IoC=1.010 (below threshold)
+
+--- Page 25 (1729 runes) - Extended scan ---
+  LiberAL_simple sub: best IoC=1.015 (below threshold)
+  LiberAL_simple beaufort: best IoC=1.015 (below threshold)
+  LiberAL_simple add: best IoC=1.025 (below threshold)
+  LiberAL_digraph sub: best IoC=1.015 (below threshold)
+  LiberAL_digraph beaufort: best IoC=1.015 (below threshold)
+  LiberAL_digraph add: best IoC=1.014 (below threshold)
+  SelfReliance_simple sub: best IoC=1.013 (below threshold)
+  SelfReliance_simple beaufort: best IoC=1.013 (below threshold)
+  SelfReliance_simple add: best IoC=1.019 (below threshold)
+  SelfReliance_digraph sub: best IoC=1.018 (below threshold)
+  SelfReliance_digraph beaufort: best IoC=1.018 (below threshold)
+  SelfReliance_digraph add: best IoC=1.017 (below threshold)
+  AllCombined_simple sub: best IoC=1.012 (below threshold)
+  AllCombined_simple beaufort: best IoC=1.012 (below threshold)
+  AllCombined_simple add: best IoC=1.019 (below threshold)
+  AllCombined_digraph sub: best IoC=1.025 (below threshold)
+  AllCombined_digraph beaufort: best IoC=1.025 (below threshold)
+  AllCombined_digraph add: best IoC=1.015 (below threshold)
+  Deor_simple sub: best IoC=1.015 (below threshold)
+  Deor_simple beaufort: best IoC=1.015 (below threshold)
+  Deor_simple add: best IoC=1.027 (below threshold)
+  Deor_digraph sub: best IoC=1.013 (below threshold)
+  Deor_digraph beaufort: best IoC=1.013 (below threshold)
+  Deor_digraph add: best IoC=1.014 (below threshold)
+
+--- Page 50 (1468 runes) - Extended scan ---
+  LiberAL_simple sub: best IoC=1.018 (below threshold)
+  LiberAL_simple beaufort: best IoC=1.018 (below threshold)
+  LiberAL_simple add: best IoC=1.022 (below threshold)
+  LiberAL_digraph sub: best IoC=1.022 (below threshold)
+  LiberAL_digraph beaufort: best IoC=1.022 (below threshold)
+  LiberAL_digraph add: best IoC=1.020 (below threshold)
+  SelfReliance_simple sub: best IoC=1.021 (below threshold)
+  SelfReliance_simple beaufort: best IoC=1.021 (below threshold)
+  SelfReliance_simple add: best IoC=1.016 (below threshold)
+  SelfReliance_digraph sub: best IoC=1.019 (below threshold)
+  SelfReliance_digraph beaufort: best IoC=1.019 (below threshold)
+  SelfReliance_digraph add: best IoC=1.021 (below threshold)
+  AllCombined_simple sub: best IoC=1.020 (below threshold)
+  AllCombined_simple beaufort: best IoC=1.020 (below threshold)
+  AllCombined_simple add: best IoC=1.019 (below threshold)
+  AllCombined_digraph sub: best IoC=1.025 (below threshold)
+  AllCombined_digraph beaufort: best IoC=1.025 (below threshold)
+  AllCombined_digraph add: best IoC=1.017 (below threshold)
+  Deor_simple sub: best IoC=1.020 (below threshold)
+  Deor_simple beaufort: best IoC=1.020 (below threshold)
+  Deor_simple add: best IoC=1.018 (below threshold)
+  Deor_digraph sub: best IoC=1.020 (below threshold)
+  Deor_digraph beaufort: best IoC=1.020 (below threshold)
+  Deor_digraph add: best IoC=1.020 (below threshold)
+
+--- Page 44 (1433 runes) - Extended scan ---
+  LiberAL_simple sub: best IoC=1.018 (below threshold)
+  LiberAL_simple beaufort: best IoC=1.018 (below threshold)
+  LiberAL_simple add: best IoC=1.023 (below threshold)
+  LiberAL_digraph sub: best IoC=1.025 (below threshold)
+  LiberAL_digraph beaufort: best IoC=1.025 (below threshold)
+  LiberAL_digraph add: best IoC=1.018 (below threshold)
+  SelfReliance_simple sub: best IoC=1.021 (below threshold)
+  SelfReliance_simple beaufort: best IoC=1.021 (below threshold)
+  SelfReliance_simple add: best IoC=1.020 (below threshold)
+  SelfReliance_digraph sub: best IoC=1.020 (below threshold)
+  SelfReliance_digraph beaufort: best IoC=1.020 (below threshold)
+  SelfReliance_digraph add: best IoC=1.016 (below threshold)
+  AllCombined_simple sub: best IoC=1.024 (below threshold)
+  AllCombined_simple beaufort: best IoC=1.024 (below threshold)
+  AllCombined_simple add: best IoC=1.016 (below threshold)
+  AllCombined_digraph sub: best IoC=1.015 (below threshold)
+  AllCombined_digraph beaufort: best IoC=1.015 (below threshold)
+  AllCombined_digraph add: best IoC=1.020 (below threshold)
+  Deor_simple sub: best IoC=1.028 (below threshold)
+  Deor_simple beaufort: best IoC=1.028 (below threshold)
+  Deor_simple add: best IoC=1.018 (below threshold)
+  Deor_digraph sub: best IoC=1.023 (below threshold)
+  Deor_digraph beaufort: best IoC=1.023 (below threshold)
+  Deor_digraph add: best IoC=1.022 (below threshold)
+
+--- Page 40 (1021 runes) - Extended scan ---
+  LiberAL_simple sub: best IoC=1.035 (below threshold)
+  LiberAL_simple beaufort: best IoC=1.035 (below threshold)
+  LiberAL_simple add: best IoC=1.026 (below threshold)
+  LiberAL_digraph sub: best IoC=1.030 (below threshold)
+  LiberAL_digraph beaufort: best IoC=1.030 (below threshold)
+  LiberAL_digraph add: best IoC=1.024 (below threshold)
+  SelfReliance_simple sub: best IoC=1.028 (below threshold)
+  SelfReliance_simple beaufort: best IoC=1.028 (below threshold)
+  SelfReliance_simple add: best IoC=1.027 (below threshold)
+  SelfReliance_digraph sub: best IoC=1.032 (below threshold)
+  SelfReliance_digraph beaufort: best IoC=1.032 (below threshold)
+  SelfReliance_digraph add: best IoC=1.033 (below threshold)
+  AllCombined_simple sub: best IoC=1.022 (below threshold)
+  AllCombined_simple beaufort: best IoC=1.022 (below threshold)
+  AllCombined_simple add: best IoC=1.024 (below threshold)
+  AllCombined_digraph sub: best IoC=1.024 (below threshold)
+  AllCombined_digraph beaufort: best IoC=1.024 (below threshold)
+  AllCombined_digraph add: best IoC=1.026 (below threshold)
+  Deor_simple sub: best IoC=1.029 (below threshold)
+  Deor_simple beaufort: best IoC=1.029 (below threshold)
+  Deor_simple add: best IoC=1.027 (below threshold)
+  Deor_digraph sub: best IoC=1.025 (below threshold)
+  Deor_digraph beaufort: best IoC=1.025 (below threshold)
+  Deor_digraph add: best IoC=1.024 (below threshold)
+
+================================================================================
+PHASE 3: Cross-page concatenation attack
+================================================================================
+Total concatenated runes: 16601
+  Concat SelfReliance_digraph sub off=25: Page 49 IoC=1.366
+     Text: ESLGIOLICLSWOYEOBUEPGEANIAHOINGTJBHJEAMSONNGEEIAEEOSSOEEAINGFEEJSEOENEAFFWCEOEOE
+  Concat SelfReliance_digraph beaufort off=25: Page 49 IoC=1.366
+     Text: JXNDMYNMANXOEYOBEOEAJTDULTHNGYMHPEEONGEUIXYLHJJMRBXXWUMHFJJEXBJLUFFOEAJYJW
+
+================================================================================
+PHASE 4: Multiplicative and Affine cipher (non-stream)
+================================================================================
+
+================================================================================
+PHASE 5: Novel number-theoretic streams
+================================================================================
+
+================================================================================
+SUMMARY
+================================================================================
+
+No results with IoC > 1.4 found across all tests.
+This rules out simple running key using tested literary texts.
+
+Total key streams tested: 25
+Total pages tested: 10
+Modes tested: ['sub', 'beaufort', 'add']

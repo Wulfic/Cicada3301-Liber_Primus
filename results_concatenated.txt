@@ -1,0 +1,73 @@
+Total pages loaded: 68
+Unsolved dash pages (18-54): [18, 19, 21, 22, 24, 26, 27, 28, 29, 30, 31, 33, 34, 35, 36, 37, 38, 39, 41, 42, 43, 45, 46, 47, 48, 49, 51, 52, 53, 54]
+  Total dash runes: 7182
+Unsolved bullet pages (18-54): [20, 23, 25, 32, 40, 44, 50]
+  Total bullet runes: 8690
+
+================================================================================
+ATTACK 1: CONTINUOUS TOTIENT STREAM ACROSS CONCATENATED PAGES
+Pages concatenated in order, totient key index continuous
+================================================================================
+  Concatenated 30 dash pages: 7182 runes total
+  No continuous totient hits on concatenated dash pages
+  Tested 1000 continuous configurations
+
+  --- Beaufort mode ---
+  No Beaufort continuous hits
+
+================================================================================
+ATTACK 2: REARRANGED PAGE ORDER
+P19 says 'REARRANGING THE PRIMES' ΓÇö try different page orderings
+================================================================================
+  No rearranged page order hits
+  Tested 680 page rearrangement configurations
+
+================================================================================
+ATTACK 3: PRIME-POSITION PERMUTATION WITHIN EACH PAGE
+'Rearranging the primes': permute runes at prime positions
+================================================================================
+  No prime-position permutation hits
+  Tested 184 permutation configurations
+
+================================================================================
+ATTACK 4: WIDE COLUMNAR TRANSPOSITION ON CONCATENATED PAGES
+If pages 21-54 are one text, try columnar widths 71-199 (primes)
+================================================================================
+  All unsolved 18-54 concatenated: 15872 runes
+  No wide columnar transposition hits
+  Tested 53 wide columnar widths
+
+================================================================================
+ATTACK 5: PAGE-SPECIFIC TOTIENT WITH PAGE NUMBER AS OFFSET
+Each page uses totient stream starting at index = f(page_number)
+================================================================================
+  No page-specific offset hits
+  Tested 173 page-specific offset configurations
+
+================================================================================
+ATTACK 6: BULLET PAGES ΓÇö SEPARATE TREATMENT
+Large bullet pages (P20,23,25,32,40,44,50) may use different cipher
+================================================================================
+  Concatenated 7 bullet pages: 8690 runes
+  No concatenated bullet page hits
+  Tested 1000 bullet configurations
+
+================================================================================
+COMPREHENSIVE SUMMARY
+================================================================================
+
+NO VIABLE HITS across all concatenation and rearrangement attacks.
+
+Attacks tested:
+  - Continuous totient on concatenated dash pages (500 offsets, F-skip + no-skip)
+  - Beaufort mode continuous totient
+  - Rearranged page orderings (17 arrangements)
+  - Prime-position permutation within pages
+  - Grid transposition + totient on individual pages
+  - Wide columnar transposition on all concatenated pages (prime widths 29-300)
+  - Page-number-derived offset (6 functions per page)
+  - Concatenated bullet pages with totient stream
+
+================================================================================
+COMPLETE
+================================================================================

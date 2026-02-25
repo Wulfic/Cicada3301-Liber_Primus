@@ -1,0 +1,174 @@
+Loaded 37 pages
+
+================================================================================
+BIFID CIPHER DECRYPTION
+Grid: 5├ù6 (30 positions, 29 used), various keyword orderings
+Periods: primes 2-107 + selected composites
+================================================================================
+  No Bifid hits above IoC threshold
+  Tested 7680 Bifid configurations
+
+  --- Bifid 6├ù5 grid orientation ---
+  No Bifid 6├ù5 hits
+  Tested 375 Bifid 6├ù5 configurations
+
+================================================================================
+TRIFID CIPHER DECRYPTION
+Grid: 3├ù3├ù4=36 positions, 29 used
+================================================================================
+  No Trifid hits above IoC threshold
+  Tested 350 Trifid configurations
+
+================================================================================
+PLAYFAIR CIPHER DECRYPTION
+Digraph substitution on 5├ù6 grid
+================================================================================
+  No Playfair hits above IoC threshold
+  Tested 145 Playfair configurations
+
+================================================================================
+NIHILIST CIPHER DECRYPTION
+Polybius coordinates + key subtraction
+================================================================================
+  P32 key=SHADOWS: IoC=12.669 score=300
+  P25 key=SHADOWS: IoC=13.432 score=290
+  P50 key=SHADOWS: IoC=12.939 score=295
+  P44 key=SHADOWS: IoC=11.963 score=345
+  P40 key=SHADOWS: IoC=13.394 score=205
+  P32 key=AETHEREAL: IoC=7.448 score=650
+  P25 key=AETHEREAL: IoC=7.510 score=750
+  P50 key=AETHEREAL: IoC=7.266 score=485
+  P44 key=AETHEREAL: IoC=7.026 score=545
+  P40 key=AETHEREAL: IoC=7.477 score=355
+  P32 key=VOID: IoC=15.766 score=260
+  P25 key=VOID: IoC=15.313 score=305
+  P50 key=VOID: IoC=14.541 score=355
+  P44 key=VOID: IoC=15.184 score=280
+  P40 key=VOID: IoC=15.793 score=150
+  P32 key=CABAL: IoC=9.473 score=325
+  P25 key=CABAL: IoC=9.175 score=330
+  P50 key=CABAL: IoC=9.090 score=270
+  P44 key=CABAL: IoC=9.248 score=260
+  P40 key=CABAL: IoC=9.167 score=110
+  P32 key=OBSCURA: IoC=13.619 score=210
+  P25 key=OBSCURA: IoC=14.217 score=90
+  P50 key=OBSCURA: IoC=13.192 score=160
+  P44 key=OBSCURA: IoC=13.574 score=120
+  P40 key=OBSCURA: IoC=13.710 score=110
+  P32 key=MOBIUS: IoC=14.436 score=455
+  P25 key=MOBIUS: IoC=13.848 score=385
+  P50 key=MOBIUS: IoC=14.478 score=265
+  P44 key=MOBIUS: IoC=14.133 score=200
+  P40 key=MOBIUS: IoC=14.773 score=120
+  P32 key=CARNAL: IoC=10.405 score=200
+  P25 key=CARNAL: IoC=11.394 score=130
+  P50 key=CARNAL: IoC=10.662 score=135
+  P44 key=CARNAL: IoC=10.482 score=110
+  P40 key=CARNAL: IoC=11.226 score=100
+  P32 key=DIVINITY: IoC=15.585 score=180
+  P25 key=DIVINITY: IoC=16.343 score=100
+  P50 key=DIVINITY: IoC=16.308 score=80
+  P44 key=DIVINITY: IoC=15.658 score=100
+  P40 key=DIVINITY: IoC=16.135 score=140
+  P32 key=PRIMES: IoC=12.208 score=480
+  P25 key=PRIMES: IoC=12.069 score=695
+  P50 key=PRIMES: IoC=12.446 score=420
+  P44 key=PRIMES: IoC=12.335 score=390
+  P40 key=PRIMES: IoC=12.046 score=245
+  P32 key=CIRCUMFERENCE: IoC=10.962 score=715
+  P25 key=CIRCUMFERENCE: IoC=12.101 score=745
+  P50 key=CIRCUMFERENCE: IoC=11.643 score=495
+  P44 key=CIRCUMFERENCE: IoC=10.985 score=705
+  P40 key=CIRCUMFERENCE: IoC=10.830 score=275
+  P32 key=FORM: IoC=11.707 score=640
+  P25 key=FORM: IoC=12.068 score=680
+  P50 key=FORM: IoC=11.015 score=300
+  P44 key=FORM: IoC=10.490 score=430
+  P40 key=FORM: IoC=11.840 score=445
+  P32 key=MOURNFUL: IoC=11.318 score=750
+  P25 key=MOURNFUL: IoC=11.525 score=400
+  P50 key=MOURNFUL: IoC=11.900 score=380
+  P44 key=MOURNFUL: IoC=11.671 score=300
+  P40 key=MOURNFUL: IoC=12.339 score=240
+  P32 key=ANALOG: IoC=9.212 score=250
+  P25 key=ANALOG: IoC=9.004 score=335
+  P50 key=ANALOG: IoC=8.858 score=305
+  P44 key=ANALOG: IoC=8.460 score=350
+  P40 key=ANALOG: IoC=8.945 score=300
+  P32 key=WARNING: IoC=13.244 score=235
+  P25 key=WARNING: IoC=13.408 score=320
+  P50 key=WARNING: IoC=13.466 score=215
+  P44 key=WARNING: IoC=13.372 score=180
+  P40 key=WARNING: IoC=13.889 score=110
+  Tested 70 Nihilist configurations
+
+================================================================================
+ADFGVX-STYLE: Polybius + Columnar Transposition
+================================================================================
+  No ADFGVX hits above IoC threshold
+  Tested 70 ADFGVX configurations
+
+================================================================================
+DOUBLE TRANSPOSITION (after simulated Vigen├¿re layer)
+Test if Vigen├¿re + double transposition explains pages 21-30
+================================================================================
+  No Vigen├¿re+Transposition hits
+  Tested 0 Vigen├¿re+Transposition configs
+
+================================================================================
+MOBIUS FUNCTION AS CIPHER SELECTOR
+mu(n): -1 = subtract, 0 = skip, 1 = add (from totient/prime stream)
+================================================================================
+  No M├╢bius hits
+  Tested 200 M├╢bius configurations
+
+================================================================================
+CHAOCIPHER SIMULATION
+Two rotating mixed alphabets, self-modifying after each character
+================================================================================
+  No Chaocipher hits
+  Tested 150 Chaocipher configurations
+
+================================================================================
+SOLITAIRE / PONTIFEX CIPHER
+Card deck-based stream cipher adapted to 29 symbols
+================================================================================
+  No Solitaire hits
+  Tested 15 Solitaire configurations
+
+================================================================================
+NUMBER-THEORETIC FUNCTION VARIANTS
+M├╢bius ╬╝(n), Liouville ╬╗(n), divisor ╧â(n) as key streams
+================================================================================
+  No number-theoretic function hits
+  Tested 500 number-theoretic configurations
+
+================================================================================
+QUADRATIC / POLYNOMIAL KEY FUNCTIONS
+key[i] = (a*i^2 + b*i + c) % 29
+================================================================================
+  No polynomial key hits
+  Tested 840 polynomial key configurations
+
+================================================================================
+COMPREHENSIVE SUMMARY
+================================================================================
+
+NO VIABLE HITS across all fractionation and advanced ciphers.
+
+Cipher types tested this run:
+  - Bifid (5├ù6, 6├ù5 grids, 15 keyword orderings, periods 2-109)
+  - Trifid (3├ù3├ù4 grid, 5 keywords, periods 2-43)
+  - Playfair (5├ù6, 6├ù5 grids, 15 keyword orderings)
+  - Nihilist (14 keyword keys)
+  - ADFGVX (Polybius + columnar transpose, 14 keys)
+  - Double transposition (Vigen├¿re + columnar, 14 keywords)
+  - M├╢bius function controlled totient stream
+  - Chaocipher (15 keyword alphabets ├ù 2 right variants)
+  - Solitaire/Pontifex (5 deck orderings)
+  - Number-theoretic functions (6 streams ├ù 20 offsets)
+  - Quadratic polynomial keys (28├ù10 coefficients)
+
+================================================================================
+COMPLETE
+================================================================================
