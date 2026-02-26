@@ -1,6 +1,0 @@
-Traceback (most recent call last):
-  File "C:\Users\tyler\Repos\Cicada3301\p18_deep_attack.py", line 719, in <module>
-    print("\nSimple shift scan (P18 Caesar \u2192 P19 key match):")
-  File "C:\Users\tyler\AppData\Local\Programs\Python\Python310\lib\encodings\cp1252.py", line 19, in encode
-    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
-UnicodeEncodeError: 'charmap' codec can't encode character '\u2192' in position 32: character maps to <undefined>
