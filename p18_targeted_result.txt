@@ -1,0 +1,175 @@
+Dictionary: 583 unique GP-words
+
+======================================================================
+WORD ANALYSIS BY NUMBER OF UNKNOWN POSITIONS:
+======================================================================
+
+--- Words with 0 unknown key position(s): ---
+  Word   3: IN                   MATCHED 
+  Word   4: XHU                          
+  Word   5: THAL                         
+  Word   6: A                    MATCHED 
+  Word   7: RGDSHF                       
+  Word   8: THE                  MATCHED 
+  Word  11: THEY                 MATCHED 
+  Word  12: THERE                MATCHED 
+  Word  14: THE                  MATCHED 
+  Word  16: I                    MATCHED 
+  Word  19: OWWH                         
+  Word  20: OERLUPAEOE                   
+  Word  21: IAR                          
+  Word  28: ITS                  MATCHED 
+  Word  29: DTH                          
+  Word  31: ITS                  MATCHED 
+  Word  32: OR                   MATCHED 
+  Word  33: TESNR                        
+  Word  34: LIAR                         
+  Word  35: PJO                          
+  Word  38: IT                   MATCHED 
+  Word  39: I                    MATCHED 
+  Word  43: A                    MATCHED 
+  Word  44: IAAH                         
+  Word  45: OF                   MATCHED 
+  Word  46: FIND                 MATCHED 
+  Word  47: LEARN                MATCHED 
+  Word  48: AEBL                         
+  Word  51: FEH                          
+  Word  52: EEA                          
+  Word  56: I                    MATCHED 
+  Word  57: A                    MATCHED 
+  Word  59: TYBU                         
+  Word  60: LPII                         
+  Word  61: FANGHS                       
+  Word  62: THE                  MATCHED 
+  Word  67: I                    MATCHED 
+
+--- Words with 1 unknown key position(s): ---
+  Word  24: UWIETTHAAE                    [unknown keys: [37]]
+  Word  25: NAEI                          [unknown keys: [45]]
+  Word  26: NGAUE                         [unknown keys: [49]]
+  Word  37: GOEOERTHE                     [unknown keys: [45]]
+  Word  53: FC                            [unknown keys: [45]]
+  Word  55: CIAJU                         [unknown keys: [1]]
+  Word  63: NGNGEO                        [unknown keys: [30]]
+  Word  66: ANGIA                         [unknown keys: [45]]
+
+--- Words with 2 unknown key position(s): ---
+  Word   0: FFMGNX                        [unknown keys: [0, 1]]
+  Word   1: IAUR                          [unknown keys: [7, 8]]
+  Word   9: PR                            [unknown keys: [30, 31]]
+  Word  13: YARIN                         [unknown keys: [45, 49]]
+  Word  17: GIASLTH                       [unknown keys: [7, 8]]
+  Word  23: YO                            [unknown keys: [35, 36]]
+  Word  41: FEONGFJYTH                    [unknown keys: [1, 7]]
+
+--- Words with 3 unknown key position(s): ---
+  Word  15: DISTH                         [unknown keys: [0, 1, 52]]
+  Word  27: THED                          [unknown keys: [0, 1, 52]]
+  Word  40: OEMIAUL                       [unknown keys: [0, 49, 52]]
+  Word  49: HNGEO                         [unknown keys: [30, 31, 32]]
+  Word  54: NGTHUMNGTHDF                  [unknown keys: [0, 49, 52]]
+  Word  65: CLAREECNTH                    [unknown keys: [35, 36, 37]]
+
+--- Words with 4 unknown key position(s): ---
+  Word   2: NGASNG                        [unknown keys: [9, 10, 11, 12]]
+  Word  18: PSIAET                        [unknown keys: [9, 10, 11, 12]]
+  Word  64: GXFOE                         [unknown keys: [31, 32, 33, 34]]
+
+--- Words with 5 unknown key position(s): ---
+  Word  22: AIAEAND                       [unknown keys: [30, 31, 32, 33, 34]]
+  Word  42: ROUGH                         [unknown keys: [8, 9, 10, 11, 12]]
+  Word  50: DEOEDHC                       [unknown keys: [33, 34, 35, 36, 37]]
+
+--- Words with 6 unknown key position(s): ---
+  Word  10: ESOWSU                        [unknown keys: [32, 33, 34, 35, 36, 37]]
+  Word  30: EEJWWR                        [unknown keys: [7, 8, 9, 10, 11, 12]]
+  Word  58: HOENGXIAE                     [unknown keys: [7, 8, 9, 10, 11, 12]]
+
+======================================================================
+WORDS WITH 1 UNKNOWN: EXHAUSTIVE SEARCH
+======================================================================
+
+======================================================================
+KEY POSITION CONSTRAINTS FROM 1-UNKNOWN WORDS:
+======================================================================
+
+======================================================================
+WORDS WITH 2 UNKNOWNS: EXHAUSTIVE SEARCH
+======================================================================
+
+  Word   9 (PR), unknown keys [30, 31]:
+    key[30]= 3(O  ), key[31]= 5(C  ) ΓåÆ 'AT'
+    key[30]= 3(O  ), key[31]=12(EO ) ΓåÆ 'AN'
+    key[30]= 4(R  ), key[31]=18(E  ) ΓåÆ 'DO'
+    key[30]= 8(H  ), key[31]= 3(O  ) ΓåÆ 'ME'
+    key[30]= 8(H  ), key[31]=24(A  ) ΓåÆ 'MY'
+    key[30]=10(I  ), key[31]= 3(O  ) ΓåÆ 'BE'
+    key[30]=10(I  ), key[31]=24(A  ) ΓåÆ 'BY'
+    key[30]=11(J  ), key[31]=18(E  ) ΓåÆ 'TO'
+    key[30]=12(EO ), key[31]=18(E  ) ΓåÆ 'SO'
+    key[30]=12(EO ), key[31]=22(OE ) ΓåÆ 'SEA'
+    key[30]=17(B  ), key[31]= 5(C  ) ΓåÆ 'IT'
+    key[30]=17(B  ), key[31]= 6(G  ) ΓåÆ 'IS'
+    key[30]=17(B  ), key[31]=12(EO ) ΓåÆ 'IN'
+    key[30]=17(B  ), key[31]=21(NG ) ΓåÆ 'IF'
+    key[30]=18(E  ), key[31]=18(E  ) ΓåÆ 'NO'
+    key[30]=19(M  ), key[31]= 3(O  ) ΓåÆ 'HE'
+    key[30]=20(L  ), key[31]= 3(O  ) ΓåÆ 'WE'
+    key[30]=21(NG ), key[31]=18(E  ) ΓåÆ 'GO'
+    key[30]=24(A  ), key[31]=12(EO ) ΓåÆ 'ON'
+    key[30]=24(A  ), key[31]=17(B  ) ΓåÆ 'OR'
+    key[30]=24(A  ), key[31]=21(NG ) ΓåÆ 'OF'
+    key[30]=25(AE ), key[31]= 3(O  ) ΓåÆ 'THE'
+    key[30]=26(Y  ), key[31]= 6(G  ) ΓåÆ 'US'
+    key[30]=26(Y  ), key[31]= 8(H  ) ΓåÆ 'UP'
+    key[30]=28(EA ), key[31]=17(B  ) ΓåÆ 'EAR'
+
+  Word  23 (YO), unknown keys [35, 36]:
+    key[35]= 3(O  ), key[36]= 4(R  ) ΓåÆ 'MY'
+    key[35]= 3(O  ), key[36]=12(EO ) ΓåÆ 'ME'
+    key[35]= 5(C  ), key[36]= 4(R  ) ΓåÆ 'BY'
+    key[35]= 5(C  ), key[36]=12(EO ) ΓåÆ 'BE'
+    key[35]= 6(G  ), key[36]=27(IA ) ΓåÆ 'TO'
+    key[35]= 7(W  ), key[36]= 2(TH ) ΓåÆ 'SEA'
+    key[35]= 7(W  ), key[36]=27(IA ) ΓåÆ 'SO'
+    key[35]=12(EO ), key[36]= 1(U  ) ΓåÆ 'IF'
+    key[35]=12(EO ), key[36]=14(X  ) ΓåÆ 'IT'
+    key[35]=12(EO ), key[36]=15(S  ) ΓåÆ 'IS'
+    key[35]=12(EO ), key[36]=21(NG ) ΓåÆ 'IN'
+    key[35]=13(P  ), key[36]=27(IA ) ΓåÆ 'NO'
+    key[35]=14(X  ), key[36]=12(EO ) ΓåÆ 'HE'
+    key[35]=15(S  ), key[36]=12(EO ) ΓåÆ 'WE'
+    key[35]=16(T  ), key[36]=27(IA ) ΓåÆ 'GO'
+    key[35]=19(M  ), key[36]= 1(U  ) ΓåÆ 'OF'
+    key[35]=19(M  ), key[36]=21(NG ) ΓåÆ 'ON'
+    key[35]=19(M  ), key[36]=26(Y  ) ΓåÆ 'OR'
+    key[35]=20(L  ), key[36]=12(EO ) ΓåÆ 'THE'
+    key[35]=21(NG ), key[36]=15(S  ) ΓåÆ 'US'
+    key[35]=21(NG ), key[36]=17(B  ) ΓåÆ 'UP'
+    key[35]=23(D  ), key[36]=26(Y  ) ΓåÆ 'EAR'
+    key[35]=27(IA ), key[36]=14(X  ) ΓåÆ 'AT'
+    key[35]=27(IA ), key[36]=21(NG ) ΓåÆ 'AN'
+    key[35]=28(EA ), key[36]=27(IA ) ΓåÆ 'DO'
+
+======================================================================
+SUMMARY: Constrained key positions from word matching
+======================================================================
+  key[ 0]: no 1-unknown word constraints
+  key[ 1]: no 1-unknown word constraints
+  key[ 7]: no 1-unknown word constraints
+  key[ 8]: no 1-unknown word constraints
+  key[ 9]: no 1-unknown word constraints
+  key[10]: no 1-unknown word constraints
+  key[11]: no 1-unknown word constraints
+  key[12]: no 1-unknown word constraints
+  key[30]: no 1-unknown word constraints
+  key[31]: no 1-unknown word constraints
+  key[32]: no 1-unknown word constraints
+  key[33]: no 1-unknown word constraints
+  key[34]: no 1-unknown word constraints
+  key[35]: no 1-unknown word constraints
+  key[36]: no 1-unknown word constraints
+  key[37]: no 1-unknown word constraints
+  key[45]: no 1-unknown word constraints
+  key[49]: no 1-unknown word constraints
+  key[52]: no 1-unknown word constraints
