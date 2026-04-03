@@ -162,24 +162,29 @@ Pages 58–74 substantially repeat pages 00–17 content using different (often 
 
 ## 4. UNSOLVED PAGES — CURRENT STATE
 
-### Pages 21–30: High IoC with Page 63 Keywords
+### Pages 21–30: UNSOLVED — Cipher Method UNKNOWN
 
-Letters are correct, order is wrong. Keyword + mode confirmed:
+> **⚠️ CRITICAL CORRECTION (Session 7, 2026-03):** The keyword-page assignments and IoC values below are WRONG. They were based on hill-climbed keys (`data/verified_keys.json`), NOT actual P63 keyword decryption. Systematic testing confirmed:
+> - ALL P63 keywords × ALL modes produce IoC ≈ 1.0 (random) on EVERY P21-30 page
+> - The "high IoC" values (1.87-2.31) came from 71/83-element hill-climbed keys, which are artifacts (repetitive TH/EA/OE digraph patterns, NOT English)
+> - Even after refining hill-climbed keys to pass all singleton constraints, text remains gibberish
 
-| Page | Keyword | Mode | IoC |
-|------|---------|------|-----|
-| 21 | CABAL | Beaufort | 1.9728 |
-| 22 | DIVINITY | Beaufort | 1.8671 |
-| 23 | ENCRYPTION | ADD | 2.0044 |
-| 24 | OBSCURA | Beaufort | 2.0622 |
-| 25 | CABAL | Beaufort | 1.8920 |
-| 26 | ENCRYPT | ADD | 1.9844 |
-| 27 | SHADOWS | ADD | 2.1043 |
-| 28 | DEOR | SUB | 2.0678 |
-| 29 | TOTIENT | Beaufort | 2.1184 |
-| 30 | MOURNFUL | ADD | 1.9756 |
+**Raw ciphertext IoC: ≈ 1.0 (indistinguishable from random)**
 
-**Remaining problem:** An additional transformation layer (transposition, word-level rearrangement, or multi-stage) is needed beyond keyword decryption.
+| Page | Runes | Singletons | Raw IoC | Best Method Found |
+|------|-------|------------|---------|-------------------|
+| 21 | 273 | 7 | ~1.0 | NONE — all tested methods produce IoC ≈ 1.0 |
+| 22 | 131 | 2 | ~1.0 | NONE |
+| 23 | 333 | 0 | ~1.0 | NONE |
+| 24 | 270 | 9 | ~1.0 | NONE |
+| 25 | 1729 | 0 | ~1.0 | NONE |
+| 26 | 265 | 4 | ~1.0 | NONE |
+| 27 | 234 | 3 | ~1.0 | NONE (P27 = P44[0:234], confirmed 100% match) |
+| 28 | 269 | 12 | ~1.0 | NONE (strongest singleton constraint page) |
+| 29 | 277 | 8 | ~1.0 | NONE |
+| 30 | 263 | 8 | ~1.0 | NONE |
+
+**The cipher for P21-54 is NOT standard Vigenère, NOT autokey, NOT LFSR, NOT any tested mathematical stream, and NOT a simple combination of keyword + stream.** See §10 for comprehensive list of failed approaches.
 
 ### Pages 31–54: Caesar Shift Identified
 
@@ -399,6 +404,30 @@ Every single-rune word in plaintext must be I (index 10) or A (index 24). This c
 ```
 key[i] = (cipher_rune - 10) % 29  OR  key[i] = (cipher_rune - 24) % 29
 ```
+
+---
+
+## RECENT AUTOMATION LOG
+
+- `Tools/p25_liberal_offset_sweep.py` executed: coarse sweep 0..5000 step 100, refined ±200 around top coarse offsets. Output saved to `data/p25_offset_results.txt`.
+- Recommendation: inspect `data/p25_offset_results.txt` and run a hillclimb/substitution on the top 5 offsets (modes beaufort/sub) to attempt readable plaintext.
+
+- `Tools/hillclimb_substitute.py` executed against `data/p24_candidates_processed/`; output: `data/p24_hillclimb_results.txt`.
+- Best P24 candidate after hillclimb: `candidate_w14_s25.txt` produced a top-scoring partial decode (see `data/p24_hillclimb_results.txt`).
+
+- `Tools/p25_hillclimb.py` executed: parsed top offsets from `data/p25_offset_results.txt`, decrypted candidates with Liber AL running key, ran substitution hillclimb, and saved results to `data/p25_hillclimb_results.txt`.
+- Top offsets processed: see `data/p25_hillclimb_results.txt` (includes multiple offsets/modes; highest scored partial decodes noted there).
+
+- `Tools/p24_refine.py` executed: deep hillclimb on `candidate_w14_s25.txt` produced `data/p24_refine_results.txt` with improved partial decode (SCORE=145). Output begins with: "THARJMFKPN WRO APPLE WRO TOMENTFNFGFMT ..." — suggests partial words like `APPLE` present.
+
+- `Tools/p24_apply_targeted_map.py` executed: extracted the `APPLE` alignment from `data/p24_refine_results.txt`, applied cipher→plaintext mapping to `candidate_w14_s25.txt`, and saved partial reveal to `data/p24_targeted_map_applied.txt` (SCORE=325). Result shows several letters resolved; file contains masked output with underscores for unmapped letters.
+
+- `Tools/p24_seeded_hillclimb.py` executed: used the mapped letters from `data/p24_targeted_map_applied.txt` as fixed seeds and ran a constrained hillclimb to fill remaining letters; output saved to `data/p24_seeded_refine.txt` (SCORE=89). The seeded run produced more readable short words (`ZEL`/`BTHEWQANUP`) but overall score decreased compared with aggressive free hillclimb — next step: run constrained hillclimb but allow some seed relaxation to improve global score.
+
+
+
+
+
 
 ### 8.5 Fibonacci Spiral Reading Order
 From the seventh onion site 4×4 grid: subtracting each number from 3301 yields primes whose ordinal positions form the Fibonacci sequence. The Fibonacci sequence traces a spiral path through the grid. Pages may need spiral/non-linear reading order.
@@ -627,6 +656,78 @@ Page 57 Parable contains "CIRCUMFERENCE" — this word also appears in Onion 6 p
 | ❌ GPU batch attack (2900 keys × all modes) | No readable English on any unsolved page |
 | ❌ Affine ciphers (a=3..28, b=0..28) | Best ~926 (P18), all gibberish |
 
+### Session 6-7 Additions (2026-03) — Comprehensive Testing
+
+#### LFSR Stream Ciphers (Algebraic solver with singleton constraint)
+| Method | Result |
+|--------|--------|
+| ❌ LFSR(2) over GF(29): 841 tap combos × 3 modes × all pages | 0 candidates on ALL unsolved pages (P06 validated: correct solution found) |
+| ❌ LFSR(3) over GF(29): 24389 tap combos × 3 modes × all pages | 0 candidates on ALL unsolved pages (P06 validated: 2496 candidates including correct) |
+
+#### P63 Keywords on P21-30 (Definitive re-test)
+| Method | Result |
+|--------|--------|
+| ❌ ALL 20 P63 keywords × ALL modes (sub/add/beaufort) × P21-30 | ALL produce IoC ≈ 1.0 (random) on EVERY page |
+| ❌ Verified keys (71/83-element hill-climbed) | IoC 1.96-4.47 BUT text is repetitive TH/EA/OE digraph gibberish |
+| ❌ Refined verified keys (singleton-fixed) | All singletons pass with 2-9 key changes, text STILL gibberish |
+| ❌ P63 keywords with F-skip | IoC improves to ~1.08-1.13 max, still gibberish |
+
+#### Combined Cipher (Keyword + Stream)
+| Method | Result |
+|--------|--------|
+| ❌ Keyword Vigenère + totient stream (all keywords × modes × offsets 0-100) | 0 significant hits on ANY page |
+| ❌ Keyword Vigenère + prime_mod stream (same) | 0 significant hits |
+
+#### Autokey Cipher (Comprehensive)
+| Method | Result |
+|--------|--------|
+| ❌ Plaintext-feedback autokey (sub/add/beaufort) × all P63 keywords × P21-54 | 0 hits with IoC > 1.3 and all singletons passing |
+| ❌ Ciphertext-feedback autokey (sub/add/beaufort) × all keywords × P21-54 | 0 hits |
+| ❌ Brute-force autokey seeds length 2 (841 × 6 modes × 34 pages) | 0 hits |
+| ❌ Brute-force autokey seeds length 3 (24389 × 6 modes × 23 pages) | 0 hits |
+
+#### Two-Time Pad & Running Key Analysis
+| Method | Result |
+|--------|--------|
+| ❌ Pairwise ciphertext differences (all 561 unsolved page pairs) | NO pairs with IoC > 1.3 except P27=P44 (trivially identical) |
+| ❌ Solved LP plaintext (cleartext pages concatenated) as running key | Best IoC 1.46 on P54 (76 runes — short page noise) |
+| ❌ Full LP rune stream (13136 runes) as running key | P39 trivially matches itself; no real solutions |
+| ❌ Emerson essays (430K GP values) as running key | Best IoC ~1.03 with 4/7 singletons |
+| ❌ Self-Reliance (43K GP values) as running key | All IoC ≈ 1.0 |
+| ❌ Liber AL vel Legis (8.7K GP values) as running key | All IoC ≈ 1.0 |
+| ❌ Deor poem (2.3K GP values) as running key | All IoC ≈ 1.0 |
+
+#### Singleton-Constrained Key Stream Search (100K offsets)
+| Method | Result |
+|--------|--------|
+| ❌ φ(prime[n]) % 29 (totient of primes), offsets 0-100K × 3 modes | 0 hits for pages with 6+ singletons |
+| ❌ prime[n] % 29, offsets 0-100K × 3 modes | 0 hits |
+| ❌ Cumulative prime sum mod 29 | 0 hits |
+| ❌ Prime gaps mod 29 | 0 hits |
+| ❌ Fibonacci mod 29 | 0 hits |
+| ❌ prime[n]² mod 29 | 0 hits |
+| ❌ prime[n] × n mod 29 | 0 hits |
+| ❌ φ(n) for all integers (not just primes) | 0 hits |
+| ❌ Sequential integers mod 29 (control) | 0 hits |
+
+#### Keyword-Stepped Prime Streams ("Rearranging Primes")
+| Method | Result |
+|--------|--------|
+| ❌ Cumulative keyword step through prime table (20 kw × 1001 offsets) | 0 hits |
+| ❌ Multiplicative keyword × position index | 0 hits |
+| ❌ Prime-indexed keyword selector | 0 hits |
+| ❌ Keyword + sequential totient (additive) | 0 hits |
+| ❌ Fibonacci recurrence seeded by keyword | 0 hits |
+| ❌ Keyword XOR position as prime index | 0 hits |
+
+#### Structural Analysis
+| Finding | Detail |
+|---------|--------|
+| ✅ P27 = P44[0:234] confirmed | 100% match, 234/234 runes identical. Cipher is NOT page-number dependent. |
+| ✅ No two-time pad detected | No unsolved page pairs share a key stream |
+| ✅ Outguess binaries (P17/P21/P43) | 58,152 bytes each, shared 1417-byte GPG header, NOT valid OpenPGP, require unknown passphrase |
+| ✅ P08 bigram grid | "For those who have fallen behind" hint — STILL UNDECODED |
+
 ### Page 00 (After Key Length 113 Decryption)
 | Method | Result |
 |--------|--------|
@@ -655,58 +756,68 @@ Page 57 Parable contains "CIRCUMFERENCE" — this word also appears in Onion 6 p
 
 ## 11. ACTIVE HYPOTHESES & NEXT STEPS
 
-### Priority 1: Word-Level Anagram (Pages 21–30) ⭐⭐⭐⭐⭐
-Letters are correct but order is wrong. P19 says "REARRANGING" explicitly.
-- Extract words using rune hyphens as boundaries
-- Reconstruct sentences using word frequency / n-gram statistics
-- Try magic square path as reading/rearranging order
+> **Session 7 Assessment (2026-03):** After exhaustive computational testing of all known cipher families (Vigenère, LFSR, autokey, stream ciphers, combined ciphers, running keys, keyword-stepped streams), NO approach has produced readable English for ANY unsolved page (P21-54). The cipher produces IoC ≈ 1.0 (random), which means the effective key length is comparable to the message length. The key source is NOT any tested mathematical function of primes, Fibonacci, totients, or any combination thereof.
 
-### Priority 2: P43 + P00 Key Relationship ⭐⭐⭐⭐⭐
-P00 runes as Vigenère ADD key → IoC 2.0632 (highest signal in any unsolved page).
-- Perform word-level analysis of the decrypted output
-- Try reverse: P43 as key for P00's second layer
-- Test P00 as key for other short unsolved pages
+### Priority 1: Decode P08 Outguess Bigram Grid ⭐⭐⭐⭐⭐
+The P08 outguess data is literaly a hint from Cicada: "For those who have fallen behind."
+```
+TL BE IE OV UT HT RE ID TS EO ST PO SO YR 
+SL BT II IY T4 DG UQ IM NU 44 2I 15 33 9M
+```
+14 pairs per row. NEVER DECODED. This is the most likely path to the solution.
+- Test as Polybius square coordinates
+- Test as Playfair cipher examples
+- Test as substitution table (plaintext→ciphertext bigram mapping)
+- Analyze relationship to GP digraphs (EO is GP index 12)
 
-### Priority 3: 1331 Triangle (P00, P48, P54) ⭐⭐⭐⭐
-All three pages have distance sum 1331 (= 11³) from Parable (P57).
-- Investigate shared encryption framework
-- Use Parable as second-layer key with page-specific offsets
-- Explore the 3-6-9 pattern in page number differences
+### Priority 2: Decrypt Outguess Binary Data ⭐⭐⭐⭐⭐
+P17, P21, P43 each contain 58,152 bytes of GPG-like encrypted binary.
+- Shared 1,417-byte header (identical across all 3)
+- P21 and P43 share 2,004 bytes of prefix
+- NOT valid OpenPGP packets (tag byte 0xC0 = reserved)
+- Possible passphrases: cookie primes (167, 761), P.S. number, keywords
+- May contain actual key material for decrypting LP pages
 
-### Priority 4: Running Key Chain (P11-P12 evidence) ⭐⭐⭐⭐
-P11[47:82] = P12[48:83] — 35-element overlap with 1-position shift.
-- **Blocker:** Requires understanding the master key stream source
-- Test if P10 and P13 keys follow the same pattern
-- If continuous key: could predict key for unsolved pages
+### Priority 3: Running Key from Unidentified Text ⭐⭐⭐⭐
+IoC ≈ 1.0 implies long key (OTP-like). Tested sources that FAILED:
+- Emerson essays, Self-Reliance, Deor, Liber AL, LP text itself
+- All P63 keywords × all modes × all offsets
+Untested sources to try:
+- Tao Te Ching, Bhagavad Gita, other mystical/philosophical texts
+- Cicada's own PGP-signed messages (concatenated)
+- The 131-digit P.S. number as key material
+- Guitar tones from 3301.txt
+- 7×7 magic square values from OpenPuff
 
-### Priority 5: Find Wisdom Page for Pages 31–54 ⭐⭐⭐⭐
-The self-referential pattern (P63→P21-30) predicts another reference page for this block.
-- Scan P55-74 for pages with grid structures, keyword lists, or unusual patterns
-- Check if any solved page content contains hidden keys for P31-54
-- P74's instruction section is LONGER than P56 — may contain additional clues
+### Priority 4: P11-P12 Running Key Evidence ⭐⭐⭐⭐
+P11 key positions [47:82] = P12 key positions [48:83] (35-element overlap, 1-position shift).
+- Proves continuous key stream across pages
+- Need to verify if these are genuine keys (P10-13 should be cleartext)
+- If genuine: extends to P21-54 with correct offsets
 
-### Priority 6: 95-Element Master Key + Offset ⭐⭐⭐
-Each page needs a different offset. Best results: P30 (score 303), P28 (score 234).
-- Derive offsets from page properties (rune count, prime index, structural position)
-- Focus on P28 (closest to solved) to crack the offset formula
-- Test if offsets follow Fibonacci, prime, or GP-index sequence
+### Priority 5: Non-Substitution Cipher ⭐⭐⭐⭐
+Maybe the cipher isn't position-by-position substitution at all.
+- ADFGVX/fractionation cipher adapted to mod-29
+- Columnar transposition of ONE long message spanning multiple pages
+- Multiplicative cipher over GF(29)
+- Block cipher operations (rounds, S-boxes adapted to mod-29)
 
-### Priority 7: Outguess Data Analysis ⭐⭐⭐
-P17, P21, P43 contain PGP-signed hex data never fully analyzed.
-- Extract and analyze for keys, hints, or additional ciphertext
-- P67 SHA-512 hash may point to a deep web page with additional information
+### Priority 6: Page Image Analysis ⭐⭐⭐
+The JPG images may contain information beyond the rune text:
+- Visual patterns, watermarks, or hidden elements
+- Byte-level analysis of image files  
+- Comparison of P27 and P44 images for differences (same ciphertext, different pages)
+- Check all page images with steganalysis beyond outguess
 
-### Priority 8: LFSR Stream Cipher ⭐⭐⭐
-Near-uniform frequency in P31-54 suggests LFSR, not standard Vigenère.
-- Try LFSR with polynomial degree from key lengths (47, 53)
-- Use telnet gap primes as tap positions
-- Use P63 grid numbers or keywords as seed
+### Priority 7: P43 + P00 / 1331 Triangle ⭐⭐⭐
+- P00 runes as Vigenère ADD key for P43 → IoC 2.0632 (possibly artifact of short text)
+- Pages 0, 48, 54: distance sum = 1331 (11³) from Parable (P57)
+- P27 = P44[0:234] confirmed — cipher is NOT page-number dependent
 
-### Priority 9: Page 00 Second Layer ⭐⭐
-Old English output confirmed (FLETH, HATHEN, THEON). Needs:
-- Full Old English → Modern English translation
-- Check if a second cipher transforms OE to ME
-- Compare structure to Deor poem or other OE texts
+### Priority 8: Community Collaboration ⭐⭐⭐
+- CicadaSolvers Discord may have newer findings (post-2025)
+- The `rtkd/iddqd` GitHub repo may have additional tools or analysis
+- Stanford/academic cryptanalysis tools (CrypTool, etc.)
 
 ---
 

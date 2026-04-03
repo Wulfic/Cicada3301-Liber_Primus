@@ -1,0 +1,281 @@
+======================================================================
+P21-30 SECOND LAYER ANALYSIS
+======================================================================
+
+======================================================================
+PAGE 21: 273 runes, 60 words
+  Keyword: CABAL = [5, 24, 17, 24, 20] (len 5), Mode: beaufort
+  F-rune positions in ciphertext: [41, 84, 93, 105, 160, 223, 259, 263] (8 total)
+
+  [No F-skip] IoC=0.9943 | Singles: 1/7
+    Text: FEAE USEA NGWEO JEOELMEFOE IAIA WIW R TMYSUEAOOENGWJ ATHIA MIAUEA APYF E GANGWXNGJXIAG UEAMUAIA RR IIANGB IAWF SGBDETHODSTHN CLOISEACNGIAX A...
+    Single@22: R (FAIL)
+    Single@45: E (FAIL)
+    Single@93: A (OK)
+    Single@151: AE (FAIL)
+    Single@203: EA (FAIL)
+    Single@217: NG (FAIL)
+    Single@234: J (FAIL)
+
+  [Best IoC F-skip] IoC=1.0857 (mask: [41, 105, 160, 223, 259, 263])
+    Singles: 1/7
+    Text: FEAE USEA NGWEO JEOELMEFOE IAIA WIW R TMYSUEAOOENGWJ ATHIA MIAUEA FLMR R TTHXJFTHEWTHNG JGEOCIH JY XPMPI THOEI OEEANGNEANAEIAUEOT IAAELOENGNWHNG B...
+
+  --- Second-layer transforms (on standard Vigenere result) ---
+
+    Word rearrangement (60 words):
+    Prime words (0-idx): NGWEO JEOELMEFOE WIW TMYSUEAOOENGWJ E UEAMUAIA SGBDETHODSTHN A RTCEO MNGGOEEAGN AE ID ONGPEAEUNE BWS AEXETEHAE...
+    Non-prime words (0-idx): FEAE USEA IAIA R ATHIA MIAUEA APYF GANGWXNGJXIAG RR IIANGB IAWF CLOISEACNGIAX WEONEAEAHSRRS OECMHNGNMY NGPEIAE...
+    Prime words (1-idx): USEA NGWEO IAIA R APYF GANGWXNGJXIAG IAWF CLOISEACNGIAX NGPEIAE UGNG HPTHRB OENGF WMO AER RTDAEEAOE...
+    Reversed words: AJOEOCJTHX LEAJSAE DEAIFFJPYGY MB EATHOEBYYD EACIOETH J AEAE BWFITHX GAREA NGGMNG NG AEXETEHAE RTDAEEAOE EA...
+    Magic square order (first 25 words): MIAUEA IIANGB GANGWXNGJXIAG TMYSUEAOOENGWJ SGBDETHODSTHN JEOELMEFOE OECMHNGNMY USEA RTCEO IAIA WEONEAEAHSRRS R CLOISEACNGIAX APYF RR E UEAMUAIA FEAE CI ATHIA IAWF NGWEO NGPEIAE WIW A
+
+======================================================================
+PAGE 22: 131 runes, 32 words
+  Keyword: DIVINITY = [23, 10, 10, 9, 10, 16, 26] (len 7), Mode: beaufort
+  F-rune positions in ciphertext: [13, 51, 55, 119, 124, 128] (6 total)
+
+  [No F-skip] IoC=0.9638 | Singles: 0/2
+    Text: THL FO EAI NGLHNGWEA MY NGCEAJNGS EOEO CTHIAGC THSUH ER EOA GSWLNESTDGTH B XNGRHIPTH EYAPSWMFNOEE NGDLEO THTOE ONGLEOBRTHLEAUNGO AENGW FOE...
+    Single@46: B (FAIL)
+    Single@110: IA (FAIL)
+
+  [Best IoC F-skip] IoC=1.2022 (mask: [13, 51, 55, 119, 124])
+    Singles: 0/2
+    Text: THL FO EAI NGLHNGWEA MF AEEAEOLN THS ETHEACEA NGEXH MO GX NEAWNGHEOCMWGO T HJWNGFXTH JFJMTHNGMDNGNA HHLG XOEA MGLGFLHWPUSS EOIAD XOEO...
+
+  --- Second-layer transforms (on standard Vigenere result) ---
+
+    Word rearrangement (32 words):
+    Prime words (0-idx): EAI NGLHNGWEA NGCEAJNGS CTHIAGC GSWLNESTDGTH XNGRHIPTH ONGLEOBRTHLEAUNGO FOE BJIS NGHT IFAE...
+    Non-prime words (0-idx): THL FO MY EOEO THSUH ER EOA B EYAPSWMFNOEE NGDLEO THTOE AENGW AEEO HJ ECIGJ...
+    Prime words (1-idx): FO EAI MY EOEO EOA B THTOE AENGW ECIGJ EADAU XTHJ...
+    Reversed words: IFAE XTHJ NGHT EADAU MGYRBOE IA ROEW REOYS BJIS ECIGJ HJ AEEO FOE AENGW ONGLEOBRTHLEAUNGO...
+    Magic square order (first 25 words): ER NGDLEO B CTHIAGC ONGLEOBRTHLEAUNGO NGLHNGWEA HJ FO BJIS MY AEEO EOEO AENGW EOA EYAPSWMFNOEE GSWLNESTDGTH XNGRHIPTH THL REOYS THSUH THTOE EAI ECIGJ NGCEAJNGS FOE
+
+======================================================================
+PAGE 23: 333 runes, 79 words
+  Keyword: ENCRYPTION = [18, 9, 5, 4, 26, 13, 16, 10, 3, 9] (len 10), Mode: add
+  F-rune positions in ciphertext: [53, 85, 149] (3 total)
+
+  [No F-skip] IoC=0.9805 | Singles: 0/2
+    Text: PAEMNG T MXAEL DU SXOOEMHR BIACEOJTH ENGO SPG FAE IAWCBIA SNGWNG OFLDXAEXS CXMDRESA APTHRM AEA IAANGAEIES EOEEU REOOMW FOEA IAEOPG...
+    Single@4: T (FAIL)
+    Single@273: EO (FAIL)
+
+  [Best IoC F-skip] IoC=1.0005 (mask: [149])
+    Singles: 0/2
+    Text: PAEMNG T MXAEL DU SXOOEMHR BIACEOJTH ENGO SPG FAE IAWCBIA SNGWNG OFLDXAEXS CXMDRESA APTHRM AEA IAANGAEIES EOEEU REOOMW FOEA IAEOPG...
+
+  --- Second-layer transforms (on standard Vigenere result) ---
+
+    Word rearrangement (79 words):
+    Prime words (0-idx): MXAEL DU BIACEOJTH SPG OFLDXAEXS APTHRM REOOMW IAEOPG FXTHEIA EONGH RXGNFJ WEOW AEG HFBOE FTHJLHDO...
+    Non-prime words (0-idx): PAEMNG T SXOOEMHR ENGO FAE IAWCBIA SNGWNG CXMDRESA AEA IAANGAEIES EOEEU FOEA OI ONAE JH...
+    Prime words (1-idx): T MXAEL SXOOEMHR ENGO SNGWNG CXMDRESA EOEEU FOEA JH EAFPFJEA UCY NGJD MAHHTB XGCTYOEBEAOYAN XNGX...
+    Reversed words: AHA BH EDNG THNGGOE ONG CSIA WECYETWEOUHO IAE NGEAEBXL BXHTSC IAPAE EAOENG UMAEAE LLFGIC EO...
+    Magic square order (first 25 words): IAWCBIA IAANGAEIES CXMDRESA SPG REOOMW DU ONAE T FXTHEIA SXOOEMHR OI ENGO FOEA SNGWNG AEA OFLDXAEXS APTHRM PAEMNG GUWAECC FAE EOEEU MXAEL JH BIACEOJTH IAEOPG
+
+======================================================================
+PAGE 24: 270 runes, 73 words
+  Keyword: OBSCURA = [3, 17, 15, 5, 1, 4, 24] (len 7), Mode: beaufort
+  F-rune positions in ciphertext: [2, 35, 83, 100, 108, 135, 137, 151, 161, 183, 206, 223] (12 total)
+
+  [No F-skip] IoC=0.9926 | Singles: 0/9
+    Text: NPS TMH SIANH OEOLAEAE IAA IAHYAE H HL FG IARUFEOIAF IAROTHW AETEOC XSXP O LIATH ONEA DIXB SBWBEAFF TAER TUIAAU...
+    Single@21: H (FAIL)
+    Single@46: O (FAIL)
+    Single@114: E (FAIL)
+    Single@135: S (FAIL)
+    Single@157: X (FAIL)
+    Single@180: H (FAIL)
+    Single@224: T (FAIL)
+    Single@225: E (FAIL)
+    Single@257: B (FAIL)
+
+  [Best IoC F-skip] IoC=1.1316 (mask: [2, 35, 83, 100, 161, 223])
+    Singles: 0/9
+    Text: NPF YDC AMAI OWBCB PY HEODC F DOE II APOESXHR APFNA HUPJ SOETHAE B NGRO IYJ HJLE OECMTHFGU DPT UTHRAEH...
+
+  --- Second-layer transforms (on standard Vigenere result) ---
+
+    Word rearrangement (73 words):
+    Prime words (0-idx): SIANH OEOLAEAE IAHYAE HL AETEOC O SBWBEAFF TUIAAU WAEA WS XY S AHJ X CO...
+    Non-prime words (0-idx): NPS TMH IAA H FG IARUFEOIAF IAROTHW XSXP LIATH ONEA DIXB TAER EONJO NGDUTBHTAOER AMNHM...
+    Prime words (1-idx): TMH SIANH IAA H IAROTHW XSXP DIXB TAER AMNHM E ELEOA MA CWG UWPOEUU OEXH...
+    Reversed words: ITNGOBEAOA LJEOE B REO FWDASCIA AG ECAEL AETWF CD GAESTHWEO DTHOE E T CA FD...
+    Magic square order (first 25 words): IARUFEOIAF ONEA XSXP HL SBWBEAFF OEOLAEAE NGDUTBHTAOER TMH WAEA IAA EONJO H TAER IAROTHW LIATH AETEOC O NPS RIAMSCTHST FG DIXB SIANH AMNHM IAHYAE TUIAAU
+
+======================================================================
+PAGE 25: 1729 runes, 383 words
+  Keyword: CABAL = [5, 24, 17, 24, 20] (len 5), Mode: beaufort
+  F-rune positions in ciphertext: [34, 161, 183, 189, 192, 196, 203, 245, 278, 293, 317, 318, 341, 388, 392, 441, 459, 480, 509, 563, 594, 659, 679, 683, 686, 763, 802, 807, 827, 852, 872, 881, 885, 888, 905, 956, 986, 989, 1003, 1022, 1098, 1115, 1121, 1137, 1156, 1162, 1174, 1203, 1206, 1293, 1297, 1309, 1322, 1350, 1356, 1370, 1380, 1410, 1413, 1445, 1458, 1463, 1507, 1567, 1594, 1690] (66 total)
+
+  [No F-skip] IoC=0.9943 | Singles: 4/11
+    Text: LXOC MLCEOOEWTHW MSR GI RLD THMECEAEAIYD EAAHX PLP NYSY THC CEA TJBUPE HOETH EADTNOTHO GLC JEARJ XOEG ITALEARGP IAFLR MRT...
+    Single@274: I (OK)
+    Single@501: NG (FAIL)
+    Single@554: I (OK)
+    Single@602: H (FAIL)
+    Single@692: J (FAIL)
+    Single@785: A (OK)
+    Single@1128: I (OK)
+    Single@1221: IA (FAIL)
+    Single@1348: D (FAIL)
+    Single@1401: B (FAIL)
+    Single@1473: P (FAIL)
+
+  [F-skip] Too many F positions (66) ΓÇö skipping exhaustive search
+
+  --- Second-layer transforms (on standard Vigenere result) ---
+
+    Word rearrangement (383 words):
+    Prime words (0-idx): MSR GI THMECEAEAIYD PLP TJBUPE EADTNOTHO ITALEARGP MRT CH UAEOYAEEOOCEIA AETHANXSJEAHFAEP NOGNGTRMWUD TUAFN NGNGAESTHTBH SYBNGHOEOEYTH...
+    Non-prime words (0-idx): LXOC MLCEOOEWTHW RLD EAAHX NYSY THC CEA HOETH GLC JEARJ XOEG IAFLR NGBCS NGILOO DMTTR...
+    Prime words (1-idx): MLCEOOEWTHW MSR RLD EAAHX CEA HOETH XOEG IAFLR DMTTR TLYAP XBMRIS SRAEBEOE SALONF GSNFTHD THU...
+    Reversed words: NAERFRT THY TDNXTHNGEX EOLSNGNGU AEPY FTH GIGNLDGEO SOECYTN GWJA IDJ EUSBEOBEAR LOE THYIAIEA PAETEAOC MFN...
+    Magic square order (first 25 words): THC JEARJ HOETH PLP ITALEARGP GI NGILOO MLCEOOEWTHW CH RLD NGBCS EAAHX IAFLR CEA GLC TJBUPE EADTNOTHO LXOC EHD NYSY XOEG MSR DMTTR THMECEAEAIYD MRT
+
+======================================================================
+PAGE 26: 265 runes, 69 words
+  Keyword: ENCRYPT = [18, 9, 5, 4, 26, 13, 16] (len 7), Mode: add
+  F-rune positions in ciphertext: [35, 73, 77, 98, 105, 164, 205, 228, 258] (9 total)
+
+  [No F-skip] IoC=0.9783 | Singles: 0/4
+    Text: T EOXOF APUDREAA OEIIB EOCJ B IBWB JX SSOEIAGEOIF EAE OEXMHOE N HP AEWJWIEEAEAIM AECJLNG EOEAS AX RDIA THUGSURFDU ER...
+    Single@0: T (FAIL)
+    Single@20: B (FAIL)
+    Single@42: N (FAIL)
+    Single@197: IA (FAIL)
+
+  [Best IoC F-skip] IoC=1.1159 (mask: [35, 73, 77, 98, 105, 205, 228])
+    Singles: 0/4
+    Text: T EOXOF APUDREAA OEIIB EOCJ B IBWB JX SSOEIAGEOIF FC YSYNGM W BB YXARHIAOFBO OEOLAOE MEOEO OED HAC SIARACFHXJ FH...
+
+  --- Second-layer transforms (on standard Vigenere result) ---
+
+    Word rearrangement (69 words):
+    Prime words (0-idx): APUDREAA OEIIB B JX N AEWJWIEEAEAIM RDIA ER JSTHIGM INGLH EAMIA LEOUAEX WEA HY IXFBGJ...
+    Non-prime words (0-idx): T EOXOF EOCJ IBWB SSOEIAGEOIF EAE OEXMHOE HP AECJLNG EOEAS AX THUGSURFDU RHN TYEOAAE GSUEA...
+    Prime words (1-idx): EOXOF APUDREAA EOCJ IBWB OEXMHOE HP AX THUGSURFDU GSUEA IAPEHEA PAY IAAETH THTH YGRNGBS FS...
+    Reversed words: FSNGAEHC PRT BYY THM RTHER WNGP OEAAEYBM OTH PHN LYBAE RCTHAEF IAA WTHNG NGWUPNU YNI...
+    Magic square order (first 25 words): EAE EOEAS HP JX RDIA OEIIB TYEOAAE EOXOF JSTHIGM EOCJ RHN IBWB THUGSURFDU OEXMHOE AECJLNG N AEWJWIEEAEAIM T EEXA SSOEIAGEOIF AX APUDREAA GSUEA B ER
+
+======================================================================
+PAGE 27: 234 runes, 57 words
+  Keyword: SHADOWS = [15, 8, 24, 23, 3, 7, 15] (len 7), Mode: add
+  F-rune positions in ciphertext: [27, 35, 54, 61, 68, 111, 128, 169, 202, 214, 233] (11 total)
+
+  [No F-skip] IoC=0.9489 | Singles: 0/3
+    Text: CNGNG XEIIJTSEOSBCG EAIEAT T DNGNOETHR AS NMAE JNGB JS NG LWC JCGP EOFFYXOR RAE OEW PXPEOFEAW RYEOIA WL WOE LEAOEW...
+    Single@19: T (FAIL)
+    Single@36: NG (FAIL)
+    Single@144: AE (FAIL)
+
+  [Best IoC F-skip] IoC=1.0797 (mask: [27, 35, 54, 111, 128, 214, 233])
+    Singles: 0/3
+    Text: CNGNG XEIIJTSEOSBCG EAIEAT T DNGNOETHR AF NYN EOEOP OF EA JNGY IAOEIAL OXNGPTHAJ AI XF NGTHEOONGRA EOXJE EAAE AJG MMXEO...
+
+  --- Second-layer transforms (on standard Vigenere result) ---
+
+    Word rearrangement (57 words):
+    Prime words (0-idx): EAIEAT T AS JNGB JCGP RAE WL LEAOEW THEO SIAE UTHLAETH AE THTH UTHIMEY TIXJMOIANNGE...
+    Non-prime words (0-idx): CNGNG XEIIJTSEOSBCG DNGNOETHR NMAE JS NG LWC EOFFYXOR OEW PXPEOFEAW RYEOIA WOE GNG REA WIAEOOEEEPMEOFAER...
+    Prime words (1-idx): XEIIJTSEOSBCG EAIEAT DNGNOETHR NMAE LWC EOFFYXOR RYEOIA WOE WIAEOOEEEPMEOFAER IAI SGDAE OEBDEOSEX NGL OEAH SEA...
+    Reversed words: ANGA HEOOEOHEOTH BTNGA DIA HBOYWD GMLE THBBIA FEASO RNJMAEXCXEAP TIXJMOIANNGE SEA HPMHGGWCBRNJ NGXE UTHIMEY OEAH...
+    Magic square order (first 25 words): NG PXPEOFEAW EOFFYXOR JNGB WL T REA XEIIJTSEOSBCG THEO DNGNOETHR GNG NMAE WOE LWC OEW JCGP RAE CNGNG AEL JS RYEOIA EAIEAT WIAEOOEEEPMEOFAER AS LEAOEW
+
+======================================================================
+PAGE 28: 269 runes, 67 words
+  Keyword: DEOR = [23, 12, 4] (len 3), Mode: sub
+  F-rune positions in ciphertext: [42, 68, 79, 110, 128, 130, 145, 151, 164, 182, 188, 207] (12 total)
+
+  [No F-skip] IoC=1.0282 | Singles: 0/12
+    Text: MOE WHCGP JOIATDPH OBYLEA RMLX XIJ FOEFGJU B HITHBM OENG TR GCT T PTFTHL TATH DLOST JAWPNG OEOHIAEXP MWIAPF FBMBG...
+    Single@32: B (FAIL)
+    Single@45: T (FAIL)
+    Single@94: EA (FAIL)
+    Single@161: W (FAIL)
+    Single@162: D (FAIL)
+    Single@163: O (FAIL)
+    Single@187: S (FAIL)
+    Single@207: G (FAIL)
+    Single@229: EA (FAIL)
+    Single@233: S (FAIL)
+    Single@246: C (FAIL)
+    Single@247: TH (FAIL)
+
+  [Best IoC F-skip] IoC=1.1078 (mask: [68, 79, 110, 128, 130, 164, 182, 188, 207])
+    Singles: 0/12
+    Text: MOE WHCGP JOIATDPH OBYLEA RMLX XIJ FOEFGJU B HITHBM OENG TR GCT T PTFTHL TATH DLOST JAWPNG OEOHIFRTH JYTCM ENNFT...
+
+  --- Second-layer transforms (on standard Vigenere result) ---
+
+    Word rearrangement (67 words):
+    Prime words (0-idx): JOIATDPH OBYLEA XIJ B GCT PTFTHL OEOHIAEXP FBMBG GOEWJTHTHEAO HIAECIATAESB CEOGWH W JT EAIAWAE OETMNG...
+    Non-prime words (0-idx): MOE WHCGP RMLX FOEFGJU HITHBM OENG TR T TATH DLOST JAWPNG MWIAPF EAEOEOE AEFAYUMSNF EA...
+    Prime words (1-idx): WHCGP JOIATDPH RMLX FOEFGJU TR T JAWPNG MWIAPF EA CMEO EAAEOC ABFGCP AEAD ISDIABOEEOYTM AEONEAC...
+    Reversed words: NGWLRTHIAR PEANG CIATEATRND EO TH C JTHU BMJP RHS EEO S YEOT EA AMEAMSIEAWYOAE EALDCOD...
+    Magic square order (first 25 words): OENG DLOST T B OEOHIAEXP OBYLEA AEFAYUMSNF WHCGP GOEWJTHTHEAO RMLX EAEOEOE FOEFGJU MWIAPF TR TATH GCT PTFTHL MOE EOWAESX HITHBM JAWPNG JOIATDPH EA XIJ FBMBG
+
+======================================================================
+PAGE 29: 277 runes, 79 words
+  Keyword: TOTIENT = [16, 3, 16, 10, 18, 9, 16] (len 7), Mode: beaufort
+  F-rune positions in ciphertext: [40, 87, 88, 90, 184, 222, 234, 246] (8 total)
+
+  [No F-skip] IoC=0.9749 | Singles: 1/8
+    Text: XNI NTHEFM THA RAEXF CUM XIX EAA USGDFOE GJL MOEO NGSM UOEN AEUS OBDT OEIIMAEEOE UBOE JBHWONE IAN AEIAA UTHA...
+    Single@93: J (FAIL)
+    Single@102: S (FAIL)
+    Single@138: A (OK)
+    Single@155: P (FAIL)
+    Single@185: C (FAIL)
+    Single@209: AE (FAIL)
+    Single@230: C (FAIL)
+    Single@231: H (FAIL)
+
+  [Best IoC F-skip] IoC=1.1053 (mask: [40, 87, 88, 184, 222])
+    Singles: 0/8
+    Text: XNI NTHEFM THA RAEXF CUM XIX EAA USGDFOE GJL MOEO NGSM UOEF EUEA MDSAE SIDGTHRIA DBG IADFTAENTH XS BWB USJ...
+
+  --- Second-layer transforms (on standard Vigenere result) ---
+
+    Word rearrangement (79 words):
+    Prime words (0-idx): THA RAEXF XIX USGDFOE UOEN OBDT IAN UTHA NG S AU EDYFY LLBJEONY EOEAF GA...
+    Non-prime words (0-idx): XNI NTHEFM CUM EAA GJL MOEO NGSM AEUS OEIIMAEEOE UBOE JBHWONE AEIAA CLI AER EOINHOEEAU...
+    Prime words (1-idx): NTHEFM THA CUM EAA NGSM AEUS JBHWONE AEIAA EOINHOEEAU EAYEOERH HOEA SAEEO A DTHTH FGAEW...
+    Reversed words: YHL IAR FR THPWNGOL YIBIAOEIPTHW NOEEATGIAOEB JIAOEIASGYO RH IFW YAE H C UTA ANNOENGJ EEA...
+    Magic square order (first 25 words): MOEO UBOE AEUS USGDFOE IAN RAEXF AER NTHEFM NG CUM CLI EAA AEIAA NGSM OEIIMAEEOE UOEN OBDT XNI IEOT GJL JBHWONE THA EOINHOEEAU XIX UTHA
+
+======================================================================
+PAGE 30: 263 runes, 67 words
+  Keyword: MOURNFUL = [19, 3, 1, 4, 9, 0, 1, 20] (len 8), Mode: add
+  F-rune positions in ciphertext: [70, 87, 107, 124, 144, 172, 175, 252] (8 total)
+
+  [No F-skip] IoC=0.9907 | Singles: 0/8
+    Text: PIAXOE EA XYHTHW MUTHY CMORF U IAAN DRTHTHEOWOE WTOELS FPDTDD N F EBI WAEPTHEAN LEASOIAEH AEWG MET THRI PTHUPOEC OXAER...
+    Single@4: EA (FAIL)
+    Single@19: U (FAIL)
+    Single@41: N (FAIL)
+    Single@42: F (FAIL)
+    Single@105: NG (FAIL)
+    Single@173: L (FAIL)
+    Single@174: OE (FAIL)
+    Single@215: EA (FAIL)
+
+  [Best IoC F-skip] IoC=1.0833 (mask: [87, 107, 124, 172, 175, 252])
+    Singles: 0/8
+    Text: PIAXOE EA XYHTHW MUTHY CMORF U IAAN DRTHTHEOWOE WTOELS FPDTDD N F EBI WAEPTHEAN LEASOIAEH AEWG MET THRI PTHUPOEC OXAER...
+
+  --- Second-layer transforms (on standard Vigenere result) ---
+
+    Word rearrangement (67 words):
+    Prime words (0-idx): XYHTHW MUTHY U DRTHTHEOWOE F WAEPTHEAN THRI OXAER RLI OR JGPS WBCHMRNGCTH GTTAE TTHTEAYN YAEAOE...
+    Non-prime words (0-idx): PIAXOE EA CMORF IAAN WTOELS FPDTDD N EBI LEASOIAEH AEWG MET PTHUPOEC PCTH RWO THT...
+    Prime words (1-idx): EA XYHTHW CMORF IAAN N EBI MET PTHUPOEC THT NG OWIJ UAEOEOAEEAE AEGE HXUAEB LB...
+    Reversed words: THOEEONMEATHEOP MNN JM TIAS HEOEOGWPX NNGYIAHIL AREA EAP TBILCXTOEXIL EA GEAIA FJA EOEAGH FEY HLXAED...
+    Magic square order (first 25 words): FPDTDD AEWG EBI DRTHTHEOWOE THRI MUTHY RWO EA RLI CMORF PCTH IAAN PTHUPOEC N LEASOIAEH F WAEPTHEAN PIAXOE AEOEB WTOELS MET XYHTHW THT U OXAER
+
+======================================================================
+ANALYSIS COMPLETE
+======================================================================
