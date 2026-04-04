@@ -169,16 +169,27 @@ for s, sp in enumerate(SING_POS):
     SING_A1[canon] = a1
 
 def enforce_singletons(keys_np):
-    """For sub mode: set singleton positions to I or A randomly."""
+    """For sub mode: set singleton positions to I or A.
+    Preserves existing valid A/I assignments; only randomly fixes invalid ones.
+    This keeps optimized singleton configurations from checkpoint keys intact."""
     rng_ = np.random.default_rng()
-    for s, (sp, sc) in enumerate(zip(SING_POS, SING_CIP)):
+    for sp, sc in zip(SING_POS, SING_CIP):
         canon_sp = int(LINK_MAP[sp])
-        a0 = (sc - 10) % M
-        a1 = (sc - 24) % M
-        choices = rng_.integers(0, 2, size=keys_np.shape[0])
-        val = np.where(choices == 0, a0, a1)
-        keys_np[:, canon_sp] = val
-        keys_np[:, sp]       = val
+        a0 = (sc - 10) % M  # key value that decrypts to I (GP 10)
+        a1 = (sc - 24) % M  # key value that decrypts to A (GP 24)
+        current = keys_np[:, canon_sp]
+        invalid = ~((current == a0) | (current == a1))
+        n_invalid = int(invalid.sum())
+        if n_invalid > 0:
+            rows = np.flatnonzero(invalid)
+            choices = rng_.integers(0, 2, size=n_invalid)
+            new_vals = np.where(choices == 0, a0, a1).astype(np.int32)
+            keys_np[rows, canon_sp] = new_vals
+            if sp != canon_sp:
+                keys_np[rows, sp] = new_vals
+        # Always sync mirror position with canonical position
+        if sp != canon_sp:
+            keys_np[:, sp] = keys_np[:, canon_sp]
 
 # ─── Quadgram scoring table ───────────────────────────────────────────────────
 print('Building GP quadgram table...', flush=True)
@@ -395,9 +406,17 @@ if Path(CHECKPOINT).exists():
     ck_key = np.array(ck['key'], dtype=np.int32)
     warmstart_score = float(ck.get('score', 0))
     print(f'Warmstart from {CHECKPOINT}: score={warmstart_score}, step={ck.get("step","?")}', flush=True)
-    # Seed all chains from best key + varying perturbation sizes
+    # Seed all chains from best key + diversified perturbation sizes to escape basin
+    # 10%: tiny (fine-tune near best), 23%: small, 33%: large, 34%: near-random
     for c_i in range(N_CHAINS):
-        n_perturb = max(1, N_INDEPENDENT // (20 + c_i // 200))
+        if c_i < N_CHAINS // 10:
+            n_perturb = max(10, N_INDEPENDENT // 200)     # ~53 positions
+        elif c_i < N_CHAINS // 3:
+            n_perturb = max(100, N_INDEPENDENT // 50)     # ~214 positions
+        elif c_i < 2 * N_CHAINS // 3:
+            n_perturb = max(1000, N_INDEPENDENT // 5)     # ~2144 positions
+        else:
+            n_perturb = max(3000, N_INDEPENDENT // 2)    # ~5360 positions
         perturb_pos = rng.choice(INDEPENDENT_POS, size=n_perturb, replace=False)
         pvals       = rng.integers(0, M, size=n_perturb)
         KEYS[c_i]   = ck_key.copy()
@@ -523,19 +542,32 @@ WORD_REFINE_INTERVAL = 5
 print(f'\n=== GPU {GPU_ID} hillclimber v2 starting (N_CHAINS={N_CHAINS}) ===', flush=True)
 print(f'Output: {OUTFILE}', flush=True)
 
-T_START = 0.08 if warmstart_score else 0.5
+# T=3.0 on warmstart: high enough that e^(-delta/T) gives real acceptance probability
+# for typical delta~5-50 nats. T=0.08 was effectively frozen (e^(-5/0.08) ~ 0).
+T_START = 3.0 if warmstart_score else 8.0
 T_END   = 0.00005
 T_DECAY = 0.9999993   # slightly slower cooling for more chains
 
 temperature       = T_START
-global_best_score = float(cp_scores.max())
-global_best_key   = cp_keys[int(cp_scores.argmax())].get()
+# Preserve warmstart key if checkpoint was better than any initialised chain.
+# This prevents the checkpoint from being overwritten with a degraded key when
+# the diversified population hasn't yet recovered the old best.
+_init_best_idx   = int(cp_scores.argmax())
+_init_best_score = float(cp_scores[_init_best_idx])
+if warmstart_score and warmstart_score > _init_best_score:
+    global_best_score = warmstart_score
+    global_best_key   = ck_key.copy()   # preserve original checkpoint key exactly
+    print(f'  Preserving checkpoint key (warmstart {warmstart_score:.1f} > init {_init_best_score:.1f})', flush=True)
+else:
+    global_best_score = _init_best_score
+    global_best_key   = cp_keys[_init_best_idx].get()
 
 # -- Stagnation detection for warm restarts --
-stagnation_window   = 5    # save blocks without improvement
+stagnation_window   = 25   # save blocks (250K steps) without 50-point improvement
 stagnation_counter  = 0
 last_improvement_score = global_best_score
-WARM_RESTART_TEMP   = 0.02  # temperature to reset to on stagnation
+WARM_RESTART_TEMP   = 3.0  # must be high enough for real basin hopping (was 0.02=frozen)
+exploration_lockout = 0    # blocks remaining where chain-restart is suppressed
 
 blk = 256
 grd = (N_CHAINS + blk - 1) // blk
@@ -645,8 +677,34 @@ while True:
     if stagnation_counter >= stagnation_window and temperature < WARM_RESTART_TEMP:
         temperature = WARM_RESTART_TEMP
         stagnation_counter = 0
-        print(f'  [warm-restart] Score stagnated for {stagnation_window} blocks, '
-              f'temp reset to {WARM_RESTART_TEMP}', flush=True)
+        # Nuclear scatter: diversify the population to escape the current basin.
+        # Top 15% stay near best (preserve memory); bottom 50% get large scatter.
+        keys_np  = cp_keys.get()
+        best_np  = global_best_key.copy()
+        n        = N_CHAINS
+        for ci_idx in range(n * 15 // 100):
+            ci  = rng.integers(0, n)
+            n_p = rng.integers(50, 300)
+            pp  = rng.choice(INDEPENDENT_POS, size=n_p, replace=False)
+            keys_np[ci]     = best_np.copy()
+            keys_np[ci, pp] = rng.integers(0, M, size=n_p)
+        for ci in range(n // 2, n):
+            n_p = rng.integers(2000, N_INDEPENDENT)
+            pp  = rng.choice(INDEPENDENT_POS, size=n_p, replace=False)
+            keys_np[ci]     = best_np.copy()
+            keys_np[ci, pp] = rng.integers(0, M, size=n_p)
+        enforce_singletons(keys_np)
+        enforce_cribs(keys_np)
+        enforce_ttp(keys_np)
+        cp_keys = cp.array(keys_np, dtype=cp.int32)
+        compute_all_scores()
+        # Set stagnation_counter to -100 so next nuclear restart is 125 blocks away
+        # and lock out chain restarts for 100 blocks so scattered chains can converge.
+        stagnation_counter  = -100
+        exploration_lockout = 100
+        print(f'  [nuclear-restart] Stagnated {stagnation_window} blocks, '
+              f'T→{WARM_RESTART_TEMP}, chains scattered (50% large-perturbed). '
+              f'Lockout=100 blocks.', flush=True)
 
     # Save checkpoint (JSON — compatible with v1 checkpoint format)
     ck_data = {
@@ -665,13 +723,16 @@ while True:
 
     # ── Chain restart: every 10 saves, revive worst 10% from best ────────
     save_block = step // SAVE_EVERY
-    if save_block % 10 == 0:
+    # Skip chain restart during exploration lockout (after nuclear scatter)
+    if exploration_lockout > 0:
+        exploration_lockout -= 1
+    elif save_block % 10 == 0:
         scores_np = cp_scores.get()
         worst_idx = np.argsort(scores_np)[:N_CHAINS // 10]
         best_np   = cp_keys[int(np.argmax(scores_np))].get()
         keys_np   = cp_keys.get()
         for wi in worst_idx:
-            n_p = rng.integers(100, 500)
+            n_p = rng.integers(200, 1500)  # wider scatter than before (was 100-500)
             pp  = rng.choice(INDEPENDENT_POS, size=n_p, replace=False)
             pv  = rng.integers(0, M, size=n_p)
             keys_np[wi] = best_np.copy()

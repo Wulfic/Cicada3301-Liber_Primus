@@ -1,7 +1,7 @@
 # LIBER PRIMUS — MASTER TRACKER
 ## Cicada 3301 (2014) — Comprehensive Solving Record
 
-**Last Updated:** Apr 2026 (Session 13)  
+**Last Updated:** Apr 2026 (Session 15)  
 **Purpose:** Single source of truth. ALL findings, methods tried, and status consolidated here.  
 **Rule:** Check this document BEFORE starting any new attack to avoid repeating work.  
 **Note:** Repository reorganized Feb 2026. Old directories (LiberPrimus/, Analysis/, Assets/, Tools/) replaced by pages/, data/, reference/, tools/. See §12 for current file index.
@@ -919,23 +919,108 @@ Page 57 Parable contains "CIRCUMFERENCE" — this word also appears in Onion 6 p
 - **OPT-4: English corpus augmented quadgrams** — Added Emerson essays (567K chars) + Self-Reliance (57K chars) to quadgram table, 3× LP weighting. Quadgrams jumped from ~8K distinct → 51,447 distinct.
 - **Noise attractor detection** added to save-block output (tracks DPTS/TSUH/CDPI/EATSUH/TSEATS)
 - **Per-page IoC monitoring** at every save block (5 sampled pages)
-- **Stagnation warm restart**: if score plateaus for 5 save blocks, temperature resets to 0.02
 - **`Tools/hillclimb_monitor.py`** created: full per-page IoC/word-score/noise/false-solve analysis with `--watch` mode and `--export` for reverse-engineering JSON
 
 Results (within first 1.75M new steps):
 - Score: **−174,377 → −139,616** (+34,761 points, 20% improvement)
-- Noise patterns: **375 → 58** (85% reduction — English corpus severely penalizes non-English quadgrams)
-- Genuine pages: **1 → 13** (monitor false-solve classification)
-- Likely false: **9 → 1**
-- Per-page IoC: P31=2.89, P22=2.70, P37=2.59, P27=2.55, P51=2.56, P54=3.29
-- Real English fragments visible: "ALL THES ENCES", "FOREUER STHAT ISTHESAR ENCES", "CONSUMPTION", "PRESERUATION"
-- **64 TTP violations remain** in checkpoint — inherited from v1; v2 enforces at init/restart but checkpoint writes may drift
-- Rate: ~14,000 steps/sec
+- Noise patterns: **375 → 0** (completely eliminated by English corpus — score plateaued near step 23M)
+- Genuine pages: **1 → 12** (monitor false-solve classification)
+- Per-page IoC: P21=2.92, P25=3.01, P31=3.05, P40=3.14, P50=2.95 (all well above English ~1.73)
+- Real English fragments visible: "CONSUMPTION", "CIRCUMFERENCE", "THERESTAND", "NATURE"
 
-**Next checkpoint action items:**
-- Monitor noise trend — if < 10, ready for new crib candidates
-- Check TTP violations trend — should decrease as chains restart
-- Run `python Tools/hillclimb_monitor.py --export` to dump per-page solution JSONs
+**Session 14 — Stagnation Diagnosis & Fix (same session, later messages):**
+
+The v2 climber stagnated at −131,577 for 200+ consecutive save blocks (~2M steps, zero improvement). Root cause analysis:
+
+**Root cause 1 — Temperature was effectively frozen:**
+- `T_START = 0.08 if warmstart_score else 0.5` — at T=0.08, acceptance for a δ=5 nat cost is `e^(-5/0.08) = e^(-62.5) ≈ 0`. Pure greedy hill climbing with no exploration.
+- `WARM_RESTART_TEMP = 0.02` — stagnation reset target was also frozen. Acceptance at T=0.02 for δ=5: `e^(-250) ≈ 0`.
+- **Fix:** `T_START = 3.0 if warmstart_score else 8.0`, `WARM_RESTART_TEMP = 3.0`. At T=3.0, δ=5 acceptance = `e^(-1.67) ≈ 19%`. Real exploration possible.
+
+**Root cause 2 — Warmstart chain diversity too low:**
+- All 4000 chains started from checkpoint + 274–536 positions perturbed (2.5–5% of 10720). Not enough to escape basin.
+- **Fix:** Diversified init — 10%: 53 pos, 23%: 214 pos, 33%: 2144 pos, 34%: 5360 pos.
+
+**Root cause 3 — `enforce_singletons` randomized all 217 singleton A/I assignments on init:**
+- Overwrote the checkpoint's optimal singleton configuration for ALL chains, including the "preserve best" chain.
+- Cost: ~108 singleton flips × 3 nats ≈ 324 nats worse than checkpoint. Explains why init best was -132,450 not -131,371.
+- **Fix:** `enforce_singletons` now preserves valid A/I assignments. Only fixes positions with invalid (non-A, non-I) values.
+
+**Root cause 4 — `stagnation_window = 5` fired every 50K steps:**
+- With score stuck, fired every 5 save blocks (50K steps), reset T=0.02 (frozen), stagnation_counter=0. Cycle period: ~15K steps. Perpetual oscillation at T=0.019–0.020.
+- **Fix:** `stagnation_window = 25` (250K steps between checks).
+
+**Root cause 5 — Nuclear scatter undone by chain restart:**
+- Chain restart runs every 10 save blocks (100K steps), pulling 400 chains back toward current best. After nuclear scatter, this destroyed diversity within 200K steps.
+- **Fix:** `exploration_lockout = 100` after nuclear scatter. Chain restarts suppressed for 100 blocks (1M steps) after each nuclear scatter. Also `stagnation_counter = -100` after scatter, giving 125 blocks (1.25M steps) before next nuclear restart.
+
+**Root cause 6 — Checkpoint overwritten with worse score on first save block:**
+- On warmstart, diverse init produced chains at -132,450 (worse than checkpoint's -131,371). First save block wrote -132,450 to checkpoint, overwriting the -131,371 key.
+- **Fix:** On warmstart, if `warmstart_score > init_best_score`, preserve `global_best_key = ck_key` and `global_best_score = warmstart_score`. Checkpoint only gets WORSE when score actually improves.
+
+**⚠️ Lost checkpoint: -131,371 key (step 31M) was overwritten before fix was applied.** Best checkpoint at session end: -132,377.
+
+**Current state (after all fixes applied):**
+- Score: -132,377.3 | Step: ~5M (restarted from fixed checkpoint)
+- T_START=3.0, WARM_RESTART_TEMP=3.0, stagnation_window=25, exploration_lockout=100
+- Nuclear scatter: 15% near-best (50–300 pos) + 50% large scatter (2000–10720 pos), T→3.0, lockout=100
+- `enforce_singletons` preserves valid assignments ✓
+- Checkpoint preservation logic ✓
+- Next nuclear scatter expected ~1.25M steps from last scatter
+- **All 9 cribs still 100% valid; 217/217 singletons; 0 noise**
+
+**Key files added/modified (Session 14):**
+- `Tools/gpu_hillclimber_v2.py` — all stagnation fixes applied (see above)
+- `Tools/hillclimb_monitor.py` — per-page analysis (`--export` → `data/per_page_solutions/`)
+- `.gitignore` — updated to exclude all checkpoint/result ephemeral files
+
+---
+
+**Session 15 (2026-04): V3 Decode Analysis, Crib Extraction, V4 Hillclimber**
+
+**V3 stagnation analysis:**
+V3 had run 8.79M steps, stagnated at score **43,921.6** for 7.3M consecutive steps.
+Per-page IoC: P21=1.49, P25=1.55, P31=1.66, P40=1.57, P50=1.61 (vs English ~1.73).
+Created `Tools/analyze_v3_decode.py` → `data/v3_decode_analysis.txt`.
+
+**LP vocabulary pollution discovered:**
+`load_page()` on non-cleartext solved pages returns cipher rune sequences, NOT plaintext — this polluted LP_VOCAB, making 100% vocab hit rate meaningless. LP_CANON (hardcoded) is the reliable target.
+
+**Genuine LP words confirmed in v3 decode (~73% of word slots):**
+- PRESERUATION — P21, P22, P25, P28, P30, P32 (TTP twin confirmed)
+- INTELLIGENCE — P23, P25, P27, P32
+- THELOSSOF — P24×2, P28, P32
+- CIRCUMFERENCE / CIRCUMFERENCES — P25, P32
+- ADHERENCE — P25×3, P32
+- BEHAUIORS — P21, P31×2
+- CONSUMPTION — P25
+- ENCRYPTED — P25×2
+- DIUINITY — P21, P28
+- ~27% of word slots still decode to garbage (the unsolved portion)
+
+**TTP twin region confirmation:**
+P32 tail decodes identically to P21+P22 concatenated (TTP-3 verified: 1,312-rune overlap). ALL twin regions decode identically — confirms single coherent key.
+
+**Crib extraction (590 LP_CANON words, 3,058 canonical positions):**
+- Created `Tools/extract_confirmed_cribs.py`
+- All 590 matches are word-boundary-aligned and TTP-consistent (zero violations)
+- Saved to `data/v3_confirmed_cribs.json` (3,058 canonical position → key value entries)
+
+**GPU Hillclimber V4 (LAUNCHED, RUNNING):**
+- Created `Tools/gpu_hillclimber_v4.py` from v3 with crib enhancements
+- 3,058 confirmed canonical positions **locked** (never mutated by step kernel)
+- INDEPENDENT_POS: 10,811 → **7,753 free positions** (28.3% reduction)
+- `enforce_cribs()` called at: init, stagnation scatter, chain restart
+- Warmstart from v3 checkpoint (score=43,921.6); running on GPU 1 at ~1,180 steps/sec
+
+**Key files added/modified (Session 15):**
+- `Tools/gpu_hillclimber_v4.py` — crib-locked hillclimber (**RUNNING**)
+- `Tools/analyze_v3_decode.py` — per-page decode + LP_CANON audit
+- `Tools/extract_confirmed_cribs.py` — crib extraction from checkpoint
+- `data/v3_confirmed_cribs.json` — 590 LP_CANON words, 3,058 locked positions
+- `data/v3_decode_analysis.txt` — full decode of P21-P54 with per-page stats
+
+### Priority 1: Continue GPU Hillclimber V4 (RUNNING) ⭐⭐⭐⭐⭐
 
 ### Priority 2: TTP-Targeted Crib Dragging ⭐⭐⭐⭐⭐
 Use TTP double-verification correctly:
