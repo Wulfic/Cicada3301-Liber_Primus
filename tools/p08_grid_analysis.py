@@ -1,7 +1,20 @@
 #!/usr/bin/env python3
 """
-P08 Bigram Grid Analysis — Priority #1 Unsolved Lead
-======================================================
+P08 Bigram Grid Analysis — Historical Exploration Notes
+=======================================================
+The P08 outguess hint is now independently solved.
+
+Verified plaintext:
+    TOBELIEVETRUTHISTODESTROYPOSSIBILITYQ4UTGDI2N4M4UIM59133
+
+Verified model:
+    - 56-character stream
+    - 7-row transposition grid
+    - fill/read order: column-wise
+    - undo row permutation: (0, 4, 2, 6, 5, 3, 1)
+
+The exploratory tests below predate that correction and are retained for reference.
+
 Cicada hint "For those who have fallen behind:" with grid:
 
   Row 1: TL BE IE OV UT HT RE ID TS EO ST PO SO YR  (14 pairs, all alpha)
@@ -24,6 +37,22 @@ from collections import Counter
 
 BASE = Path(__file__).resolve().parent.parent
 PAGES_DIR = BASE / "pages"
+
+
+def euler_totient(n):
+    """Compute Euler's totient without external dependencies."""
+    result = n
+    value = n
+    factor = 2
+    while factor * factor <= value:
+        if value % factor == 0:
+            while value % factor == 0:
+                value //= factor
+            result -= result // factor
+        factor += 1
+    if value > 1:
+        result -= result // value
+    return result
 
 # === Gematria Primus ===
 RUNE_TO_IDX = {
@@ -84,6 +113,23 @@ KEY_C_DIFF2 = [KEY_A[2*i+1] for i in range(14)] # second of each pair (14 values
 # Extra keys: direct GPR1 and GPR2 as keys
 KEY_R1 = R1_GP  # 28-value key directly being row 1 GP values
 KEY_R2 = R2_GP  # 28-value key directly being row 2 GP values
+
+
+def verify_known_transposition():
+    """Reproduce the verified P08 outguess plaintext."""
+    cipher = ''.join(ROW1_PAIRS + ROW2_PAIRS)
+    perm = (0, 4, 2, 6, 5, 3, 1)
+    rows, cols = 7, 8
+    grid = [[''] * cols for _ in range(rows)]
+    idx = 0
+    for c in range(cols):
+        for r in range(rows):
+            grid[perm[r]][c] = cipher[idx]
+            idx += 1
+    plain = ''.join(grid[r][c] for c in range(cols) for r in range(rows))
+    print("=== VERIFIED P08 OUTGUESS TRANSPOSITION ===")
+    print(plain)
+    print()
 
 print("=== P08 BIGRAM GRID KEY STREAMS ===")
 print(f"Row 1 GP: {R1_GP}")
@@ -685,16 +731,16 @@ def analyze_grid_arithmetic():
     print(f"Key A sums by pair: {KEY_C_SUM}")
 
     # Check for prime-related patterns
-    from sympy import primepi, isprime, prime as nth_prime, totient
     print("\nChecking if key values relate to primes:")
     for i, (k, r1, r2) in enumerate(zip(KEY_A[:14], R1_GP[:14], R2_GP[:14])):
         print(f"  pos {i:2d}: R1={r1:2d}({IDX_TO_LETTER[r1]}) R2={r2:2d}({IDX_TO_LETTER[r2]}) "
               f"diff={k:2d}({IDX_TO_LETTER[k]}) "
-              f"phi(R1)={totient(r1+1):3d}%29={(totient(r1+1))%29:2d} "
+              f"phi(R1)={euler_totient(r1+1):3d}%29={(euler_totient(r1+1))%29:2d} "
               f"R1*R2%29={(r1*r2)%29:2d}")
 
 
 def main():
+    verify_known_transposition()
     test_p08_runes()
     run_fixed_keys()
     run_offset_sweep()

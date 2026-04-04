@@ -24,11 +24,50 @@ wheels/
 .installed.cfg
 *.egg
 
-# Large output files
-**/outputs/*.txt
-**/results/*.txt
-**/*_results.txt
-**/*_output.txt
+# ─── Hill climber progress / checkpoint files ────────────────────────────────
+# These are large, ephemeral, and regenerated on every run.
+# The MASTER_TRACKER.md is the canonical record of results.
+data/gpu_hill_*.txt
+data/gpu_hill_*.json
+data/gpu_hill_checkpoint_*.json
+data/decode_best_*.txt
+data/*_hillclimb_results.txt
+data/*_refine_results.txt
+data/*_seeded_refine.txt
+data/*_offset_results.txt
+data/*_targeted_map_applied.txt
+data/*_candidates.txt
+data/*_candidate_processed.txt
+data/p24_candidates_processed/
+data/p24_prime0_post.txt
+data/p24_candidate_full_*.txt
+
+# ─── Intermediate analysis / solver output ───────────────────────────────────
+data/autokey_results.txt
+data/beaufort_crib_results.txt
+data/combined_cipher_results.txt
+data/keyword_stepped_results.txt
+data/lfsr_results.txt
+data/lfsr4_results.txt
+data/lfsr4_err.txt
+data/lfsr4_live.txt
+data/singleton_stream_results.txt
+data/twotime_pad_results.txt
+data/refine_vk_results.txt
+data/p21_30_analysis.txt
+data/p21_30_keyword_sweep.txt
+data/lp_extraction.txt
+Tools/*_results.txt
+Tools/cipher_analysis_results.txt
+
+# ─── Solution monitoring output ──────────────────────────────────────────────
+data/hillclimb_monitor_*.json
+data/per_page_solutions/
+
+# ─── Large reference files (keep tracked but note size) ──────────────────────
+# data/emerson_essays.txt        # 564 KB — keep tracked
+# data/wordlist.txt              # 4 MB — keep tracked
+# reference/LiberPrimus.pdf      # 55 MB — consider LFS
 
 # IDE
 .vscode/
