@@ -64,6 +64,18 @@ LP_CANON = [
     # From P05/P63 magic square keywords  
     'SHADOWS','AETHEREAL','BUFFERS','CARNAL','ANALOG','MOBIUS',
     'OBSCURA','FORM','VOID','MOURNFUL','CABAL',
+    # LP archaic U/V spellings
+    'DISCOUER','DISCOUERY','THEMSELUES','OURSELUES',
+    'BELEIUE','BELIEUE','UERSE','UERSES',
+    'SECUENCES','SECUENCE','CNOWTHIS',
+    'CUESTION','CUESTIONS','DIUINITE',
+    'OUER','ADUANCE','ADUANCED',
+    'GIUE','GIUEN','LIUE','LIUED',
+    'MOUE','MOUED','LOUE','LOUED',
+    'LEAUE','LEAUES','HAUING',
+    'RECEIUE','RECEIUED','PERCEIUE',
+    'CONCEIUE','PRESERUE','PRESERUED',
+    'OBSERUE','RESERUED','DESERUED',
 ]
 
 # Build GP-encoded LP canon set
@@ -128,11 +140,12 @@ for src_s, dst_s, ln in TTP_CONSTRAINTS:
     for i in range(ln):
         LINK_MAP[dst_s + i] = LINK_MAP[src_s + i]
 
-# Load checkpoint
-ck = json.loads(Path('data/gpu_hill_checkpoint_gpu1_v3.json').read_text())
+# Load checkpoint (accept optional path as argv[1])
+ck_path = sys.argv[1] if len(sys.argv) > 1 else 'data/gpu_hill_checkpoint_gpu1_v3.json'
+ck = json.loads(Path(ck_path).read_text())
 KEY = ck['key']
 
-print(f'Checkpoint: score={ck["score"]:.1f}, step={ck["step"]:,}', flush=True)
+print(f'Checkpoint: {ck_path}  score={ck.get("score",0):.1f}, step={ck.get("step",0):,}', flush=True)
 print(f'Words to scan: {len(words_with_pos)}', flush=True)
 print()
 
@@ -219,7 +232,9 @@ output = {
     'n_forced': len(FORCED_CRIBS_POS),
 }
 Path('data/v3_confirmed_cribs.json').write_text(json.dumps(output, indent=2))
-print(f'Saved to data/v3_confirmed_cribs.json')
+out_path = 'data/v3_confirmed_cribs.json' if len(sys.argv) <= 2 else sys.argv[2]
+Path(out_path).write_text(json.dumps(output, indent=2))
+print(f'Saved to {out_path}')
 
 # Show statistics
 print()

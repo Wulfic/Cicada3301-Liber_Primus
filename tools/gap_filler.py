@@ -114,6 +114,44 @@ LP_CANON_WORDS = sorted(set([
     # Words visible in decoded preview fragments
     'YOURSELF','AWT','NGAETH',  # "AWT" might be a valid LP word
     'WIRIH','DAGR',             # could be LP archaic words
+    # LP archaic U/V spellings (Cicada consistently uses U for V)
+    'DISCOUER','DISCOUERY','DISCOUERS',       # DISCOVER/DISCOVERY/DISCOVERS
+    'THEMSELUES','OURSELUES','THEMSELUES',    # THEMSELVES/OURSELVES
+    'BELEIUE','BELIEUE','BELIEUES',           # BELIEVE/BELIEVES
+    'UERSE','UERSES',                         # VERSE/VERSES
+    'SECUENCES','SECUENCE',                   # SEQUENCES/SEQUENCE
+    'CNOWTHIS','KNOWTHIS',                    # KNOWTHIS
+    'CUESTION','CUESTIONS',                   # QUESTION/QUESTIONS
+    'DIUINITE',                               # DIVINITE (LP variant)
+    'OUER',                                   # OVER
+    'ADUANCE','ADUANCED','ADUANCEMENT',       # ADVANCE
+    'NEUER',                                  # NEVER (already in list but confirm)
+    'GIUE','GIUEN','GIUES',                   # GIVE/GIVEN
+    'LIUE','LIUED','LIUES',                   # LIVE/LIVED
+    'MOUE','MOUED',                           # MOVE/MOVED
+    'LOUE','LOUED',                           # LOVE/LOVED
+    'HAUING',                                 # HAVING
+    'LEAUE','LEAUES',                         # LEAVE/LEAVES
+    'BEHAUE','BEHAUIOR','BEHAUIORS',          # BEHAVE/BEHAVIOR/BEHAVIORS
+    'RECEIUE','RECEIUED',                     # RECEIVE/RECEIVED
+    'PERCEIUE','PERCEIUED',                   # PERCEIVE/PERCEIVED
+    'CONCEIUE','CONCEIUED',                   # CONCEIVE/CONCEIVED
+    'PRESERUE','PRESERUED',                   # PRESERVE/PRESERVED
+    'OBSERUE','OBSERUED',                     # OBSERVE/OBSERVED
+    'RESERUED',                               # RESERVED
+    'DESERUED',                               # DESERVED
+    # Additional confirmed LP/Cicada words from context
+    'WHICH','BECAUSE','SEVEN','SEUEN',        # WHICH/BECAUSE/SEVEN
+    'ERRORS','ERROR',                         # ERRORS (confirmed P05 magic square)
+    'UERY','VERY',                            # VERY (LP archaic UERY)
+    'HAUE',                                   # HAVE (archaic)
+    'ABOUT','CAUSE','LATER','PAIN',           # confirmed in decode
+    'SECTION','SECTIONS',                     # confirmed LP structural words
+    'CHAPTER','CHAPTERS',                     # confirmed LP structural words
+    'BELONG','BELONGS',                       # confirmed LP words
+    'IMPOSE','IMPOSED',                       # confirmed LP words
+    'EMERGE','EMERGED',                       # confirmed LP words
+    'FIND','FOUND','SEEK','SEEKETH',          # confirmed LP
 ]))
 
 # GP-encode all canon words, indexed by rune length

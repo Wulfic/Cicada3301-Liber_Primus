@@ -663,7 +663,7 @@ def word_refine_pass(key_np):
     key = key_np.copy(); fixes = 0
     for wstart, wlen in WORD_SLOTS:
         if wstart + wlen > N_CIPHER or wlen < 3: continue
-        dec = tuple((int(CIPHER[wstart+i]) - int(key[wstart+i])) % M for i in range(wlen))
+        dec = tuple((int(CIPHER[wstart+i]) - int(key[int(LINK_MAP[wstart+i])])) % M for i in range(wlen))
         candidates = lp_gp_by_len.get(wlen, set())
         for cand in candidates:
             diffs = [(i, cand[i]) for i in range(wlen) if dec[i] != cand[i]]
@@ -671,6 +671,8 @@ def word_refine_pass(key_np):
             di, new_plain = diffs[0]
             pos  = wstart + di
             canon = int(LINK_MAP[pos])
+            if canon in CRIB_CANON_SET:
+                continue  # v4: never overwrite locked LP word positions
             new_kv = (int(CIPHER[pos]) - new_plain) % M
             if SING_A0[canon] >= 0 and new_kv != SING_A0[canon] and new_kv != SING_A1[canon]:
                 continue
@@ -885,6 +887,7 @@ while True:
                 keys_np[ci, pp] = pv
             enforce_singletons(keys_np)
             enforce_ttp(keys_np)
+            enforce_cribs(keys_np)  # v4: restore locked LP positions after word-refine seeding
             cp_keys.set(keys_np.astype(np.int32))  # in-place, avoids double VRAM
             compute_all_scores()
             new_best_idx = int(cp_scores.argmax())

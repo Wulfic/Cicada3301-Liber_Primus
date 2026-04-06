@@ -1,0 +1,397 @@
+Checkpoint: data/gpu_hill_checkpoint_gpu1_v4.json
+Score: 53756.8  Step: 320,000
+
+======================================================================
+TEST 1: TTP CIPHER STRUCTURE VERIFICATION (key-free)
+  For each TTP pair (master, slave), cipher[slave]-cipher[master] mod 29
+  must be CONSTANT across all positions in the region.
+  This is a property of the CIPHER ITSELF, not the key.
+
+  Region 1: master= 3001- 4312 slave= 9727-11038  len=1312  cipher_diff_distribution: UNIFORM (OTP-like key)
+  Region 2: master= 6298- 7765 slave=12311-13778  len=1468  cipher_diff_distribution: UNIFORM (OTP-like key)
+  Region 3: master=    0-  403 slave= 5803- 6206  len= 404  cipher_diff_distribution: UNIFORM (OTP-like key)
+  Region 4: master= 2736- 3000 slave= 8643- 8907  len= 265  cipher_diff_distribution: UNIFORM (OTP-like key)
+  Region 5: master=  737-  908 slave= 8100- 8271  len= 172  cipher_diff_distribution: UNIFORM (OTP-like key)
+  Region 6: master=  910- 1006 slave= 8273- 8369  len=  97  cipher_diff_distribution: UNIFORM (OTP-like key)
+
+  NOTE: Uniform diff means each twin region uses the SAME key offset everywhere.
+  Non-uniform means an OTP-like (position-varying) key.
+
+======================================================================
+TEST 2: LONG-WORD KEY DERIVATION (deterministic, no search)
+  For each word slot of len>=8 that decodes to an LP word under current key:
+  a) Show the REQUIRED key values (cipher[i] - plain[i]) mod 29
+  b) Propagate via TTP to all linked positions
+  c) Show what those OTHER positions decode to
+  d) Check if those other positions decode to readable text
+
+  Found 211 word slots of len>=8 decoding to known LP words.
+
+  ✓ P21 pos=    9 len= 8 "YOURSELF"  (8 canon keys)    TTP-linked words: 1
+      → P32 pos= 5812 (offset +5803): "YOURSELF"
+  ✓ P21 pos=   23 len=11 "PRESERUATION"  (11 canon keys)    TTP-linked words: 1
+      → P32 pos= 5826 (offset +5803): "PRESERUATION"
+  ✓ P21 pos=   83 len=10 "INSTRUCTION"  (10 canon keys)    TTP-linked words: 1
+      → P32 pos= 5886 (offset +5803): "INSTRUCTIONA"
+  ✓ P21 pos=  104 len= 8 "ATTACHED"  (8 canon keys)    TTP-linked words: 1
+      → P32 pos= 5907 (offset +5803): "ATTACHED"
+  ✓ P21 pos=  172 len= 8 "BEHAUIORS"  (8 canon keys)    TTP-linked words: 1
+      → P32 pos= 5975 (offset +5803): "BEHAUIORS"
+  ✓ P21 pos=  188 len= 8 "ATTACHED"  (8 canon keys)    TTP-linked words: 1
+      → P32 pos= 5991 (offset +5803): "ATTACHED"
+  ✓ P21 pos=  249 len=10 "INSTRUCTION"  (10 canon keys)    TTP-linked words: 1
+      → P32 pos= 6052 (offset +5803): "INSTRUCTION"
+  ✓ P21 pos=  265 len= 8 "DIUINITY"  (8 canon keys)    TTP-linked words: 1
+      → P32 pos= 6068 (offset +5803): "DIUINITYTHE"
+  ✓ P22 pos=  308 len=11 "PRESERUATION"  (11 canon keys)    TTP-linked words: 1
+      → P32 pos= 6111 (offset +5803): "PRESERUATIONI"
+  ✓ P22 pos=  327 len=11 "PRESERUATION"  (11 canon keys)    TTP-linked words: 1
+      → P32 pos= 6130 (offset +5803): "PRESERUATION"
+  ✓ P22 pos=  345 len=12 "INTELLIGENCE"  (12 canon keys)    TTP-linked words: 1
+      → P32 pos= 6148 (offset +5803): "INTELLIGENCE"
+  ✓ P23 pos=  445 len= 8 "DECEPTION"  (8 canon keys)    TTP-linked words: 0
+  ✓ P23 pos=  453 len= 8 "YOURSELF"  (8 canon keys)    TTP-linked words: 0
+  ✓ P23 pos=  580 len=12 "INTELLIGENCE"  (12 canon keys)    TTP-linked words: 0
+  ✓ P23 pos=  621 len= 8 "DISCOUER"  (8 canon keys)    TTP-linked words: 0
+  ✓ P23 pos=  708 len=12 "INTELLIGENCE"  (12 canon keys)    TTP-linked words: 0
+  ✓ P24 pos=  813 len=10 "INSTRUCTION"  (10 canon keys)    TTP-linked words: 1
+      → P40 pos= 8176 (offset +7363): "INSTRUCTION"
+  ✓ P24 pos=  831 len= 8 "ATTACHED"  (8 canon keys)    TTP-linked words: 1
+      → P40 pos= 8194 (offset +7363): "ATTACHED"
+  ✓ P24 pos=  898 len= 8 "DECEPTION"  (8 canon keys)    TTP-linked words: 1
+      → P40 pos= 8261 (offset +7363): "DECEPTION"
+  ✓ P24 pos=  932 len= 8 "THELOSSOF"  (8 canon keys)    TTP-linked words: 1
+      → P40 pos= 8295 (offset +7363): "THELOSSOF"
+  ✓ P24 pos=  940 len= 8 "DECEPTION"  (8 canon keys)    TTP-linked words: 1
+      → P40 pos= 8303 (offset +7363): "DECEPTION"
+  ✓ P24 pos=  984 len= 8 "THELOSSOF"  (8 canon keys)    TTP-linked words: 1
+      → P40 pos= 8345 (offset +7361): "ISTHELOSSOF"
+  ✓ P24 pos=  999 len= 8 "THELOSSOF"  (8 canon keys)    TTP-linked words: 1
+      → P40 pos= 8362 (offset +7363): "THELOSSOFUS"
+  ✓ P25 pos= 1011 len= 8 "DISCOUER"  (8 canon keys)    TTP-linked words: 0
+  ✓ P25 pos= 1027 len= 9 "ENCRYPTED"  (9 canon keys)    TTP-linked words: 0
+  ✓ P25 pos= 1077 len= 8 "ATTACHED"  (8 canon keys)    TTP-linked words: 0
+  ✓ P25 pos= 1131 len=10 "CONSUMPTION"  (10 canon keys)    TTP-linked words: 0
+  ✓ P25 pos= 1147 len=12 "INTELLIGENCE"  (12 canon keys)    TTP-linked words: 0
+  ✓ P25 pos= 1179 len=10 "INSTRUCTION"  (10 canon keys)    TTP-linked words: 0
+  ✓ P25 pos= 1193 len= 9 "PRACTICES"  (9 canon keys)    TTP-linked words: 0
+
+======================================================================
+TEST 3: TTP SLAVE REGION DIRECT MATCH CHECK
+  master_plain[i] must equal slave_plain[i] under a valid key.
+  (This is the cipher property: cipher[slave]=cipher[master]+const implies
+   that for OTP key k[slave]=k[master]+const, decodes are equal.)
+
+  Region 1:  len=1312  mismatches=   0  match=100.0%
+  Region 2:  len=1468  mismatches=   0  match=100.0%
+  Region 3:  len= 404  mismatches=   0  match=100.0%
+  Region 4:  len= 265  mismatches=   0  match=100.0%
+  Region 5:  len= 172  mismatches=   0  match=100.0%
+  Region 6:  len=  97  mismatches=   0  match=100.0%
+
+  NOTE: 100% match = TTP enforced correctly.
+  Any mismatch = key has drifted from TTP (should never happen with enforce_ttp).
+
+======================================================================
+TEST 4: IoC PER PAGE (pure letter frequency, no vocabulary bias)
+  Genuine LP plaintext has IoC 1.7-2.2. Random has IoC ~1.0. Cipher ~1.0.
+
+  P21: IoC=1.692  words= 60  unique= 37  diversity=0.62  AND=5(8%)
+  P22: IoC=1.982  words= 32  unique= 26  diversity=0.81  AND=3(9%)
+  P23: IoC=1.948  words= 79  unique= 53  diversity=0.67  AND=0(0%)
+  P24: IoC=1.793  words= 73  unique= 43  diversity=0.59  AND=0(0%)
+  P25: IoC=1.867  words=383  unique=131  diversity=0.34  AND=2(1%)
+  P26: IoC=2.049  words= 69  unique= 40  diversity=0.58  AND=1(1%)
+  P27: IoC=1.832  words= 57  unique= 38  diversity=0.67  AND=4(7%)
+  P28: IoC=1.939  words= 67  unique= 39  diversity=0.58  AND=2(3%)
+  P29: IoC=1.822  words= 79  unique= 47  diversity=0.59  AND=4(5%)
+  P30: IoC=2.068  words= 67  unique= 44  diversity=0.66  AND=3(4%)
+  P31: IoC=1.999  words= 72  unique= 43  diversity=0.60  AND=4(6%)
+  P32: IoC=1.871  words=435  unique=141  diversity=0.32  AND=11(3%)
+  P33: IoC=2.247  words= 61  unique= 40  diversity=0.66  AND=1(2%)
+  P34: IoC=1.937  words= 71  unique= 46  diversity=0.65  AND=2(3%)
+  P35: IoC=1.914  words= 71  unique= 44  diversity=0.62  AND=2(3%)
+  P36: IoC=2.126  words= 58  unique= 40  diversity=0.69  AND=2(3%)
+  P37: IoC=1.952  words= 60  unique= 43  diversity=0.72  AND=2(3%)
+  P38: IoC=1.847  words= 53  unique= 33  diversity=0.62  AND=2(4%)
+  P39: IoC=2.004  words= 64  unique= 39  diversity=0.61  AND=1(2%)
+  P40: IoC=1.860  words=224  unique=113  diversity=0.50  AND=1(0%)
+  P41: IoC=1.826  words= 68  unique= 44  diversity=0.65  AND=0(0%)
+  P42: IoC=1.806  words= 68  unique= 48  diversity=0.71  AND=1(1%)
+  P43: IoC=1.974  words= 69  unique= 45  diversity=0.65  AND=0(0%)
+  P44: IoC=1.917  words=326  unique=145  diversity=0.44  AND=16(5%)
+  P45: IoC=1.902  words= 70  unique= 42  diversity=0.60  AND=0(0%)
+  P46: IoC=2.471  words= 71  unique= 45  diversity=0.63  AND=1(1%)
+  P47: IoC=1.910  words= 66  unique= 40  diversity=0.61  AND=0(0%)
+  P48: IoC=1.684  words= 74  unique= 49  diversity=0.66  AND=0(0%)
+  P49: IoC=1.731  words= 20  unique= 17  diversity=0.85  AND=0(0%)
+  P50: IoC=2.012  words=326  unique=151  diversity=0.46  AND=11(3%)
+  P51: IoC=2.085  words= 70  unique= 43  diversity=0.61  AND=0(0%)
+  P52: IoC=1.762  words= 46  unique= 34  diversity=0.74  AND=2(4%)
+  P53: IoC=1.792  words= 58  unique= 39  diversity=0.67  AND=0(0%)
+  P54: IoC=1.506  words= 19  unique= 17  diversity=0.89  AND=0(0%)
+
+  Healthy text: IoC>1.7, diversity>0.4, AND<20%
+
+======================================================================
+TEST 5: PURE QUADGRAM SCORE (no vocabulary bonus)
+
+  Computing scores (this takes ~10s)...
+  Current key:           -150573.0
+  Random key (avg×3):    -250744.9
+  All-zeros key:         -250412.4
+
+  Improvement over random: +100171.9 nats (39.9%)
+
+  Rule of thumb: >10% improvement over random is highly significant.
+  >20% strongly suggests genuine plaintext structure.
+
+======================================================================
+TEST 6: LONG-WORD-ONLY DECODE (len>=7, no gap-filler short words)
+  Shows ONLY word slots that decode to confirmed long LP words.
+  These cannot be accidentally produced by quadgram optimization.
+
+  P21:
+    pos=    9 len= 8: YOURSELF
+    pos=   23 len=11: PRESERUATION
+    pos=   83 len=10: INSTRUCTION
+    pos=  104 len= 8: ATTACHED
+    pos=  172 len= 8: BEHAUIORS
+    pos=  188 len= 8: ATTACHED
+    pos=  249 len=10: INSTRUCTION
+    pos=  265 len= 8: DIUINITY
+  P22:
+    pos=  308 len=11: PRESERUATION
+    pos=  327 len=11: PRESERUATION
+    pos=  345 len=12: INTELLIGENCE
+  P23:
+    pos=  445 len= 8: DECEPTION
+    pos=  453 len= 8: YOURSELF
+    pos=  580 len=12: INTELLIGENCE
+    pos=  621 len= 8: DISCOUER
+    pos=  708 len=12: INTELLIGENCE
+  P24:
+    pos=  813 len=10: INSTRUCTION
+    pos=  831 len= 8: ATTACHED
+    pos=  898 len= 8: DECEPTION
+    pos=  932 len= 8: THELOSSOF
+    pos=  940 len= 8: DECEPTION
+    pos=  984 len= 8: THELOSSOF
+    pos=  999 len= 8: THELOSSOF
+  P25:
+    pos= 1011 len= 8: DISCOUER
+    pos= 1027 len= 9: ENCRYPTED
+    pos= 1077 len= 8: ATTACHED
+    pos= 1131 len=10: CONSUMPTION
+    pos= 1147 len=12: INTELLIGENCE
+    pos= 1179 len=10: INSTRUCTION
+    pos= 1193 len= 9: PRACTICES
+    pos= 1219 len= 8: YOURSELF
+    pos= 1227 len= 8: PREPARED
+    pos= 1432 len= 8: THELOSSOF
+    pos= 1448 len=11: PRESERUATION
+    pos= 1480 len=12: INTELLIGENCE
+    pos= 1512 len= 8: DISCOUER
+    pos= 1659 len= 8: YOURSELF
+    pos= 1683 len= 8: DIUINITY
+    pos= 1723 len= 8: THELOSSOF
+    pos= 1755 len=11: PRESERUATION
+    pos= 1770 len= 9: ADHERENCE
+    pos= 1823 len= 9: ADHERENCE
+    pos= 1851 len= 8: DISCOUER
+    pos= 1877 len=11: PRESERUATION
+    pos= 1917 len= 9: ADHERENCE
+    pos= 2008 len=11: PRESERUATION
+    pos= 2051 len=12: INTELLIGENCE
+    pos= 2092 len= 9: ENCRYPTED
+    pos= 2116 len=10: INSTRUCTION
+    pos= 2284 len= 9: ADHERENCE
+    pos= 2306 len=10: INSTRUCTION
+    pos= 2392 len= 9: PRACTICES
+    pos= 2419 len= 8: YOURSELF
+    pos= 2538 len=14: CIRCUMFERENCES
+    pos= 2701 len= 8: PREPARED
+    pos= 2720 len= 8: DECEPTION
+  P26:
+    pos= 2763 len= 8: DISCOUER
+    pos= 2781 len=10: CONSUMPTION
+  P27:
+    pos= 3004 len=12: INTELLIGENCE
+    pos= 3080 len=12: INTELLIGENCE
+    pos= 3167 len=12: INTELLIGENCE
+    pos= 3191 len=10: INSTRUCTION
+  P28:
+    pos= 3330 len= 8: DECEPTION
+    pos= 3453 len=11: PRESERUATION
+    pos= 3485 len= 8: YOURSELF
+    pos= 3496 len= 8: THELOSSOF
+  P29:
+    pos= 3743 len= 8: DIUINITY
+    pos= 3751 len= 8: DISCOUER
+  P30:
+    pos= 3921 len= 9: PRACTICES
+    pos= 3997 len=11: PRESERUATION
+    pos= 4035 len= 9: ENCRYPTED
+  P31:
+    pos= 4044 len= 8: BEHAUIORS
+    pos= 4105 len= 8: BEHAUIORS
+  P32:
+    pos= 4356 len= 9: ADHERENCE
+    pos= 4415 len= 8: YOURSELF
+    pos= 4463 len=13: CIRCUMFERENCE
+    pos= 4476 len= 8: THELOSSOF
+    pos= 4591 len= 8: YOURSELF
+    pos= 4599 len= 8: ATTACHED
+    pos= 4626 len=12: INTELLIGENCE
+    pos= 4645 len=12: INTELLIGENCE
+    pos= 4708 len= 8: DISCOUER
+    pos= 4743 len= 8: DIUINITY
+    pos= 4797 len= 8: YOURSELF
+    pos= 4935 len= 8: ATTACHED
+    pos= 5085 len= 8: DECEPTION
+    pos= 5138 len=10: INSTRUCTION
+    pos= 5195 len= 9: ADHERENCE
+    pos= 5208 len= 8: DISCOUER
+    pos= 5250 len= 9: ADHERENCE
+    pos= 5335 len= 8: THELOSSOF
+    pos= 5552 len= 8: DISCOUER
+    pos= 5660 len= 8: ATTACHED
+    pos= 5766 len= 8: PREPARED
+    pos= 5812 len= 8: YOURSELF
+    pos= 5826 len=11: PRESERUATION
+    pos= 5907 len= 8: ATTACHED
+    pos= 5975 len= 8: BEHAUIORS
+    pos= 5991 len= 8: ATTACHED
+    pos= 6052 len=10: INSTRUCTION
+    pos= 6130 len=11: PRESERUATION
+    pos= 6148 len=12: INTELLIGENCE
+  P33:
+    pos= 6274 len= 8: DISCOUER
+    pos= 6355 len= 8: YOURSELF
+  P34:
+    pos= 6493 len= 9: ADHERENCE
+  P35:
+    pos= 6689 len=10: INSTRUCTION
+    pos= 6716 len= 8: DISCOUER
+    pos= 6739 len= 8: DISCOUER
+  P36:
+    pos= 7007 len= 9: ENCRYPTED
+    pos= 7059 len= 8: PREPARED
+    pos= 7106 len= 8: PREPARED
+    pos= 7144 len=11: PRESERUATION
+    pos= 7155 len= 8: DISCOUER
+  P37:
+    pos= 7211 len= 8: THELOSSOF
+  P38:
+    pos= 7574 len= 8: THELOSSOF
+  P39:
+    pos= 7833 len=10: INSTRUCTION
+  P40:
+    pos= 7903 len= 8: DECEPTION
+    pos= 8004 len= 8: ATTACHED
+    pos= 8164 len= 8: THELOSSOF
+    pos= 8176 len=10: INSTRUCTION
+    pos= 8194 len= 8: ATTACHED
+    pos= 8261 len= 8: DECEPTION
+    pos= 8295 len= 8: THELOSSOF
+    pos= 8303 len= 8: DECEPTION
+    pos= 8416 len=14: CIRCUMFERENCES
+    pos= 8444 len=10: INSTRUCTION
+    pos= 8471 len= 9: ENCRYPTED
+    pos= 8535 len= 8: DISCOUER
+    pos= 8597 len= 9: ADHERENCE
+    pos= 8670 len= 8: DISCOUER
+    pos= 8688 len=10: CONSUMPTION
+  P41:
+    pos= 8992 len=10: INSTRUCTION
+    pos= 9030 len= 8: ATTACHED
+    pos= 9163 len= 8: ATTACHED
+  P42:
+    pos= 9189 len= 9: ENCRYPTED
+    pos= 9215 len=10: INSTRUCTION
+    pos= 9240 len= 8: DISCOUER
+    pos= 9346 len= 8: ATTACHED
+    pos= 9367 len= 9: ADHERENCE
+    pos= 9392 len= 8: THELOSSOF
+  P43:
+    pos= 9463 len= 8: DECEPTION
+    pos= 9478 len= 8: THELOSSOF
+    pos= 9490 len=10: INSTRUCTION
+    pos= 9510 len=10: INSTRUCTION
+    pos= 9584 len= 8: PREPARED
+    pos= 9641 len= 8: BEHAUIORS
+    pos= 9709 len=11: PRESERUATION
+  P44:
+    pos= 9730 len=12: INTELLIGENCE
+    pos= 9806 len=12: INTELLIGENCE
+    pos= 9893 len=12: INTELLIGENCE
+    pos= 9917 len=10: INSTRUCTION
+    pos=10056 len= 8: DECEPTION
+    pos=10179 len=11: PRESERUATION
+    pos=10211 len= 8: YOURSELF
+    pos=10222 len= 8: THELOSSOF
+    pos=10469 len= 8: DIUINITY
+    pos=10477 len= 8: DISCOUER
+    pos=10647 len= 9: PRACTICES
+    pos=10723 len=11: PRESERUATION
+    pos=10761 len= 9: ENCRYPTED
+    pos=10770 len= 8: BEHAUIORS
+    pos=10831 len= 8: BEHAUIORS
+    pos=11128 len= 8: DISCOUER
+    pos=11143 len= 8: PREPARED
+  P45:
+    pos=11170 len= 8: BEHAUIORS
+    pos=11184 len= 8: ATTACHED
+    pos=11273 len=10: CONSUMPTION
+    pos=11341 len= 8: DIUINITY
+    pos=11419 len= 9: ENCRYPTED
+  P46:
+    pos=11526 len=12: INTELLIGENCE
+    pos=11545 len= 8: THELOSSOF
+    pos=11611 len= 8: THELOSSOF
+    pos=11668 len= 8: THELOSSOF
+  P47:
+    pos=11703 len= 8: DISCOUER
+    pos=11711 len=10: INSTRUCTION
+    pos=11807 len= 8: DECEPTION
+    pos=11847 len= 9: PRACTICES
+    pos=11897 len= 9: PRACTICES
+    pos=11936 len=10: INSTRUCTION
+    pos=11956 len=11: PRESERUATION
+  P48:
+    pos=12103 len= 8: PREPARED
+    pos=12140 len= 8: PREPARED
+    pos=12237 len= 8: BEHAUIORS
+  P50:
+    pos=12368 len= 8: YOURSELF
+    pos=12506 len= 9: ADHERENCE
+    pos=12567 len= 8: DISCOUER
+    pos=12702 len=10: INSTRUCTION
+    pos=12729 len= 8: DISCOUER
+    pos=12752 len= 8: DISCOUER
+    pos=12892 len= 8: DISCOUER
+    pos=13020 len= 9: ENCRYPTED
+    pos=13072 len= 8: PREPARED
+    pos=13119 len= 8: PREPARED
+    pos=13157 len=11: PRESERUATION
+    pos=13168 len= 8: DISCOUER
+    pos=13587 len= 8: THELOSSOF
+  P51:
+    pos=13782 len= 8: DISCOUER
+    pos=13857 len=10: INSTRUCTION
+    pos=13985 len=12: INTELLIGENCE
+    pos=14022 len= 8: DISCOUER
+  P52:
+    pos=14067 len= 8: YOURSELF
+    pos=14116 len=10: INSTRUCTION
+    pos=14183 len=11: PRESERUATION
+  P53:
+    pos=14222 len= 8: DIUINITY
+    pos=14281 len=10: CONSUMPTION
+    pos=14291 len= 8: DIUINITY
+    pos=14307 len= 8: DECEPTION
+    pos=14380 len= 8: BEHAUIORS
+    pos=14397 len= 8: YOURSELF
+    pos=14443 len=10: INSTRUCTION
+  P54:
+    pos=14477 len=12: INTELLIGENCE
