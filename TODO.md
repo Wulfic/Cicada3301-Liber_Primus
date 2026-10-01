@@ -9,7 +9,32 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-*(none. The next research step is MASTER_TRACKER §1, item 1. Plan it here before starting.)*
+### L — what values can the key take? (started 2026-10-01)
+
+**Goal.** Tracker §1 item 1. Generalise C10 from "English text" to any key *alphabet*. When the key's values come
+from a small set, the cipher distribution r = q ⊛ k is uneven in every mode and offset, and drift does not change
+it. Testing the marginal excludes whole classes of digit, hex and letter keys without decoding any.
+
+**Prediction (model only, before LP2): expected LLR on 12,956 runes if the alphabet were the key's.**
+Decimal digits 0–9: +240. Hex 0–15: +41. Uniform letters A–Z: +25. Base-60: +3. Two-digit groups 00–99: +1.1.
+Bytes: +0.3. Three-digit groups: 0.0. Also tested: **English text written as Latin letters**, A–Z → 0–25, with
+A–Z frequencies from the solved translation. C10 covered English only in rune form.
+
+**Declared rules.**
+- Statistic: as C10, LLR = Σ O_c log(29 r_c), the most favourable of 29 offsets in each of 3 modes. Offsets also
+  cover A = 0 against A = 1, and digit keys + constant.
+- **Excluded** if every mode's best LLR ≤ −10.
+- **Untestable** (recorded, not excluded) if the predicted LLR is below 20: base-60, 00–99, bytes, 000–999.
+- **Positive controls:** LP2-sized synthetic ciphers (solved plaintext, repeated) with random keys from each
+  testable alphabet, and with Emerson as Latin letters, must give LLR ≥ +10 with their own model.
+
+**Consequence if excluded.** No key made of single decimal digits (π, e, the 2012 P.S. number, RAND digits, the
+decimal digits of a hash), single hex digits (SHA hashes, OutGuess hex), or letters (uniform, or English).
+
+**Not doing.** No new decodes. Wider alphabets with no power are recorded as untestable this way.
+
+**Blast radius.** `tools/lpcore/stats.py` (refactor `running_key_distribution` over a new `cipher_distribution`),
+`tests/test_keyspace.py`, docs. **Rollback:** `git revert`.
 
 ## Owner items
 

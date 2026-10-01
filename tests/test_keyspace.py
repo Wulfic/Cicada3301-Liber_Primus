@@ -3,22 +3,25 @@
 C10: the key is not English text (any text), as letters, prime values or φ(prime values), in any mode and shift.
 C11: the cipher is not an autokey on its own ciphertext at any lag 2–1000.
 C12: no earlier ciphertext rune (lag 1–1000) chooses the alphabet, c_i = σ_{c_{i−L}}(p_i), for any σ.
+C13: the key's values are not single decimal digits, hex digits, or letters A–Z (uniform or English).
 Each verdict pins the observed numbers; each statistic has a positive control.
 """
 
 from __future__ import annotations
 
+import math
 import random
 import unittest
 from collections import Counter
 
 from tools.lpcore import detect, keys, leak, stats
-from tools.lpcore.corpus import load_corpus
+from tools.lpcore.corpus import REPO_ROOT, load_corpus
 from tools.lpcore.gematria import N, PRIME_VALUES
 from tools.lpcore.verify import load_translation
 
 CORPUS = load_corpus()
-PLAIN = [r for w in keys.solved_plaintext_words(CORPUS, load_translation()) for r in w]
+TRANSLATION = load_translation()
+PLAIN = [r for w in keys.solved_plaintext_words(CORPUS, TRANSLATION) for r in w]
 Q = detect.unigram(PLAIN)
 LP2 = [CORPUS.segment_runes(s) for s in stats.UNSOLVED_SEGMENTS]
 MAPPINGS = {
@@ -146,6 +149,65 @@ class TestC12CiphertextSelectedAlphabets(unittest.TestCase):
         chi2, df = stats.transition_chi2(LP2, 1)
         self.assertEqual(df, 783)
         self.assertAlmostEqual(chi2, 785.5, delta=0.1)                          # lag 1 off the diagonal: flat
+
+
+def latin_letter_weights() -> list[int]:
+    """A–Z counts of the solved English translation: an English key written in Latin letters (A = 0 … Z = 25)."""
+    text = " ".join(c for paras in TRANSLATION.values() for para in paras for c in para).upper()
+    counts_ = Counter(ch for ch in text if "A" <= ch <= "Z")
+    return [counts_[chr(ord("A") + i)] for i in range(26)]
+
+
+class TestC13KeyAlphabets(unittest.TestCase):
+    """Declared: excluded if every mode's best LLR ≤ −10; untestable if the predicted LLR is below 20."""
+
+    TESTABLE = {"decimal digits": [1] * 10, "hex digits": [1] * 16, "letters A-Z": [1] * 26}
+    UNTESTABLE = {"base-60 digits": [1] * 60, "two-digit groups": [1] * 100, "bytes": [1] * 256}
+
+    @staticmethod
+    def best(cnt: list[int], weights: list[int]) -> float:
+        key = stats.values_distribution(weights)
+        return max(stats.unigram_llr(cnt, stats.cipher_distribution(Q, key, mode, a))
+                   for mode in detect.MODES for a in range(N))
+
+    def test_values_distribution(self) -> None:
+        self.assertEqual(stats.values_distribution([1] * 58), [1 / N] * N)
+        self.assertAlmostEqual(stats.values_distribution([1] * 30)[0], 2 / 30)
+        with self.assertRaises(ValueError):
+            stats.values_distribution([0, 0])
+
+    def test_positive_controls(self) -> None:
+        plain = (PLAIN * 5)[:sum(map(len, LP2))]
+        rng = random.Random(13)
+        for name, weights in self.TESTABLE.items():
+            key = rng.choices(range(len(weights)), k=len(plain))
+            with self.subTest(alphabet=name):
+                self.assertGreater(self.best(counts([(p + k) % N for p, k in zip(plain, key)]), weights), 10.0)
+        text = (REPO_ROOT / "data" / "corpora" / "emerson_essays.txt").read_text(encoding="utf-8", errors="replace")
+        latin = [ord(ch) - ord("A") for ch in text.upper() if "A" <= ch <= "Z"][5000:5000 + len(plain)]
+        cnt = counts([(p + k) % N for p, k in zip(plain, latin)])
+        self.assertGreater(self.best(cnt, latin_letter_weights()), 10.0)
+
+    def test_small_key_alphabets_are_excluded(self) -> None:
+        cnt = counts([r for s in LP2 for r in s])
+        observed = {name: self.best(cnt, w) for name, w in self.TESTABLE.items()}
+        observed["English as Latin letters"] = self.best(cnt, latin_letter_weights())
+        for name, llr in observed.items():
+            with self.subTest(alphabet=name):
+                self.assertLessEqual(llr, C10_EXCLUDE)                          # verdict: excluded
+        self.assertAlmostEqual(observed["decimal digits"], -214.3, delta=0.1)
+        self.assertAlmostEqual(observed["hex digits"], -19.5, delta=0.1)
+        self.assertAlmostEqual(observed["letters A-Z"], -14.3, delta=0.1)
+        self.assertAlmostEqual(observed["English as Latin letters"], -121.7, delta=0.1)
+
+    def test_wide_alphabets_have_no_power(self) -> None:
+        # Recorded as untestable this way: even the true model would score below the +20 needed.
+        for name, weights in self.UNTESTABLE.items():
+            key = stats.values_distribution(weights)
+            r = stats.cipher_distribution(Q, key, "sub")
+            expected_if_true = sum(map(len, LP2)) * sum(x * math.log(N * x) for x in r)
+            with self.subTest(alphabet=name):
+                self.assertLess(expected_if_true, 20.0)
 
 
 if __name__ == "__main__":

@@ -118,24 +118,42 @@ def lag_scan(streams: Sequence[Sequence[int]], lags: Iterable[int]) -> list[tupl
 
 # --- C10/C11: what the key's own statistics must be (TODO stage J) -------------------------------
 
-def running_key_distribution(q: Sequence[float], mapping: Sequence[int], mode: str, lam: float = 1.0,
-                             shift: int = 0) -> list[float]:
-    """Distribution of the cipher rune when p ~ q and the key value is σ(k) + shift, k ~ λ·q + (1 − λ)·uniform.
+def cipher_distribution(q: Sequence[float], key: Sequence[float], mode: str, shift: int = 0) -> list[float]:
+    """Distribution of the cipher rune when p ~ q and the key value ~ `key` + shift, independently.
 
     `mode` names the decryption, as in `ciphers.apply_stream`: "sub" (c = p + k), "add" (c = p − k),
-    "beaufort" (c = k − p). σ = `mapping`, a table from key letter to key value.
+    "beaufort" (c = k − p).
     """
-    if mode not in ("sub", "add", "beaufort") or not 0.0 <= lam <= 1.0 or len(q) != N or len(mapping) != N:
-        raise ValueError("running_key_distribution: bad arguments")
-    key = [0.0] * N
-    for letter in range(N):
-        key[(mapping[letter] + shift) % N] += lam * q[letter] + (1 - lam) / N
+    if mode not in ("sub", "add", "beaufort") or len(q) != N or len(key) != N:
+        raise ValueError("cipher_distribution: bad arguments")
     out = [0.0] * N
     for p in range(N):
         for k in range(N):
-            c = {"sub": p + k, "add": p - k, "beaufort": k - p}[mode] % N
+            c = {"sub": p + k + shift, "add": p - k - shift, "beaufort": k + shift - p}[mode] % N
             out[c] += q[p] * key[k]
     return out
+
+
+def values_distribution(weights: Sequence[float]) -> list[float]:
+    """Reduce a distribution over key values 0, 1, 2, … (any count) to a distribution mod 29."""
+    total = sum(weights)
+    if total <= 0 or min(weights) < 0:
+        raise ValueError("values_distribution needs non-negative weights with a positive sum")
+    out = [0.0] * N
+    for v, w in enumerate(weights):
+        out[v % N] += w / total
+    return out
+
+
+def running_key_distribution(q: Sequence[float], mapping: Sequence[int], mode: str, lam: float = 1.0,
+                             shift: int = 0) -> list[float]:
+    """`cipher_distribution` for a key letter k ~ λ·q + (1 − λ)·uniform whose value is σ(k) + shift, σ = `mapping`."""
+    if not 0.0 <= lam <= 1.0 or len(q) != N or len(mapping) != N:
+        raise ValueError("running_key_distribution: bad arguments")
+    key = [0.0] * N
+    for letter in range(N):
+        key[mapping[letter] % N] += lam * q[letter] + (1 - lam) / N
+    return cipher_distribution(q, key, mode, shift)
 
 
 def unigram_llr(counts: Sequence[int], model: Sequence[float]) -> float:
