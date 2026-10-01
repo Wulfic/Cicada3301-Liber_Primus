@@ -13,7 +13,7 @@ Nothing in here is loaded by code. For runes, use `data/canonical/` through `too
 
 | File | Contents |
 |---|---|
-| `lp2_logic_findings_2026-09-29.md` | Key-independent constraints C1–C7 on the unsolved LP2 cipher, the scan-32 square decoded, open items (§6) |
+| `lp2_logic_findings_2026-09-29.md` | Key-independent constraints C1–C8 on the unsolved LP2 cipher, the scan-32 square decoded, open items (§6), the doublet leak (§7) |
 
 ## sources/
 
@@ -41,6 +41,6 @@ Nothing in here is loaded by code. For runes, use `data/canonical/` through `too
 | `cicada_puzzle_paper.pdf` | Academic paper on the puzzles |
 | `cuneiform.pdf` | Cuneiform numeral reference (LP2 uses base-60 cuneiform) |
 | `images/2_grams.png` | 2-gram count table for LP2 pages 0–55 (12,956 runes). It shows the doublet deficit on the diagonal |
-| `images/Algorithm.png` | A community "key switch" proposal: change keys whenever the next cipher rune would repeat. **A candidate mechanism for the doublet rule** (findings §6.1) |
+| `images/Algorithm.png` | A community "key switch" proposal: change keys whenever the next cipher rune would repeat. Tested and **refuted** as the doublet mechanism (findings §7, L5) |
 | `images/Symbols_page34.png` | Cuneiform reading 10·7·10·3 / 50·5·1 in base 60. Neither total is prime |
 | `images/Screenshot_from_2016-01-15_02-52-43.png` | Output of a word-pattern lookup tool |

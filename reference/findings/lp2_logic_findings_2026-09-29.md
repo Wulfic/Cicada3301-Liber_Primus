@@ -35,7 +35,7 @@ Each result needs no key and no search. Each has a named regression test.
 | C3 | **The surviving doublets do not mark any single plaintext letter.** This refutes the chain-multiplicative family c = c₋₁ + (p − x)·k over Z₂₉\*. | F predicts about 75 doublets at the end of 2-rune words (OF, IF); we observe 1. A positional log-likelihood against random placement is ≤ −0.3 for all 29 letters. EA's 0.62 % frequency matching 0.66 % is a coincidence. | analysis script (§5) |
 | C4 | **No additive mod-29 cipher with a plaintext-independent key can produce the deficit**, whatever the key text. | Predicted rate Σ P(Δp=d)·P(Δk=−d) with LP-English as the model: English running key / long-lag autokey 3.60 %; φ(prime) 3.20 %; prime values 3.20 %; any flat key 3.45 %. Observed: 0.66 %. | `test_additive_ciphers_cannot_produce_the_deficit` |
 | C5 | **Only lag 1 is affected.** Repeats at lags 2–10 are normal. | 3.38–3.69 % at every lag from 2 to 10 | `test_only_lag_one_is_depleted` |
-| C6 | **One system throughout, with no seam.** Every unsolved section shows the deficit. | z from −4.1 to −8.9 per section; early (0.53 %) vs late (0.77 %) sections are not significantly different (p ≈ 0.10) | analysis script (§5) |
+| C6 | **One system throughout, with no seam.** Every unsolved section shows the deficit. | z from −4.1 to −8.9 per section; early (0.53 %) vs late (0.77 %) sections are not significantly different (p ≈ 0.10). All 9 sections: χ² = 5.33, df 8, p = 0.72 (§7 L4) | `test_l4_survivors_are_homogeneous_and_unclustered` |
 | C7 | **Any scheme that uses one shift per word is excluded.** | A per-word shift preserves plaintext bigram differences inside words (2.6 % doublets for LP-English). Observed within-word rate: 0.63 %. | follows from C1 |
 
 Reading of C1–C7: the deficit comes from a rule applied at the output of a non-periodic
@@ -75,18 +75,16 @@ The other squares in the book are also decoded:
   Curiosities, not evidence: 729 = 9³ and 1729 = 9³ + 10³ (the taxicab number); 1021 is prime;
   3316 = 4 × 829, and 829 is one of the square's primes.
 
-## 5. Reproducing the analysis-script rows (C3, C6)
+## 5. Reproducing the analysis-script row (C3)
 
-C3 and C6 were computed in a one-off session script. The inputs are all available from
+C3 was computed in a one-off session script (C6 is now a test, §7 L4). The inputs are all available from
 `tools.lpcore`: `corpus.rune_words(seg)` for word positions, and `stats.lag_repeats` for
-per-section rates. Promote them to tests before building on them.
+per-section rates. Promote it to a test before building on them.
 
 ## 6. What is still open — suggested next logic steps
 
-1. **Characterise the leak.** A software rule would suppress 100 % of would-be doublets, not
-   81 %. Find what distinguishes the 86 survivors. Candidates: a second rule that sometimes
-   re-creates a doublet; keystream values that coincide; a hand-applied process.
-   Their identities are flat (no rune dominates), and they are not tied to a plaintext letter (C3).
+1. ~~**Characterise the leak.**~~ **Done 2026-10-01, see §7.** Nothing separates the survivors.
+   The key-switch scheme is refuted. C8 states what any re-keying rule must satisfy.
 2. **Key-source riddles not in either community ledger.** Only the new ones are worth
    testing: the scan-32 prime spiral as an ordinal stream; values of the solved text's words
    ("their numbers are the direction", 2016). Each must be one deterministic decryption with
@@ -94,3 +92,34 @@ per-section rates. Promote them to tests before building on them.
 3. **Section titles** are short, structured, and one of them is "A" + 9 runes. Crib ideas must
    state their prediction for the *key* fragment (e.g. "reads as English" for a running key)
    before running.
+
+## 7. The doublet leak, characterised (2026-10-01, TODO stage H)
+
+The predictions and verdict rules were written in `TODO.md` before the run. Module: `tools/lpcore/leak.py`.
+Tests: `tests/test_leak.py`. Each statistic also has a positive control, a synthetic stream with the effect
+built in, and the test checks that the statistic detects it.
+
+| # | Question | Observed | Verdict |
+|---|---|---|---|
+| L1 | Where did the ≈ 361 suppressed doublets go? | Δc bins d = 1..28 range 404–510. The largest deviation is \|z\| = 2.58 (d = 17, *low*). Threshold 3.5 | **Spread evenly.** No "nudge" rule (c ± 1 or similar) |
+| L2 | Is the rule checked only within a written line? | within a line 82 / 12,362 (0.66 %); across a line break 4 / 585 (0.68 %); across a page break 0 / 48 | **The rule spans line and page breaks.** One-sided p = 0.54 |
+| L3 | Do survivors fall on a period (m = 2..32, two indexings)? | Best union-bound p = 0.036 (m = 27 along the stream). Bonferroni threshold 1.6 × 10⁻⁴ | **No period** |
+| L4 | Are survivors clustered or section-dependent? | Across sections χ² = 5.33, df 8, p = 0.72 (C6, now a test). Index of dispersion in 500-pair windows = 1.02 | **Homogeneous and unclustered** |
+| L5 | The community key-switch ([`Algorithm.png`](../community/images/Algorithm.png)) on 2,901 runes of LP1 plaintext | DIVINITY / CIRCUMFERENCES: idealised 6 / 2,900 (0.21 %), the picture's literal code 10 / 2,898 (0.35 %, not the 0.69 % it claims). Scaled to 12,947 pairs: λ = 27 and 45; P(X ≥ 86) = 9 × 10⁻²⁰ and 3 × 10⁻⁸ | **Refuted** as declared (threshold 10⁻⁶) |
+
+The second declared key pair, φ(prime) / prime values, turned out to be degenerate: φ(p) = p − 1, so key 2 is
+always key 1 + 1 and no switched rune can repeat (0 survivors). This does not change the verdict. It is a
+special case of C8 below.
+
+**C8 (exact, no key needed): a re-keying rule leaks exactly where the replacement key equals the original.**
+Suppose a would-be doublet p + k = c₋₁ is re-encrypted with a replacement key value k′. Then p + k′ = c₋₁
+holds if and only if k′ ≡ k. So any "on a would-be doublet, use another key value" mechanism (a second key,
+skipping to the next key value, a re-draw) keeps 19 % of would-be doublets only if its replacement value
+equals the original at ≈ 19 % of those positions. For independent keys the figure is 1 / 29 ≈ 3.4 %.
+For a "skip to the next key value" rule, 19 % is the key stream's own lag-1 repeat rate.
+
+**Reading.** The survivors look like independent random events at one constant rate. That rate holds across
+lines, pages, sections and phases, and the missing doublets are spread evenly over every other difference.
+This fits a re-keying rule (L1) whose replacement agrees with the original about 19 % of the time (C8).
+It also fits a check applied by hand with ≈ 81 % reliability. These data cannot tell the two apart.
+Any proposed mechanism must reproduce L1–L4 and the 19 % figure from its own definition, without fitting.

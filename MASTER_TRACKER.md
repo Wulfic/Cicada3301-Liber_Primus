@@ -4,7 +4,7 @@
 and what to do next. Every claim on it is backed by a test or a linked document. If something here
 disagrees with the tests, the tests win, and this page needs fixing.
 
-**Last updated:** 2026-10-01 · **Tests:** 35, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
+**Last updated:** 2026-10-01 · **Tests:** 48, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
 
 ---
 
@@ -14,17 +14,15 @@ disagrees with the tests, the tests win, and this page needs fixing.
 match their scans, so most older "discoveries" were artifacts (see §4.3). Now one canonical transcription
 (`data/canonical/`) is read by one tested loader (`tools/lpcore`). Every solved section decrypts from it
 exactly. The unsolved LP2 cipher has a key-independent fingerprint (§3.2). The repo was reorganised by trust level.
+The doublet leak has been characterised: the 86 survivors are random at a constant ≈ 19 %, and the key-switch
+scheme is refuted (§3.2 "The leak", findings §7).
 
 **Next actions, in order** (detail in [findings §6](reference/findings/lp2_logic_findings_2026-09-29.md)):
 
-1. **Characterise the doublet "leak".** A software rule would suppress 100 % of would-be doublets, but
-   only ~81 % are suppressed. Find what distinguishes the 86 survivors. First candidate to test: the community
-   **key-switch** scheme ([`Algorithm.png`](reference/community/images/Algorithm.png): when the next cipher rune would repeat
-   the last one, switch to a second key). Predict its doublet rate and survivor pattern before comparing with the book.
-2. **Key-source riddles not in either community ledger.** Test the scan-32 prime spiral as an ordinal key
+1. **Key-source riddles not in either community ledger.** Test the scan-32 prime spiral as an ordinal key
    stream, and the values of the solved text's words as keys ("their numbers are the direction"). Each is one deterministic,
    skip-aware decode with a pass threshold declared before the run.
-3. **Section-title cribs.** Titles are short and structured (one is "A" + 9 runes). Each crib idea must state its
+2. **Section-title cribs.** Titles are short and structured (one is "A" + 9 runes). Each crib idea must state its
    prediction for the *key* fragment before it runs.
 
 **Before you start anything:** read §4 (ruled out) and §6 (rules of evidence). Plans go in [`TODO.md`](TODO.md).
@@ -84,7 +82,7 @@ Errata, each with its evidence in `solved.py`: **WIDSOM** is the book's own typo
 | **all** | | **12,956** | **86** | **0.66 %** vs 3.45 % expected (z = −17) | |
 
 Everything else is flat: IoC, rune frequencies, and repeats at lags 2–10. The constraints derived from that
-are C1–C7 in [findings §2](reference/findings/lp2_logic_findings_2026-09-29.md):
+are C1–C7 in [findings §2](reference/findings/lp2_logic_findings_2026-09-29.md) (C8 is in §7):
 
 - The anti-doublet rule acts on the continuous rune stream and ignores word boundaries (C1).
 - There is no plaintext-F passthrough, unlike LP1 (C2). The surviving doublets mark no single plaintext letter (C3).
@@ -93,6 +91,13 @@ are C1–C7 in [findings §2](reference/findings/lp2_logic_findings_2026-09-29.m
 
 **Reading:** a rule applied at the output of a non-periodic additive stream. It is not a property of the key
 text, of word structure, or of any plaintext letter.
+
+**The leak (findings §7, `tests/test_leak.py`).** The 86 survivors look like independent random events at one
+constant rate, about 19 % of would-be doublets. That rate holds across lines and pages (L2), periods (L3), and
+sections and windows (L4). The suppressed doublets are spread evenly over all other differences (L1).
+**C8:** a rule that re-keys a would-be doublet keeps it exactly when the replacement key value equals the original.
+So a re-keying rule needs agreement at ≈ 19 % of those positions (independent keys give 3.4 %). A check
+applied by hand with ≈ 81 % reliability also fits. These data cannot tell the two apart.
 
 ### 3.3 The number squares are all decoded
 
@@ -118,6 +123,10 @@ RANDOM.ORG and RAND archives (~14.5 billion offsets). Both conclude "OTP-class" 
 - No doublet↔plaintext-letter link; this refutes the chain-multiplicative family c = c₋₁ + (p − x)·k (C3).
 - No additive cipher with a plaintext-independent key, including English running keys, primes and φ(prime) (C4).
 - No per-word shift scheme (C7).
+- The community **key-switch** scheme ([`Algorithm.png`](reference/community/images/Algorithm.png)) leaves 6–10 doublets
+  per ~2,900 runes, which scales to λ ≈ 27–45 against the 86 observed (P ≤ 3 × 10⁻⁸). Its literal code gives 0.35 %,
+  not the 0.69 % the picture claims (L5, findings §7).
+- A per-line check, a "nudge" rule (c ± 1), and a periodic gap in checking are all excluded (L1–L3).
 - The "Echo446Ghq full solution" is debunked ([analysis](reference/community/echo446ghq_analysis.md)).
 
 ### 4.3 Invalid claims from before 2026-09-29
@@ -147,8 +156,8 @@ wrong scan numbers. But none of them was test-backed, and the community ledgers 
 
 The ordered list is in §1. These questions are also open and cheap to state:
 
-- Do the 86 surviving doublets cluster in position, or in the cipher values on either side of them?
-- Is the 1.08 % rate in segment 12 a real difference or noise? (C6 says early vs late is not significant, p ≈ 0.10.)
+- Answered 2026-10-01 (findings §7): the survivors do not cluster in position (L3, L4). Segment 12's 1.08 % is noise
+  (χ² across all sections p = 0.72).
 - Section sizes 729 = 9³ and 1729 = 9³ + 10³; 1021 is prime; 3316 = 4 × 829. These are curiosities, not evidence.
 
 ---
@@ -167,6 +176,7 @@ The ordered list is in §1. These questions are also open and cheap to state:
 
 | Date | What happened | Commits |
 |---|---|---|
+| 2026-10-01 | **Doublet leak characterised** (TODO H): L1–L5 and C8, `tools/lpcore/leak.py`, 13 tests. Key-switch refuted; C6 promoted to a test | this commit |
 | 2026-10-01 | Repo organised by trust level. This tracker rewritten; the old one archived. Material from another project removed. `.gitattributes` added | `f5ca9a1` … this commit |
 | 2026-09-29 | **Data-integrity correction.** Canonical corpus, `tools/lpcore` and 35 tests; 150 page files rebuilt; legacy tools and outputs archived; logic-only findings C1–C7; scan-32 square decoded | `f038274`, `50889e8`, `a85c106` |
 | 2026-02 → 2026-05 | Sessions 1–21 on the misaligned page files, much of it hill-climbing. Archived: [old tracker](reference/archive/MASTER_TRACKER_pre-2026-09-29.md) | — |
