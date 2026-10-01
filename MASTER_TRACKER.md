@@ -4,7 +4,7 @@
 and what to do next. Every claim on it is backed by a test or a linked document. If something here
 disagrees with the tests, the tests win, and this page needs fixing.
 
-**Last updated:** 2026-10-01 · **Tests:** 85, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
+**Last updated:** 2026-10-01 · **Tests:** 88, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
 
 ---
 
@@ -21,7 +21,7 @@ periodic keys are excluded (C9, findings §8). The key is not English text from 
 an autokey on its ciphertext (C10, C11, findings §9). No earlier cipher rune chooses the alphabet, for any secret
 alphabets (C12, findings §10). The key's values are not decimal digits, hex digits or letters (C13, findings §11). The base-60 grid on scans
 66–67 is a 184-byte stream. It is not the key, and it does not decrypt under the book's own keys or hash
-(findings §12–§13). So the key stream is random-like numbers, which is why
+(findings §12–§13). The anti-doublet re-keying is not "skip to the next key value" (C14, findings §14). So the key stream is random-like numbers, which is why
 title cribs were closed as untestable.
 
 **Next actions, in order** (detail in [findings §6](reference/findings/lp2_logic_findings_2026-09-29.md)):
@@ -93,7 +93,7 @@ Errata, each with its evidence in `solved.py`: **WIDSOM** is the book's own typo
 | **all** | | **12,956** | **86** | **0.66 %** vs 3.45 % expected (z = −17) | |
 
 Everything else is flat: IoC, rune frequencies, and repeats at lags 2–10. The constraints derived from that
-are C1–C7 in [findings §2](reference/findings/lp2_logic_findings_2026-09-29.md) (C8 is in §7, C9 in §8, C10–C11 in §9, C12 in §10, C13 in §11):
+are C1–C7 in [findings §2](reference/findings/lp2_logic_findings_2026-09-29.md) (C8 is in §7, C9 in §8, C10–C11 in §9, C12 in §10, C13 in §11, C14 in §14):
 
 - The anti-doublet rule acts on the continuous rune stream and ignores word boundaries (C1).
 - There is no plaintext-F passthrough, unlike LP1 (C2). The surviving doublets mark no single plaintext letter (C3).
@@ -104,6 +104,8 @@ are C1–C7 in [findings §2](reference/findings/lp2_logic_findings_2026-09-29.m
 - **No ciphertext-selected alphabet (C12):** c_i = σ_{c_{i−L}}(p_i) is excluded for any secret alphabets and
   any L ≤ 1000. This includes keyed autokeys c_i = p_i + f(c_{i−1}).
 - **Key alphabet (C13):** not single decimal digits, hex digits, or letters (uniform or English in Latin spelling).
+- **Not skip-next (C14):** a "skip to the next key value" rule needs a key repeating adjacent values ~19 % of the
+  time, and that would leak English differences into Δc. LLR −21.3. The replacement must be independent of the key stream.
 - **No periodic key (C9):** lags 11–1000 are normal. This excludes every period ≤ 1000 under a re-key rule that keeps
   the key in step, and every period ≤ 25 under a drifting one (findings §8).
 
@@ -152,6 +154,7 @@ RANDOM.ORG and RAND archives (~14.5 billion offsets). Both conclude "OTP-class" 
 - **Any English running key, plaintext autokey at any lag, ciphertext autokey at lags 2–1000** (C10, C11; findings §9).
   Section-title cribs are closed as untestable without a key model.
 - **Ciphertext-selected alphabets** c_i = σ_{c_{i−L}}(p_i), any σ, L ≤ 1000 (C12, findings §10).
+- **A "skip to the next key value" anti-doublet rule** (C14, findings §14).
 - **Grid bytes as LP ciphertext or as XOR/Vigenère of ASCII** under the AN END hash, φ(prime), primes, the solved
   keys as ASCII, or the square's cells (456 readings, findings §13).
 - **The scan 66–67 base-60 grid as a key** (bytes, 5-bit groups, base-60 digits; 3,132 decodes; findings §12).
@@ -206,6 +209,7 @@ The ordered list is in §1. These questions are also open and cheap to state:
 
 | Date | What happened | Commits |
 |---|---|---|
+| 2026-10-01 | **Skip-next rule** (TODO O): C14, the re-keying is not "skip to the next key value" (LLR −21.3; held-out models −20/−32) | `0d4d86b` + this commit |
 | 2026-10-01 | **Grid bytes** (TODO N): 72 byte decryptions and 384 rune readings under LP-native keys; none passes (best 44 % printable, best log LR −4.8) | `14afdff` + this commit |
 | 2026-10-01 | **Base-60 grid** (TODO M): scans 66–67 parse as 184 bytes. As a key (3 readings × 3 modes × 29 shifts × 12 alignments) nothing passes; the power check gives +45…+122 | `4d66364` + this commit |
 | 2026-10-01 | **Key alphabets** (TODO L): C13, the key is not decimal digits (−214), hex (−19.5) or letters (−14.3; English Latin −122); bytes, digit pairs and base 60 are untestable this way | `0c59200` + this commit |

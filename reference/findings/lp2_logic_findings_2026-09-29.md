@@ -314,3 +314,32 @@ atbash and atbash + 3), φ(prime), DIVINITY and FIRFUMFERENFE. The best log LR i
 
 **Reading.** The grid is not LP-style rune ciphertext under any solved-section method, and not a simple XOR or
 Vigenère of ASCII under the book's own keys or hash. Whatever it is needs another key, or more than one layer.
+
+## 14. The re-keying is not "skip to the next key value" (2026-10-01, TODO stage O)
+
+Rule declared in `TODO.md` before the run. Function: `leak.skip_next_llr`. Tests: `tests/test_leak.py` (`TestC14SkipNext`).
+
+**Argument.** By C8, a skip-next rule keeps a would-be doublet only when k_{j+1} = k_j. A 19 % survival rate then
+means the key repeats adjacent values about 19 % of the time. At those ordinary positions Δc = Δp, so the Δc
+histogram over bins 1–28 becomes P1(e) ∝ 0.19 · P(Δp = e) + 0.81/28 · (1 − P(Δp = e)). That carries the shape
+of English bigram differences. The flat alternative is that the replacement is independent of the next key
+value. Power, computed before the plan: expected χ² excess +47, directional LLR about ±23.
+
+**C14 result: LLR(H1 : flat) = −21.3**, against the declared exclusion line of −10. *Not blind on the data:* L1's
+undirected χ² (41.2 on 27 df) had been seen, but not this directional statistic.
+
+| Check | LLR |
+|---|---|
+| LP2, Δp model from all solved plaintext | **−21.3** |
+| LP2, Δp model from disjoint halves of the solved text | −31.7 / −20.0 |
+| Control: skip-next, key repeating 19 %, LP2-sized (in-sample model) | +34.8 / +39.7 / +34.0 |
+| Control: same, out-of-sample model | +11.0 / +7.2 / +10.6 / +29.0 (weaker, never negative) |
+| Control: fresh re-key, flat key | −13.1 / −28.0 / −31.6 |
+
+A by-product: a skip-next rule with a 19 %-repeating key reproduces LP2's doublet rate *by itself*
+(0.70–0.76 %, with no "keep" probability). That makes it an attractive mechanism, but the Δc histogram rules
+it out.
+
+**Consequence.** If the deficit comes from re-keying, the replacement value is independent of the next key value:
+a fresh draw, a second key, or a value from some other source. The other reading still stands: a check applied by
+hand that misses about 1 doublet in 5.
