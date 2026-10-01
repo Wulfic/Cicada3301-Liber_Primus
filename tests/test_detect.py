@@ -10,7 +10,7 @@ import csv
 import math
 import unittest
 
-from tools import run_stage_i
+from tools import run_stage_i, run_stage_m
 from tools.lpcore import detect, keys, leak, stats
 from tools.lpcore.corpus import load_corpus
 from tools.lpcore.gematria import N, runes_to_indices
@@ -183,6 +183,40 @@ class TestStageICandidates(unittest.TestCase):
         flat = [(p + k) % N for p, k in zip([r for w in words for r in w], key)]
         cipher = [tuple(flat[:4]), tuple(flat[4:])]
         self.assertTrue(all(w in vocab for w in run_stage_i.decode_title(cipher, key, "sub")))
+
+
+class TestStageMGrid(unittest.TestCase):
+    """The scan 66–67 base-60 grid as a key (declared in TODO.md stage M before the run)."""
+
+    def test_grid_is_a_byte_stream(self) -> None:
+        self.assertEqual(len(keys.grid_tokens(CORPUS)), 184)
+        data = keys.grid_bytes(CORPUS)
+        self.assertEqual((min(data), max(data)), (4, 255))
+        self.assertEqual(bytes(data[:4]).hex(), "cbe7a7ba")                    # 3N 3p 2l 36
+        self.assertEqual(len(keys.grid_5bit(CORPUS)), 294)
+        self.assertEqual(len(keys.grid_digits(CORPUS)), 368)
+        self.assertEqual(keys.grid_rune_offset(CORPUS), 2474)                   # of segment 15's 3,316 runes
+
+    def test_power_check(self) -> None:
+        # Declared gate: a right grid key on solved plaintext (skip-next rule) must clear the threshold.
+        for name, key in run_stage_m.grid_keys(CORPUS).items():
+            n = int(len(key) / 1.1)
+            cipher = keys.encrypt_dodging(PLAIN[700:700 + n], key, keep=0.19, seed=700)
+            with self.subTest(key=name):
+                self.assertGreater(detect.log_lr(cipher, key, Q), detect.THRESHOLD)
+
+    def test_recorded_family_fails(self) -> None:
+        with run_stage_m.OUT_PATH.open(encoding="utf-8", newline="") as f:
+            rows = list(csv.DictReader(f, delimiter="	"))
+        self.assertEqual(len(rows), 3 * 12 * 3 * N)
+        self.assertLess(max(float(r["log_lr_nats"]) for r in rows), detect.THRESHOLD)
+        real = [float(r["log_lr_nats"]) for r in rows if r["segment"] != "section 10"]
+        self.assertLess(max(real), 0.0)
+        row = next(r for r in rows if r["key"] == "G-B bytes" and r["segment"] == "section 15"
+                   and r["mode"] == "sub" and r["shift"] == "3")
+        key = run_stage_m.grid_keys(CORPUS)["G-B bytes"]
+        lr = detect.log_lr(CORPUS.segment_runes(15), key, Q, mode="sub", shift=3)
+        self.assertAlmostEqual(lr, float(row["log_lr_nats"]), places=2)
 
 
 if __name__ == "__main__":

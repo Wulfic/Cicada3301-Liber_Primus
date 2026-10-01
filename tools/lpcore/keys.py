@@ -7,6 +7,7 @@ by `detect.log_lr`, so `primes` also stands for p ± 1, φ(p) = p − 1 and 3301
 from __future__ import annotations
 
 import random
+import string
 from collections.abc import Sequence
 from itertools import islice
 
@@ -41,6 +42,51 @@ def word_sum_stream(words: Sequence[Sequence[int]]) -> list[int]:
 def plaintext_value_stream(words: Sequence[Sequence[int]]) -> list[int]:
     """K-D: prime value of each solved-plaintext rune, in order."""
     return [PRIME_VALUES[r] for w in words for r in w]
+
+
+BASE60_DIGITS = string.digits + string.ascii_uppercase + string.ascii_lowercase[:24]   # 0-9 A-Z a-x
+GRID_SCANS = (66, 67)
+GRID_SEGMENT = 15
+
+
+def grid_tokens(corpus: Corpus) -> list[str]:
+    """The two-character base-60 tokens of the scan 66–67 grid, in reading order."""
+    tokens = [w.text for w in corpus.words if w.kind == "number" and w.scan in GRID_SCANS]
+    bad = [t for t in tokens if len(t) != 2 or any(ch not in BASE60_DIGITS for ch in t)]
+    if bad or not tokens:
+        raise ValueError(f"unexpected grid tokens: {bad[:5]} (of {len(tokens)})")
+    return tokens
+
+
+def grid_bytes(corpus: Corpus) -> list[int]:
+    """G-B: each token as 60·a + b. All 184 values are below 256, so the grid is a byte stream."""
+    values = [60 * BASE60_DIGITS.index(a) + BASE60_DIGITS.index(b) for a, b in grid_tokens(corpus)]
+    if max(values) > 255:
+        raise ValueError(f"grid value {max(values)} is not a byte")
+    return values
+
+
+def grid_5bit(corpus: Corpus) -> list[int]:
+    """G-5: the grid's bits regrouped into 5-bit values, most significant bit first (a short tail is dropped)."""
+    bits = "".join(f"{v:08b}" for v in grid_bytes(corpus))
+    return [int(bits[i:i + 5], 2) for i in range(0, len(bits) - 4, 5)]
+
+
+def grid_digits(corpus: Corpus) -> list[int]:
+    """G-D: the single base-60 digits of the grid, two per token."""
+    return [BASE60_DIGITS.index(ch) for t in grid_tokens(corpus) for ch in t]
+
+
+def grid_rune_offset(corpus: Corpus) -> int:
+    """Index, within segment 15's rune stream, of the first rune after the grid begins."""
+    count = 0
+    for w in corpus.words:
+        if w.segment != GRID_SEGMENT:
+            continue
+        if w.kind == "number" and w.scan in GRID_SCANS:
+            return count
+        count += len(w.runes)
+    raise ValueError("grid not found in segment 15")
 
 
 def random_key(length: int, seed: int) -> list[int]:
