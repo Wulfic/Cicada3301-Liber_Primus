@@ -8,7 +8,7 @@ Nothing in this folder is tested, and nothing in it should be cited as evidence.
 - **They read misaligned data.** Until 2026-09-29, `pages/page_N/runes.txt` held LP2 page N while
   `pages/page_N/images/` held scan N.jpg, and LP1 text sat in pages 57–74. Every result these
   scripts produced from page files came from the wrong scan. The "discoveries" that depended on
-  that are listed in the data-integrity section at the top of `MASTER_TRACKER.md`.
+  that are listed in `MASTER_TRACKER.md` §4.3.
 - **Most of them are optimisers** (hill-climbing, simulated annealing, GPU search). Project
   policy is that hypothesis tests must be deterministic, with one decode and a threshold declared
   before the run. Optimiser output isn't accepted as evidence.

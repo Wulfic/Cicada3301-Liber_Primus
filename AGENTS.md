@@ -11,13 +11,13 @@ objection". When something is wrong, say so plainly and fix it.
 |---|---|
 | Rune text (LP1 + LP2) | `data/canonical/liber_primus_master.txt`. Load it **only** through `tools/lpcore/corpus.py` |
 | Proof the data and core are right | `python -m unittest discover -s tests -t . -v` (every solved section must decrypt) |
-| What is known, refuted and open | `MASTER_TRACKER.md` §0, then `reference/findings/lp2_logic_findings_2026-09-29.md` |
+| What is known, refuted and open | `MASTER_TRACKER.md` (start at §1 "Resume here"), then `reference/findings/lp2_logic_findings_2026-09-29.md` |
 | Current plan and progress | `TODO.md` |
 | Repo layout | `README.md` |
 
 ⚠️ **Anything written before 2026-09-29 is suspect.** Until then the page files were misaligned:
 `pages/page_N/runes.txt` held LP2 page N, not the runes on scan N.jpg. Claims built on them are
-listed as invalid in `MASTER_TRACKER.md` §0. Re-derive any older claim from canonical data before
+listed as invalid in `MASTER_TRACKER.md` §4.3. Re-derive any older claim from canonical data before
 you build on it. The old scripts and their outputs are in `tools/legacy/` and
 `data/archive/hillclimbers/`. They are history, not evidence.
 
