@@ -9,7 +9,59 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-*(none. The next research step is MASTER_TRACKER §1, item 1. Plan it here before starting.)*
+### U — Latin-square (Quagmire) tabulae: which constraints survive re-labelling (2026-10-01)
+
+**Goal.** MASTER_TRACKER §1 item 1. Quagmire I–IV and keyed mixed alphabets are c_i = π₂(π₁(p_i) + κ_i), with
+κ_i = π₃(k_i) the key value after its own relabelling (mode and constant offset are absorbed into π₁ and π₃).
+For a fixed key stream this is exactly the additive cipher on x = π₁(p), with its output renamed by π₂. Work out
+which of C1–C16 and L1–L5 hold for every π₁, π₂, π₃, then re-derive the label-dependent ones that can be re-derived.
+
+**Model-only facts checked before this declaration** (scratch script; never read LP2):
+- With π₁ uniformly random, E|â(f)|² = (29Σq² − 1)/28 at every f ≠ 0, so E[λ] = n·(29Σq² − 1)(29Σb² − 1)/28 for
+  **any** key distribution b. Monte Carlo agrees within 0.3 % for six key families (20,000 draws).
+- Draws of λ at LP2's length: English runes min 87 / median 294; English prime values 125 / 407; English Latin letters
+  120 / 350; decimal digits 187 / 693; hex digits 92 / 296; **uniform letters A–Z 14 / 42**.
+
+**U1. Audit (no LP2 run).** A statistic that depends only on equality patterns of c (doublets, lag repeats, χ²
+against flat, transition tables up to relabelling of rows and columns) is unchanged by π₂. A model that uses only the
+multiset of q is unchanged by π₁. Classification to be written up: invariant C1, C2, C3, C5–C9, C11, C12, C15,
+L2–L5; label-dependent C4, C10, C13, C14, L1 (its "no nudge" reading); C16 holds for its own family, which does not
+contain Quagmire. Test: for random π₁, π₂ and a fixed key, the Quagmire cipher and the additive cipher on π₁(p) give
+identical doublet counts, lag-1–10 repeats, pooled χ² and the C12 transition χ², while the Δc histogram differs.
+
+**U2. C4 without labels (new C17, theorem plus test; no LP2 run beyond the known 86 / 12,947).** For an iid key with
+value distribution b, independent of the plaintext, P(Δκ = e) = (1/29)Σ_f |b̂(f)|² ω^{fe}, which lies in
+[2/29 − Σb², Σb²]. So the doublet rate lies in that interval **for any π₁, π₂, π₃ and any plaintext language**.
+The observed 0.664 % needs Σb² ≥ 2/29 − 86/12,947 = 0.06233. Test: the interval holds exactly for 1,000 random (b, π)
+including point masses; the needed Σb² is pinned; flat, letters A–Z (0.0385), base 60, digit pairs and bytes are
+below it. That excludes all of them as rule-free sources of the deficit, under any labels.
+
+**U3. C10 and C13 under random alphabets (new C18, the LP2 run).**
+- **Model:** π₁, π₃ uniformly random permutations, either independent (variant I) or tied π₃ = π₁ (variant T,
+  Quagmire III-like). π₂ does not affect χ². The key is iid from family b. Families (6): English as runes (LP-English
+  q; covers letters), English as prime values mod 29 (φ is a shift of this, so the same family), English as Latin
+  letters A–Z, decimal digits, hex digits, uniform letters A–Z.
+- **Statistic:** pooled χ² (one set of alphabets for LP2, 28 df) and Σ per-section χ² over sections 7–9 and 11–15
+  (fresh alphabets per section, 224 df), as in stage T. For each draw, λ is computed exactly from r = π₁q ⊛ π₃b.
+  P = mean over draws of P(χ²_df(λ) ≤ observed). D = 100,000 draws for LP2 and 10,000 per control cipher, seed 3301.
+- **Family size N:** 6 families × 2 variants × 2 statistics = 24 rows.
+- **Exclude** a row if P ≤ 1e-4 under both the raw χ² and the χ² divided by the dodging factor (the mean χ² / df of
+  200 flat-key Quagmire controls at LP2's length, keep 0.19). **Not excluded** otherwise. Family-wise 24 × 1e-4.
+- **Gates, run first on synthetic data (word-shuffled solved plaintext, 12,956 runes, keep 0.19, re-key fresh):**
+  G1: for variant I, MC mean λ within 3 % of the formula, every family. G2 (power): per family and variant, 20
+  ciphers made with that family's key and random alphabets; the row is **testable** only if ≥ 18 / 20 reach
+  P ≤ 1e-4, otherwise it is recorded as **untestable this way** whatever LP2 gives. G3: 20 flat-key Quagmire
+  ciphers must give P > 1e-4 for every row; any failure makes the run **void**.
+- **Expected if the constraints survive:** English (3 representations), digits and hex excluded in all four
+  columns; uniform letters A–Z not excluded and probably untestable (median λ 42 vs LP2's λ_max 42.5).
+- **Fast vectorised noncentral CDF:** tested equal to `flatness.noncentral_chi2_cdf`.
+
+**Not doing:** adversarial alphabets (the minimum of λ over all 29!² pairs is open; we report the prior P and the
+smallest λ drawn); named keyword alphabets (a separate stage); C14 and L1 under relabelling; named keys in step
+(stage S's decodes were seen, so they cannot be reused). **Rejected:** a key-free test for flat keys. For a fixed key the
+cipher is the additive one renamed, and under a flat iid key it is uniform iid whatever π is, so no ciphertext
+statistic can see the alphabets.
+**Blast radius:** additive. A new `lpcore` module, runner, TSV, tests and docs. **Rollback:** `git revert` the stage commits.
 
 ## Owner items
 
