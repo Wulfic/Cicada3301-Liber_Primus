@@ -69,6 +69,19 @@ dominated the mean. At the true phase they score about +90, like the letter keys
 exists, and building one is its own stage); sources not on disk. **Blast radius:** additive only (new module, runner,
 TSVs, tests, docs). **Rollback:** `git revert` the stage commits.
 
+**Run 1 (after `8c93b22`): VOID by the rule above.** Four negative controls scored +904 … +1,104, all on
+plaintext-derived keys at 12,956 runes. The cause is in the control, not the detector. The control text was the
+2,901-rune plaintext tiled, and those keys are read cyclically with the same period 2,901. So the control cipher
+repeated itself at lag 2,901 (96.8 % of positions), and any classing of period 2,901 caught that, a shuffled key
+included. LP2 at lag 2,901 is normal (328 / 10,055 = 3.3 %). The 20 real-data nulls were all ≤ −489. No decode
+reached 30. The outputs of run 1 are committed as the record.
+
+**Run 2, declared now (S′).** One change, to the controls only: the control text is the solved plaintext's *words*,
+concatenated in a fresh seeded random order each time the list is used up. That text has no period. The family, the
+detector, α, the sizes, seeds and every rule above are unchanged. *Not blind:* run 1's LP2 decodes have been seen
+(all < 1 nat). They are deterministic, so run 2 must reproduce them exactly. The test will assert that, and the
+controls can then only decide where there is power, by the rule already written.
+
 ## Owner items
 
 - [ ] **Tokens in `.claude/mcp.vscode-reference.json`** (GitHub PAT, mem0, context7) are plaintext. They were never
