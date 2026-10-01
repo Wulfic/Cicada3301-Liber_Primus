@@ -11,7 +11,7 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ### W — byte keys as random tabulae, in step, flat negatives (2026-10-01)
 
-Tracker §1 item 1. Declared before `tools/run_stage_w.py` exists.
+Tracker §1 item 1. Declared before the runner (tools/run_stage_w.py, not yet written) exists.
 
 **Model:** c_i = σ_{k_{t+i}}(p_i). k is the raw byte stream (256 classes) of one named file, read cyclically. σ_v is an
 independent secret permutation for each byte value v, and t is any start phase (a uniform prior over every phase of
@@ -48,7 +48,7 @@ section 11 (1,894) borderline (stage S +35…+49), sections ≤ 1,729 and segmen
 excluded.
 **Not doing:** desync (1 % desync kills this detector, so the exclusion holds in step only); the mod-29 and rejection
 mappings (already C16); structured tabulae (Latin-square → C17–C19); new sources.
-**Outputs:** `tools/run_stage_w.py` (`--quick`), `reference/findings/stage_w_controls.tsv`, `stage_w_candidates.tsv`,
+**Outputs (to be written):** tools/run_stage_w.py (`--quick`), reference/findings/stage_w_controls.tsv and stage_w_candidates.tsv,
 a test pinning the headline, findings §21. **Blast radius:** additive. **Rollback:** `git revert` the stage commits.
 
 ## Owner items
