@@ -265,3 +265,28 @@ digits, and any number written out in decimal, read one digit per rune, in any m
 hex digits (a SHA hash, OutGuess hex), and not letters, whether uniform or English in Latin spelling. Wider
 alphabets (bytes, digit pairs, base 60) leave too little trace in the marginal. Those need a named source and
 `detect.log_lr`.
+
+## 12. The base-60 grid (scans 66–67) is 184 bytes, and not the key (2026-10-01, TODO stage M)
+
+Plan declared in `TODO.md` before the run. Parser: `keys.grid_bytes` and siblings. Run: `python -m tools.run_stage_m`,
+rows in [`stage_m_candidates.tsv`](stage_m_candidates.tsv). Tests: `tests/test_detect.py` (`TestStageMGrid`).
+
+**What the grid is.** Section 15 contains 184 two-character tokens in base 60 (0-9 A-Z a-x) on scans 66 and 67. The
+first character is never above 4, and when it is 4 the second is at most E, so every token is 60a + b ≤ 255.
+**The grid is a 184-byte stream.** It starts cb e7 a7 ba …, with 130 distinct values and an entropy of 6.91 bits
+per byte, about what 184 random bytes give. It sits after rune 2,474 of section 15's 3,316. Neither community
+ledger mentions it.
+
+**As a key: it fails.** There were three readings, all mod 29: bytes (184 values), 5-bit groups MSB first (294),
+and single base-60 digits (368). Each ran in 3 modes × 29 shifts × 12 alignments: the 9 section starts, LP2
+continuous, the runes right after the grid, and the runes ending where the grid begins. That is 3,132 decodes,
+with a false-positive bound of 3 × 10⁻¹⁰.
+
+| Key | Power check (right key, solved plaintext, skip-next rule) | Best on a real alignment |
+|---|---|---|
+| bytes | +45 … +57 | −5.5 (section 15) |
+| 5-bit groups | +59 … +98 | −19.6 (ending at the grid) |
+| base-60 digits | +80 … +122 | −27.5 (ending at the grid) |
+
+The only positive scores come from the 9-rune section 10 (at most +4.8), which has no power. What the 184 bytes
+encode is still open. They may be ciphertext under another layer; this stage did not try to decrypt them.

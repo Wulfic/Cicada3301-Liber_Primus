@@ -9,32 +9,7 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-### M — the scan 66–67 base-60 grid as a key (started 2026-10-01)
-
-**Goal.** Tracker §1 item 1: a named wide-alphabet source that neither ledger lists. The grid inside section 15
-(scans 66–67) is 184 two-character base-60 tokens (digits 0-9A-Za-x). Every token is 60a + b ≤ 255, so the grid is a
-**184-byte stream**. Its entropy is 6.91 bits per byte, about what 184 random bytes give. C13 cannot test bytes
-(no power), so only a decode can.
-
-**Declared family.** Three key streams from the grid, in reading order:
-- **G-B:** bytes mod 29 (184 values).
-- **G-5:** the bits regrouped into 5-bit values, MSB first, mod 29 (294 values). The ledger used 5-bit groups for
-  OutGuess payloads.
-- **G-D:** single base-60 digits mod 29 (368 values).
-
-Each runs in 3 modes × 29 shifts × 12 alignments: the 9 section starts; LP2 continuous; the section-15 runes that
-directly follow the grid; and the 184/294/368 section-15 runes that end where the grid begins. That is
-3,132 decodes, with a false-positive bound of about 3 × 10⁻¹⁰.
-
-**Power check, before the run.** A synthetic of 184 runes of solved plaintext encrypted with G-B (sub, with the
-skip-next anti-doublet rule) must score ≥ 30. If it does not, the family is recorded as untestable, not as failed.
-
-**Declared rule.** PASS = log LR ≥ 30. Prediction: nothing passes.
-
-**Not doing.** Decrypting the grid bytes themselves. Any optimiser.
-
-**Blast radius.** `tools/lpcore/keys.py` (grid parser), `tools/run_stage_m.py`,
-`reference/findings/stage_m_candidates.tsv`, tests, docs. **Rollback:** `git revert`.
+*(none. The next research step is MASTER_TRACKER §1, item 1. Plan it here before starting.)*
 
 ## Owner items
 
@@ -48,6 +23,7 @@ skip-next anti-doublet rule) must score ≥ 30. If it does not, the family is re
 
 | Date | Stage | Result | Commits |
 |---|---|---|---|
+| 2026-10-01 | **M** base-60 grid | Declared first. Scans 66–67 = 184 bytes (60a + b ≤ 255). Bytes / 5-bit / digits as a key: 3,132 decodes, none passes (best −5.5 on a real alignment; power check +45…+122). → findings §12, `tools/run_stage_m.py` | `4d66364` + this |
 | 2026-10-01 | **L** key alphabets | Rules and predictions declared first. C13: no decimal-digit (−214), hex (−19.5), letter (−14.3) or English-Latin (−122) key, best of 87 mode/offsets; controls +24…+251. Bytes, 00–99, base 60 untestable this way. → findings §11 | `0c59200` + this |
 | 2026-10-01 | **K** ciphertext-selected alphabets | Rule declared first. C12: off-diagonal lag-L transition χ² flat for L = 1–1000 (best p 3.9e-3 vs 1e-5); calibration conservative; controls χ² 7.6k–14k. Subsumes C11. → findings §10 | `55c78b1` + this |
 | 2026-10-01 | **J** key statistics | Rules declared first. C10: no English running key from any text, in 3 mappings × 3 modes × 29 offsets (LLR −255…−333; still excluded at λ = 0.25). C11: no ciphertext autokey at lags 2–1000 (best p 5.6e-4 vs 5e-6). Title cribs closed as untestable. → findings §9, `tests/test_keyspace.py` | `b1fa1bb` + this |
