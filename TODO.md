@@ -9,7 +9,47 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-*(none. The next research step is MASTER_TRACKER §1, item 1. Plan it here before starting.)*
+### W — byte keys as random tabulae, in step, flat negatives (2026-10-01)
+
+Tracker §1 item 1. Declared before `tools/run_stage_w.py` exists.
+
+**Model:** c_i = σ_{k_{t+i}}(p_i). k is the raw byte stream (256 classes) of one named file, read cyclically. σ_v is an
+independent secret permutation for each byte value v, and t is any start phase (a uniform prior over every phase of
+the key). In step: a would-be doublet is re-keyed by a fresh draw that consumes no key value (C14 excludes skip-next).
+**Classings (5):** `wisdom_hint.txt` raw (3,368 B), the same reversed, and `page_17.bin`, `page_21.bin`, `page_43.bin`
+raw (58,152 B each). This is the complete set of named byte sources on disk that are longer than 1,000 values:
+`folly_hint.txt` is byte-identical to `wisdom_hint.txt` (same MD5), `folly_rev_hint.txt` is it reversed, `page_00`
+gives 991 bytes, `page_08` 150, and the grid 256. Sources of 1,000 values or fewer are already C9 in step (§17).
+**Alignments (10):** LP2 continuous (7–15), and each section 7…15 with its own phase.
+**Not already excluded because:** C16 leaves V_eff > 153 open, and these sit at 236.5 and 254.8–254.9 (P 8.7 × 10⁻⁴
+and 1.3 × 10⁻³, above the 10⁻⁴ line). C9 reaches period 1,000; these are 3,368 and 58,152. Stage S scored this exact
+family, but that run is void (§17): its negative controls were uneven random-σ ciphers.
+**Already seen:** stage S's LP2 rows for these 50 decodes (best +0.84). The detector, α and keys here are the same,
+so the LP2 numbers are fixed in advance and will be asserted equal to `stage_s_candidates.tsv`. What this stage adds is
+the controls, which decide the verdict. Before declaring, I scored one synthetic flat cipher per size against
+`page_17.bin` raw (729: −0.8, 3,316: −79.4, 12,956: −910.0) to time the run. No LP2 data was touched.
+**Detector:** `alphabets.log_mean_lr` (mean DM LR over all phases, α = `dm_alpha` of the solved plaintext). Family
+N = 50, bound 50·e^−30 ≈ 4.7 × 10⁻¹².
+**Controls, per (classing, alignment), at that alignment's exact length,** from `run_stage_s.control_text` (solved
+words, shuffled):
+- positive ×5: `alphabets.encrypt_alphabets` under the key at a random phase, keep 0.19;
+- **flat negative ×5:** `keys.encrypt_dodging` with a uniform random key (fresh, keep 0.19), scored against the
+  named key;
+- plus a real-data null per classing: the shuffled key on LP2 continuous.
+
+**Rules (declared now):**
+- **VOID** if any flat negative or real-data null scores ≥ 30.
+- An alignment is **testable** for a classing if all 5 positives score ≥ 30. Otherwise it is **untestable**.
+- **PASS** if any LP2 decode scores ≥ 30.
+- **EXCLUDED** (classing × alignment): testable, and LP2 < 30.
+
+**Expected:** continuous testable for all 5 (stage S positives +1,659…+1,769 at 12,956), section 15 (3,316) testable,
+section 11 (1,894) borderline (stage S +35…+49), sections ≤ 1,729 and segment 10 untestable. Every testable alignment
+excluded.
+**Not doing:** desync (1 % desync kills this detector, so the exclusion holds in step only); the mod-29 and rejection
+mappings (already C16); structured tabulae (Latin-square → C17–C19); new sources.
+**Outputs:** `tools/run_stage_w.py` (`--quick`), `reference/findings/stage_w_controls.tsv`, `stage_w_candidates.tsv`,
+a test pinning the headline, findings §21. **Blast radius:** additive. **Rollback:** `git revert` the stage commits.
 
 ## Owner items
 
