@@ -6,9 +6,6 @@
 
 Cicada 3301 is an organization that posted three rounds of cryptographic puzzles (2012, 2013, 2014) to recruit codebreakers. The third puzzle centres on the **Liber Primus**, a 75-page runic manuscript, and it remains partially unsolved. See [Lemmino's overview](https://www.youtube.com/watch?v=I2O7blSSzpI) or [Nox Populi's deep dive](https://www.youtube.com/watch?v=l0z03ntMJio) for background.
 
-# Authors Note!
-This shit is going to take a village to solve! Please feel free to submit PR requests!
-
 # This repository
 
 A research workspace for the unsolved pages of the Liber Primus, built on logic and reproducible tests rather than search.
@@ -52,7 +49,6 @@ Folders are grouped by **how far you can trust them**. ★ = source of truth.
 MASTER_TRACKER.md          ★ status, facts, exclusions, next steps; start here
 TODO.md                    current plan (written before any code) and stage history
 AGENTS.md                  working rules for anyone, human or AI, changing this repo
-CONTRIBUTORS.md            main contributor + everyone with a merged PR (auto-updated)
 
 pages/page_XX/             one folder per scan, 00–74
   images/                  the scan(s)
@@ -67,7 +63,6 @@ data/                      inputs; see data/README.md
 
 tools/
   lpcore/                  ★ tested core: corpus loader, gematria, deterministic ciphers, verifier, statistics
-  add_contributor.py       adds a merged PR's author to CONTRIBUTORS.md (dry-run unless --write)
   rebuild_page_files.py    regenerates pages/*/runes.txt + README.md (dry-run unless --write)
   run_stage_i.py           reproduces the stage-I key-source run (findings §8); writes one TSV of results
   run_stage_m.py           reproduces the stage-M full-grid key tests (findings §12); writes one TSV of results
@@ -94,9 +89,6 @@ reference/                 reading material; see reference/README.md
 ## Credits & Links
 
 Credit to the Cicada solvers community and the 3301 organization.
-
-**Contributors:** wulfic is the main contributor. Anyone whose pull request is merged becomes a contributor and is
-added to [CONTRIBUTORS.md](CONTRIBUTORS.md) automatically.
 
 - [Uncovering Cicada Wiki](https://uncovering-cicada.fandom.com/wiki/Uncovering_Cicada_Wiki)
 - [Cicada Solvers Discord](https://discord.com/invite/eMmeaA9)

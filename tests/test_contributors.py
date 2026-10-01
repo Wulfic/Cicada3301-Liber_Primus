@@ -8,7 +8,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from tools.add_contributor import CONTRIBUTORS, END, START, add_contributor, listed_logins, main
+from tools.add_contributor import CONTRIBUTORS, END, START, add_contributor, listed_logins, main, table
 
 SAMPLE = f"# Contributors\n\n{START}\n| Contributor | First merged PR |\n|---|---|\n| [alice](x) | [#1](y) |\n{END}\n"
 
@@ -16,8 +16,8 @@ SAMPLE = f"# Contributors\n\n{START}\n| Contributor | First merged PR |\n|---|--
 class TestContributorsFile(unittest.TestCase):
     def test_wulfic_is_main_contributor_and_pr1_author_listed(self) -> None:
         text = CONTRIBUTORS.read_text("utf-8")
-        main_section = text.split("## Main contributor", 1)[1].split("\n## ", 1)[0]
-        self.assertIn("[wulfic](https://github.com/Wulfic)", main_section)
+        first_row = table(text).strip().splitlines()[2]
+        self.assertTrue(first_row.startswith("| [wulfic](https://github.com/Wulfic) | **Main contributor**"))
         self.assertIn("certified-retart", listed_logins(text))
 
 

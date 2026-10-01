@@ -45,7 +45,7 @@ def add_contributor(text: str, login: str, pr: int) -> tuple[str, str]:
         return text, "skipped: maintainer"
     if login.lower() in listed_logins(text):
         return text, "skipped: already listed"
-    row = f"| [{login}](https://github.com/{login}) | [#{pr}]({REPO_URL}/pull/{pr}) |\n"
+    row = f"| [{login}](https://github.com/{login}) | Contributor | [#{pr}]({REPO_URL}/pull/{pr}) |\n"
     head, tail = text.split(END, 1)
     return f"{head}{row}{END}{tail}", "added"
 
