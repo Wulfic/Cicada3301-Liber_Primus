@@ -7,6 +7,7 @@ __pycache__/
 env/
 venv/
 .venv/
+.venv*/
 ENV/
 build/
 develop-eggs/
@@ -23,6 +24,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+./venv_py3.11/
 
 # ─── Hill climber progress / checkpoint files ────────────────────────────────
 # These are large, ephemeral, and regenerated on every run.
@@ -60,6 +62,10 @@ data/lp_extraction.txt
 Tools/*_results.txt
 Tools/cipher_analysis_results.txt
 
+# ─── Archived hill-climb outputs that were never committed (Stage E, 2026-09-29) ─
+# Kept locally for history; they were computed on misaligned page data. See the archive README.
+data/archive/hillclimbers/*/untracked/
+
 # ─── Solution monitoring output ──────────────────────────────────────────────
 data/hillclimb_monitor_*.json
 data/per_page_solutions/
@@ -68,6 +74,19 @@ data/per_page_solutions/
 # data/emerson_essays.txt        # 564 KB — keep tracked
 # data/wordlist.txt              # 4 MB — keep tracked
 # reference/LiberPrimus.pdf      # 55 MB — consider LFS
+
+# ─── Local agent / MCP config — CONTAINS CREDENTIALS, NEVER COMMIT ────────────
+# .claude/mcp.vscode-reference.json holds bearer tokens. AGENTS.md is the only tracked
+# agent-facing file; agent memory, skill trees and local agent config stay in this checkout.
+.mcp.json
+.claude/
+.github/skills/
+.github/copilot-instructions.md
+CLAUDE.md
+.agent/
+.env
+.env.*
+*.pem
 
 # IDE
 .vscode/
