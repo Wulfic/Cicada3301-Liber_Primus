@@ -55,6 +55,15 @@ below it. That excludes all of them as rule-free sources of the deficit, under a
 - **Expected if the constraints survive:** English (3 representations), digits and hex excluded in all four
   columns; uniform letters A–Z not excluded and probably untestable (median λ 42 vs LP2's λ_max 42.5).
 - **Fast vectorised noncentral CDF:** tested equal to `flatness.noncentral_chi2_cdf`.
+- **Amendment (before LP2 was scored).** The quick run (gates only, never scores LP2) showed the declared G2 and
+  G3 had swapped roles. Ciphers made with a row's own key are the true model, so excluding them is a *false*
+  exclusion. Flat-key ciphers look like LP2, so excluding *them* is the power. As written, G3 voids every row that
+  has power. Corrected: **G2 (power)**: the exclusion rule (raw and corrected) excludes the row on ≥ 18 / 20
+  flat-key ciphers, otherwise the row is untestable. **G3 (calibration)**: it excludes the row on 0 / 20 of the
+  row's own ciphers, otherwise the run is void. Also, 10,000 draws cannot resolve P ≈ 1e-4 (the quick run had one
+  own-family false exclusion at 2,000), so control rows now use the same 100,000 draws as LP2.
+  `family_p` drops draws whose CDF is already below 1e-15. The family, thresholds, statistics and exclusion rule are
+  unchanged.
 
 **Not doing:** adversarial alphabets (the minimum of λ over all 29!² pairs is open; we report the prior P and the
 smallest λ drawn); named keyword alphabets (a separate stage); C14 and L1 under relabelling; named keys in step
