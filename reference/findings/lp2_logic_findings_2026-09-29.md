@@ -85,10 +85,9 @@ per-section rates. Promote it to a test before building on them.
 
 1. ~~**Characterise the leak.**~~ **Done 2026-10-01, see §7.** Nothing separates the survivors.
    The key-switch scheme is refuted. C8 states what any re-keying rule must satisfy.
-2. **Key-source riddles not in either community ledger.** Only the new ones are worth
-   testing: the scan-32 prime spiral as an ordinal stream; values of the solved text's words
-   ("their numbers are the direction", 2016). Each must be one deterministic decryption with
-   a pre-declared pass threshold. The skip-aware decode must be exact inference, not an optimiser.
+2. ~~**Key-source riddles not in either community ledger.**~~ **Done 2026-10-01, see §8.** The prime family,
+   word sums and plaintext values all fail under a drift-tolerant detector. Periodic keys are excluded (C9). The
+   square does not decode the segment 10 title.
 3. **Section titles** are short, structured, and one of them is "A" + 9 runes. Crib ideas must
    state their prediction for the *key* fragment (e.g. "reads as English" for a running key)
    before running.
@@ -123,3 +122,54 @@ lines, pages, sections and phases, and the missing doublets are spread evenly ov
 This fits a re-keying rule (L1) whose replacement agrees with the original about 19 % of the time (C8).
 It also fits a check applied by hand with ≈ 81 % reliability. These data cannot tell the two apart.
 Any proposed mechanism must reproduce L1–L4 and the 19 % figure from its own definition, without fitting.
+
+## 8. Key-source riddles with a drift-tolerant detector (2026-10-01, TODO stage I)
+
+Predictions, thresholds and the candidate list were written in `TODO.md` before the run. Module:
+`tools/lpcore/detect.py`. Candidates: `tools/lpcore/keys.py`. Run: `python -m tools.run_stage_i`, which writes
+every decode to [`stage_i_candidates.tsv`](stage_i_candidates.tsv). Tests: `tests/test_detect.py`.
+
+**The detector.** C8 says a would-be doublet is re-keyed. If that consumes key values, the key drifts out of step
+with the cipher about every 36 runes, and a fixed-sync decode of the right key looks like noise. `detect.log_lr`
+sums over every drift path with the forward algorithm. At each rune the key index moves +1, +2 (a skipped value)
+or 0 (a stall or interrupter), with ρ = 0.02 each for the last two. The emission ratio against uniform noise is
+r = 0.9 · 29 · q(p) + 0.1, where q is the unigram of the solved plaintext. Under a uniform null E[r] = 1, so
+E[LR] = 1 and **P(log LR ≥ 30) ≤ e^−30 ≈ 10^−13 per hypothesis, with no calibration**. Unigram emissions are
+blind to plaintext order, so a transposition before encryption would not hide the key.
+
+| Control (declared) | Observed | |
+|---|---|---|
+| Seg 1, DIVINITY (515 runes; q built without seg 1) | **+142** nats; fixed sync −104 (F interrupters desync it) | pass |
+| Seg 5, FIRFUMFERENFE (319 runes) | +119 | pass |
+| Seg 16, φ(prime) (AN END, 85 runes) | **29.6 < 30** | **failed by length.** The detector needs ≳ 100 runes in step; every LP2 section except seg 10 has ≥ 729 |
+| Synthetic: solved plaintext under φ(prime), skip-next anti-doublet rule, 19 % leak | +892; fixed sync negative; 0.52 % doublets (LP2: 0.66 %) | pass |
+| Wrong key (DIVINITY on seg 5); 180 random keys on LP2 sections | all < 30 (random keys ≈ −0.13 nats per rune) | pass |
+
+**C9 (key-independent): no periodic key.** Repeat rates at lags 11–1000 inside sections are all normal. The best
+is lag 717 (304 / 7,211, p = 3.4 × 10⁻⁴); the declared Bonferroni threshold was 1.0 × 10⁻⁵. Power, measured on
+synthetic text of LP2's size: under a re-key rule that keeps the key in step, every period from 16 to 1000 is
+detected (p ≤ 10⁻²⁰). Under a drifting skip-next rule only periods ≤ 25 are. With C5 (lags 2–10), this excludes
+every periodic key of period ≤ 1000 under an in-step rule, and of period ≤ 25 under a drifting one. That includes
+the scan-32 square's 16 values and Fibonacci or Lucas numbers mod 29 (Pisano period 14).
+
+**The candidate family: 2,610 decodes, none passes.** Each key ran in 3 modes (sub, add, beaufort) × 29 constant
+shifts × 10 alignments (each of 9 sections from its first rune, and continuous through LP2). The family's
+false-positive bound is 2,610 · e^−30 ≈ 2 × 10⁻¹⁰.
+
+| Key | Definition | Covers | Best log LR on a real section | Median |
+|---|---|---|---|---|
+| K-A | primes p(n), 25,912 terms | p ± c, φ(p) (AN END's stream continued), 3301 − p(n) | −69.5 | −194 |
+| K-C | gematria sum of each solved-plaintext word, book order (726 terms) | "their numbers are the direction" | −65.5 | −97 |
+| K-D | prime value of each solved-plaintext rune (2,901 terms) | the solved text as a running key | −77.4 | −215 |
+
+The only scores above 0 come from segment 10, whose 9 runes carry no power (the best is +4.1). A right key would
+score hundreds of nats on any LP2 section. K-C covers only the first 726 runes of each alignment.
+
+**The segment 10 title is not the square's key at work.** Its 9 runes (F-U-L-M A-EA-Y-OE-A) were decoded with the
+square's own numbers, read outward and inward along the spiral, in 3 modes: the cell values, p(F+1), p(F+1) − 1,
+the ordinals F+1, and F itself. That is 30 decodes, and none gives two English words. The check accepts WISE WORDS
+enciphered the same way. Chance rate, measured first: 0 of 20,000 random keys pass.
+
+**Reading.** Prime-based streams, with or without drift and in every mode and shift, are not the LP2 key. Nor are
+the solved text's word sums or rune values. Periodic keys are gone. What is left are long, aperiodic keys from
+a source nobody has named, or a non-additive cipher.

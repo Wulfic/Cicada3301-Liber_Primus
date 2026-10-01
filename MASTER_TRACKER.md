@@ -4,7 +4,7 @@
 and what to do next. Every claim on it is backed by a test or a linked document. If something here
 disagrees with the tests, the tests win, and this page needs fixing.
 
-**Last updated:** 2026-10-01 · **Tests:** 48, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
+**Last updated:** 2026-10-01 · **Tests:** 64, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
 
 ---
 
@@ -15,15 +15,16 @@ match their scans, so most older "discoveries" were artifacts (see §4.3). Now o
 (`data/canonical/`) is read by one tested loader (`tools/lpcore`). Every solved section decrypts from it
 exactly. The unsolved LP2 cipher has a key-independent fingerprint (§3.2). The repo was reorganised by trust level.
 The doublet leak has been characterised: the 86 survivors are random at a constant ≈ 19 %, and the key-switch
-scheme is refuted (§3.2 "The leak", findings §7).
+scheme is refuted (§3.2 "The leak", findings §7). A drift-tolerant key detector now exists (`tools/lpcore/detect.py`,
+exact forward algorithm, false-positive bound e^−30 per test). It found none of the riddle-derived keys, and
+periodic keys are excluded (C9, findings §8).
 
 **Next actions, in order** (detail in [findings §6](reference/findings/lp2_logic_findings_2026-09-29.md)):
 
-1. **Key-source riddles not in either community ledger.** Test the scan-32 prime spiral as an ordinal key
-   stream, and the values of the solved text's words as keys ("their numbers are the direction"). Each is one deterministic,
-   skip-aware decode with a pass threshold declared before the run.
-2. **Section-title cribs.** Titles are short and structured (one is "A" + 9 runes). Each crib idea must state its
+1. **Section-title cribs.** Titles are short and structured (one is "A" + 9 runes). Each crib idea must state its
    prediction for the *key* fragment before it runs.
+2. **Any new key source goes through `detect.log_lr`.** Add it to `tools/run_stage_i.py` style: declared first,
+   every mode and shift recorded, pass at 30 nats.
 
 **Before you start anything:** read §4 (ruled out) and §6 (rules of evidence). Plans go in [`TODO.md`](TODO.md).
 
@@ -82,12 +83,14 @@ Errata, each with its evidence in `solved.py`: **WIDSOM** is the book's own typo
 | **all** | | **12,956** | **86** | **0.66 %** vs 3.45 % expected (z = −17) | |
 
 Everything else is flat: IoC, rune frequencies, and repeats at lags 2–10. The constraints derived from that
-are C1–C7 in [findings §2](reference/findings/lp2_logic_findings_2026-09-29.md) (C8 is in §7):
+are C1–C7 in [findings §2](reference/findings/lp2_logic_findings_2026-09-29.md) (C8 is in §7, C9 in §8):
 
 - The anti-doublet rule acts on the continuous rune stream and ignores word boundaries (C1).
 - There is no plaintext-F passthrough, unlike LP1 (C2). The surviving doublets mark no single plaintext letter (C3).
 - **No additive mod-29 cipher with a plaintext-independent key can produce the deficit**, whatever the key text (C4).
 - Only lag 1 is affected (C5). One system runs throughout, with no seam between sections (C6). No one-shift-per-word scheme fits (C7).
+- **No periodic key (C9):** lags 11–1000 are normal. This excludes every period ≤ 1000 under a re-key rule that keeps
+  the key in step, and every period ≤ 25 under a drifting one (findings §8).
 
 **Reading:** a rule applied at the output of a non-periodic additive stream. It is not a property of the key
 text, of word structure, or of any plaintext letter.
@@ -127,6 +130,10 @@ RANDOM.ORG and RAND archives (~14.5 billion offsets). Both conclude "OTP-class" 
   per ~2,900 runes, which scales to λ ≈ 27–45 against the 86 observed (P ≤ 3 × 10⁻⁸). Its literal code gives 0.35 %,
   not the 0.69 % the picture claims (L5, findings §7).
 - A per-line check, a "nudge" rule (c ± 1), and a periodic gap in checking are all excluded (L1–L3).
+- **Riddle-derived keys (stage I, findings §8):** primes p(n) in every mode and constant shift (so also φ(p), p ± 1 and
+  3301 − p), the solved text's word sums, and its rune values, each per section and continuous. That is 2,610
+  drift-tolerant decodes, with the best on a real section at −65 nats against a pass mark of +30. The scan-32 square's
+  numbers do not decode the segment 10 title (0 of 30).
 - The "Echo446Ghq full solution" is debunked ([analysis](reference/community/echo446ghq_analysis.md)).
 
 ### 4.3 Invalid claims from before 2026-09-29
@@ -176,7 +183,8 @@ The ordered list is in §1. These questions are also open and cheap to state:
 
 | Date | What happened | Commits |
 |---|---|---|
-| 2026-10-01 | **Doublet leak characterised** (TODO H): L1–L5 and C8, `tools/lpcore/leak.py`, 13 tests. Key-switch refuted; C6 promoted to a test | this commit |
+| 2026-10-01 | **Key-source riddles** (TODO I): drift-tolerant detector, C9 (no periodic key), 2,610 candidate decodes all fail, segment 10 title not decoded. AN END control failed by length (29.6 < 30), recorded | `8641c50` + this commit |
+| 2026-10-01 | **Doublet leak characterised** (TODO H): L1–L5 and C8, `tools/lpcore/leak.py`, 13 tests. Key-switch refuted; C6 promoted to a test | `d66cbb2` |
 | 2026-10-01 | Repo organised by trust level. This tracker rewritten; the old one archived. Material from another project removed. `.gitattributes` added | `f5ca9a1` … this commit |
 | 2026-09-29 | **Data-integrity correction.** Canonical corpus, `tools/lpcore` and 35 tests; 150 page files rebuilt; legacy tools and outputs archived; logic-only findings C1–C7; scan-32 square decoded | `f038274`, `50889e8`, `a85c106` |
 | 2026-02 → 2026-05 | Sessions 1–21 on the misaligned page files, much of it hill-climbing. Archived: [old tracker](reference/archive/MASTER_TRACKER_pre-2026-09-29.md) | — |

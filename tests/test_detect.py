@@ -6,12 +6,14 @@ observed value; the verdict rules were written first.
 
 from __future__ import annotations
 
+import csv
 import math
 import unittest
 
+from tools import run_stage_i
 from tools.lpcore import detect, keys, leak, stats
 from tools.lpcore.corpus import load_corpus
-from tools.lpcore.gematria import N
+from tools.lpcore.gematria import N, runes_to_indices
 from tools.lpcore.solved import DIVINITY, FIRFUMFERENFE
 from tools.lpcore.verify import load_translation
 
@@ -143,6 +145,44 @@ class TestC9PeriodicKeys(unittest.TestCase):
             for _ in range(60):
                 seq.append((seq[-1] + seq[-2]) % N)
             self.assertEqual(seq[:30], seq[14:44])
+
+
+class TestStageICandidates(unittest.TestCase):
+    """Verdicts of `python -m tools.run_stage_i` (declared prediction: every candidate fails)."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        with run_stage_i.OUT_PATH.open(encoding="utf-8", newline="") as f:
+            cls.rows = list(csv.DictReader(f, delimiter="\t"))
+
+    def test_recorded_family_is_complete_and_fails(self) -> None:
+        self.assertEqual(len(self.rows), 3 * 3 * N * 10)
+        self.assertLess(max(float(r["log_lr_nats"]) for r in self.rows), detect.THRESHOLD)
+        big = [float(r["log_lr_nats"]) for r in self.rows if r["segment"] != "10"]
+        self.assertLess(max(big), -60.0)                    # far below 0, let alone +30
+
+    def test_a_recorded_row_reproduces(self) -> None:
+        row = next(r for r in self.rows if r["key"] == "K-A primes" and r["alignment"] == "per-section"
+                   and r["segment"] == "7" and r["mode"] == "add" and r["shift"] == "21")
+        seg7 = CORPUS.segment_runes(7)
+        lr = detect.log_lr(seg7, keys.prime_stream(30000), Q, mode="add", shift=21)
+        self.assertAlmostEqual(lr, float(row["log_lr_nats"]), places=2)
+
+    def test_segment_10_title_is_not_decoded_by_the_square(self) -> None:
+        vocab = run_stage_i.english_vocabulary(TRANSLATION)
+        title = [w.runes for w in CORPUS.rune_words(10)]
+        self.assertEqual([len(w) for w in title], [4, 5])
+        for name, values in run_stage_i.square_key_sources().items():
+            for seq in (values[:9], values[::-1][:9]):
+                for mode in detect.MODES:
+                    plain = run_stage_i.decode_title(title, [v % N for v in seq], mode)
+                    self.assertFalse(all(w in vocab for w in plain), (name, mode, plain))
+        # Positive control: WISE WORDS enciphered with the cell values (c = p + k) passes the same check.
+        key = [v % N for v in run_stage_i.square_key_sources()["cell values"][:9]]
+        words = [runes_to_indices("ᚹᛁᛋᛖ"), runes_to_indices("ᚹᚩᚱᛞᛋ")]
+        flat = [(p + k) % N for p, k in zip([r for w in words for r in w], key)]
+        cipher = [tuple(flat[:4]), tuple(flat[4:])]
+        self.assertTrue(all(w in vocab for w in run_stage_i.decode_title(cipher, key, "sub")))
 
 
 if __name__ == "__main__":
