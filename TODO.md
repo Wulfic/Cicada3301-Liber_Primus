@@ -9,7 +9,48 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-*(none. The next research step is MASTER_TRACKER §1, item 1. Plan it here before starting.)*
+### R — Cicada's own numbers and OutGuess payloads as wide-alphabet keys (2026-10-01)
+
+Tracker §1, item 1. Declared before any LP2 decode. The only runs so far were synthetic power checks, on solved
+plaintext encrypted with these keys.
+
+**Model:** c_i = p_i ± k_j (sub `c−k`, add `c+k`, beaufort `k−c`), plus a constant shift s ∈ 0…28. The key k is one
+of the sources below, **read cyclically from an unknown start phase**. Drift follows `detect.log_lr`: ρ = 0.02
+stall and skip, ε = 0.1. The unknown phase is handled exactly, not searched: the forward pass starts with a uniform
+prior over all P phases (new `starts=` argument to `detect.log_lr`). The mixture's E[LR] = 1 under the null, so
+the e^−30 bound per decode still holds, and the cost is log P ≤ 11 nats of power.
+
+**Sources** (key values mod 29; each under two **mappings**, `mod` = v mod 29 and `reject` = drop v ≥ 29·⌊V/29⌋,
+then mod 29, which is how a careful pad generator makes uniform values):
+- Digit groups (V = 100 for pairs, 1000 for triples): pairs at phase 0 and 1, triples at phase 0, 1 and 2, of
+  - the 2012 P.S. number, 131 digits (`community_research.md` §2b; `echo446ghq_analysis.md` agrees);
+  - its 132-digit variant (the archived tracker §9.5 appends a `1`; provenance unresolved, so both are run);
+  - the 2014 RSA modulus n, 130 digits (`people_2014.md`, outguess of 1033.jpg).
+  That is 15 digit keys.
+- Bytes (V = 256): the onion cookies 167 and 761 (32 bytes each, `community_research.md` §2c); the AN END hash
+  (`keys.an_end_hash`, 64 bytes); the signed hex in `data/outguess/page_00.txt` (991 bytes); the 2014 second-onion
+  hex (256 bytes, `people_2014.md`); the wisdom/folly hint (3,368 bytes; `wisdom_hint` = `folly_hint`), forward and
+  reversed (= `folly_rev_hint`); and `page_17.bin`, `page_21.bin`, `page_43.bin` (58,152 bytes each). That is 10 byte keys.
+- Excluded from the family: `page_08.txt` (English, so C10), and hex read one digit per rune (C13).
+
+**Alignments:** each of the 9 unsolved sections, and LP2 continuous (7–15). That is 10.
+**Not already excluded because:** C9 excludes these short keys only as in-step periods ≤ 1000. Under drift it covers
+only periods ≤ 25, and the long payloads (3,368 and 58,152) are outside it. C13 covers single digits, hex and
+letters, not pairs, triples or bytes (untestable by marginals). The ledger ran OutGuess payloads in fixed sync only.
+**Family size N:** 25 keys × 2 mappings × 3 modes × 29 shifts × 10 alignments = **43,500** → false-positive bound
+43,500 · e^−30 ≈ 4.1 × 10⁻⁹.
+**Pass:** any decode with log LR ≥ 30. A pass is then audited (`lp-claim-audit`) before it is called anything.
+**Exclude:** every decode < 30, with all positive controls ≥ 30. **Inconclusive:** any positive control < 30. That
+source is then recorded as "untestable this way".
+**Controls (run first, in the same runner):** positive: solved plaintext at 729 and 3,316 runes, encrypted by
+`keys.encrypt_dodging` (keep 0.19, rekey `fresh` and `next`) from a random phase of each key and mapping, scored
+in sub mode at the true shift. Each must be ≥ 30. Synthetic checks gave +216…+338 at 729–1,021 runes. Negative:
+the same pipeline on a `keys.random_key` of each key's length, which must stay < 30.
+**Expected if true:** ≥ +200 on the true alignment. **Expected if false:** about −1 nat per rune, so −90 … −1,600.
+**Not doing:** other mappings (base conversions, factorisations, hashes of these numbers); the wrapper/middle split
+of the `.bin` files (the phase mixture already covers every offset); onion addresses as text (English-like, C10).
+**Blast radius:** additive. A `starts=` keyword in `detect.log_lr` (default unchanged), `tools/run_stage_r.py`,
+`reference/findings/stage_r_candidates.tsv`, and tests. **Rollback:** `git revert <commit>`.
 
 ## Owner items
 
