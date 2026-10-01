@@ -1,0 +1,457 @@
+reading	key	op_or_mode	direction	printable	signature	log_lr_nats	verdict
+bytes	AN END hash	xor	forward	0.353	-		fail
+bytes	AN END hash	b-k	forward	0.386	-		fail
+bytes	AN END hash	b+k	forward	0.391	-		fail
+bytes	AN END hash reversed	xor	forward	0.370	-		fail
+bytes	AN END hash reversed	b-k	forward	0.370	-		fail
+bytes	AN END hash reversed	b+k	forward	0.413	-		fail
+bytes	phi(prime) mod 256	xor	forward	0.315	-		fail
+bytes	phi(prime) mod 256	b-k	forward	0.397	-		fail
+bytes	phi(prime) mod 256	b+k	forward	0.304	-		fail
+bytes	primes mod 256	xor	forward	0.299	-		fail
+bytes	primes mod 256	b-k	forward	0.391	-		fail
+bytes	primes mod 256	b+k	forward	0.321	-		fail
+bytes	scan-32 square cells mod 256	xor	forward	0.386	-		fail
+bytes	scan-32 square cells mod 256	b-k	forward	0.321	-		fail
+bytes	scan-32 square cells mod 256	b+k	forward	0.375	-		fail
+bytes	ASCII DIVINITY	xor	forward	0.348	-		fail
+bytes	ASCII DIVINITY	b-k	forward	0.402	-		fail
+bytes	ASCII DIVINITY	b+k	forward	0.375	-		fail
+bytes	ASCII divinity	xor	forward	0.386	-		fail
+bytes	ASCII divinity	b-k	forward	0.391	-		fail
+bytes	ASCII divinity	b+k	forward	0.375	-		fail
+bytes	ASCII FIRFUMFERENFE	xor	forward	0.348	-		fail
+bytes	ASCII FIRFUMFERENFE	b-k	forward	0.408	-		fail
+bytes	ASCII FIRFUMFERENFE	b+k	forward	0.397	-		fail
+bytes	ASCII firfumferenfe	xor	forward	0.375	-		fail
+bytes	ASCII firfumferenfe	b-k	forward	0.397	-		fail
+bytes	ASCII firfumferenfe	b+k	forward	0.386	-		fail
+bytes	ASCII CIRCUMFERENCE	xor	forward	0.348	-		fail
+bytes	ASCII CIRCUMFERENCE	b-k	forward	0.408	-		fail
+bytes	ASCII CIRCUMFERENCE	b+k	forward	0.391	-		fail
+bytes	ASCII circumference	xor	forward	0.370	-		fail
+bytes	ASCII circumference	b-k	forward	0.397	-		fail
+bytes	ASCII circumference	b+k	forward	0.380	-		fail
+bytes	ASCII 3301	xor	forward	0.359	-		fail
+bytes	ASCII 3301	b-k	forward	0.375	-		fail
+bytes	ASCII 3301	b+k	forward	0.370	-		fail
+bytes	AN END hash	xor	reversed	0.413	-		fail
+bytes	AN END hash	b-k	reversed	0.348	-		fail
+bytes	AN END hash	b+k	reversed	0.353	-		fail
+bytes	AN END hash reversed	xor	reversed	0.391	-		fail
+bytes	AN END hash reversed	b-k	reversed	0.380	-		fail
+bytes	AN END hash reversed	b+k	reversed	0.397	-		fail
+bytes	phi(prime) mod 256	xor	reversed	0.353	-		fail
+bytes	phi(prime) mod 256	b-k	reversed	0.337	-		fail
+bytes	phi(prime) mod 256	b+k	reversed	0.397	-		fail
+bytes	primes mod 256	xor	reversed	0.353	-		fail
+bytes	primes mod 256	b-k	reversed	0.337	-		fail
+bytes	primes mod 256	b+k	reversed	0.413	-		fail
+bytes	scan-32 square cells mod 256	xor	reversed	0.440	-		fail
+bytes	scan-32 square cells mod 256	b-k	reversed	0.402	-		fail
+bytes	scan-32 square cells mod 256	b+k	reversed	0.364	-		fail
+bytes	ASCII DIVINITY	xor	reversed	0.332	-		fail
+bytes	ASCII DIVINITY	b-k	reversed	0.429	-		fail
+bytes	ASCII DIVINITY	b+k	reversed	0.353	-		fail
+bytes	ASCII divinity	xor	reversed	0.375	-		fail
+bytes	ASCII divinity	b-k	reversed	0.402	-		fail
+bytes	ASCII divinity	b+k	reversed	0.386	-		fail
+bytes	ASCII FIRFUMFERENFE	xor	reversed	0.359	-		fail
+bytes	ASCII FIRFUMFERENFE	b-k	reversed	0.435	-		fail
+bytes	ASCII FIRFUMFERENFE	b+k	reversed	0.370	-		fail
+bytes	ASCII firfumferenfe	xor	reversed	0.370	-		fail
+bytes	ASCII firfumferenfe	b-k	reversed	0.386	-		fail
+bytes	ASCII firfumferenfe	b+k	reversed	0.375	-		fail
+bytes	ASCII CIRCUMFERENCE	xor	reversed	0.359	-		fail
+bytes	ASCII CIRCUMFERENCE	b-k	reversed	0.435	-		fail
+bytes	ASCII CIRCUMFERENCE	b+k	reversed	0.364	-		fail
+bytes	ASCII circumference	xor	reversed	0.375	-		fail
+bytes	ASCII circumference	b-k	reversed	0.391	-		fail
+bytes	ASCII circumference	b+k	reversed	0.380	-		fail
+bytes	ASCII 3301	xor	reversed	0.342	-		fail
+bytes	ASCII 3301	b-k	reversed	0.375	-		fail
+bytes	ASCII 3301	b+k	reversed	0.364	-		fail
+bytes mod 29	constant	sub	forward shift 0			-87.41	fail
+bytes mod 29	constant	sub	forward shift 1			-76.15	fail
+bytes mod 29	constant	sub	forward shift 2			-71.97	fail
+bytes mod 29	constant	sub	forward shift 3			-111.49	fail
+bytes mod 29	constant	sub	forward shift 4			-71.03	fail
+bytes mod 29	constant	sub	forward shift 5			-79.02	fail
+bytes mod 29	constant	sub	forward shift 6			-83.38	fail
+bytes mod 29	constant	sub	forward shift 7			-74.81	fail
+bytes mod 29	constant	sub	forward shift 8			-72.90	fail
+bytes mod 29	constant	sub	forward shift 9			-66.48	fail
+bytes mod 29	constant	sub	forward shift 10			-50.94	fail
+bytes mod 29	constant	sub	forward shift 11			-84.10	fail
+bytes mod 29	constant	sub	forward shift 12			-70.01	fail
+bytes mod 29	constant	sub	forward shift 13			-79.58	fail
+bytes mod 29	constant	sub	forward shift 14			-81.22	fail
+bytes mod 29	constant	sub	forward shift 15			-67.01	fail
+bytes mod 29	constant	sub	forward shift 16			-75.97	fail
+bytes mod 29	constant	sub	forward shift 17			-91.86	fail
+bytes mod 29	constant	sub	forward shift 18			-55.50	fail
+bytes mod 29	constant	sub	forward shift 19			-60.59	fail
+bytes mod 29	constant	sub	forward shift 20			-61.44	fail
+bytes mod 29	constant	sub	forward shift 21			-63.79	fail
+bytes mod 29	constant	sub	forward shift 22			-91.31	fail
+bytes mod 29	constant	sub	forward shift 23			-79.55	fail
+bytes mod 29	constant	sub	forward shift 24			-39.75	fail
+bytes mod 29	constant	sub	forward shift 25			-67.81	fail
+bytes mod 29	constant	sub	forward shift 26			-79.64	fail
+bytes mod 29	constant	sub	forward shift 27			-63.58	fail
+bytes mod 29	constant	sub	forward shift 28			-69.95	fail
+bytes mod 29	phi(prime)	sub	forward			-21.11	fail
+bytes mod 29	DIVINITY	sub	forward			-26.94	fail
+bytes mod 29	FIRFUMFERENFE	sub	forward			-24.86	fail
+bytes mod 29	constant	add	forward shift 0			-87.41	fail
+bytes mod 29	constant	add	forward shift 1			-69.95	fail
+bytes mod 29	constant	add	forward shift 2			-63.58	fail
+bytes mod 29	constant	add	forward shift 3			-79.64	fail
+bytes mod 29	constant	add	forward shift 4			-67.81	fail
+bytes mod 29	constant	add	forward shift 5			-39.75	fail
+bytes mod 29	constant	add	forward shift 6			-79.55	fail
+bytes mod 29	constant	add	forward shift 7			-91.31	fail
+bytes mod 29	constant	add	forward shift 8			-63.79	fail
+bytes mod 29	constant	add	forward shift 9			-61.44	fail
+bytes mod 29	constant	add	forward shift 10			-60.59	fail
+bytes mod 29	constant	add	forward shift 11			-55.50	fail
+bytes mod 29	constant	add	forward shift 12			-91.86	fail
+bytes mod 29	constant	add	forward shift 13			-75.97	fail
+bytes mod 29	constant	add	forward shift 14			-67.01	fail
+bytes mod 29	constant	add	forward shift 15			-81.22	fail
+bytes mod 29	constant	add	forward shift 16			-79.58	fail
+bytes mod 29	constant	add	forward shift 17			-70.01	fail
+bytes mod 29	constant	add	forward shift 18			-84.10	fail
+bytes mod 29	constant	add	forward shift 19			-50.94	fail
+bytes mod 29	constant	add	forward shift 20			-66.48	fail
+bytes mod 29	constant	add	forward shift 21			-72.90	fail
+bytes mod 29	constant	add	forward shift 22			-74.81	fail
+bytes mod 29	constant	add	forward shift 23			-83.38	fail
+bytes mod 29	constant	add	forward shift 24			-79.02	fail
+bytes mod 29	constant	add	forward shift 25			-71.03	fail
+bytes mod 29	constant	add	forward shift 26			-111.49	fail
+bytes mod 29	constant	add	forward shift 27			-71.97	fail
+bytes mod 29	constant	add	forward shift 28			-76.15	fail
+bytes mod 29	phi(prime)	add	forward			-16.25	fail
+bytes mod 29	DIVINITY	add	forward			-28.25	fail
+bytes mod 29	FIRFUMFERENFE	add	forward			-36.86	fail
+bytes mod 29	constant	beaufort	forward shift 0			-59.44	fail
+bytes mod 29	constant	beaufort	forward shift 1			-79.00	fail
+bytes mod 29	constant	beaufort	forward shift 2			-53.81	fail
+bytes mod 29	constant	beaufort	forward shift 3			-64.22	fail
+bytes mod 29	constant	beaufort	forward shift 4			-60.85	fail
+bytes mod 29	constant	beaufort	forward shift 5			-59.64	fail
+bytes mod 29	constant	beaufort	forward shift 6			-64.47	fail
+bytes mod 29	constant	beaufort	forward shift 7			-91.08	fail
+bytes mod 29	constant	beaufort	forward shift 8			-65.05	fail
+bytes mod 29	constant	beaufort	forward shift 9			-64.55	fail
+bytes mod 29	constant	beaufort	forward shift 10			-99.78	fail
+bytes mod 29	constant	beaufort	forward shift 11			-96.69	fail
+bytes mod 29	constant	beaufort	forward shift 12			-67.23	fail
+bytes mod 29	constant	beaufort	forward shift 13			-83.59	fail
+bytes mod 29	constant	beaufort	forward shift 14			-55.39	fail
+bytes mod 29	constant	beaufort	forward shift 15			-76.81	fail
+bytes mod 29	constant	beaufort	forward shift 16			-74.32	fail
+bytes mod 29	constant	beaufort	forward shift 17			-77.43	fail
+bytes mod 29	constant	beaufort	forward shift 18			-85.88	fail
+bytes mod 29	constant	beaufort	forward shift 19			-62.69	fail
+bytes mod 29	constant	beaufort	forward shift 20			-72.16	fail
+bytes mod 29	constant	beaufort	forward shift 21			-99.69	fail
+bytes mod 29	constant	beaufort	forward shift 22			-72.71	fail
+bytes mod 29	constant	beaufort	forward shift 23			-56.15	fail
+bytes mod 29	constant	beaufort	forward shift 24			-82.26	fail
+bytes mod 29	constant	beaufort	forward shift 25			-63.72	fail
+bytes mod 29	constant	beaufort	forward shift 26			-84.75	fail
+bytes mod 29	constant	beaufort	forward shift 27			-92.70	fail
+bytes mod 29	constant	beaufort	forward shift 28			-61.45	fail
+bytes mod 29	phi(prime)	beaufort	forward			-22.69	fail
+bytes mod 29	DIVINITY	beaufort	forward			-38.98	fail
+bytes mod 29	FIRFUMFERENFE	beaufort	forward			-29.67	fail
+bytes mod 29	constant	sub	reversed shift 0			-86.75	fail
+bytes mod 29	constant	sub	reversed shift 1			-75.85	fail
+bytes mod 29	constant	sub	reversed shift 2			-71.75	fail
+bytes mod 29	constant	sub	reversed shift 3			-111.58	fail
+bytes mod 29	constant	sub	reversed shift 4			-70.04	fail
+bytes mod 29	constant	sub	reversed shift 5			-79.39	fail
+bytes mod 29	constant	sub	reversed shift 6			-83.01	fail
+bytes mod 29	constant	sub	reversed shift 7			-73.06	fail
+bytes mod 29	constant	sub	reversed shift 8			-72.46	fail
+bytes mod 29	constant	sub	reversed shift 9			-68.97	fail
+bytes mod 29	constant	sub	reversed shift 10			-52.39	fail
+bytes mod 29	constant	sub	reversed shift 11			-87.12	fail
+bytes mod 29	constant	sub	reversed shift 12			-69.53	fail
+bytes mod 29	constant	sub	reversed shift 13			-79.62	fail
+bytes mod 29	constant	sub	reversed shift 14			-78.63	fail
+bytes mod 29	constant	sub	reversed shift 15			-66.68	fail
+bytes mod 29	constant	sub	reversed shift 16			-74.18	fail
+bytes mod 29	constant	sub	reversed shift 17			-88.07	fail
+bytes mod 29	constant	sub	reversed shift 18			-55.83	fail
+bytes mod 29	constant	sub	reversed shift 19			-60.99	fail
+bytes mod 29	constant	sub	reversed shift 20			-60.97	fail
+bytes mod 29	constant	sub	reversed shift 21			-63.75	fail
+bytes mod 29	constant	sub	reversed shift 22			-89.80	fail
+bytes mod 29	constant	sub	reversed shift 23			-80.68	fail
+bytes mod 29	constant	sub	reversed shift 24			-40.82	fail
+bytes mod 29	constant	sub	reversed shift 25			-68.89	fail
+bytes mod 29	constant	sub	reversed shift 26			-81.67	fail
+bytes mod 29	constant	sub	reversed shift 27			-62.96	fail
+bytes mod 29	constant	sub	reversed shift 28			-69.47	fail
+bytes mod 29	phi(prime)	sub	reversed			-26.15	fail
+bytes mod 29	DIVINITY	sub	reversed			-23.44	fail
+bytes mod 29	FIRFUMFERENFE	sub	reversed			-24.38	fail
+bytes mod 29	constant	add	reversed shift 0			-86.75	fail
+bytes mod 29	constant	add	reversed shift 1			-69.47	fail
+bytes mod 29	constant	add	reversed shift 2			-62.96	fail
+bytes mod 29	constant	add	reversed shift 3			-81.67	fail
+bytes mod 29	constant	add	reversed shift 4			-68.89	fail
+bytes mod 29	constant	add	reversed shift 5			-40.82	fail
+bytes mod 29	constant	add	reversed shift 6			-80.68	fail
+bytes mod 29	constant	add	reversed shift 7			-89.80	fail
+bytes mod 29	constant	add	reversed shift 8			-63.75	fail
+bytes mod 29	constant	add	reversed shift 9			-60.97	fail
+bytes mod 29	constant	add	reversed shift 10			-60.99	fail
+bytes mod 29	constant	add	reversed shift 11			-55.83	fail
+bytes mod 29	constant	add	reversed shift 12			-88.07	fail
+bytes mod 29	constant	add	reversed shift 13			-74.18	fail
+bytes mod 29	constant	add	reversed shift 14			-66.68	fail
+bytes mod 29	constant	add	reversed shift 15			-78.63	fail
+bytes mod 29	constant	add	reversed shift 16			-79.62	fail
+bytes mod 29	constant	add	reversed shift 17			-69.53	fail
+bytes mod 29	constant	add	reversed shift 18			-87.12	fail
+bytes mod 29	constant	add	reversed shift 19			-52.39	fail
+bytes mod 29	constant	add	reversed shift 20			-68.97	fail
+bytes mod 29	constant	add	reversed shift 21			-72.46	fail
+bytes mod 29	constant	add	reversed shift 22			-73.06	fail
+bytes mod 29	constant	add	reversed shift 23			-83.01	fail
+bytes mod 29	constant	add	reversed shift 24			-79.39	fail
+bytes mod 29	constant	add	reversed shift 25			-70.04	fail
+bytes mod 29	constant	add	reversed shift 26			-111.58	fail
+bytes mod 29	constant	add	reversed shift 27			-71.75	fail
+bytes mod 29	constant	add	reversed shift 28			-75.85	fail
+bytes mod 29	phi(prime)	add	reversed			-20.74	fail
+bytes mod 29	DIVINITY	add	reversed			-28.83	fail
+bytes mod 29	FIRFUMFERENFE	add	reversed			-36.77	fail
+bytes mod 29	constant	beaufort	reversed shift 0			-59.46	fail
+bytes mod 29	constant	beaufort	reversed shift 1			-79.23	fail
+bytes mod 29	constant	beaufort	reversed shift 2			-53.72	fail
+bytes mod 29	constant	beaufort	reversed shift 3			-64.02	fail
+bytes mod 29	constant	beaufort	reversed shift 4			-62.06	fail
+bytes mod 29	constant	beaufort	reversed shift 5			-59.76	fail
+bytes mod 29	constant	beaufort	reversed shift 6			-64.80	fail
+bytes mod 29	constant	beaufort	reversed shift 7			-93.90	fail
+bytes mod 29	constant	beaufort	reversed shift 8			-65.47	fail
+bytes mod 29	constant	beaufort	reversed shift 9			-64.67	fail
+bytes mod 29	constant	beaufort	reversed shift 10			-98.86	fail
+bytes mod 29	constant	beaufort	reversed shift 11			-95.04	fail
+bytes mod 29	constant	beaufort	reversed shift 12			-64.78	fail
+bytes mod 29	constant	beaufort	reversed shift 13			-84.47	fail
+bytes mod 29	constant	beaufort	reversed shift 14			-55.93	fail
+bytes mod 29	constant	beaufort	reversed shift 15			-79.07	fail
+bytes mod 29	constant	beaufort	reversed shift 16			-75.50	fail
+bytes mod 29	constant	beaufort	reversed shift 17			-77.25	fail
+bytes mod 29	constant	beaufort	reversed shift 18			-86.19	fail
+bytes mod 29	constant	beaufort	reversed shift 19			-64.08	fail
+bytes mod 29	constant	beaufort	reversed shift 20			-72.37	fail
+bytes mod 29	constant	beaufort	reversed shift 21			-98.07	fail
+bytes mod 29	constant	beaufort	reversed shift 22			-71.69	fail
+bytes mod 29	constant	beaufort	reversed shift 23			-57.70	fail
+bytes mod 29	constant	beaufort	reversed shift 24			-79.51	fail
+bytes mod 29	constant	beaufort	reversed shift 25			-62.42	fail
+bytes mod 29	constant	beaufort	reversed shift 26			-83.79	fail
+bytes mod 29	constant	beaufort	reversed shift 27			-90.42	fail
+bytes mod 29	constant	beaufort	reversed shift 28			-62.35	fail
+bytes mod 29	phi(prime)	beaufort	reversed			-31.99	fail
+bytes mod 29	DIVINITY	beaufort	reversed			-43.36	fail
+bytes mod 29	FIRFUMFERENFE	beaufort	reversed			-24.38	fail
+base-60 digits mod 29	constant	sub	forward shift 0			-51.81	fail
+base-60 digits mod 29	constant	sub	forward shift 1			-134.21	fail
+base-60 digits mod 29	constant	sub	forward shift 2			-190.01	fail
+base-60 digits mod 29	constant	sub	forward shift 3			-223.06	fail
+base-60 digits mod 29	constant	sub	forward shift 4			-278.42	fail
+base-60 digits mod 29	constant	sub	forward shift 5			-226.57	fail
+base-60 digits mod 29	constant	sub	forward shift 6			-156.17	fail
+base-60 digits mod 29	constant	sub	forward shift 7			-234.40	fail
+base-60 digits mod 29	constant	sub	forward shift 8			-211.43	fail
+base-60 digits mod 29	constant	sub	forward shift 9			-182.85	fail
+base-60 digits mod 29	constant	sub	forward shift 10			-217.20	fail
+base-60 digits mod 29	constant	sub	forward shift 11			-120.93	fail
+base-60 digits mod 29	constant	sub	forward shift 12			-76.75	fail
+base-60 digits mod 29	constant	sub	forward shift 13			-55.63	fail
+base-60 digits mod 29	constant	sub	forward shift 14			-15.92	fail
+base-60 digits mod 29	constant	sub	forward shift 15			-111.14	fail
+base-60 digits mod 29	constant	sub	forward shift 16			-122.19	fail
+base-60 digits mod 29	constant	sub	forward shift 17			-229.48	fail
+base-60 digits mod 29	constant	sub	forward shift 18			-330.46	fail
+base-60 digits mod 29	constant	sub	forward shift 19			-269.43	fail
+base-60 digits mod 29	constant	sub	forward shift 20			-232.63	fail
+base-60 digits mod 29	constant	sub	forward shift 21			-166.46	fail
+base-60 digits mod 29	constant	sub	forward shift 22			-47.92	fail
+base-60 digits mod 29	constant	sub	forward shift 23			-69.19	fail
+base-60 digits mod 29	constant	sub	forward shift 24			-106.50	fail
+base-60 digits mod 29	constant	sub	forward shift 25			-90.03	fail
+base-60 digits mod 29	constant	sub	forward shift 26			-65.99	fail
+base-60 digits mod 29	constant	sub	forward shift 27			-21.13	fail
+base-60 digits mod 29	constant	sub	forward shift 28			-9.83	fail
+base-60 digits mod 29	phi(prime)	sub	forward			-49.49	fail
+base-60 digits mod 29	DIVINITY	sub	forward			-78.93	fail
+base-60 digits mod 29	FIRFUMFERENFE	sub	forward			-106.72	fail
+base-60 digits mod 29	constant	add	forward shift 0			-51.81	fail
+base-60 digits mod 29	constant	add	forward shift 1			-9.83	fail
+base-60 digits mod 29	constant	add	forward shift 2			-21.13	fail
+base-60 digits mod 29	constant	add	forward shift 3			-65.99	fail
+base-60 digits mod 29	constant	add	forward shift 4			-90.03	fail
+base-60 digits mod 29	constant	add	forward shift 5			-106.50	fail
+base-60 digits mod 29	constant	add	forward shift 6			-69.19	fail
+base-60 digits mod 29	constant	add	forward shift 7			-47.92	fail
+base-60 digits mod 29	constant	add	forward shift 8			-166.46	fail
+base-60 digits mod 29	constant	add	forward shift 9			-232.63	fail
+base-60 digits mod 29	constant	add	forward shift 10			-269.43	fail
+base-60 digits mod 29	constant	add	forward shift 11			-330.46	fail
+base-60 digits mod 29	constant	add	forward shift 12			-229.48	fail
+base-60 digits mod 29	constant	add	forward shift 13			-122.19	fail
+base-60 digits mod 29	constant	add	forward shift 14			-111.14	fail
+base-60 digits mod 29	constant	add	forward shift 15			-15.92	fail
+base-60 digits mod 29	constant	add	forward shift 16			-55.63	fail
+base-60 digits mod 29	constant	add	forward shift 17			-76.75	fail
+base-60 digits mod 29	constant	add	forward shift 18			-120.93	fail
+base-60 digits mod 29	constant	add	forward shift 19			-217.20	fail
+base-60 digits mod 29	constant	add	forward shift 20			-182.85	fail
+base-60 digits mod 29	constant	add	forward shift 21			-211.43	fail
+base-60 digits mod 29	constant	add	forward shift 22			-234.40	fail
+base-60 digits mod 29	constant	add	forward shift 23			-156.17	fail
+base-60 digits mod 29	constant	add	forward shift 24			-226.57	fail
+base-60 digits mod 29	constant	add	forward shift 25			-278.42	fail
+base-60 digits mod 29	constant	add	forward shift 26			-223.06	fail
+base-60 digits mod 29	constant	add	forward shift 27			-190.01	fail
+base-60 digits mod 29	constant	add	forward shift 28			-134.21	fail
+base-60 digits mod 29	phi(prime)	add	forward			-41.57	fail
+base-60 digits mod 29	DIVINITY	add	forward			-60.65	fail
+base-60 digits mod 29	FIRFUMFERENFE	add	forward			-23.34	fail
+base-60 digits mod 29	constant	beaufort	forward shift 0			-230.11	fail
+base-60 digits mod 29	constant	beaufort	forward shift 1			-205.92	fail
+base-60 digits mod 29	constant	beaufort	forward shift 2			-161.09	fail
+base-60 digits mod 29	constant	beaufort	forward shift 3			-67.50	fail
+base-60 digits mod 29	constant	beaufort	forward shift 4			-4.83	fail
+base-60 digits mod 29	constant	beaufort	forward shift 5			-22.06	fail
+base-60 digits mod 29	constant	beaufort	forward shift 6			-50.08	fail
+base-60 digits mod 29	constant	beaufort	forward shift 7			-79.17	fail
+base-60 digits mod 29	constant	beaufort	forward shift 8			-99.84	fail
+base-60 digits mod 29	constant	beaufort	forward shift 9			-106.39	fail
+base-60 digits mod 29	constant	beaufort	forward shift 10			-50.86	fail
+base-60 digits mod 29	constant	beaufort	forward shift 11			-105.01	fail
+base-60 digits mod 29	constant	beaufort	forward shift 12			-195.05	fail
+base-60 digits mod 29	constant	beaufort	forward shift 13			-250.51	fail
+base-60 digits mod 29	constant	beaufort	forward shift 14			-339.49	fail
+base-60 digits mod 29	constant	beaufort	forward shift 15			-288.06	fail
+base-60 digits mod 29	constant	beaufort	forward shift 16			-166.40	fail
+base-60 digits mod 29	constant	beaufort	forward shift 17			-156.21	fail
+base-60 digits mod 29	constant	beaufort	forward shift 18			-59.21	fail
+base-60 digits mod 29	constant	beaufort	forward shift 19			-32.81	fail
+base-60 digits mod 29	constant	beaufort	forward shift 20			-61.34	fail
+base-60 digits mod 29	constant	beaufort	forward shift 21			-79.64	fail
+base-60 digits mod 29	constant	beaufort	forward shift 22			-185.65	fail
+base-60 digits mod 29	constant	beaufort	forward shift 23			-188.23	fail
+base-60 digits mod 29	constant	beaufort	forward shift 24			-183.51	fail
+base-60 digits mod 29	constant	beaufort	forward shift 25			-256.31	fail
+base-60 digits mod 29	constant	beaufort	forward shift 26			-167.44	fail
+base-60 digits mod 29	constant	beaufort	forward shift 27			-188.22	fail
+base-60 digits mod 29	constant	beaufort	forward shift 28			-270.06	fail
+base-60 digits mod 29	phi(prime)	beaufort	forward			-53.92	fail
+base-60 digits mod 29	DIVINITY	beaufort	forward			-41.44	fail
+base-60 digits mod 29	FIRFUMFERENFE	beaufort	forward			-35.65	fail
+base-60 digits mod 29	constant	sub	reversed shift 0			-52.49	fail
+base-60 digits mod 29	constant	sub	reversed shift 1			-133.13	fail
+base-60 digits mod 29	constant	sub	reversed shift 2			-192.04	fail
+base-60 digits mod 29	constant	sub	reversed shift 3			-223.45	fail
+base-60 digits mod 29	constant	sub	reversed shift 4			-286.77	fail
+base-60 digits mod 29	constant	sub	reversed shift 5			-225.84	fail
+base-60 digits mod 29	constant	sub	reversed shift 6			-157.83	fail
+base-60 digits mod 29	constant	sub	reversed shift 7			-230.88	fail
+base-60 digits mod 29	constant	sub	reversed shift 8			-213.07	fail
+base-60 digits mod 29	constant	sub	reversed shift 9			-186.22	fail
+base-60 digits mod 29	constant	sub	reversed shift 10			-206.61	fail
+base-60 digits mod 29	constant	sub	reversed shift 11			-116.04	fail
+base-60 digits mod 29	constant	sub	reversed shift 12			-77.96	fail
+base-60 digits mod 29	constant	sub	reversed shift 13			-56.21	fail
+base-60 digits mod 29	constant	sub	reversed shift 14			-16.40	fail
+base-60 digits mod 29	constant	sub	reversed shift 15			-111.09	fail
+base-60 digits mod 29	constant	sub	reversed shift 16			-123.27	fail
+base-60 digits mod 29	constant	sub	reversed shift 17			-233.21	fail
+base-60 digits mod 29	constant	sub	reversed shift 18			-330.76	fail
+base-60 digits mod 29	constant	sub	reversed shift 19			-276.57	fail
+base-60 digits mod 29	constant	sub	reversed shift 20			-229.08	fail
+base-60 digits mod 29	constant	sub	reversed shift 21			-162.00	fail
+base-60 digits mod 29	constant	sub	reversed shift 22			-49.87	fail
+base-60 digits mod 29	constant	sub	reversed shift 23			-69.67	fail
+base-60 digits mod 29	constant	sub	reversed shift 24			-104.45	fail
+base-60 digits mod 29	constant	sub	reversed shift 25			-91.51	fail
+base-60 digits mod 29	constant	sub	reversed shift 26			-63.14	fail
+base-60 digits mod 29	constant	sub	reversed shift 27			-19.70	fail
+base-60 digits mod 29	constant	sub	reversed shift 28			-13.05	fail
+base-60 digits mod 29	phi(prime)	sub	reversed			-61.99	fail
+base-60 digits mod 29	DIVINITY	sub	reversed			-84.00	fail
+base-60 digits mod 29	FIRFUMFERENFE	sub	reversed			-109.89	fail
+base-60 digits mod 29	constant	add	reversed shift 0			-52.49	fail
+base-60 digits mod 29	constant	add	reversed shift 1			-13.05	fail
+base-60 digits mod 29	constant	add	reversed shift 2			-19.70	fail
+base-60 digits mod 29	constant	add	reversed shift 3			-63.14	fail
+base-60 digits mod 29	constant	add	reversed shift 4			-91.51	fail
+base-60 digits mod 29	constant	add	reversed shift 5			-104.45	fail
+base-60 digits mod 29	constant	add	reversed shift 6			-69.67	fail
+base-60 digits mod 29	constant	add	reversed shift 7			-49.87	fail
+base-60 digits mod 29	constant	add	reversed shift 8			-162.00	fail
+base-60 digits mod 29	constant	add	reversed shift 9			-229.08	fail
+base-60 digits mod 29	constant	add	reversed shift 10			-276.57	fail
+base-60 digits mod 29	constant	add	reversed shift 11			-330.76	fail
+base-60 digits mod 29	constant	add	reversed shift 12			-233.21	fail
+base-60 digits mod 29	constant	add	reversed shift 13			-123.27	fail
+base-60 digits mod 29	constant	add	reversed shift 14			-111.09	fail
+base-60 digits mod 29	constant	add	reversed shift 15			-16.40	fail
+base-60 digits mod 29	constant	add	reversed shift 16			-56.21	fail
+base-60 digits mod 29	constant	add	reversed shift 17			-77.96	fail
+base-60 digits mod 29	constant	add	reversed shift 18			-116.04	fail
+base-60 digits mod 29	constant	add	reversed shift 19			-206.61	fail
+base-60 digits mod 29	constant	add	reversed shift 20			-186.22	fail
+base-60 digits mod 29	constant	add	reversed shift 21			-213.07	fail
+base-60 digits mod 29	constant	add	reversed shift 22			-230.88	fail
+base-60 digits mod 29	constant	add	reversed shift 23			-157.83	fail
+base-60 digits mod 29	constant	add	reversed shift 24			-225.84	fail
+base-60 digits mod 29	constant	add	reversed shift 25			-286.77	fail
+base-60 digits mod 29	constant	add	reversed shift 26			-223.45	fail
+base-60 digits mod 29	constant	add	reversed shift 27			-192.04	fail
+base-60 digits mod 29	constant	add	reversed shift 28			-133.13	fail
+base-60 digits mod 29	phi(prime)	add	reversed			-49.34	fail
+base-60 digits mod 29	DIVINITY	add	reversed			-62.88	fail
+base-60 digits mod 29	FIRFUMFERENFE	add	reversed			-25.35	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 0			-231.04	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 1			-202.86	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 2			-157.09	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 3			-69.42	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 4			-6.01	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 5			-20.02	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 6			-51.42	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 7			-79.80	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 8			-99.82	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 9			-108.82	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 10			-50.60	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 11			-106.41	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 12			-196.97	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 13			-255.89	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 14			-341.83	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 15			-277.70	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 16			-165.79	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 17			-155.18	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 18			-59.71	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 19			-32.92	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 20			-58.70	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 21			-79.97	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 22			-188.62	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 23			-193.47	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 24			-187.56	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 25			-253.70	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 26			-168.92	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 27			-191.27	fail
+base-60 digits mod 29	constant	beaufort	reversed shift 28			-259.60	fail
+base-60 digits mod 29	phi(prime)	beaufort	reversed			-44.78	fail
+base-60 digits mod 29	DIVINITY	beaufort	reversed			-36.02	fail
+base-60 digits mod 29	FIRFUMFERENFE	beaufort	reversed			-30.78	fail

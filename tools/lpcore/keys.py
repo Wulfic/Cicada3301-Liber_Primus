@@ -89,6 +89,17 @@ def grid_rune_offset(corpus: Corpus) -> int:
     raise ValueError("grid not found in segment 15")
 
 
+AN_END_SCAN = 73
+
+
+def an_end_hash(corpus: Corpus) -> bytes:
+    """The 64-byte hash printed on AN END (scan 73): 'within the deep web there exists a page that hashes to'."""
+    hexdigits = "".join(w.text for w in corpus.words if w.kind == "number" and w.scan == AN_END_SCAN)
+    if len(hexdigits) != 128 or any(ch not in "0123456789abcdef" for ch in hexdigits):
+        raise ValueError(f"AN END hash has unexpected form: {hexdigits[:20]}… ({len(hexdigits)} chars)")
+    return bytes.fromhex(hexdigits)
+
+
 def random_key(length: int, seed: int) -> list[int]:
     rng = random.Random(seed)
     return [rng.randrange(N) for _ in range(length)]

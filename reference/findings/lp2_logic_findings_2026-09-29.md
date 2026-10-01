@@ -274,8 +274,9 @@ rows in [`stage_m_candidates.tsv`](stage_m_candidates.tsv). Tests: `tests/test_d
 **What the grid is.** Section 15 contains 184 two-character tokens in base 60 (0-9 A-Z a-x) on scans 66 and 67. The
 first character is never above 4, and when it is 4 the second is at most E, so every token is 60a + b ≤ 255.
 **The grid is a 184-byte stream.** It starts cb e7 a7 ba …, with 130 distinct values and an entropy of 6.91 bits
-per byte, about what 184 random bytes give. It sits after rune 2,474 of section 15's 3,316. Neither community
-ledger mentions it.
+per byte, about what 184 random bytes give. It sits after rune 2,474 of section 15's 3,316. The byte reading is
+community knowledge (the Uncovering Cicada wiki notes the maximum token is 4F = 255). Neither ledger tests the grid
+as a key; that is what is new here.
 
 **As a key: it fails.** There were three readings, all mod 29: bytes (184 values), 5-bit groups MSB first (294),
 and single base-60 digits (368). Each ran in 3 modes × 29 shifts × 12 alignments: the 9 section starts, LP2
