@@ -9,32 +9,7 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-### L — what values can the key take? (started 2026-10-01)
-
-**Goal.** Tracker §1 item 1. Generalise C10 from "English text" to any key *alphabet*. When the key's values come
-from a small set, the cipher distribution r = q ⊛ k is uneven in every mode and offset, and drift does not change
-it. Testing the marginal excludes whole classes of digit, hex and letter keys without decoding any.
-
-**Prediction (model only, before LP2): expected LLR on 12,956 runes if the alphabet were the key's.**
-Decimal digits 0–9: +240. Hex 0–15: +41. Uniform letters A–Z: +25. Base-60: +3. Two-digit groups 00–99: +1.1.
-Bytes: +0.3. Three-digit groups: 0.0. Also tested: **English text written as Latin letters**, A–Z → 0–25, with
-A–Z frequencies from the solved translation. C10 covered English only in rune form.
-
-**Declared rules.**
-- Statistic: as C10, LLR = Σ O_c log(29 r_c), the most favourable of 29 offsets in each of 3 modes. Offsets also
-  cover A = 0 against A = 1, and digit keys + constant.
-- **Excluded** if every mode's best LLR ≤ −10.
-- **Untestable** (recorded, not excluded) if the predicted LLR is below 20: base-60, 00–99, bytes, 000–999.
-- **Positive controls:** LP2-sized synthetic ciphers (solved plaintext, repeated) with random keys from each
-  testable alphabet, and with Emerson as Latin letters, must give LLR ≥ +10 with their own model.
-
-**Consequence if excluded.** No key made of single decimal digits (π, e, the 2012 P.S. number, RAND digits, the
-decimal digits of a hash), single hex digits (SHA hashes, OutGuess hex), or letters (uniform, or English).
-
-**Not doing.** No new decodes. Wider alphabets with no power are recorded as untestable this way.
-
-**Blast radius.** `tools/lpcore/stats.py` (refactor `running_key_distribution` over a new `cipher_distribution`),
-`tests/test_keyspace.py`, docs. **Rollback:** `git revert`.
+*(none. The next research step is MASTER_TRACKER §1, item 1. Plan it here before starting.)*
 
 ## Owner items
 
@@ -48,6 +23,7 @@ decimal digits of a hash), single hex digits (SHA hashes, OutGuess hex), or lett
 
 | Date | Stage | Result | Commits |
 |---|---|---|---|
+| 2026-10-01 | **L** key alphabets | Rules and predictions declared first. C13: no decimal-digit (−214), hex (−19.5), letter (−14.3) or English-Latin (−122) key, best of 87 mode/offsets; controls +24…+251. Bytes, 00–99, base 60 untestable this way. → findings §11 | `0c59200` + this |
 | 2026-10-01 | **K** ciphertext-selected alphabets | Rule declared first. C12: off-diagonal lag-L transition χ² flat for L = 1–1000 (best p 3.9e-3 vs 1e-5); calibration conservative; controls χ² 7.6k–14k. Subsumes C11. → findings §10 | `55c78b1` + this |
 | 2026-10-01 | **J** key statistics | Rules declared first. C10: no English running key from any text, in 3 mappings × 3 modes × 29 offsets (LLR −255…−333; still excluded at λ = 0.25). C11: no ciphertext autokey at lags 2–1000 (best p 5.6e-4 vs 5e-6). Title cribs closed as untestable. → findings §9, `tests/test_keyspace.py` | `b1fa1bb` + this |
 | 2026-10-01 | **I** key-source riddles | Plan, thresholds and candidate list declared first. Drift-tolerant detector (`detect.py`, forward algorithm, bound e^−30). Controls pass except AN END (85 runes, 29.6 < 30: too short, recorded). C9: no periodic key (lags 11–1000). 2,610 decodes of primes / word sums / plaintext values all fail (best −65 nats on a real section). Segment 10 title not decoded by the square. → findings §8. `tools/run_stage_i.py`, `tests/test_detect.py` | `8641c50` `3720710` |

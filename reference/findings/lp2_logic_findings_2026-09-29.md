@@ -241,3 +241,27 @@ stream whose values are near-flat mod 29. It is not periodic, not English text, 
 the solved text, and not a function of the ciphertext alone. That is the "OTP-class" verdict of both community
 ledgers, now with each piece tested on canonical data. Only a named key source can go further, and
 `detect.log_lr` is the tool for testing one.
+
+## 11. What values the key can take (2026-10-01, TODO stage L)
+
+Rules declared in `TODO.md` before the run. Functions: `stats.cipher_distribution`, `stats.values_distribution`.
+Tests: `tests/test_keyspace.py`.
+
+**C13.** C10 generalised from "English text" to any small key alphabet. If the key's values come from a small set,
+the cipher distribution r = q ⊛ k is uneven in every mode and offset, and no amount of drift or skipping changes
+that. The statistic is C10's, the best LLR over 3 modes × 29 offsets; offsets also cover A = 0 against A = 1 and
+digit + constant. The expected LLR if true was computed from the model before the run.
+
+| Key values | Expected if true | LP2 (best of 87) | Control | Verdict |
+|---|---|---|---|---|
+| decimal digits 0–9 | +240 | **−214.3** | +251 | excluded |
+| hex digits 0–15 | +41 | **−19.5** | +45 | excluded |
+| letters A–Z, uniform | +25 | **−14.3** | +24 | excluded |
+| English text as Latin letters A–Z | — | **−121.7** | +141 (Emerson) | excluded |
+| base-60 digits, two-digit groups 00–99, bytes, 000–999 | +3 … 0 | — | — | **untestable this way** (no power) |
+
+Consequences: the key is not a stream of single decimal digits. That covers π, e, the 2012 P.S. number, RAND
+digits, and any number written out in decimal, read one digit per rune, in any mode and offset. It is not single
+hex digits (a SHA hash, OutGuess hex), and not letters, whether uniform or English in Latin spelling. Wider
+alphabets (bytes, digit pairs, base 60) leave too little trace in the marginal. Those need a named source and
+`detect.log_lr`.

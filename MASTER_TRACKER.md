@@ -4,7 +4,7 @@
 and what to do next. Every claim on it is backed by a test or a linked document. If something here
 disagrees with the tests, the tests win, and this page needs fixing.
 
-**Last updated:** 2026-10-01 · **Tests:** 73, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
+**Last updated:** 2026-10-01 · **Tests:** 77, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
 
 ---
 
@@ -19,14 +19,15 @@ scheme is refuted (§3.2 "The leak", findings §7). A drift-tolerant key detecto
 exact forward algorithm, false-positive bound e^−30 per test). It found none of the riddle-derived keys, and
 periodic keys are excluded (C9, findings §8). The key is not English text from any source, and the cipher is not
 an autokey on its ciphertext (C10, C11, findings §9). No earlier cipher rune chooses the alphabet, for any secret
-alphabets (C12, findings §10). So the key stream is random-like numbers, which is why
+alphabets (C12, findings §10). The key's values are not decimal digits, hex digits or letters (C13, findings §11). So the key stream is random-like numbers, which is why
 title cribs were closed as untestable.
 
 **Next actions, in order** (detail in [findings §6](reference/findings/lp2_logic_findings_2026-09-29.md)):
 
-1. **What values can the key take? (stage L, to plan).** C10's logic generalises: a key built from a small
-   alphabet (decimal digits, hex digits, letters A–Z, base-60 digits, two-digit groups) leaves an uneven cipher
-   distribution in every mode and offset. That would exclude whole classes of digit and hash keys without decoding any.
+1. **Named key sources with wide alphabets.** C1–C13 leave a near-flat, aperiodic key whose values span at least
+   ~30 symbols: bytes, digit pairs, base 60, or numbers mod 29. Only a named source can be tested, scored with
+   `detect.log_lr`. Candidates not yet in either ledger include the scan-67 base-60 grid, OutGuess bytes per page,
+   and two-digit groupings of Cicada numbers. Declare each before running.
 2. **Any new key source goes through `detect.log_lr`.** Add it to `tools/run_stage_i.py` style: declared first,
    every mode and shift recorded, pass at 30 nats.
 
@@ -87,7 +88,7 @@ Errata, each with its evidence in `solved.py`: **WIDSOM** is the book's own typo
 | **all** | | **12,956** | **86** | **0.66 %** vs 3.45 % expected (z = −17) | |
 
 Everything else is flat: IoC, rune frequencies, and repeats at lags 2–10. The constraints derived from that
-are C1–C7 in [findings §2](reference/findings/lp2_logic_findings_2026-09-29.md) (C8 is in §7, C9 in §8, C10–C11 in §9, C12 in §10):
+are C1–C7 in [findings §2](reference/findings/lp2_logic_findings_2026-09-29.md) (C8 is in §7, C9 in §8, C10–C11 in §9, C12 in §10, C13 in §11):
 
 - The anti-doublet rule acts on the continuous rune stream and ignores word boundaries (C1).
 - There is no plaintext-F passthrough, unlike LP1 (C2). The surviving doublets mark no single plaintext letter (C3).
@@ -97,6 +98,7 @@ are C1–C7 in [findings §2](reference/findings/lp2_logic_findings_2026-09-29.m
   and offset. The key's values must be near-flat mod 29. **No ciphertext autokey (C11)** at lags 2–1000.
 - **No ciphertext-selected alphabet (C12):** c_i = σ_{c_{i−L}}(p_i) is excluded for any secret alphabets and
   any L ≤ 1000. This includes keyed autokeys c_i = p_i + f(c_{i−1}).
+- **Key alphabet (C13):** not single decimal digits, hex digits, or letters (uniform or English in Latin spelling).
 - **No periodic key (C9):** lags 11–1000 are normal. This excludes every period ≤ 1000 under a re-key rule that keeps
   the key in step, and every period ≤ 25 under a drifting one (findings §8).
 
@@ -145,6 +147,8 @@ RANDOM.ORG and RAND archives (~14.5 billion offsets). Both conclude "OTP-class" 
 - **Any English running key, plaintext autokey at any lag, ciphertext autokey at lags 2–1000** (C10, C11; findings §9).
   Section-title cribs are closed as untestable without a key model.
 - **Ciphertext-selected alphabets** c_i = σ_{c_{i−L}}(p_i), any σ, L ≤ 1000 (C12, findings §10).
+- **Keys made of single decimal digits, hex digits or letters**, in any mode and offset (C13, findings §11). This
+  covers π/e digits, the P.S. number, RAND digits, and hash hex read one symbol per rune.
 - The "Echo446Ghq full solution" is debunked ([analysis](reference/community/echo446ghq_analysis.md)).
 
 ### 4.3 Invalid claims from before 2026-09-29
@@ -194,6 +198,7 @@ The ordered list is in §1. These questions are also open and cheap to state:
 
 | Date | What happened | Commits |
 |---|---|---|
+| 2026-10-01 | **Key alphabets** (TODO L): C13, the key is not decimal digits (−214), hex (−19.5) or letters (−14.3; English Latin −122); bytes, digit pairs and base 60 are untestable this way | `0c59200` + this commit |
 | 2026-10-01 | **Ciphertext-selected alphabets** (TODO K): C12, no lag 1–1000 transition table carries plaintext structure, for any secret alphabets | `55c78b1` + this commit |
 | 2026-10-01 | **Key statistics** (TODO J): C10, no English running key from any text (LLR −255 to −333; still excluded at 25 % English-like); C11, no ciphertext autokey at lags 2–1000. Title cribs closed as untestable | `b1fa1bb` + this commit |
 | 2026-10-01 | **Key-source riddles** (TODO I): drift-tolerant detector, C9 (no periodic key), 2,610 candidate decodes all fail, segment 10 title not decoded. AN END control failed by length (29.6 < 30), recorded | `8641c50` `3720710` |
