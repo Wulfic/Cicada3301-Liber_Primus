@@ -1,4 +1,4 @@
-"""Stage N: the scan 66–67 grid bytes under LP-native keys (rules declared in TODO.md before the run)."""
+"""Stage N: the scan 66–68 grid bytes under LP-native keys (rules declared in TODO.md before the run)."""
 
 from __future__ import annotations
 
@@ -32,12 +32,13 @@ class TestStageN(unittest.TestCase):
         self.assertTrue(run_stage_n.pgp_packet_fits(bytes([0x85, 0, 3, 1, 2, 3])))          # old format, 2-octet length
         self.assertFalse(run_stage_n.pgp_packet_fits(bytes([0x84, 7, 1, 2, 3])))            # length does not fit
         rng = random.Random(1)
-        hits = sum(run_stage_n.pgp_packet_fits(bytes(rng.randrange(256) for _ in range(184))) for _ in range(20000))
-        self.assertEqual(hits, 33)                     # 0.17 %: (96/256)·(1/256) ≈ 0.15 %, so ≈ 0.12 false hits in 72
+        hits = sum(run_stage_n.pgp_packet_fits(bytes(rng.randrange(256) for _ in range(256))) for _ in range(20000))
+        self.assertEqual(hits, 4)                      # measured 0.020 % at the full grid length
 
     def test_positive_controls_bytes(self) -> None:
-        text = b"Within the deep web there exists a page that hashes to this. " * 4
-        text = text[:184]
+        text = b"Within the deep web there exists a page that hashes to this. " * 5
+        text = text[:256]
+        self.assertEqual(len(text), len(keys.grid_bytes(CORPUS)))
         for name, key in run_stage_n.byte_keys(CORPUS).items():
             for op, inverse in INVERSE.items():
                 cipher = [inverse(p, key[i % len(key)]) for i, p in enumerate(text)]
@@ -48,7 +49,7 @@ class TestStageN(unittest.TestCase):
 
     def test_positive_control_runes(self) -> None:
         phi = [p - 1 for p in islice(primes(), 400)]
-        cipher = [(p + k) % N for p, k in zip(PLAIN[700:884], phi)]
+        cipher = [(p + k) % N for p, k in zip(PLAIN[700:956], phi)]
         self.assertGreater(detect.log_lr(cipher, phi, Q), detect.THRESHOLD)
 
     def test_recorded_verdict(self) -> None:
@@ -59,8 +60,9 @@ class TestStageN(unittest.TestCase):
         self.assertEqual(len(byte_rows), 12 * 3 * 2)
         self.assertEqual(len(rune_rows), 2 * 2 * 3 * (N + 3))
         self.assertFalse([r for r in rows if r["verdict"] == "PASS"])                     # verdict: nothing decrypts
-        self.assertAlmostEqual(max(float(r["printable"]) for r in byte_rows), 0.440, places=3)
-        self.assertLess(max(float(r["log_lr_nats"]) for r in rune_rows), 0.0)
+        self.assertAlmostEqual(max(float(r["printable"]) for r in byte_rows), 0.426, places=3)
+        self.assertAlmostEqual(max(float(r["log_lr_nats"]) for r in rune_rows), 4.63, places=2)
+        self.assertLess(max(float(r["log_lr_nats"]) for r in rune_rows), detect.THRESHOLD)
         # The file reproduces from code.
         fresh = run_stage_n.byte_results(CORPUS)
         self.assertEqual([r[4] for r in fresh], [r["printable"] for r in byte_rows])

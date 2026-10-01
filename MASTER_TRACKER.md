@@ -25,8 +25,12 @@ stream over mod 29, plus an anti-doublet re-keying rule that leaks about 19 % of
 
 That is the community's "OTP-class" verdict, with each piece now tested on canonical data. A drift-tolerant
 detector (`tools/lpcore/detect.py`, false-positive bound e^−30) tests any named key source. It found none among
-the riddle-derived keys (findings §8). The base-60 grid on scans 66–67 is 184 bytes; it is not the key, and it does
-not decrypt under the book's own keys or hash (findings §12–§13). Title cribs were closed as untestable (findings §9).
+the riddle-derived keys (findings §8). The complete base-60 grid spans scans 66–68 and is interpreted as 256 bytes.
+Stage M/N test that full payload as a key and under named LP-native keys, modes and alignments (findings §12–§13).
+None of those full-grid candidates passes the original thresholds; these are bounded results, not an exclusion
+of arbitrary transformations or other grid-derived keys.
+The earlier 184-byte runs covered only a prefix. The five numeric-cell updates follow prior community work
+credited to Inky in 2021; see [provenance](data/canonical/PROVENANCE.md). Title cribs were closed as untestable (findings §9).
 Cicada's published numbers and every OutGuess payload in the repo also fail as keys, from any start phase (findings §16).
 
 **Next actions, in order** (all low prior; detail in [findings §6–§16](reference/findings/lp2_logic_findings_2026-09-29.md)):
@@ -38,7 +42,7 @@ Cicada's published numbers and every OutGuess payload in the repo also fail as k
    in-step one, with its null taken from offsets of the key rather than from a formula. That is still worth doing:
    the surviving re-key models (fresh draw, missed hand check) keep the key in step, and every solved LP1 key runs
    without desync. Declare it first.
-2. **The grid's 184 bytes** are still undeciphered (findings §13).
+2. **The grid's 256 bytes** are still undeciphered (findings §13).
 3. **More named sources** only with a new primary source: OutGuess output from scans the repo does not hold
    (community `lp_outguessed/`), or a named generator (catalog row 22). The material on disk is exhausted (§16).
 
@@ -166,9 +170,10 @@ RANDOM.ORG and RAND archives (~14.5 billion offsets). Both conclude "OTP-class" 
   Section-title cribs are closed as untestable without a key model.
 - **Ciphertext-selected alphabets** c_i = σ_{c_{i−L}}(p_i), any σ, L ≤ 1000 (C12, findings §10).
 - **A "skip to the next key value" anti-doublet rule** (C14, findings §14).
-- **Grid bytes as LP ciphertext or as XOR/Vigenère of ASCII** under the AN END hash, φ(prime), primes, the solved
-  keys as ASCII, or the square's cells (456 readings, findings §13).
-- **The scan 66–67 base-60 grid as a key** (bytes, 5-bit groups, base-60 digits; 3,132 decodes; findings §12).
+- **The named full-grid byte/rune readings** under the AN END hash, φ(prime), primes, the solved keys as ASCII,
+  or the square's cells (456 readings, findings §13). Other keys and transformations remain untested.
+- **The scan 66–68 base-60 grid as a key in the tested alignments** (bytes, 5-bit groups, base-60 digits;
+  3,132 decodes; findings §12). This does not exclude every use of the grid as a key.
 - **Keys made of single decimal digits, hex digits or letters**, in any mode and offset (C13, findings §11). This
   covers π/e digits, the P.S. number, RAND digits, and hash hex read one symbol per rune.
 - **Cicada's numbers and OutGuess payloads as additive keys, from any phase** (stage R, findings §16): the
@@ -224,11 +229,12 @@ The ordered list is in §1. These questions are also open and cheap to state:
 
 | Date | What happened | Commits |
 |---|---|---|
+| 2026-10-01 | **Full-grid correction:** scans 66–68 supply all 256 cells; five numeric corrections follow Inky's 2021 iddqd update. Prime byte streams continue through all 256 positions. The regenerated 3,132 Stage M and 456 Stage N candidates give no pass; best nontrivial M score −13.75, N 42.6 % printable / +4.63 nats. Payload and stream regressions added; findings §§12–13 supersede the historical prefix results | `4f326e5` (PR #1) |
 | 2026-10-01 | **Cicada numbers and OutGuess payloads** (TODO R): 25 sources × 2 mappings, any start phase (`starts=` prior), 43,500 decodes; none passes (best −50.8 on a real section; controls ≥ +169). `fastdetect` (numpy, tested equal). Synthetic check: a label-free coincidence test has power only in step | `2c209dc` + this commit |
 | 2026-10-01 | **Consolidation** (TODO Q): constraint register (findings §0); C3 now a test (all 29 letters excluded); C15, no homophonic substitution (χ² ≥ 4,802); every §3.2 number pinned; `tests/test_docs.py` checks cited names; errata in C3 (75 → 25) and C7 (2.6 → 2.39 %) | `028ef53` `d8115fd` |
 | 2026-10-01 | **Skip-next rule** (TODO O): C14, the re-keying is not "skip to the next key value" (LLR −21.3; held-out models −20/−32) | `0d4d86b` + this commit |
-| 2026-10-01 | **Grid bytes** (TODO N): 72 byte decryptions and 384 rune readings under LP-native keys; none passes (best 44 % printable, best log LR −4.8) | `14afdff` + this commit |
-| 2026-10-01 | **Base-60 grid** (TODO M): scans 66–67 parse as 184 bytes. As a key (3 readings × 3 modes × 29 shifts × 12 alignments) nothing passes; the power check gives +45…+122 | `4d66364` + this commit |
+| 2026-10-01 | **Historical grid prefix** (TODO N): the original 184-byte payload gave 72 byte decryptions and 384 rune readings; none passed (best 44 % printable, best log LR −4.8). Superseded by the complete-grid rerun in findings §13 | `14afdff` + this commit |
+| 2026-10-01 | **Historical base-60 prefix** (TODO M): scans 66–67 supplied 184 bytes and omitted scan 68. Its 3,132 key tests gave no pass; the power check gave +45…+122. This did not test the complete grid; see corrected findings §12 | `4d66364` + this commit |
 | 2026-10-01 | **Key alphabets** (TODO L): C13, the key is not decimal digits (−214), hex (−19.5) or letters (−14.3; English Latin −122); bytes, digit pairs and base 60 are untestable this way | `0c59200` + this commit |
 | 2026-10-01 | **Ciphertext-selected alphabets** (TODO K): C12, no lag 1–1000 transition table carries plaintext structure, for any secret alphabets | `55c78b1` + this commit |
 | 2026-10-01 | **Key statistics** (TODO J): C10, no English running key from any text (LLR −255 to −333; still excluded at 25 % English-like); C11, no ciphertext autokey at lags 2–1000. Title cribs closed as untestable | `b1fa1bb` + this commit |

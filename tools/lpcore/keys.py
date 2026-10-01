@@ -45,21 +45,21 @@ def plaintext_value_stream(words: Sequence[Sequence[int]]) -> list[int]:
 
 
 BASE60_DIGITS = string.digits + string.ascii_uppercase + string.ascii_lowercase[:24]   # 0-9 A-Z a-x
-GRID_SCANS = (66, 67)
+GRID_SCANS = (66, 67, 68)
 GRID_SEGMENT = 15
 
 
 def grid_tokens(corpus: Corpus) -> list[str]:
-    """The two-character base-60 tokens of the scan 66–67 grid, in reading order."""
+    """The two-character base-60 tokens of the scan 66–68 grid, in reading order."""
     tokens = [w.text for w in corpus.words if w.kind == "number" and w.scan in GRID_SCANS]
     bad = [t for t in tokens if len(t) != 2 or any(ch not in BASE60_DIGITS for ch in t)]
-    if bad or not tokens:
+    if bad or len(tokens) != 256:
         raise ValueError(f"unexpected grid tokens: {bad[:5]} (of {len(tokens)})")
     return tokens
 
 
 def grid_bytes(corpus: Corpus) -> list[int]:
-    """G-B: each token as 60·a + b. All 184 values are below 256, so the grid is a byte stream."""
+    """G-B: each token as 60·a + b. All 256 values are below 256, so the grid is a byte stream."""
     values = [60 * BASE60_DIGITS.index(a) + BASE60_DIGITS.index(b) for a, b in grid_tokens(corpus)]
     if max(values) > 255:
         raise ValueError(f"grid value {max(values)} is not a byte")

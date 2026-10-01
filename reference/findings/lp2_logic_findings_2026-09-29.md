@@ -1,7 +1,9 @@
 # LP2 — logic-only findings, 2026-09-29
 
-No hill-climbing, no optimisers. Every number below is reproduced by the test suite
-(`python -m unittest discover -s tests -t . -v`) from canonical data (`data/canonical/`).
+No hill-climbing, no optimisers. Current numbers are reproduced by the cited tests or named runners
+from canonical data (`data/canonical/`). Run the full suite with `python -m unittest discover -s tests -t . -v`.
+Explicitly labelled historical-prefix results in §§12–13 describe the earlier commits, rather than the
+current full-grid input.
 
 ## 0. Constraint register
 
@@ -42,8 +44,8 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 |---|---|---|---|
 | Primes, word sums, plaintext values (stage I) | 2,610 | −65 vs +30 nats | `test_recorded_family_is_complete_and_fails` |
 | The square's numbers on the segment 10 title | 30 | 0 English | `test_segment_10_title_is_not_decoded_by_the_square` |
-| The base-60 grid as a key (stage M) | 3,132 | −5.5 vs +30 | `test_recorded_family_fails` |
-| The grid bytes under LP-native keys (stage N) | 456 | 44 % printable vs 90 %; −4.8 vs +30 | `test_recorded_verdict` |
+| The complete base-60 grid as a key in the tested alignments (stage M) | 3,132 | −13.75 excluding the short title vs +30 | `test_recorded_family_fails` |
+| The complete grid under the named byte/rune readings (stage N) | 456 | 42.6 % printable vs 90 %; +4.63 vs +30 | `test_recorded_verdict` |
 | Cicada's numbers and OutGuess payloads, any phase (stage R) | 43,500 | −50.8 vs +30 | `test_recorded_family_is_complete_and_fails` |
 
 ## 1. State of the art (web check, September 2026)
@@ -310,54 +312,89 @@ hex digits (a SHA hash, OutGuess hex), and not letters, whether uniform or Engli
 alphabets (bytes, digit pairs, base 60) leave too little trace in the marginal. Those need a named source and
 `detect.log_lr`.
 
-## 12. The base-60 grid (scans 66–67) is 184 bytes, and not the key (2026-10-01, TODO stage M)
+## 12. The complete base-60 grid as a key (2026-10-01, TODO stage M, corrected)
 
-Plan declared in `TODO.md` before the run. Parser: `keys.grid_bytes` and siblings. Run: `python -m tools.run_stage_m`,
-rows in [`stage_m_candidates.tsv`](stage_m_candidates.tsv). Tests: `tests/test_detect.py` (`TestStageMGrid`).
+The original plan and thresholds were declared in `TODO.md`; the correction plan restores the complete input
+without adding a cipher family. Parser: `keys.grid_bytes` and siblings. Run: `python -m tools.run_stage_m`,
+rows in [`stage_m_candidates.tsv`](stage_m_candidates.tsv). Tests: `tests/test_detect.py` (`TestStageMGrid`)
+and `tests/test_grid_extraction.py`.
 
-**What the grid is.** Section 15 contains 184 two-character tokens in base 60 (0-9 A-Z a-x) on scans 66 and 67. The
-first character is never above 4, and when it is 4 the second is at most E, so every token is 60a + b ≤ 255.
-**The grid is a 184-byte stream.** It starts cb e7 a7 ba …, with 130 distinct values and an entropy of 6.91 bits
-per byte, about what 184 random bytes give. It sits after rune 2,474 of section 15's 3,316. The byte reading is
-community knowledge (the Uncovering Cicada wiki notes the maximum token is 4F = 255). Neither ledger tests the grid
-as a key; that is what is new here.
+**Input correction.** The original extractor selected only scans 66 and 67, yielding a 184-byte prefix and
+omitting the final 72 cells on scan 68. The complete grid spans **LP2 pages 49–51 / scans 66–68**, with
+80 + 104 + 72 = **256 cells**. Five numeric cells now follow the prior community corrections credited to Inky
+in [iddqd commit f804b85, 2021-05-09](https://github.com/cicada-solvers/iddqd/commit/f804b85e9e6fe6287c7cab054335af07ed420728).
+The 2019 punctuation and all rune text are preserved. Some `I`/`l` strokes are ambiguous; the cell choices follow
+that documented community convention. See [canonical provenance](../../data/canonical/PROVENANCE.md) for the
+exact overlay, attribution and source checksums.
 
-**As a key: it fails.** There were three readings, all mod 29: bytes (184 values), 5-bit groups MSB first (294),
-and single base-60 digits (368). Each ran in 3 modes × 29 shifts × 12 alignments: the 9 section starts, LP2
-continuous, the runes right after the grid, and the runes ending where the grid begins. That is 3,132 decodes,
-with a false-positive bound of 3 × 10⁻¹⁰.
+**Tested byte interpretation.** Tokens use base 60 (0-9 A-Z a-x), interpreted as `60*a+b`. The first character
+is never above 4, and for 4 the second is at most F, so the values lie in 0–255. This convention yields a
+256-byte payload starting cb e7 a7 ba, with 161 distinct values and entropy 7.16965 bits per byte.
+Its SHA-256 is `3b9b07d9a26e6d55c432d94d2661fdff3c2b348daed06821f2bdb23184a4b290`.
+The first grid cell follows rune 2,474 of section 15's 3,316; these offsets do not change.
+`test_all_three_pages_and_current_payload` pins the counts, checksum and byte properties. The byte reading is
+a tested convention, not an authenticated statement of Cicada's intent.
 
-| Key | Power check (right key, solved plaintext, skip-next rule) | Best on a real alignment |
+**Full-grid key tests: none passes.** The three readings, all mod 29, are bytes (256 values), 5-bit groups
+MSB first (409, with the final three bits dropped), and single base-60 digits (512). Each runs in 3 modes ×
+29 shifts × 12 alignments: the 9 section starts, LP2 continuous, the runes right after the grid, and the runes
+ending where the grid begins. That is 3,132 decodes under the original pass threshold of +30 nats. The detector's
+uniform-null false-positive bound for this family is 3,132 × e⁻³⁰ ≈ 3 × 10⁻¹⁰.
+
+| Key | Power control | Best excluding section 10 |
 |---|---|---|
-| bytes | +45 … +57 | −5.5 (section 15) |
-| 5-bit groups | +59 … +98 | −19.6 (ending at the grid) |
-| base-60 digits | +80 … +122 | −27.5 (ending at the grid) |
+| bytes | +88.33 | −13.75 (section 8, Beaufort, shift 9) |
+| 5-bit groups | +134.55 | −28.20 (section 7, Beaufort, shift 9) |
+| base-60 digits | +167.15 | −47.26 (section 13, add, shift 13) |
 
-The only positive scores come from the 9-rune section 10 (at most +4.8), which has no power. What the 184 bytes
-encode is still open. They may be ciphertext under another layer; this stage did not try to decrypt them.
+Power controls use the exact construction in `test_power_check`: solved plaintext beginning at rune 700,
+`n=int(len(key)/1.1)`, skip-next encryption with `keep=0.19` and seed 700. Each exceeds the declared threshold.
+The best score anywhere is +4.83 on the 9-rune section 10, whose short title gives little power.
 
-## 13. The grid bytes do not decrypt under LP-native keys (2026-10-01, TODO stage N)
+**Historical prefix results.** The original 184-byte / 294-group / 368-digit run also tested 3,132 candidates.
+Its best score excluding section 10 was −5.5 (bytes, section 15), and its power checks were +45…+122.
+Those results applied only to the older-transcription prefix; they did not test the complete grid. The current
+TSV and assertions are regenerated for the complete, updated payload. The historical construction is
+`tools/run_stage_m.py` at the pre-correction baseline `a7ab786`.
 
-Rules declared in `TODO.md` before the run. Run: `python -m tools.run_stage_n` (3 s), rows in
-[`stage_n_results.tsv`](stage_n_results.tsv). Tests: `tests/test_grid.py`.
+**Scope.** These results concern the named readings, modes, shifts, alignments and drift detector. They do not
+exclude other offsets, transformations, plaintext models or uses of the grid as a key. This stage does not
+attempt to decipher the grid itself.
 
-**Byte readings: 72 decryptions, none passes.** The operations were XOR, b − k and b + k mod 256, with the grid read
-forward and reversed. The keys, each repeated: the AN END hash (64 bytes, canonical scan 73) and its reverse;
-φ(prime) mod 256 and the primes mod 256; DIVINITY, FIRFUMFERENFE and CIRCUMFERENCE as ASCII in upper and lower
-case; "3301"; and the scan-32 square cells mod 256. A pass needed ≥ 90 % printable ASCII or a file signature.
-The best output is 44.0 % printable, where random bytes give about 38 %, and no output matched a signature.
-Every key/operation pair recovers ASCII text enciphered the same way (positive control).
+## 13. The complete grid under named LP-native keys (2026-10-01, TODO stage N, corrected)
 
-**Rune readings: 384 decodes, none passes.** The grid was read as LP ciphertext in two ways: bytes mod 29 and
-base-60 digits mod 29, each forward and reversed. Keys: a constant (3 modes × 29 shifts, which covers Caesar,
-atbash and atbash + 3), φ(prime), DIVINITY and FIRFUMFERENFE. The best log LR is −4.8, against a pass mark of 30;
-184 runes of real LP ciphertext under the right φ key scores above 30 (control).
+The original thresholds remain unchanged. Run: `python -m tools.run_stage_n`, rows in
+[`stage_n_results.tsv`](stage_n_results.tsv). Tests: `tests/test_grid.py` and `tests/test_grid_extraction.py`.
+The input is the complete 256-byte payload documented in §12.
 
-*Caveat recorded:* an OpenPGP header check (a well-formed header whose length fits) still passes 0.17 % of random
-184-byte blocks, about 0.12 expected false hits over 72 decodes. None occurred.
+**Byte readings: 72 decryptions, none passes.** Operations are XOR, b − k and b + k mod 256, with the grid read
+forward and reversed. Keys are the AN END hash (64 bytes, canonical scan 73) and its reverse; φ(prime) mod 256
+and primes mod 256; DIVINITY, FIRFUMFERENFE and CIRCUMFERENCE as ASCII in upper and lower case; "3301";
+and the scan-32 square cells mod 256. The hash, ASCII and square keys repeat. The prime streams now continue
+through all 256 positions: the original fixed 200-prime list would have wrapped prematurely on the full grid.
+A regression checks the actual prime contents, not just their lengths.
 
-**Reading.** The grid is not LP-style rune ciphertext under any solved-section method, and not a simple XOR or
-Vigenère of ASCII under the book's own keys or hash. Whatever it is needs another key, or more than one layer.
+A pass needs ≥ 90 % printable ASCII or a recognized file signature. The best output is **42.6 % printable**,
+and no output matches a signature. All 36 named key/operation combinations recover their planted 256-byte
+ASCII text exactly in `test_positive_controls_bytes`.
+
+**Rune readings: 384 decodes, none passes.** The grid is read as bytes mod 29 and base-60 digits mod 29, each
+forward and reversed. Keys are a constant (3 modes × 29 shifts, covering Caesar and atbash variants), φ(prime),
+DIVINITY and FIRFUMFERENFE. The best log LR is **+4.63**, below the pass mark of +30. A 256-rune planted
+plaintext under the right φ key scores +106.28 in `test_positive_control_runes`.
+
+**Signature calibration.** The OpenPGP header-and-length check does not validate packet contents. In the
+deterministic calibration in `test_pgp_header_check` (seed 1), it passes **4 of 20,000 random 256-byte blocks**,
+an empirical rate of 0.020 %, or about 0.014 expected hits over 72 readings. No grid reading passes that check.
+
+**Historical prefix results.** The original 184-byte run gave 44.0 % best printable output and −4.8 best rune
+log LR; no candidate passed. Its separate 184-byte OpenPGP calibration gave 33 / 20,000 hits (0.165 %).
+These describe the old prefix and must not be treated as full-grid results. The historical construction is
+`tools/run_stage_n.py` and `tests/test_grid.py` at the pre-correction baseline `a7ab786`.
+
+**Scope.** No candidate in this finite set of byte/rune readings passes the declared criteria. This does not
+exclude other keys, key offsets, transformations, ciphers, plaintext distributions or layers, and it yields
+neither a plaintext nor a proof of the grid's intended purpose.
 
 ## 14. The re-keying is not "skip to the next key value" (2026-10-01, TODO stage O)
 
