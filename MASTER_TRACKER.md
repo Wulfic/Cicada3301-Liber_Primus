@@ -4,7 +4,7 @@
 and what to do next. Every claim on it is backed by a test or a linked document. If something here
 disagrees with the tests, the tests win, and this page needs fixing.
 
-**Last updated:** 2026-10-01 · **Tests:** 156, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
+**Last updated:** 2026-10-01 · **Tests:** 168, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
 
 ---
 
@@ -14,7 +14,7 @@ disagrees with the tests, the tests win, and this page needs fixing.
 match their scans, so most older "discoveries" were artifacts (see §4.3). Now one canonical transcription
 (`data/canonical/`) is read by one tested loader (`tools/lpcore`), and every solved section decrypts from it exactly.
 
-The unsolved LP2 cipher is pinned down by eighteen key-independent constraints (§3.2, C1–C18; each with its test in the
+The unsolved LP2 cipher is pinned down by nineteen constraints (§3.2, C1–C19; each with its test in the
 [findings §0 register](reference/findings/lp2_logic_findings_2026-09-29.md#0-constraint-register)). In short: an additive
 stream over mod 29, plus an anti-doublet re-keying rule that leaks about 19 % of the time.
 - **The key stream** is near-flat mod 29 and aperiodic. Its values come from an alphabet of at least ~30 symbols,
@@ -41,16 +41,17 @@ on relabelled runes. Its alphabets are invisible to any key-free statistic, but 
 no iid key with V_eff ≥ 17 makes the deficit under any alphabets (C17), and under random alphabets the key is still
 not English, decimal digits or hex (C18). Only C13's "not letters" is lost: with mixed alphabets a uniform A–Z key is
 untestable.
+Stage V (findings §20) names the alphabets: 34 LP keywords give 68 keyed alphabets, and all 314,432 triples are
+scored with labels (C19). Under every one of them the key is not English or decimal digits, and hex is out for all
+but 431. A uniform A–Z key is excluded for a third of the triples; most of the rest cannot be tested from 12,956
+runes. No triple fits better than flat.
 
-**Next actions, in order** (all low prior; detail in [findings §6–§18](reference/findings/lp2_logic_findings_2026-09-29.md)):
+**Next actions, in order** (all low prior; detail in [findings §6–§20](reference/findings/lp2_logic_findings_2026-09-29.md)):
 
-1. **Named keyword alphabets** (findings §19, "not covered"): Quagmire I–IV with π₁, π₂, π₃ built from a declared
-   list of LP keywords (DIVINITY, CIRCUMFERENCE, section titles, …). That family is finite, so C10/C13's flatness test
-   applies exactly to each member, including uniform-letter keys, which random alphabets left untestable.
-2. **Keys with > 150 classes as random tabulae** (raw bytes, digit pairs, base 60). These are untestable by flatness.
+1. **Keys with > 150 classes as random tabulae** (raw bytes, digit pairs, base 60). These are untestable by flatness.
    They can be tested in step only, with the §17 detector and **flat** negative controls.
-3. **The grid's 256 bytes** are still undeciphered (findings §12–§13).
-4. **More named sources** only with a new primary source: OutGuess output from scans the repo does not hold
+2. **The grid's 256 bytes** are still undeciphered (findings §12–§13).
+3. **More named sources** only with a new primary source: OutGuess output from scans the repo does not hold
    (community `lp_outguessed/`), or a named generator (catalog row 22). The material on disk is exhausted (§16).
 
 **Before you start anything:** read §4 (ruled out) and §6 (rules of evidence). Plans go in [`TODO.md`](TODO.md).
@@ -111,7 +112,7 @@ Errata, each with its evidence in `solved.py`: **WIDSOM** is the book's own typo
 
 Everything else is flat: IoC, rune frequencies, and repeats at lags 2–10. The constraints derived from that
 are indexed, one row each with its test, in the [findings §0 register](reference/findings/lp2_logic_findings_2026-09-29.md#0-constraint-register).
-The evidence is in findings §2 (C1–C7), §7 (C8), §8 (C9), §9 (C10–C11), §10 (C12), §11 (C13), §14 (C14), §15 (C3's test, C15), §18 (C16) and §19 (C17–C18):
+The evidence is in findings §2 (C1–C7), §7 (C8), §8 (C9), §9 (C10–C11), §10 (C12), §11 (C13), §14 (C14), §15 (C3's test, C15), §18 (C16), §19 (C17–C18) and §20 (C19):
 
 - The anti-doublet rule acts on the continuous rune stream and ignores word boundaries (C1).
 - There is no plaintext-F passthrough, unlike LP1 (C2). The surviving doublets mark no single plaintext letter (C3):
@@ -137,6 +138,9 @@ The evidence is in findings §2 (C1–C7), §7 (C8), §8 (C9), §9 (C10–C11), 
   - **C18:** under random alphabets, English keys (runes, prime values, Latin letters), decimal digits and hex still
     leave the cipher too uneven (worst P 1.7 × 10⁻¹¹ over 20 rows). Uniform A–Z letters are untestable this way, so
     C13's letters exclusion holds for straight alphabets only.
+  - **C19:** with named keyword alphabets (34 LP keywords, K and K⁻¹ in any role, 314,432 triples, any mode and
+    offset), scored with labels: English keys and decimal digits are excluded under every triple, hex under all but
+    431, and uniform A–Z under 103,864. No triple scores above +6.51 (lead line +10).
 - **No random tabula with few key classes (C16):** if each key value picks an independent random alphabet, the cipher
   marginal is a mixture whose χ² excess is about 10,400 / V_eff. LP2's flatness excludes V_eff ≤ 153 (one tabula) or
   ≤ 133 (one per section), at P ≤ 10⁻⁴ and under any alignment or desync. Latin-square tabulae are not covered (findings §18); see C17–C18.
@@ -204,8 +208,10 @@ RANDOM.ORG and RAND archives (~14.5 billion offsets). Both conclude "OTP-class" 
   rejection, and the four corpora as letters. The raw-byte versions (V_eff ≈ 236–255) and Latin-square tabulae (for these
   keys, beyond C17–C18) remain **open**.
 - **Quagmire-type ciphers (mixed alphabets, random) with an English, decimal-digit or hex key** (C18, findings §19), and
-  any iid key with V_eff ≥ 17 as the sole cause of the deficit, under any alphabets (C17). Named keyword alphabets
-  and uniform-letter keys under mixed alphabets remain **open**.
+  any iid key with V_eff ≥ 17 as the sole cause of the deficit, under any alphabets (C17).
+- **Quagmire with alphabets keyed by the 34 declared LP keywords** (C19, findings §20): English and decimal-digit keys
+  under all 314,432 triples, hex under all but 431, uniform A–Z under 103,864. The other 210,568 uniform-letter triples
+  (mostly untestable from LP2's length), other keywords and other keyed-alphabet constructions remain **open**.
 - The "Echo446Ghq full solution" is debunked ([analysis](reference/community/echo446ghq_analysis.md)).
 
 ### 4.3 Invalid claims from before 2026-09-29
@@ -255,6 +261,7 @@ The ordered list is in §1. These questions are also open and cheap to state:
 
 | Date | What happened | Commits |
 |---|---|---|
+| 2026-10-01 | **Named keyword Quagmire** (TODO V): 34 LP keywords → 68 alphabets → 314,432 triples per key family, scored with C13's labelled LLR (exact per member; false exclusion ≤ e^−10 whatever the family size). C19: English (3 forms) and digits excluded under every triple, hex under all but 431, uniform A–Z under 103,864. Gates passed (0 / 300 own-member exclusions). No lead. A declared expectation failed: not every testable member was excluded, and LP2 sits inside the flat-cipher range | `8880e3b` `7d44b09` + this commit |
 | 2026-10-01 | **Quagmire relabelling** (TODO U): a Quagmire cipher is the additive one renamed, so key-free statistics cannot see its alphabets. Audit of C1–C16. C17: doublet rate in [2/29 − Σb², Σb²] under any labels; the deficit needs V_eff < 16.9. C18: under random alphabets, English, digit and hex keys stay excluded (20 / 20 rows, worst P 1.7e-11); uniform letters untestable. Declared gate roles were swapped, caught by `--quick` and amended before LP2 was scored | `4051fe2` `f2ecd72` + this commit |
 | 2026-10-01 | **Flatness of random tabulae** (TODO T): C16. A random-alphabet mixture over V_eff classes adds ≈ 10,400 / V_eff to χ²; LP2's 26.36 excludes V_eff ≤ 168 / 174 by the declared rule, 153 / 133 after the anti-doublet correction (×0.939). Gates passed (formula within 7.1 %, 0 / 200 false exclusions). 15 of stage S's 20 classings excluded under any alignment; raw bytes and Latin-square tabulae stay open | `f0c8e39` + this commit |
 | 2026-10-01 | **Per-position alphabets** (TODO S): label-free DM detector (`alphabets.py`, tested). C9 extended to σ keys. The 200-decode run on long named keys is **void** twice by its declared rule (run 1: tiled control text shared the key period; run 2: random-σ control ciphers are not flat, χ² 355–1,141). LP2 decodes ≤ +0.84, real-data nulls ≤ −489.5, but nothing is excluded. New lead: a flatness constraint | `8c93b22` `2c62782` `3f5b830` + this commit |

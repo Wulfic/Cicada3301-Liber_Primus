@@ -30,6 +30,7 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 | C16 | No tabula of independent random alphabets σ_{k_i} keyed by ≤ 153 effective classes, under any alignment or desync | P ≤ 10⁻⁴ for V_eff ≤ 168 (one tabula) / 174 (one per section); 153 / 133 with the dodging correction; ≤ 29 classes: P ≈ 10⁻¹² | `test_pooled_boundary`, `test_per_section_boundary` | 18 |
 | C17 | An iid key independent of the plaintext keeps the doublet rate in [2/29 − Σb², Σb²] under any alphabets π₁, π₂, π₃: no key with Σb² ≤ 0.05925 (V_eff ≥ 16.9) makes the deficit | 86 / 12,947 needs Σb² ≥ 0.06232; P(X ≤ 86) ≤ 10⁻⁴ below 0.05925 | `test_interval_holds_under_any_labels`, `test_lp2_needs_a_key_at_least_as_uneven_as_english` | 19 |
 | C18 | Under random Quagmire alphabets the key is still not English (runes, prime values, Latin letters), decimal digits or hex | worst P 1.7 × 10⁻¹¹ ≤ 10⁻⁴ over 20 rows; uniform A–Z untestable (power ≤ 2 / 20) | `test_recorded_verdicts`, `test_pooled_rows_recompute` | 19 |
+| C19 | Under Quagmire with named keyword alphabets (34 LP keywords, K and K⁻¹, all 314,432 triples, any mode and offset) the key is not English (runes, prime values, Latin letters) or decimal digits; hex is out for 314,001 members; uniform A–Z for 103,864 | best member ≤ −27.9 (English, digits) vs exclude ≤ −10; no lead ≥ +10 in any family | `test_lp2_exclusions_recompute`, `test_recorded_survivors` | 20 |
 
 **The leak** (how the 86 survivors are spread, §7):
 
@@ -53,6 +54,7 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 | Long named keys as per-position alphabets, label-free (stage S) | 200 | **void**: excludes nothing (§17) | `test_run_2_is_void` |
 | The same 20 classings as random tabulae, by flatness (stage T) | 20 | 15 excluded (≤ 29 classes, P ≤ 2.4 × 10⁻¹²); 5 raw-byte keys not (P ≈ 10⁻³) | `test_named_classings` |
 | Key families under random Quagmire alphabets (stage U) | 24 | 20 excluded (P ≤ 1.7 × 10⁻¹¹); 4 letters A–Z rows untestable | `test_recorded_verdicts` |
+| Six key families under named keyword Quagmire alphabets (stage V) | 1,886,592 | 1,675,593 excluded; 10,332 testable survivors, best +6.51 vs lead +10 | `test_lp2_exclusions_recompute` |
 
 ## 1. State of the art (web check, September 2026)
 
@@ -710,3 +712,68 @@ next test). Keys with dependent consecutive values (C17). C14 and L1 under relab
 **Reading.** If LP2 is a Quagmire-type cipher, its key is near-flat (V_eff ≳ 17 by C17, and in practice not English
 text, digits or hex by C18), and its alphabets are invisible to every key-free statistic. Mixed alphabets add no
 handle a flat-key additive cipher lacks. Going further needs a named key source together with named alphabets.
+
+## 20. Quagmire with named keyword alphabets, scored with labels (2026-10-01, TODO stage V)
+
+Declared in `TODO.md` and committed (`8880e3b`) before any LP2 statistic was computed. The runner and an
+outputs-only amendment were committed (`7d44b09`) before the LP2 run; only `--quick`, which never scores LP2, had run.
+Library: `quagmire.keyed_alphabet`, `quagmire.log_models`, `quagmire.best_llr`. Run: `python -m tools.run_stage_v`
+(about 10 seconds), rows in [`stage_v_results.tsv`](stage_v_results.tsv). Tests: `tests/test_keyword_alphabets.py`.
+
+**The question.** §19 treated the alphabets as random. Real Quagmire ciphers use keyword alphabets, a small and
+nameable set. Once all three alphabets of c = π₂(s·π₁(p) + t·π₃(k) + a) are named, π₂ is known, so the labels come back.
+C13's own statistic then applies to each member exactly: the best labelled unigram LLR against flat over 3 modes ×
+29 offsets, with model r = π₂(π₁q ⊛ π₃b). It is stronger than the label-free χ² of §19, because on flat data
+E[LLR] ≈ −λ/2 with sd ≈ √λ.
+
+**The family.** There are 34 declared keywords. The solved keys DIVINITY and FIRFUMFERENFE, plus CIRCUMFERENCE. The ten
+solved section titles. Every distinct word of the PARABLE. LIBER PRIMUS, PRIMUS, CICADA, PRIMES and TOTIENT. Each keyword
+gives a keyed alphabet K (its distinct runes, then the rest in Gematria order) and its inverse K⁻¹. With the identity
+and duplicates collapsed, that is 68 alphabets, so **68³ = 314,432 members** (π₁, π₂, π₃) per key family, which
+contains Quagmire I–IV. The key families are §19's six, iid. A member is excluded if its best LLR ≤ −10. The vectorised
+LLR equals a brute-force `stats.unigram_llr` on non-identity members (`test_best_llr_equals_brute_force`). The
+identity member reproduces C13: −214.35 (digits), −19.48 (hex), −14.27 (letters), −121.67 (English Latin)
+(`test_identity_member_reproduces_c13`).
+
+**Error bound.** For the true member at its true mode and offset, P(LLR ≤ −10) ≤ e^−10 (Markov on the reverse
+likelihood ratio). The best over 87 can only be higher, and at most one member is true. So the chance of excluding the
+true cipher is ≤ e^−10 ≈ 4.5 × 10⁻⁵, **whatever the family size**.
+
+| Gate (synthetic, word-shuffled solved plaintext, 12,956 runes, keep 0.19) | Declared | Observed |
+|---|---|---|
+| G1 calibration: 50 own-member ciphers per family (random member, mode, offset) | none excluded, else void | 0 / 300; worst +4.83 (letters A–Z), others ≥ +36.97 |
+| G2 power: member testable if excluded on ≥ 18 / 20 flat-key ciphers | — | 100 % (English ×3, digits), 312,810 (hex), 41,792 = 13.3 % (letters A–Z) |
+
+**Result (C19).** LP2, pooled counts of segments 7–15:
+
+| Key family | Excluded (of 314,432) | Not excluded: testable / untestable | Best member |
+|---|---|---|---|
+| English as runes | **all** | 0 / 0 | −27.88 |
+| English as prime values mod 29 | **all** | 0 / 0 | −39.25 |
+| English as Latin letters A–Z | **all** | 0 / 0 | −32.65 |
+| decimal digits | **all** | 0 / 0 | −51.04 |
+| hex digits | 314,001 | 135 / 296 | −1.18 |
+| uniform letters A–Z | 103,864 (33.0 %) | 10,197 / 200,371 | +6.51 |
+
+No member in any family reaches the +10 lead line. Pinned by `test_lp2_exclusions_recompute`, `test_gates_passed` and
+`test_recorded_survivors`. The 10,332 testable survivors are listed in the TSV.
+
+**A declared expectation that failed.** The plan expected every testable member to be excluded. That was naive.
+"Testable" means excluded on ≥ 18 / 20 flat ciphers, not on all of them, and the members' scores are strongly
+correlated, so a single dataset can spare many at once. A descriptive comparison (run after the result, not part of
+any verdict) puts LP2 inside the range of the 20 flat-key ciphers. Hex: LP2 excludes 99.86 % of members, and 9 / 20
+flat ciphers exclude at least as many. Letters A–Z: 33.0 %, against a flat range of 22.9–93.8 % (median 43.6 %),
+with 15 / 20 at or above. LP2 behaves like a flat cipher here. Its survivors are what any flat cipher leaves,
+not members that fit.
+
+**Reading.** Under every Quagmire built from the declared LP keywords (any combination of K, K⁻¹ and the straight
+alphabet in the three roles, any mode and offset), the key is not English text in any of three forms and not
+decimal digits. Hex is excluded for all but 431 members. That extends C10 and C13 from random alphabets (C18) to the
+named ones exactly, member by member. For uniform A–Z keys, a third of the keyword Quagmires are excluded. Most of
+the rest cannot be tested from 12,956 runes, because a 26-value key leaves λ ≈ 43 in the marginal, near LP2's own
+limit. That is an information limit of the unigram marginal, which is the only key-free handle an iid key leaves.
+
+**What this does not cover.** Other keywords and other keyed-alphabet constructions: continuing after the keyword's
+last letter, columnar mixing, 26-letter Latin alphabets. Per-section alphabets. Keys with dependent values, and
+named key streams in step (`detect.log_lr` with a named key and named alphabets). Near-flat keys (V_eff ≳ 30), which
+are invisible to any marginal statistic under any alphabets.
