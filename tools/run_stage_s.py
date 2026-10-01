@@ -2,10 +2,10 @@
 2026-10-01 before this script first ran on LP2).
 
 Each key classing is scored by `alphabets.log_mean_lr`: the mean Dirichlet-multinomial LR over every key phase,
-with the key in step. Controls run first (stage_s_controls.tsv): positive (the solved plaintext, reversed, under the
-key with a random σ per class, fresh re-key, keep 0.19), negative (the same cipher against the shuffled key), and a real-data
-null (the shuffled key on LP2 continuous). The family (20 classings × 10 alignments) goes to stage_s_candidates.tsv.
-PASS means a score ≥ detect.THRESHOLD (30 nats).
+with the key in step. Controls run first (stage_s_controls.tsv): positive (the solved plaintext's words in random
+order, under the key with a random σ per class, fresh re-key, keep 0.19), negative (the same cipher against the
+shuffled key), and a real-data null (the shuffled key on LP2 continuous). The family (20 classings × 10 alignments)
+goes to stage_s_candidates.tsv. PASS means a score ≥ detect.THRESHOLD (30 nats). Run 1 was void (TODO stage S).
 
 Deterministic. Usage: python -m tools.run_stage_s [--quick]
 """
@@ -87,15 +87,20 @@ def key_from(key: Sequence[Hashable], phase: int, length: int, cyclic: bool) -> 
     return list(key[phase:phase + length])
 
 
-def _plain() -> list[int]:
-    corpus = load_corpus()
-    return [r for w in keys.solved_plaintext_words(corpus, load_translation()) for r in w]
-
-
-PLAIN = _plain()
+WORDS = keys.solved_plaintext_words(load_corpus(), load_translation())
+PLAIN = [r for w in WORDS for r in w]
 ALPHA = alphabets.dm_alpha(PLAIN)
-# Reversed, so no phase of a plaintext-derived key can equal the control text (same unigram and Σq² as PLAIN).
-CONTROL_TEXT = PLAIN[::-1]
+
+
+def control_text(size: int, rng: random.Random) -> list[int]:
+    """The solved plaintext's words in a fresh random order each pass: no period (run 1's tiled text had period
+    2,901, the same as the plaintext-derived keys), and no phase of such a key equals it."""
+    out: list[int] = []
+    while len(out) < size:
+        order = WORDS[:]
+        rng.shuffle(order)
+        out += [r for w in order for r in w]
+    return out[:size]
 
 
 def _init_worker() -> None:
@@ -112,7 +117,7 @@ def _control(job: tuple[str, int, int]) -> list[tuple]:
     key, phases, cyclic = _FAMILY[name]
     rng = random.Random(f"{CONTROL_SEED}/{name}/{size}/{seed}")
     phase = rng.randrange(phases)
-    text = (CONTROL_TEXT * (size // len(CONTROL_TEXT) + 1))[:size]
+    text = control_text(size, rng)
     cipher = alphabets.encrypt_alphabets(text, key_from(key, phase, size, cyclic), keep=0.19,
                                          seed=rng.randrange(10**9))
     shuffled = list(key)
