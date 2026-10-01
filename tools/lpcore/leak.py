@@ -64,16 +64,44 @@ def adjacent_pairs(corpus: Corpus, segments: Sequence[int] = UNSOLVED_SEGMENTS) 
 
 # --- exact tail probabilities (stdlib only) ------------------------------------------------------
 
+def _binom_log_pmf(j: int, n: int, p: float) -> float:
+    """log P(X = j), in log space: math.comb(n, j) overflows a float for n in the thousands."""
+    return (math.lgamma(n + 1) - math.lgamma(j + 1) - math.lgamma(n - j + 1)
+            + j * math.log(p) + (n - j) * math.log1p(-p))
+
+
+def _binom_sum(js: range, n: int, p: float) -> float:
+    """Σ P(X = j) over `js`, stopping once the terms are past the mode and negligible."""
+    if not 0.0 <= p <= 1.0:
+        raise ValueError(f"binomial p must be in [0, 1], got {p}")
+    if p in (0.0, 1.0):                       # all mass sits on j = n·p
+        return 1.0 if int(n * p) in js else 0.0
+    total = 0.0
+    for j in js:
+        term = math.exp(_binom_log_pmf(j, n, p))
+        total += term
+        past_mode = j > n * p if js.step > 0 else j < n * p
+        if past_mode and term < total * 1e-17:
+            break
+    return min(1.0, total)
+
+
 def binom_sf(k: int, n: int, p: float) -> float:
     """P(X ≥ k) for X ~ Binomial(n, p)."""
     if k <= 0:
         return 1.0
-    return min(1.0, sum(math.comb(n, j) * p ** j * (1 - p) ** (n - j) for j in range(k, n + 1)))
+    if k > n:
+        return 0.0
+    return _binom_sum(range(k, n + 1), n, p)
 
 
 def binom_cdf(k: int, n: int, p: float) -> float:
     """P(X ≤ k) for X ~ Binomial(n, p)."""
-    return min(1.0, sum(math.comb(n, j) * p ** j * (1 - p) ** (n - j) for j in range(0, k + 1)))
+    if k >= n:
+        return 1.0
+    if k < 0:
+        return 0.0
+    return _binom_sum(range(k, -1, -1), n, p)
 
 
 def poisson_sf(k: int, lam: float) -> float:

@@ -8,6 +8,7 @@ from __future__ import annotations
 from collections import Counter
 from collections.abc import Iterable, Sequence
 from itertools import islice
+from operator import eq
 
 from .ciphers import primes
 from .corpus import Corpus
@@ -90,3 +91,25 @@ def fibonacci_prime_square(size: int = 16) -> list[int]:
         a, b = b, a + b
     prime_list = list(islice(primes(), distinct[-1] + 1))   # prime_list[F] is the (F+1)-th prime
     return [abs(3301 - prime_list[f]) for f in distinct]
+
+
+def repeat_probability(streams: Iterable[Sequence[int]]) -> float:
+    """Σ f_r²: the chance two independent positions hold the same rune, given the streams' own frequencies."""
+    counts: Counter[int] = Counter()
+    for s in streams:
+        counts.update(s)
+    n = sum(counts.values())
+    if n == 0:
+        raise ValueError("repeat_probability: no runes")
+    return sum((v / n) ** 2 for v in counts.values())
+
+
+def lag_scan(streams: Sequence[Sequence[int]], lags: Iterable[int]) -> list[tuple[int, int, int]]:
+    """[(lag, repeats, pairs compared)] for each lag, summed over independent streams (C9)."""
+    out = []
+    for m in lags:
+        if m < 1:
+            raise ValueError("lag must be >= 1")
+        hits = sum(sum(map(eq, s, s[m:])) for s in streams)
+        out.append((m, hits, sum(max(0, len(s) - m) for s in streams)))
+    return out
