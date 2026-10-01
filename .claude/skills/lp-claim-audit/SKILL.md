@@ -58,7 +58,7 @@ step 4.
 
 A real LP2 method must reproduce, from its own definition and without fitting:
 86 doublets in 12,947 pairs (0.66 %, C1–C6), flat ᚠ (C2), L1–L4 (how the survivors are spread), and the
-≈ 19 % survival (C8). Its key must satisfy C9–C15 (the findings §0 register lists each with its test). A method that predicts 3.4 % doublets is wrong, however
+≈ 19 % survival (C8). Its key must satisfy C9–C16 (the findings §0 register lists each with its test). A method that predicts 3.4 % doublets is wrong, however
 good the excerpt reads. Check the catalog in `lp-attack/attack-catalog.md`. If the family is already excluded,
 cite the C-number.
 

@@ -16,7 +16,7 @@ TEST THE KNOWLEDGE."* (canonical translation, 0.0.0.1–0.0.0.3).
 The snapshot below goes stale. These files do not:
 
 1. `MASTER_TRACKER.md` §1 (where things stand, next actions), §3.2 (the constraints C1…Cn), §4 (ruled out).
-   **If the tracker lists a constraint number higher than C15, this skill is out of date: trust the tracker.**
+   **If the tracker lists a constraint number higher than C16, this skill is out of date: trust the tracker.**
 2. `reference/findings/lp2_logic_findings_2026-09-29.md`. **Its §0 register is the fastest lookup:** one row per
    C- and L-number with the observed value, the declared line, and the test that pins it. The numbered sections
    below it hold the evidence. `tests/test_docs.py` keeps the register complete, so a row you cite exists.
@@ -81,7 +81,7 @@ From `tools/lpcore/solved.py` (tracker §3.1). These are style priors, **not** c
   needs perfect sync is broken by design (AGENTS.md: "key tests must handle skips").
 - Keys run continuously across word, quote and paragraph breaks (FIRFUMFERENFE never resets).
 
-## The unsolved cipher in one paragraph (snapshot: C1–C15, 2026-10-01)
+## The unsolved cipher in one paragraph (snapshot: C1–C16, 2026-10-01)
 
 LP2 segments 7–15 total 12,956 runes. They are flat at every order except one: **86 adjacent doublets where 447
 are expected** (z = −17.4). One system runs throughout (C6), acting on the continuous stream regardless of words,
@@ -92,8 +92,9 @@ near-flat mod 29 and aperiodic (C9). It is not English text in any mapping (C10)
 letters (C13). Its values cannot be chosen by earlier ciphertext alone (C11, C12). It is not primes, φ(primes),
 the solved text's word sums or its rune values (stage I). It is not the base-60 grid (§12). It is not any Cicada
 number or OutGuess payload in the repo, read as pairs, triples or bytes from any phase (§16). **The open space:**
-a wide-alphabet key from an *unnamed* source scored with `detect.log_lr`, or a non-additive per-position
-alphabet (which needs a label-free detector that has not been built yet).
+a wide-alphabet key from an *unnamed* source scored with `detect.log_lr`, or a per-position alphabet that is
+either a Latin-square tabula (Quagmire-type) or keyed by more than ~150 effective classes. A random tabula over
+fewer classes is excluded by flatness alone, under any alignment (C16).
 
 ## Cicada motifs and leads
 

@@ -1,6 +1,6 @@
 # Cicada motifs and key-source leads, with status
 
-Snapshot as of 2026-10-01 (C1–C15, stage R). **Status comes from tracker §4 and the findings doc. If they disagree with
+Snapshot as of 2026-10-01 (C1–C16, stage T). **Status comes from tracker §4 and the findings doc. If they disagree with
 this file, they win, so update this file.** "Open" means no test in this repo has scored it, not that it is
 promising.
 

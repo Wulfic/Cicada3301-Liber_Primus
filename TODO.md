@@ -9,50 +9,7 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-### T — flatness constraint on per-position alphabets (2026-10-01)
-
-**Goal:** turn findings §17's "what this suggests" into a declared, key-independent constraint (tracker §1 item 1).
-
-**Model:** c_i = σ_{k_i}(p_i). The key takes V values with weights w_v. The σ_v are **independent uniformly random**
-permutations (a secret tabula with unstructured rows). The re-key rule is any rule that redraws a class from the same
-weights. The cipher marginal is P(c) = Σ_v w_v q(σ_v⁻¹(c)), and its noncentrality is λ = n·29·Σ_c (P(c) − 1/29)².
-Over random σ, E[λ] = λ̄ = n·(29·Σq² − 1)·Σw². By permutation symmetry the deviation is isotropic in the 28-dim
-sum-zero space, so (CLT over classes) the observed χ² ≈ (1 + λ̄/28)·χ²₂₈. The CDF for even df is exact:
-F_{2m}(x) = 1 − e^{−x/2} Σ_{j<m} (x/2)^j / j!. Only the weights matter, **not the alignment**, so the bound holds under any
-desync or drift. q is the 2,901-rune solved plaintext (Σq² = 0.0622).
-
-**Not already excluded because:** C9 and §17 cover σ keys only in step with period ≤ 1000. C12 covers σ chosen by
-ciphertext. C15 covers homophonic substitution. C4, C10 and C13 concern additive keys. Stage S (named long keys) was void.
-
-**Statistics (two, declared now):**
-1. *Pooled* (one tabula for all of LP2): χ² of the 12,956 unsolved runes vs flat, already known to be 26.36 (C2 test).
-   P_T(V_eff) = F₂₈(26.36 / (1 + λ̄/28)), with n = 12,956 and V_eff = 1/Σw².
-2. *Per section* (a fresh tabula per section, same V_eff): S = Σ χ²_s over sections 7–9 and 11–15 (seg 10 has 9 runes,
-   so it is left out; df 224). Null: Σ_s (1 + λ̄_s/28)·χ²₂₈, P by seeded Monte Carlo with 2·10⁶ draws. **The LP2 value
-   of S has not been computed yet.**
-
-**Exclude:** a model (V_eff, statistic) is excluded if P ≤ 1e-4 (the same order as C14's e^−10). Report V*, the largest
-V_eff excluded, for each statistic. Apply the pooled rule to the stage S key classings' empirical weights (primes mod 29,
-plaintext runes, hint, `.bin` raw and mod 29, four corpora as letters).
-
-**Validity gates, run on synthetic ciphers before the LP2 per-section value is computed.** If either gate fails, the
-stage is VOID and nothing is excluded:
-- A (formula): word-shuffled solved plaintext, 12,956 runes, iid uniform keys over V ∈ {29, 256, 1024}, random σ,
-  `encrypt_alphabets` with keep = 0.19, 200 ciphers per V. The mean χ² must be within 15 % of 28 + λ̄.
-- B (no false exclusion): the same set-up at V = 1024. The pooled P under the true V must be ≤ 1e-4 for 0 of 200
-  ciphers, and ≤ 0.05 for at most 10 % of them.
-- Power (reported, not a gate): the fraction of V = 29 ciphers excluded, and of ciphers at V*/2.
-- Structural control (reported): additive σ_v(p) = p + v with a uniform key. Its χ² stays near 28, which shows that
-  Latin-square tabulae are outside this test.
-
-**Expected if true** (LP2 = random tabula with few classes): χ² in the hundreds. **Expected if false:** the boundary
-V* lands near a few hundred classes (rough estimate ~200–300 before computing), which excludes every ≤ 29-class key.
-
-**Not doing:** structured σ families. A Latin-square tabula (Vigenère, Quagmire, affine with flat shifts) under a
-near-flat key gives an exactly flat mixture, so this test cannot see it, and the doc will say so. No keyed decodes.
-No change to the plaintext model after the run (the scaling with Σq² is reported, not gated).
-**Blast radius:** additive only: `tools/lpcore/flatness.py`, `tools/run_stage_t.py`, `tests/test_flatness.py`, a TSV,
-and docs. **Rollback:** `git revert <commit>`.
+*(none. The next research step is MASTER_TRACKER §1, item 1. Plan it here before starting.)*
 
 ## Owner items
 
@@ -66,6 +23,7 @@ and docs. **Rollback:** `git revert <commit>`.
 
 | Date | Stage | Result | Commits |
 |---|---|---|---|
+| 2026-10-01 | **T** flatness of random tabulae | Declared first (`f0c8e39`; that commit was red on `tests/test_docs.py`, since it cited files not yet written). `lpcore/flatness.py`: exact even-df χ² CDFs, the random-σ scale model, boundaries. Gates passed: A within −7.1…−1.5 %, B 0 / 200 at 1e-4 and 7 % at 0.05. **C16:** V_eff ≤ 168 pooled / 174 per section by the declared rule; 153 / 133 after a post-run anti-doublet correction (×0.939, from the additive control), which the findings quote. 15 / 20 stage S classings excluded; raw bytes open. The declared "power" rows were really calibration (0 false exclusions), relabelled. → findings §18 | `f0c8e39` + this |
 | 2026-10-01 | **Contributors** policy | Owner request: wulfic is the main contributor; a merged PR makes its author a contributor. `CONTRIBUTORS.md` (PR #1 author listed, upstream credited separately), `tools/add_contributor.py` (dry-run unless `--write`; rejects invalid logins, skips maintainer and bots, one row per login), `.github/workflows/contributors.yml` (`pull_request_target` merged into main, PR code never checked out), `tests/test_contributors.py` | this |
 | 2026-10-01 | **S** per-position alphabets, label-free | Declared first (`8c93b22`). DM detector `lpcore/alphabets.py` (exact mean-1 null, FFT = direct counts, in-step power, no power at 1 % desync). C9 shown to flag σ-periodic keys (P 500, 1000). The 20 classings × 10 alignments run is **VOID twice** by the declared rule. Run 1: the tiled 2,901-rune control text shared the plaintext keys' period (negatives +904…+1,104). Run 2, word-shuffled text: Liber AL negative +53.5, because random-σ control ciphers are not flat (χ² 1,141 / 355.6 vs LP2 26.4). Real nulls ≤ −489.5; LP2 decodes ≤ +0.84, identical across runs. Nothing excluded. Stopped after two failed fixes (attempt budget) → findings §17 | `8c93b22` `2c62782` `3f5b830` + this |
 | 2026-10-01 | **PR #1** full grid | External PR (certified-retart) reviewed and merged: scan 68's 72 cells restored (256-byte grid), five cells per iddqd `f804b85` (checked against the upstream diff and scans 66–68; one I/l call is convention). Suite green on the PR branch; stage M/N TSVs regenerate byte-identical. Merged into local main with stage R/S | `4f326e5` `66c67a3` |

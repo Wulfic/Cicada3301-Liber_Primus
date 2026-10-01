@@ -26,10 +26,10 @@ produced a plaintext.
 
 ## Quick start
 
-Python 3.11 or newer. The core is standard library only; `numpy` is needed for `tools/lpcore/fastdetect.py`, `tools/lpcore/alphabets.py`, stages R and S and their tests.
+Python 3.11 or newer. The core is standard library only; `numpy` is needed for `tools/lpcore/fastdetect.py`, `tools/lpcore/alphabets.py`, `tools/lpcore/flatness.py`, stages R, S and T and their tests.
 
 ```
-python -m unittest discover -s tests -t . -v      # proves the data and the core are right (131 tests)
+python -m unittest discover -s tests -t . -v      # proves the data and the core are right (143 tests)
 ```
 
 ```python
@@ -69,6 +69,7 @@ tools/
   run_stage_n.py           reproduces the stage-N 256-byte readings (findings §13); writes one TSV of results
   run_stage_r.py           reproduces the stage-R Cicada-number and OutGuess key run (findings §16); writes two TSVs
   run_stage_s.py           reproduces the stage-S per-position-alphabet run (findings §17, void); writes two TSVs
+  run_stage_t.py           reproduces the stage-T random-tabula flatness bound (findings §18, C16); writes one TSV
   legacy/                  107 pre-2026-09-29 scripts, untested and built on misaligned data; history only
 
 tests/                     ★ the proof: python -m unittest discover -s tests -t . -v

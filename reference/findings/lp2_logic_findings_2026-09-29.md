@@ -27,6 +27,7 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 | C13 | The key is not single digits, hex digits or letters | LLR −214 / −19.5 / −14.3 / −122 ≤ −10 | `test_small_key_alphabets_are_excluded` | 11 |
 | C14 | The re-keying is not "skip to the next key value" | LLR −21.3 ≤ −10 | `test_skip_next_is_excluded` | 14 |
 | C15 | No homophonic substitution (without a stream on top) | least possible χ² 4,802 ≥ 200, vs 26.4 observed | `test_homophonic_substitution_is_excluded` | 15 |
+| C16 | No tabula of independent random alphabets σ_{k_i} keyed by ≤ 153 effective classes, under any alignment or desync | P ≤ 10⁻⁴ for V_eff ≤ 168 (one tabula) / 174 (one per section); 153 / 133 with the dodging correction; ≤ 29 classes: P ≈ 10⁻¹² | `test_pooled_boundary`, `test_per_section_boundary` | 18 |
 
 **The leak** (how the 86 survivors are spread, §7):
 
@@ -48,6 +49,7 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 | The complete grid under the named byte/rune readings (stage N) | 456 | 42.6 % printable vs 90 %; +4.63 vs +30 | `test_recorded_verdict` |
 | Cicada's numbers and OutGuess payloads, any phase (stage R) | 43,500 | −50.8 vs +30 | `test_recorded_family_is_complete_and_fails` |
 | Long named keys as per-position alphabets, label-free (stage S) | 200 | **void**: excludes nothing (§17) | `test_run_2_is_void` |
+| The same 20 classings as random tabulae, by flatness (stage T) | 20 | 15 excluded (≤ 29 classes, P ≤ 2.4 × 10⁻¹²); 5 raw-byte keys not (P ≈ 10⁻³) | `test_named_classings` |
 
 ## 1. State of the art (web check, September 2026)
 
@@ -559,3 +561,75 @@ at LP2's length. For LP2's χ² of 26.4 that needs hundreds of effective classes
 their mixture is flat (additive and Quagmire alphabets are, under a flat key). That is a constraint, written as a
 prediction. It needs its own declared stage before it can enter the register.
 
+## 18. A random tabula needs well over a hundred key classes (2026-10-01, TODO stage T)
+
+Declared in `TODO.md` and committed (`f0c8e39`) before the per-section LP2 statistic was computed. Library:
+`tools/lpcore/flatness.py`. Run: `python -m tools.run_stage_t` (under a minute), rows in
+[`stage_t_results.tsv`](stage_t_results.tsv). Tests: `tests/test_flatness.py`.
+
+**The question.** §17 left open the per-position-alphabet cipher c_i = σ_{k_i}(p_i) for long keys and any key out of
+step. This stage drops the key's order entirely. If key value v occurs with weight w_v, the cipher marginal is the
+mixture P(c) = Σ_v w_v q(σ_v⁻¹(c)). When the σ_v are **independent uniformly random permutations** (a secret tabula
+with unstructured rows), its expected noncentrality against flat is
+
+  λ̄ = n·(29·Σq² − 1)·Σw² = 10,427 / V_eff at LP2's length (Σq² = 0.0622, V_eff = 1/Σw²).
+
+By permutation symmetry the deviation is isotropic in the 28-dim sum-zero space, so the observed χ² is about
+(1 + λ̄/28)·χ²₂₈. The CDF for even df is exact (`flatness.chi2_cdf_small`), so no scipy is needed. Desync, drift and
+any re-key rule that redraws from the same weights leave the marginal unchanged, so **the bound holds under every
+alignment**.
+
+**Validity gates (synthetic, run before the LP2 per-section value).** Ciphers were made from the solved plaintext's
+words in random order, 12,956 runes, iid uniform keys, `alphabets.encrypt_alphabets` with keep 0.19, 200 per V.
+
+| Gate | Declared | Observed |
+|---|---|---|
+| A, V = 29 | mean χ² within 15 % of 387.6 | 360.1 (−7.1 %) |
+| A, V = 256 | within 15 % of 68.7 | 67.7 (−1.5 %) |
+| A, V = 1024 | within 15 % of 38.2 | 36.1 (−5.4 %) |
+| B, V = 1024 | P ≤ 10⁻⁴ for 0 / 200; P ≤ 0.05 for ≤ 10 % | 0 / 200; 7.0 % |
+
+Both gates pass, so the run is valid. The exact random-σ mixtures also match λ̄ within 5 % at V = 29 and 256
+(`test_mean_noncentrality_matches_exact_mixtures`).
+
+**Result.** LP2: pooled χ² 26.36 on 28 df (P under flat 0.45). The per-section sum over segments 7–9 and 11–15 is
+194.14 on 224 df (P 0.074). With a model excluded at P ≤ 10⁻⁴:
+
+| Statistic | Model | Excluded (declared rule) | With dodging correction |
+|---|---|---|---|
+| Pooled χ² | one random tabula for all of LP2 | V_eff ≤ 168 | V_eff ≤ 153 |
+| Σ per-section χ² | a fresh random tabula per section | V_eff ≤ 174 | V_eff ≤ 133 |
+
+Data fact, independent of any model: the true marginal's noncentrality is λ ≤ 42.52 (P ≤ 10⁻⁴). Any proposed σ
+family can be checked against that number directly.
+
+**The dodging correction (added after the run, not part of the declared rule).** The anti-doublet rule makes rune
+counts more even than multinomial. The additive structural control (uniform key, keep 0.19) averages χ² 26.29, not
+28, a factor of 0.939. Gate A's means sit −1.5 % to −7.1 % low for the same reason. The per-section rows show the
+effect most clearly: at the true V, 14–20 % of synthetic ciphers reach P ≤ 0.05 (V = 29, 87, 1024), not 5 %. That
+null over-states χ², which biases towards false exclusion. Dividing the observed statistics by 0.939 removes the bias
+and gives the right-hand column. **The constraint is quoted at the conservative 153 (pooled) and 133 (per section).**
+The runner computes the factor from its own control.
+
+**Named key classings (stage S family, pooled rule on their empirical weights).** 15 of 20 are excluded as random
+tabulae: primes mod 29 (V_eff 28.0, P 1.6 × 10⁻¹²), the solved plaintext's runes (16.1) and their prime values mod 29
+(13.7), the hint and the three `.bin` payloads mod 29 or by rejection (28.8–29.0), and the four corpora as letters
+(14.4–16.2). Not excluded: the hint and the three payloads as raw bytes (V_eff 236.5 and 254.8–254.9, P 8.7 × 10⁻⁴ and
+1.3 × 10⁻³).
+
+**Calibration at other V (reported; the TODO declared it as "power", a mislabel).** Synthetic ciphers at V = 29 and
+at half each boundary (V = 84 pooled, 87 per section) were scored against their own true V. **None was falsely
+excluded** (0 / 200 in every row, also per section at V = 1024). Power needs no separate control: a flat cipher such as
+the additive control (mean χ² 26.3) sits where LP2 does, so it excludes the same range.
+
+**What this does not cover.** A **Latin-square tabula**, whose column under each plaintext letter is itself a
+permutation (Vigenère, Quagmire I–IV, affine with flat shifts), gives an exactly flat mixture under a near-flat key.
+The additive control shows this (χ² 26.3), and `test_additive_tabula_is_invisible` pins it. Such tabulae are
+additive-like and fall to C4, C9, C10 and C13 only where those apply. Any other structured σ family must keep its
+mixture within λ ≤ 42.5. Keys with more than ~150 effective classes (raw bytes, digit pairs, base 60) remain open
+for random tabulae too. The bound assumes LP2's plaintext is about as uneven as LP1's (Σq² ≈ 0.062). Since λ̄ scales
+with 29·Σq² − 1, a plaintext half as uneven would halve every boundary.
+
+**Reading.** If LP2 uses a secret tabula of mixed alphabets, either its rows form (near) a Latin square, which makes it
+a Quagmire-type stream cipher with a near-flat key, or the key selecting the rows has well over a hundred
+effectively equiprobable values. A classic 26- or 29-row random tabula is out, under any key and any alignment.

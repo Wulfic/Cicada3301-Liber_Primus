@@ -4,7 +4,7 @@
 and what to do next. Every claim on it is backed by a test or a linked document. If something here
 disagrees with the tests, the tests win, and this page needs fixing.
 
-**Last updated:** 2026-10-01 · **Tests:** 131, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
+**Last updated:** 2026-10-01 · **Tests:** 143, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
 
 ---
 
@@ -14,7 +14,7 @@ disagrees with the tests, the tests win, and this page needs fixing.
 match their scans, so most older "discoveries" were artifacts (see §4.3). Now one canonical transcription
 (`data/canonical/`) is read by one tested loader (`tools/lpcore`), and every solved section decrypts from it exactly.
 
-The unsolved LP2 cipher is pinned down by fifteen key-independent constraints (§3.2, C1–C15; each with its test in the
+The unsolved LP2 cipher is pinned down by sixteen key-independent constraints (§3.2, C1–C16; each with its test in the
 [findings §0 register](reference/findings/lp2_logic_findings_2026-09-29.md#0-constraint-register)). In short: an additive
 stream over mod 29, plus an anti-doublet re-keying rule that leaks about 19 % of the time.
 - **The key stream** is near-flat mod 29 and aperiodic. Its values come from an alphabet of at least ~30 symbols,
@@ -32,20 +32,23 @@ of arbitrary transformations or other grid-derived keys.
 The earlier 184-byte runs covered only a prefix. The five numeric-cell updates follow prior community work
 credited to Inky in 2021; see [provenance](data/canonical/PROVENANCE.md). Title cribs were closed as untestable (findings §9).
 Cicada's published numbers and every OutGuess payload in the repo also fail as keys, from any start phase (findings §16).
-A label-free test of per-position alphabets on the long named keys was **void** by its own rule and excludes nothing;
-C9 does cover such keys when their period is ≤ 1000 (findings §17).
+A label-free test of per-position alphabets on the long named keys was **void** by its own rule (findings §17).
+The flatness of the cipher settles most of that question without a key (C16, findings §18). A secret tabula of
+independent random alphabets needs a key with more than ~150 effectively equiprobable values, under any alignment or
+desync. So a 26- or 29-row random tabula is out, and so are 15 of stage S's 20 key classings. A Latin-square tabula
+(Quagmire-type) is invisible to this test.
 
-**Next actions, in order** (all low prior; detail in [findings §6–§17](reference/findings/lp2_logic_findings_2026-09-29.md)):
+**Next actions, in order** (all low prior; detail in [findings §6–§18](reference/findings/lp2_logic_findings_2026-09-29.md)):
 
-1. **A flatness constraint on per-position alphabets** c = σ_{k_i}(p) (findings §17, "what this suggests"). It needs
-   no key. Random σ_v over V roughly equal key classes leaves an expected χ² excess of about 10,400 / V at LP2's
-   length, against LP2's 26.4. If that holds as a declared test, only σ families whose mixture is flat survive
-   (additive and Quagmire under a flat key), or keys with hundreds of effective classes. Declare it first: the
-   predicted excess as a function of the class weights, checked on synthetic ciphers *before* LP2. Only after that
-   should a named-key σ test be re-declared, with negative controls built from **flat** synthetic ciphers (stage S
-   was void because its synthetic ciphers were not flat).
-2. **The grid's 256 bytes** are still undeciphered (findings §12–§13).
-3. **More named sources** only with a new primary source: OutGuess output from scans the repo does not hold
+1. **Latin-square tabulae with a near-flat key** (Quagmire I–IV, keyed mixed alphabets), the σ family that C16 leaves.
+   Under a flat key they are an additive stream on re-labelled runes: c = π₂(π₁(p) + k). C4, C9 and C10 constrain k
+   as stated only for π₁ = π₂ = identity. First work out which existing constraints survive re-labelling. C9's lag
+   repeats and C12's χ² are label-free by construction. C4's Δ argument and C10's emissions use the labels, so they
+   need re-deriving. Then declare a key-free test for whatever is left, before any named key.
+2. **Keys with > 150 classes as random tabulae** (raw bytes, digit pairs, base 60). These are untestable by flatness.
+   They can be tested in step only, with the §17 detector and **flat** negative controls.
+3. **The grid's 256 bytes** are still undeciphered (findings §12–§13).
+4. **More named sources** only with a new primary source: OutGuess output from scans the repo does not hold
    (community `lp_outguessed/`), or a named generator (catalog row 22). The material on disk is exhausted (§16).
 
 **Before you start anything:** read §4 (ruled out) and §6 (rules of evidence). Plans go in [`TODO.md`](TODO.md).
@@ -106,7 +109,7 @@ Errata, each with its evidence in `solved.py`: **WIDSOM** is the book's own typo
 
 Everything else is flat: IoC, rune frequencies, and repeats at lags 2–10. The constraints derived from that
 are indexed, one row each with its test, in the [findings §0 register](reference/findings/lp2_logic_findings_2026-09-29.md#0-constraint-register).
-The evidence is in findings §2 (C1–C7), §7 (C8), §8 (C9), §9 (C10–C11), §10 (C12), §11 (C13), §14 (C14) and §15 (C3's test, C15):
+The evidence is in findings §2 (C1–C7), §7 (C8), §8 (C9), §9 (C10–C11), §10 (C12), §11 (C13), §14 (C14), §15 (C3's test, C15) and §18 (C16):
 
 - The anti-doublet rule acts on the continuous rune stream and ignores word boundaries (C1).
 - There is no plaintext-F passthrough, unlike LP1 (C2). The surviving doublets mark no single plaintext letter (C3):
@@ -125,6 +128,9 @@ The evidence is in findings §2 (C1–C7), §7 (C8), §8 (C9), §9 (C10–C11), 
 - **No periodic key (C9):** lags 11–1000 are normal. This excludes every period ≤ 1000 under a re-key rule that keeps
   the key in step, and every period ≤ 25 under a drifting one (findings §8). In step it holds for per-position alphabets
   c = σ_{k_i}(p) too, whatever σ is (findings §17).
+- **No random tabula with few key classes (C16):** if each key value picks an independent random alphabet, the cipher
+  marginal is a mixture whose χ² excess is about 10,400 / V_eff. LP2's flatness excludes V_eff ≤ 153 (one tabula) or
+  ≤ 133 (one per section), at P ≤ 10⁻⁴ and under any alignment or desync. Latin-square tabulae are not covered (findings §18).
 
 **Reading:** a rule applied at the output of a non-periodic additive stream. It is not a property of the key
 text, of word structure, or of any plaintext letter.
@@ -183,8 +189,11 @@ RANDOM.ORG and RAND archives (~14.5 billion offsets). Both conclude "OTP-class" 
   P.S. number (131 and 132 digits) and the 2014 RSA n as digit pairs or triples; the cookies, AN END hash,
   `page_00` hex, second-onion hex, wisdom/folly hint (both directions) and the three 58,152-byte `.bin` payloads
   as bytes, mod 29 or by rejection. 43,500 drift-tolerant decodes; best on a real section −50.8 vs +30; controls ≥ +169.
-- **Per-position alphabets c = σ_{k_i}(p) with any short key in step** (period ≤ 1000: C9, findings §17). The same
-  question for the *long* named keys (primes, solved text, hint, `.bin` payloads, corpora) is **open**: stage S was void.
+- **Per-position alphabets c = σ_{k_i}(p) with any short key in step** (period ≤ 1000: C9, findings §17).
+- **Random tabulae keyed by ≤ 153 effective classes, any alignment** (C16, findings §18). Among stage S's long named keys
+  this excludes primes mod 29, the solved text's runes and prime values, the hint and the `.bin` payloads mod 29 or by
+  rejection, and the four corpora as letters. The raw-byte versions (V_eff ≈ 236–255) and Latin-square tabulae
+  remain **open**.
 - The "Echo446Ghq full solution" is debunked ([analysis](reference/community/echo446ghq_analysis.md)).
 
 ### 4.3 Invalid claims from before 2026-09-29
@@ -234,6 +243,7 @@ The ordered list is in §1. These questions are also open and cheap to state:
 
 | Date | What happened | Commits |
 |---|---|---|
+| 2026-10-01 | **Flatness of random tabulae** (TODO T): C16. A random-alphabet mixture over V_eff classes adds ≈ 10,400 / V_eff to χ²; LP2's 26.36 excludes V_eff ≤ 168 / 174 by the declared rule, 153 / 133 after the anti-doublet correction (×0.939). Gates passed (formula within 7.1 %, 0 / 200 false exclusions). 15 of stage S's 20 classings excluded under any alignment; raw bytes and Latin-square tabulae stay open | `f0c8e39` + this commit |
 | 2026-10-01 | **Per-position alphabets** (TODO S): label-free DM detector (`alphabets.py`, tested). C9 extended to σ keys. The 200-decode run on long named keys is **void** twice by its declared rule (run 1: tiled control text shared the key period; run 2: random-σ control ciphers are not flat, χ² 355–1,141). LP2 decodes ≤ +0.84, real-data nulls ≤ −489.5, but nothing is excluded. New lead: a flatness constraint | `8c93b22` `2c62782` `3f5b830` + this commit |
 | 2026-10-01 | **Full-grid correction:** scans 66–68 supply all 256 cells; five numeric corrections follow Inky's 2021 iddqd update. Prime byte streams continue through all 256 positions. The regenerated 3,132 Stage M and 456 Stage N candidates give no pass; best nontrivial M score −13.75, N 42.6 % printable / +4.63 nats. Payload and stream regressions added; findings §§12–13 supersede the historical prefix results | `4f326e5` (PR #1) |
 | 2026-10-01 | **Cicada numbers and OutGuess payloads** (TODO R): 25 sources × 2 mappings, any start phase (`starts=` prior), 43,500 decodes; none passes (best −50.8 on a real section; controls ≥ +169). `fastdetect` (numpy, tested equal). Synthetic check: a label-free coincidence test has power only in step | `2c209dc` `14320cb` |

@@ -1,0 +1,46 @@
+kind	name	V_or_n	statistic	value	verdict
+gate_A	V=29	29	360.08	387.57	ok
+gate_A	V=256	256	67.73	68.73	ok
+gate_A	V=1024	1024	36.13	38.18	ok
+gate_B	V=1024	1024	0	0.070	ok
+control	additive uniform key	29	26.29	28	reported
+lp2	pooled chi2	12956	26.36	0.4468	P under flat
+lp2	per-section sum chi2	12947	194.14	0.0737	P under flat
+lp2	lambda_max (any system)	12956	42.52	0.0001	data fact
+boundary	pooled (one tabula)	168	26.36	0.0001	excluded V_eff <= 168
+boundary	per-section (fresh tabula)	174	194.14	0.0001	excluded V_eff <= 174
+sensitivity	pooled, dodging factor 0.939	153	28.07	0.0001	excluded V_eff <= 153
+sensitivity	per-section, dodging factor 0.939	133	206.75	0.0001	excluded V_eff <= 133
+lp2_section	7	729	19.55	0.1197	P under flat
+lp2_section	8	1145	33.01	0.7645	P under flat
+lp2_section	9	1729	26.88	0.4754	P under flat
+lp2_section	11	1894	28.67	0.5704	P under flat
+lp2_section	12	1021	21.84	0.2111	P under flat
+lp2_section	13	1524	16.23	0.0378	P under flat
+lp2_section	14	1589	21.88	0.2131	P under flat
+lp2_section	15	3316	26.08	0.4316	P under flat
+calibration	pooled V=29	29	360.08	0.000	reported
+calibration	pooled V=84	84	143.54	0.000	reported
+calibration	per-section V=29	29	551.15	0.000	reported; P<=0.05 in 0.140
+calibration	per-section V=87	87	326.00	0.000	reported; P<=0.05 in 0.195
+calibration	per-section V=1024	1024	221.76	0.000	reported; P<=0.05 in 0.150
+named	primes mod29	28.0	26.36	1.55e-12	EXCLUDED
+named	plaintext rune	16.1	26.36	1.41e-15	EXCLUDED
+named	plaintext prime-mod29	13.7	26.36	1.77e-16	EXCLUDED
+named	hint raw	236.5	26.36	0.000872	not excluded
+named	hint mod29	28.8	26.36	2.18e-12	EXCLUDED
+named	hint-reversed raw	236.5	26.36	0.000872	not excluded
+named	hint-reversed mod29	28.8	26.36	2.18e-12	EXCLUDED
+named	page_17.bin raw	254.9	26.36	0.00132	not excluded
+named	page_17.bin mod29	28.9	26.36	2.31e-12	EXCLUDED
+named	page_17.bin reject29	29.0	26.36	2.36e-12	EXCLUDED
+named	page_21.bin raw	254.8	26.36	0.00132	not excluded
+named	page_21.bin mod29	28.9	26.36	2.32e-12	EXCLUDED
+named	page_21.bin reject29	29.0	26.36	2.37e-12	EXCLUDED
+named	page_43.bin raw	254.8	26.36	0.00132	not excluded
+named	page_43.bin mod29	28.9	26.36	2.31e-12	EXCLUDED
+named	page_43.bin reject29	29.0	26.36	2.36e-12	EXCLUDED
+named	emerson_essays letters	14.9	26.36	5.22e-16	EXCLUDED
+named	self_reliance letters	15.1	26.36	6.11e-16	EXCLUDED
+named	liber_al_vel_legis letters	14.4	26.36	3.4e-16	EXCLUDED
+named	deor_poem letters	16.2	26.36	1.52e-15	EXCLUDED
