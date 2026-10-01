@@ -7,10 +7,11 @@ positive control: a synthetic stream with the effect built in must be detected.
 from __future__ import annotations
 
 import math
+import random
 import unittest
 from itertools import islice
 
-from tools.lpcore import ciphers, leak
+from tools.lpcore import ciphers, keys, leak, stats
 from tools.lpcore.corpus import load_corpus
 from tools.lpcore.gematria import N, runes_to_indices
 from tools.lpcore.leak import Pair
@@ -140,6 +141,53 @@ class TestLeakVerdicts(unittest.TestCase):
         self.assertEqual(observed["DIVINITY/CIRCUMFERENCES", "ideal"], (6, 2900))
         self.assertEqual(observed["DIVINITY/CIRCUMFERENCES", "literal"], (10, 2898))
         self.assertEqual(observed["phi(prime)/primes", "ideal"], (0, 2900))
+
+
+class TestC14SkipNext(unittest.TestCase):
+    """Stage O (declared in TODO.md): is the re-keying 'skip to the next key value'? Excluded if LLR ≤ −10."""
+
+    @staticmethod
+    def repeating_key(n: int, repeat: float, seed: int) -> list[int]:
+        rng = random.Random(seed)
+        key = [rng.randrange(N)]
+        for _ in range(n - 1):
+            key.append(key[-1] if rng.random() < repeat else rng.randrange(N))
+        return key
+
+    @staticmethod
+    def as_pairs(c: list[int]) -> list[Pair]:
+        return [Pair(0, i, i, c[i], c[i + 1], False, False) for i in range(len(c) - 1)]
+
+    def test_controls(self) -> None:
+        plain = lp_plaintext()
+        dp = stats.difference_distribution(plain)
+        big = (plain * 5)[:12956]
+        for seed in (1, 2, 3):
+            skip = keys.encrypt_dodging(big, self.repeating_key(2 * len(big), 0.19, seed), keep=0.0, seed=seed)
+            fresh = keys.encrypt_dodging(big, keys.random_key(2 * len(big), seed), keep=0.19, seed=seed, rekey="fresh")
+            with self.subTest(seed=seed):
+                self.assertGreaterEqual(leak.skip_next_llr(self.as_pairs(skip), dp), 10.0)
+                self.assertLessEqual(leak.skip_next_llr(self.as_pairs(fresh), dp), -10.0)
+                # A skip-next rule with a 19 %-repeating key reproduces LP2's doublet rate by itself.
+                rate = sum(a == b for a, b in zip(skip, skip[1:])) / (len(skip) - 1)
+                self.assertTrue(0.005 < rate < 0.009)
+
+    def test_skip_next_is_excluded(self) -> None:
+        dp = stats.difference_distribution(lp_plaintext())
+        llr = leak.skip_next_llr(PAIRS, dp)
+        self.assertLessEqual(llr, -10.0)                                        # verdict: excluded
+        self.assertAlmostEqual(llr, -21.34, delta=0.01)
+
+    def test_exclusion_survives_a_held_out_model(self) -> None:
+        # Δp model from disjoint halves of the solved text: LP2 stays ≤ −10 under both. (Out-of-sample controls
+        # score +7…+29, lower than in-sample but never negative.)
+        translation = load_translation()
+        others = [s.segment for s in SOLVED_SECTIONS if s.segment not in (1, 3)]
+        halves = (keys.solved_plaintext_words(CORPUS, translation, exclude=others),
+                  keys.solved_plaintext_words(CORPUS, translation, exclude=(1, 3)))
+        for words in halves:
+            dp = stats.difference_distribution([r for w in words for r in w])
+            self.assertLessEqual(leak.skip_next_llr(PAIRS, dp), -10.0)
 
 
 if __name__ == "__main__":

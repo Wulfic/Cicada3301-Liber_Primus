@@ -251,3 +251,20 @@ def doublet_rate(stream: Sequence[int | None]) -> tuple[int, int]:
         total += 1
         hits += a == b
     return hits, total
+
+
+# --- C14: is the re-keying "skip to the next key value"? (TODO stage O) --------------------------
+
+def skip_next_llr(pairs: Sequence[Pair], plain_diffs: Sequence[float], repeat: float = 0.19) -> float:
+    """LLR (nats) of "Δc bins 1–28 carry English differences at rate `repeat`" against flat bins.
+
+    Under a skip-next rule the 19 % leak forces the key to repeat adjacent values ≈ 19 % of the time (C8), and then
+    Δc = Δp at those positions: P1(e) ∝ repeat·P(Δp = e) + (1 − repeat)/28·(1 − P(Δp = e)), e = 1..28.
+    """
+    if len(plain_diffs) != N or not 0.0 < repeat < 1.0:
+        raise ValueError("skip_next_llr: bad arguments")
+    model = [repeat * plain_diffs[e] + (1 - repeat) / (N - 1) * (1 - plain_diffs[e]) for e in range(1, N)]
+    total = sum(model)
+    model = [m / total for m in model]
+    counts = delta_counts(pairs)[1:]
+    return sum(o * math.log(m * (N - 1)) for o, m in zip(counts, model))

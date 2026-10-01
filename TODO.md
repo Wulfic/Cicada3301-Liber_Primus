@@ -9,7 +9,30 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-*(none. The next research step is MASTER_TRACKER §1, item 1. Plan it here before starting.)*
+### O — is the anti-doublet rule "skip to the next key value"? (started 2026-10-01)
+
+**Goal.** Tell the re-keying mechanisms of C8 apart. Under a skip-next rule, a would-be doublet survives only when
+k_{j+1} = k_j. The 19 % survival rate then forces the key to repeat adjacent values about 19 % of the time. But
+then, at ordinary positions, Δc = Δp in 19 % of cases. English bigram differences leak into the Δc histogram
+(bins 1–28), which L1 measured as flat (max |z| 2.58, χ² 41.2 on 27 df).
+
+**Power, computed from the model before this plan:** the expected χ² excess is +47 at a 19 % key repeat, +8 at 10 %.
+A directional likelihood ratio has about ±23 nats expectation and an sd of about 7.
+
+**Test (C14).**
+- H1: Δc bins 1–28 ∝ P1(e) = 0.19·P(Δp = e) + 0.81/28 · (1 − P(Δp = e)), with P(Δp) from the solved plaintext.
+  H0: flat.
+- LLR = Σ_e O_e · log(P1(e) / (1/28)) over the 28 bins, each renormalised.
+- **Declared rule:** H1 is excluded if LLR ≤ −10; H1 is supported if LLR ≥ +10; otherwise undecided.
+- **Not blind on the data:** L1's undirected χ² was already seen. The directional statistic and its rule are
+  fixed here before it is computed.
+- **Controls:** an LP2-sized synthetic under a skip-next rule with a key that repeats adjacent values 19 % of the
+  time must give ≥ +10. A synthetic under a fresh re-key with a flat random key must give ≤ −10.
+
+**Consequence if excluded.** C8's re-keying must use a replacement independent of the next key value (a "fresh"
+draw, or a second key), or the leak is human error. Skip-next is gone.
+
+**Blast radius.** `tools/lpcore/leak.py` (one function), `tests/test_leak.py`, docs. **Rollback:** `git revert`.
 
 ## Owner items
 
