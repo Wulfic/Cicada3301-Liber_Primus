@@ -15,7 +15,7 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 | C1 | The anti-doublet rule ignores word boundaries | within-word 0.63 %, across 0.80 %, vs 3.45 % | `test_suppression_ignores_word_boundaries` | 2 |
 | C2 | No plaintext-F passthrough; unigrams flat | ᚠ 458 vs 447 (passthrough adds ≈ 190); χ² 26.4 on 28 df | `test_no_plaintext_f_passthrough`, `test_unigrams_are_flat` | 2 |
 | C3 | The survivors mark no plaintext letter | 26 letters by count (p < 10⁻⁶); NG, IA, EA by position, LLR −106 / −149 / −68 ≤ −10 | `test_every_letter_is_excluded` | 2, 15 |
-| C4 | No additive cipher with a plaintext-independent key makes the deficit | predicted 3.20–3.60 % vs 0.66 % | `test_additive_ciphers_cannot_produce_the_deficit` | 2 |
+| C4 | No additive cipher with a plaintext-independent key makes the deficit (named key models, straight alphabets; any alphabets for iid keys: C17) | predicted 3.20–3.60 % vs 0.66 % | `test_additive_ciphers_cannot_produce_the_deficit` | 2 |
 | C5 | Only lag 1 is affected | lags 2–10: 3.38–3.69 % | `test_only_lag_one_is_depleted` | 2 |
 | C6 | One system, no seam between sections | χ² 5.33 on 8 df, p = 0.72; early vs late p = 0.099 | `test_l4_survivors_are_homogeneous_and_unclustered`, `test_early_and_late_sections_do_not_differ` | 2, 7 |
 | C7 | No one-shift-per-word scheme | predicted 2.39 % within words vs 0.63 % (z = −11.6) | `test_per_word_shift_is_excluded` | 2 |
@@ -24,10 +24,12 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 | C10 | The key is not English text (letters, prime values, φ) | LLR −255 … −333 ≤ −10 | `test_no_english_running_key` | 9 |
 | C11 | No ciphertext autokey, lags 2–1000 | best p = 5.6 × 10⁻⁴ vs 5.0 × 10⁻⁶ | `test_no_ciphertext_autokey` | 9 |
 | C12 | No alphabet chosen by c_{i−L}, L ≤ 1000 | best p = 3.9 × 10⁻³ vs 10⁻⁵ | `test_no_ciphertext_selected_alphabet` | 10 |
-| C13 | The key is not single digits, hex digits or letters | LLR −214 / −19.5 / −14.3 / −122 ≤ −10 | `test_small_key_alphabets_are_excluded` | 11 |
+| C13 | The key is not single digits, hex digits or letters (letters: straight alphabets only, §19) | LLR −214 / −19.5 / −14.3 / −122 ≤ −10 | `test_small_key_alphabets_are_excluded` | 11 |
 | C14 | The re-keying is not "skip to the next key value" | LLR −21.3 ≤ −10 | `test_skip_next_is_excluded` | 14 |
 | C15 | No homophonic substitution (without a stream on top) | least possible χ² 4,802 ≥ 200, vs 26.4 observed | `test_homophonic_substitution_is_excluded` | 15 |
 | C16 | No tabula of independent random alphabets σ_{k_i} keyed by ≤ 153 effective classes, under any alignment or desync | P ≤ 10⁻⁴ for V_eff ≤ 168 (one tabula) / 174 (one per section); 153 / 133 with the dodging correction; ≤ 29 classes: P ≈ 10⁻¹² | `test_pooled_boundary`, `test_per_section_boundary` | 18 |
+| C17 | An iid key independent of the plaintext keeps the doublet rate in [2/29 − Σb², Σb²] under any alphabets π₁, π₂, π₃: no key with Σb² ≤ 0.05925 (V_eff ≥ 16.9) makes the deficit | 86 / 12,947 needs Σb² ≥ 0.06232; P(X ≤ 86) ≤ 10⁻⁴ below 0.05925 | `test_interval_holds_under_any_labels`, `test_lp2_needs_a_key_at_least_as_uneven_as_english` | 19 |
+| C18 | Under random Quagmire alphabets the key is still not English (runes, prime values, Latin letters), decimal digits or hex | worst P 1.7 × 10⁻¹¹ ≤ 10⁻⁴ over 20 rows; uniform A–Z untestable (power ≤ 2 / 20) | `test_recorded_verdicts`, `test_pooled_rows_recompute` | 19 |
 
 **The leak** (how the 86 survivors are spread, §7):
 
@@ -50,6 +52,7 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 | Cicada's numbers and OutGuess payloads, any phase (stage R) | 43,500 | −50.8 vs +30 | `test_recorded_family_is_complete_and_fails` |
 | Long named keys as per-position alphabets, label-free (stage S) | 200 | **void**: excludes nothing (§17) | `test_run_2_is_void` |
 | The same 20 classings as random tabulae, by flatness (stage T) | 20 | 15 excluded (≤ 29 classes, P ≤ 2.4 × 10⁻¹²); 5 raw-byte keys not (P ≈ 10⁻³) | `test_named_classings` |
+| Key families under random Quagmire alphabets (stage U) | 24 | 20 excluded (P ≤ 1.7 × 10⁻¹¹); 4 letters A–Z rows untestable | `test_recorded_verdicts` |
 
 ## 1. State of the art (web check, September 2026)
 
@@ -633,3 +636,77 @@ with 29·Σq² − 1, a plaintext half as uneven would halve every boundary.
 **Reading.** If LP2 uses a secret tabula of mixed alphabets, either its rows form (near) a Latin square, which makes it
 a Quagmire-type stream cipher with a near-flat key, or the key selecting the rows has well over a hundred
 effectively equiprobable values. A classic 26- or 29-row random tabula is out, under any key and any alignment.
+
+## 19. Latin-square (Quagmire) tabulae: what survives re-labelling (2026-10-01, TODO stage U)
+
+Declared in `TODO.md` and committed (`4051fe2`) before any LP2 statistic was scored. The gates were amended
+(`f2ecd72`) after a `--quick` run, which never scores LP2, showed that the declared G2 and G3 had swapped roles.
+Library: `tools/lpcore/quagmire.py`. Run: `python -m tools.run_stage_u` (about 25 minutes), rows in
+[`stage_u_results.tsv`](stage_u_results.tsv). Tests: `tests/test_quagmire.py`.
+
+**The question.** C16 leaves the Latin-square tabulae open: Quagmire I–IV, keyed mixed alphabets, Vigenère on a mixed
+alphabet. All of them are c_i = π₂(π₁(p_i) + κ_i), where κ_i = π₃(k_i) is the key value after its own relabelling. Mode
+and constant offset fold into π₁ and π₃. For a fixed key stream this is **exactly the additive cipher on π₁(p), with
+its output renamed by π₂** (`test_equality_statistics_cannot_see_the_alphabets` checks this rune for rune). Under a
+flat iid key the cipher is uniform iid whatever π is, so no key-free statistic can see the alphabets. What can be
+asked is which constraints on the *key* survive.
+
+**U1. Audit.** A statistic built only from equality patterns of c (doublets, lag repeats, χ² against flat, transition
+tables up to relabelling) is unchanged by π₂. A plaintext model that uses only the multiset of q is unchanged by π₁.
+
+| Holds for every π₁, π₂, π₃ | Label-dependent: narrowed or re-derived here |
+|---|---|
+| C1, C2, C3, C5, C6, C7 (a per-word shift still preserves plaintext doublets), C8 (algebra in π₁(p) + κ space), C9 (lag-P repeats are Σq² for any σ), C11 and C12 (a Quagmire autokey is a σ_{c_{i−L}}), C15, L2–L5. C16 holds for its own family, which does not contain Latin squares | **C4** (its Δ argument uses the labels) → C17. **C10, C13** (the convolution uses the labels) → C18. **C14** and L1's "no nudge" reading use Δc, so they are open under relabelling |
+
+**C17: no iid key makes the deficit by itself, under any labels.** For an iid key κ ~ b, independent of the plaintext,
+P(κ_{i+1} − κ_i = e) = (1/29)·Σ_f |b̂(f)|²·ω^{fe}. With |b̂(0)| = 1 and Parseval Σ_{f≠0}|b̂(f)|² = 29Σb² − 1, that
+probability lies in [2/29 − Σb², Σb²] for every e. The doublet rate is that probability averaged over the plaintext's
+differences, so **it lies in the same interval for any π₁, π₂, π₃ and any plaintext language**. Tests: the interval
+holds exactly for 1,000 random (b, π), including point masses (`test_interval_holds_under_any_labels`), and a
+synthetic cipher matches the exact rate (`test_synthetic_rate_matches_the_exact_rate`).
+LP2's 86 / 12,947 = 0.664 % needs Σb² ≥ 0.06232 as a point value. (The declaration printed 0.06233, a rounding slip.)
+As a test, P(X ≤ 86 | rate = 2/29 − Σb²) ≤ 1e-4 excludes every key with **Σb² ≤ 0.05925**, i.e. V_eff ≥ 16.9.
+That covers flat keys, letters A–Z (0.0385), base 60, digit pairs and bytes. English runes (0.0622), hex (0.0625) and
+decimal digits (0.1) are uneven enough to pass this test, and C18 excludes them instead
+(`test_lp2_needs_a_key_at_least_as_uneven_as_english`). C4's named-model rates (3.20–3.60 %) still stand for
+identity labels. C17 is the label-free version, for iid keys. A key with dependent consecutive values needs a
+Δκ distribution with Σ_{f≠0}|K̂(f)| ≥ 0.81 and is not covered.
+
+**C18: under random alphabets, the key is still not English, not decimal digits and not hex.** If π₁ is uniformly random,
+then E|â(f)|² = (29Σq² − 1)/28 at every f ≠ 0, because f·π is again uniform. So E[λ] = n·(29Σq² − 1)(29Σb² − 1)/28
+for **any** key distribution b. Each alphabet draw's λ is exact (r = π₁q ⊛ π₃b), and
+P = mean over draws of P(χ²_df(λ) ≤ observed).
+
+| Gate (synthetic, before LP2) | Declared (as amended) | Observed |
+|---|---|---|
+| G1 mean λ vs formula, variant I | within 3 % | within 0.23 % (all six families) |
+| G2 power: flat-key ciphers excluded | ≥ 18 / 20 → testable | 20 / 20 for 20 rows; letters A–Z 0–2 / 20 → **untestable** |
+| G3 calibration: own-family ciphers excluded | 0 / 20, else void | 0 / 20 in all 24 rows |
+| Dodging factor (200 flat-key ciphers) | — | 0.9450 pooled, 0.9455 per section |
+
+LP2 (pooled χ² 26.36, Σ per-section 194.14). Variant I has π₃ independent of π₁; variant T has π₃ = π₁. P is shown
+raw / corrected, and the largest of the four columns is quoted:
+
+| Key family | Σb² | E[λ] | Smallest λ drawn (I pooled) | Worst P | Verdict |
+|---|---|---|---|---|---|
+| English as runes (also covers English letters) | 0.0622 | 300 | 77.1 | ≤ 3.0 × 10⁻¹³ | **excluded** (4 / 4) |
+| English as prime values mod 29 (and φ, a shift) | 0.0730 | 416 | 100.3 | ≤ 2.6 × 10⁻¹⁶ | **excluded** (4 / 4) |
+| English as Latin letters A–Z | 0.0676 | 357 | 79.6 | ≤ 1.5 × 10⁻¹³ | **excluded** (4 / 4) |
+| decimal digits | 0.1000 | 708 | 203.2 | ≤ 1.3 × 10⁻²³ | **excluded** (4 / 4) |
+| hex digits | 0.0625 | 303 | 76.7 | ≤ 1.7 × 10⁻¹¹ | **excluded** (4 / 4) |
+| uniform letters A–Z | 0.0385 | 43 | 12.9 | 3.8 × 10⁻⁴ … 4.2 × 10⁻³ | **untestable** (power ≤ 2 / 20) |
+
+In the 20 excluded rows, not one of the 100,000 alphabet draws had λ at or below LP2's λ_max (42.52 pooled, 56.94
+per section). Pinned by `test_recorded_verdicts` and `test_pooled_rows_recompute`.
+
+**What changed.** C10 and the digit and hex parts of C13 survive Quagmire relabelling under random alphabets. **C13's
+letters exclusion does not**: with mixed alphabets, a uniform A–Z key gives E[λ] ≈ 43, right at LP2's limit, so it is
+untestable this way. It stays excluded only for straight (identity-labelled) alphabets.
+
+**What this does not cover.** Adversarially chosen alphabets: the minimum of λ over all 29!² pairs is open, and the
+smallest λ drawn is reported instead. Keyword-mixed alphabets from named keywords (a finite family, and the natural
+next test). Keys with dependent consecutive values (C17). C14 and L1 under relabelling.
+
+**Reading.** If LP2 is a Quagmire-type cipher, its key is near-flat (V_eff ≳ 17 by C17, and in practice not English
+text, digits or hex by C18), and its alphabets are invisible to every key-free statistic. Mixed alphabets add no
+handle a flat-key additive cipher lacks. Going further needs a named key source together with named alphabets.

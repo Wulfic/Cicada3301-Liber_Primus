@@ -65,7 +65,7 @@ Derive the statistic's predicted value **from the model and the solved plaintext
 | Periodic or reused key | `stats.lag_scan`, `stats.lag_repeats` | C5, C9 |
 | Anti-doublet mechanism | `leak.adjacent_pairs`, `delta_counts`, `phase_test`, `section_chi2`, `dispersion_index`, `skip_next_llr`; `stats.predicted_doublet_rate` | must reproduce L1–L4 and the ≈ 19 % survival from its own definition |
 | Byte payloads (grid, OutGuess, hashes) | patterns in `tools/run_stage_n.py`, `tests/test_grid.py` | chance rates **simulated**, never eyeballed |
-| Per-position alphabets c = σ_{k_i}(p) | `alphabets.log_mean_lr` (in step); `flatness.random_tabula_p` (key-free, any alignment) | random tabulae with ≤ 153 classes are already C16. The in-step detector needs **flat** synthetic negatives (stage S was void without them). Latin-square tabulae are flat, so flatness cannot see them |
+| Per-position alphabets c = σ_{k_i}(p) | `alphabets.log_mean_lr` (in step); `flatness.random_tabula_p` (key-free, any alignment) | random tabulae with ≤ 153 classes are already C16. The in-step detector needs **flat** synthetic negatives (stage S was void without them). Latin-square tabulae are flat, so flatness cannot see them; for those use `quagmire.deviations` with a key family (C18, §19) |
 
 Plaintext model `q`: `detect.unigram(...)` over `keys.solved_plaintext_words(corpus, load_translation())`.
 If the hypothesis was inspired by LP2 statistics, build models from held-out solved text (as C14 did).

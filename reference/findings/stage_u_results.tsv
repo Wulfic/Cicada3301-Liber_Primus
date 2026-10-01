@@ -1,0 +1,81 @@
+kind	family	variant	statistic	value	detail
+gate_G1	English runes	I	pooled	299.75	299.73 ok
+gate_G1	English prime values	I	pooled	416.93	415.98 ok
+gate_G1	English Latin A-Z	I	pooled	357.16	357.16 ok
+gate_G1	decimal digits	I	pooled	707.33	707.58 ok
+gate_G1	hex digits	I	pooled	302.70	302.58 ok
+gate_G1	letters A-Z	I	pooled	42.95	42.97 ok
+factor	flat key	-	pooled	0.9450	mean chi2 / 28
+factor	flat key	-	per-section	0.9455	mean chi2 / 224
+gate_G2	English runes	I	pooled	20/20	testable
+gate_G3	English runes	I	pooled	0/20	ok
+gate_G2	English runes	I	per-section	20/20	testable
+gate_G3	English runes	I	per-section	0/20	ok
+gate_G2	English runes	T	pooled	20/20	testable
+gate_G3	English runes	T	pooled	0/20	ok
+gate_G2	English runes	T	per-section	20/20	testable
+gate_G3	English runes	T	per-section	0/20	ok
+gate_G2	English prime values	I	pooled	20/20	testable
+gate_G3	English prime values	I	pooled	0/20	ok
+gate_G2	English prime values	I	per-section	20/20	testable
+gate_G3	English prime values	I	per-section	0/20	ok
+gate_G2	English prime values	T	pooled	20/20	testable
+gate_G3	English prime values	T	pooled	0/20	ok
+gate_G2	English prime values	T	per-section	20/20	testable
+gate_G3	English prime values	T	per-section	0/20	ok
+gate_G2	English Latin A-Z	I	pooled	20/20	testable
+gate_G3	English Latin A-Z	I	pooled	0/20	ok
+gate_G2	English Latin A-Z	I	per-section	20/20	testable
+gate_G3	English Latin A-Z	I	per-section	0/20	ok
+gate_G2	English Latin A-Z	T	pooled	20/20	testable
+gate_G3	English Latin A-Z	T	pooled	0/20	ok
+gate_G2	English Latin A-Z	T	per-section	20/20	testable
+gate_G3	English Latin A-Z	T	per-section	0/20	ok
+gate_G2	decimal digits	I	pooled	20/20	testable
+gate_G3	decimal digits	I	pooled	0/20	ok
+gate_G2	decimal digits	I	per-section	20/20	testable
+gate_G3	decimal digits	I	per-section	0/20	ok
+gate_G2	decimal digits	T	pooled	20/20	testable
+gate_G3	decimal digits	T	pooled	0/20	ok
+gate_G2	decimal digits	T	per-section	20/20	testable
+gate_G3	decimal digits	T	per-section	0/20	ok
+gate_G2	hex digits	I	pooled	20/20	testable
+gate_G3	hex digits	I	pooled	0/20	ok
+gate_G2	hex digits	I	per-section	20/20	testable
+gate_G3	hex digits	I	per-section	0/20	ok
+gate_G2	hex digits	T	pooled	20/20	testable
+gate_G3	hex digits	T	pooled	0/20	ok
+gate_G2	hex digits	T	per-section	20/20	testable
+gate_G3	hex digits	T	per-section	0/20	ok
+gate_G2	letters A-Z	I	pooled	1/20	untestable
+gate_G3	letters A-Z	I	pooled	0/20	ok
+gate_G2	letters A-Z	I	per-section	0/20	untestable
+gate_G3	letters A-Z	I	per-section	0/20	ok
+gate_G2	letters A-Z	T	pooled	2/20	untestable
+gate_G3	letters A-Z	T	pooled	0/20	ok
+gate_G2	letters A-Z	T	per-section	0/20	untestable
+gate_G3	letters A-Z	T	per-section	0/20	ok
+lp2	English runes	I	pooled	1.1e-13 / 3.02e-13	EXCLUDED; min lambda 77.1, median 294.4, draws with lambda <= 42.52: 0.00e+00
+lp2	English runes	I	per-section	1.23e-20 / 8.14e-19	EXCLUDED; min lambda 203.7, median 298.0, draws with lambda <= 56.94: 0.00e+00
+lp2	English runes	T	pooled	3.4e-51 / 3.49e-50	EXCLUDED; min lambda 327.3, median 525.3, draws with lambda <= 42.52: 0.00e+00
+lp2	English runes	T	per-section	3.39e-43 / 1.62e-40	EXCLUDED; min lambda 407.9, median 542.0, draws with lambda <= 56.94: 0.00e+00
+lp2	English prime values	I	pooled	8.07e-17 / 2.6e-16	EXCLUDED; min lambda 100.3, median 408.3, draws with lambda <= 42.52: 0.00e+00
+lp2	English prime values	I	per-section	2.46e-28 / 3.35e-26	EXCLUDED; min lambda 277.6, median 413.7, draws with lambda <= 56.94: 0.00e+00
+lp2	English prime values	T	pooled	2.24e-22 / 9.31e-22	EXCLUDED; min lambda 140.2, median 423.0, draws with lambda <= 42.52: 0.00e+00
+lp2	English prime values	T	per-section	1.02e-28 / 1.33e-26	EXCLUDED; min lambda 276.4, median 430.6, draws with lambda <= 56.94: 0.00e+00
+lp2	English Latin A-Z	I	pooled	5.44e-14 / 1.51e-13	EXCLUDED; min lambda 79.6, median 350.2, draws with lambda <= 42.52: 0.00e+00
+lp2	English Latin A-Z	I	per-section	8.8e-24 / 7.04e-22	EXCLUDED; min lambda 228.2, median 355.3, draws with lambda <= 56.94: 0.00e+00
+lp2	English Latin A-Z	T	pooled	3.85e-16 / 1.24e-15	EXCLUDED; min lambda 98.1, median 341.8, draws with lambda <= 42.52: 0.00e+00
+lp2	English Latin A-Z	T	per-section	7.58e-24 / 6.95e-22	EXCLUDED; min lambda 233.9, median 346.3, draws with lambda <= 56.94: 0.00e+00
+lp2	decimal digits	I	pooled	1.1e-31 / 6.49e-31	EXCLUDED; min lambda 203.2, median 692.3, draws with lambda <= 42.52: 0.00e+00
+lp2	decimal digits	I	per-section	2.6e-48 / 1.8e-45	EXCLUDED; min lambda 451.1, median 703.7, draws with lambda <= 56.94: 0.00e+00
+lp2	decimal digits	T	pooled	2.94e-24 / 1.31e-23	EXCLUDED; min lambda 153.1, median 694.4, draws with lambda <= 42.52: 0.00e+00
+lp2	decimal digits	T	per-section	6.89e-52 / 6.27e-49	EXCLUDED; min lambda 481.7, median 707.7, draws with lambda <= 56.94: 0.00e+00
+lp2	hex digits	I	pooled	1.53e-13 / 4.19e-13	EXCLUDED; min lambda 76.7, median 295.7, draws with lambda <= 42.52: 0.00e+00
+lp2	hex digits	I	per-section	6.26e-20 / 3.39e-18	EXCLUDED; min lambda 190.5, median 300.9, draws with lambda <= 56.94: 0.00e+00
+lp2	hex digits	T	pooled	6.93e-12 / 1.68e-11	EXCLUDED; min lambda 61.9, median 286.6, draws with lambda <= 42.52: 0.00e+00
+lp2	hex digits	T	per-section	6.15e-20 / 3.92e-18	EXCLUDED; min lambda 199.6, median 290.5, draws with lambda <= 56.94: 0.00e+00
+lp2	letters A-Z	I	pooled	0.0005 / 0.000883	untestable; min lambda 12.9, median 42.2, draws with lambda <= 42.52: 5.12e-01
+lp2	letters A-Z	I	per-section	0.000743 / 0.00419	untestable; min lambda 30.4, median 42.8, draws with lambda <= 56.94: 1.00e+00
+lp2	letters A-Z	T	pooled	0.000376 / 0.000673	untestable; min lambda 15.0, median 43.6, draws with lambda <= 42.52: 4.49e-01
+lp2	letters A-Z	T	per-section	0.000621 / 0.00359	untestable; min lambda 32.0, median 44.2, draws with lambda <= 56.94: 9.99e-01
