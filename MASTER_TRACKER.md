@@ -12,29 +12,30 @@ disagrees with the tests, the tests win, and this page needs fixing.
 
 **Where we are (2026-10-01).** The repo was rebuilt on clean data. Before 2026-09-29 the page files did not
 match their scans, so most older "discoveries" were artifacts (see §4.3). Now one canonical transcription
-(`data/canonical/`) is read by one tested loader (`tools/lpcore`). Every solved section decrypts from it
-exactly. The unsolved LP2 cipher has a key-independent fingerprint (§3.2). The repo was reorganised by trust level.
-The doublet leak has been characterised: the 86 survivors are random at a constant ≈ 19 %, and the key-switch
-scheme is refuted (§3.2 "The leak", findings §7). A drift-tolerant key detector now exists (`tools/lpcore/detect.py`,
-exact forward algorithm, false-positive bound e^−30 per test). It found none of the riddle-derived keys, and
-periodic keys are excluded (C9, findings §8). The key is not English text from any source, and the cipher is not
-an autokey on its ciphertext (C10, C11, findings §9). No earlier cipher rune chooses the alphabet, for any secret
-alphabets (C12, findings §10). The key's values are not decimal digits, hex digits or letters (C13, findings §11). The base-60 grid on scans
-66–67 is a 184-byte stream. It is not the key, and it does not decrypt under the book's own keys or hash
-(findings §12–§13). The anti-doublet re-keying is not "skip to the next key value" (C14, findings §14). So the key stream is random-like numbers, which is why
-title cribs were closed as untestable.
+(`data/canonical/`) is read by one tested loader (`tools/lpcore`), and every solved section decrypts from it exactly.
 
-**Next actions, in order** (detail in [findings §6](reference/findings/lp2_logic_findings_2026-09-29.md)):
+The unsolved LP2 cipher is pinned down by fourteen key-independent constraints (§3.2, C1–C14). In short: an additive
+stream over mod 29, plus an anti-doublet re-keying rule that leaks about 19 % of the time.
+- **The key stream** is near-flat mod 29 and aperiodic. Its values come from an alphabet of at least ~30 symbols,
+  so not digits, hex or letters. It is not English text, not derived from the primes or the solved text, and not
+  chosen by earlier ciphertext.
+- **The re-keying replacement** is independent of the key stream (not "skip to the next value"), or the leak is
+  hand error.
 
-1. **Named key sources with wide alphabets.** C1–C13 leave a near-flat, aperiodic key whose values span at least
-   ~30 symbols: bytes, digit pairs, base 60, or numbers mod 29. Only a named source can be tested, scored with
-   `detect.log_lr`. Done: the scan 66–67 grid (§12). Still untested: two-digit groupings of Cicada numbers
-   (the P.S. number, the 2013–2014 numbers), and OutGuess payloads re-run with drift (the ledger used fixed sync).
-   Declare each before running.
-3. ~~**What are the grid's 184 bytes?**~~ Not decrypted by any LP-native key, operation or rune reading
-   (findings §13). Still open.
-2. **Any new key source goes through `detect.log_lr`.** Add it to `tools/run_stage_i.py` style: declared first,
-   every mode and shift recorded, pass at 30 nats.
+That is the community's "OTP-class" verdict, with each piece now tested on canonical data. A drift-tolerant
+detector (`tools/lpcore/detect.py`, false-positive bound e^−30) tests any named key source. It found none among
+the riddle-derived keys (findings §8). The base-60 grid on scans 66–67 is 184 bytes; it is not the key, and it does
+not decrypt under the book's own keys or hash (findings §12–§13). Title cribs were closed as untestable (findings §9).
+
+**Next actions, in order** (all low prior; detail in [findings §6–§14](reference/findings/lp2_logic_findings_2026-09-29.md)):
+
+1. **Named wide-alphabet key sources**, each declared first and scored with `detect.log_lr` in the style of
+   `tools/run_stage_i.py`: every mode and shift recorded, pass at 30 nats. Still untested: two-digit groupings of
+   Cicada numbers (the 2012 P.S. number, the 2013–2014 numbers), and OutGuess payloads re-run with drift (the
+   ledger used fixed sync).
+2. **Non-additive per-position alphabets** c = σ_{k_i}(p). These need a detector that does not depend on the
+   plaintext's letter labels (IoC or Dirichlet emissions). Design it before testing anything with it.
+3. **The grid's 184 bytes** are still undeciphered (findings §13).
 
 **Before you start anything:** read §4 (ruled out) and §6 (rules of evidence). Plans go in [`TODO.md`](TODO.md).
 
