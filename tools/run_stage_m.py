@@ -1,4 +1,4 @@
-"""Stage M: the scan 66–67 base-60 grid as a key (TODO.md, declared 2026-10-01 before this script first ran).
+"""Stage M: the scan 66–68 base-60 grid as a key (TODO.md, declared 2026-10-01 before this script first ran).
 
 Scores G-B (bytes), G-5 (5-bit groups) and G-D (base-60 digits), all mod 29, with the drift-tolerant detector in
 3 modes × 29 shifts × 12 alignments. Writes one row per decode to reference/findings/stage_m_candidates.tsv.

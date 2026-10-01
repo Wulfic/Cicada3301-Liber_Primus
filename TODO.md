@@ -9,7 +9,27 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-*(none. The next research step is MASTER_TRACKER §1, item 1. Plan it here before starting.)*
+**Full-grid correction — draft PR review (2026-10-01).**
+
+Goal: restore all 256 base-60 cells on scans 66–68, apply the five numeric-cell corrections
+credited to Inky in iddqd commit `f804b85`, and rerun the existing Stage M/N families.
+Approach: include scan 68, require 256 tokens, extend prime streams through the payload length,
+pin the corrected payload checksum and uninterrupted prime contents, refresh generated page text,
+and regenerate the recorded results under the original pass thresholds. Full unittest discovery
+must pass before marking this correction done.
+Rejected: retaining the truncated 184-byte prefix, cycling a 200-prime list, or replacing unrelated
+punctuation from the newer transcription. No new cipher family or optimisation is introduced.
+Scope: grid extraction, five numeric cells and their generated copies, Stage M/N records, tests,
+and the affected provenance and findings. Solved rune streams must remain unchanged.
+Recovery baseline: upstream commit `a7ab786643997526760f050406ed0e960deffae7`.
+Rollback: revert the correction commit. The baseline and recorded historical-prefix results remain
+available for comparison. Publish the correction as a draft PR for review.
+
+**Validation complete:** all 105 tests pass. The original runners regenerated 3,132 Stage M and
+456 Stage N candidates at the existing thresholds; none passes. The best nontrivial M score is
+−13.75; N reaches 42.6 % printable / +4.63 nats. The complete payload checksum, uninterrupted prime
+streams and generated copies are covered by regressions. All 15,933 runes and rune-word positions
+match the recovery baseline. Implementation is complete; PR review remains pending.
 
 ## Owner items
 
@@ -26,8 +46,8 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 | 2026-10-01 | **Q** consolidation | Declared first (`028ef53`). Register of every C/L number with its test (findings §0). C3 now a test: all 29 letters excluded (23 + AE/EO/OE by count, NG/IA/EA by position). C15: no homophonic substitution, least χ² 4,802 ≥ 200 (enumeration also allows unused runes, which can only lower the bound). §3.2 numbers pinned; `tests/test_docs.py` checks cited tests, paths, names, links. Errata: C3 "75" → 25.2, C7 "2.6 %" → 2.39 %. → findings §15 | `028ef53` + this |
 | 2026-10-01 | **P** agent skills | Now tracked: `CLAUDE.md` and the 10 enabled skills under `.claude/skills/` (tokens and local settings stay ignored). New skills `lp-expert` (+ `lore.md`), `lp-attack` (+ `attack-catalog.md`), `lp-claim-audit`; repo overrides in 7 generic skills; `CLAUDE.md` index. All 23 cited `lpcore` names resolve; suite green. No research result changed | — (no tracked files besides this row) |
 | 2026-10-01 | **O** skip-next rule | Declared first (directional statistic new; L1 χ² already seen). C14: LLR −21.3 ≤ −10, skip-next excluded; robust to held-out Δp models (−20/−32). → findings §14 | `0d4d86b` + this |
-| 2026-10-01 | **N** grid bytes | Declared first (PGP rule amended before the run). 72 byte decryptions + 384 rune readings under LP-native keys: none passes (best 44 % printable; best log LR −4.8). → findings §13, `tools/run_stage_n.py`, `tests/test_grid.py` | `14afdff` + this |
-| 2026-10-01 | **M** base-60 grid | Declared first. Scans 66–67 = 184 bytes (60a + b ≤ 255). Bytes / 5-bit / digits as a key: 3,132 decodes, none passes (best −5.5 on a real alignment; power check +45…+122). → findings §12, `tools/run_stage_m.py` | `4d66364` + this |
+| 2026-10-01 | **N** historical grid prefix | Declared first (PGP rule amended before the run). The original 184-byte prefix gave 72 byte decryptions + 384 rune readings: none passed (best 44 % printable; best log LR −4.8). Superseded by the full-grid rerun. → findings §13, `tools/run_stage_n.py`, `tests/test_grid.py` | `14afdff` + this |
+| 2026-10-01 | **M** historical base-60 prefix | Declared first. Scans 66–67 supplied 184 bytes and omitted scan 68. Its 3,132 key tests gave no pass (best −5.5 on a real alignment; power check +45…+122). Superseded by the full-grid rerun. → findings §12, `tools/run_stage_m.py` | `4d66364` + this |
 | 2026-10-01 | **L** key alphabets | Rules and predictions declared first. C13: no decimal-digit (−214), hex (−19.5), letter (−14.3) or English-Latin (−122) key, best of 87 mode/offsets; controls +24…+251. Bytes, 00–99, base 60 untestable this way. → findings §11 | `0c59200` + this |
 | 2026-10-01 | **K** ciphertext-selected alphabets | Rule declared first. C12: off-diagonal lag-L transition χ² flat for L = 1–1000 (best p 3.9e-3 vs 1e-5); calibration conservative; controls χ² 7.6k–14k. Subsumes C11. → findings §10 | `55c78b1` + this |
 | 2026-10-01 | **J** key statistics | Rules declared first. C10: no English running key from any text, in 3 mappings × 3 modes × 29 offsets (LLR −255…−333; still excluded at λ = 0.25). C11: no ciphertext autokey at lags 2–1000 (best p 5.6e-4 vs 5e-6). Title cribs closed as untestable. → findings §9, `tests/test_keyspace.py` | `b1fa1bb` + this |

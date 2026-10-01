@@ -1,4 +1,4 @@
-"""Stage N: do the scan 66–67 grid's 184 bytes decrypt under LP-native keys? (TODO.md, declared 2026-10-01.)
+"""Stage N: do the scan 66–68 grid's 256 bytes decrypt under LP-native keys? (TODO.md, declared 2026-10-01.)
 
 Byte readings pass on ≥ 90 % printable ASCII or a known file signature; rune readings pass on
 `detect.log_lr` ≥ 30. Writes every result to reference/findings/stage_n_results.tsv.
@@ -39,11 +39,12 @@ BYTE_OPS: dict[str, Callable[[int, int], int]] = {
 
 def byte_keys(corpus: Corpus) -> dict[str, list[int]]:
     h = list(keys.an_end_hash(corpus))
+    grid_length = len(keys.grid_bytes(corpus))
     out = {
         "AN END hash": h,
         "AN END hash reversed": h[::-1],
-        "phi(prime) mod 256": [(p - 1) % 256 for p in islice(primes(), 200)],
-        "primes mod 256": [p % 256 for p in islice(primes(), 200)],
+        "phi(prime) mod 256": [(p - 1) % 256 for p in islice(primes(), grid_length)],
+        "primes mod 256": [p % 256 for p in islice(primes(), grid_length)],
         "scan-32 square cells mod 256": [v % 256 for v in stats.fibonacci_prime_square()],
     }
     for word in ("DIVINITY", "FIRFUMFERENFE", "CIRCUMFERENCE"):
@@ -65,8 +66,8 @@ def printable_fraction(data: bytes) -> float:
 def pgp_packet_fits(data: bytes) -> bool:
     """True if `data` is exactly one OpenPGP packet: a valid header whose body length is the rest of the data.
 
-    A bare tag byte matches often; requiring the length to fit cuts a chance match on 184 random bytes to
-    ≈ 0.17 % (96/256 header bytes × 1/256 length; measured in tests/test_grid.py), ≈ 0.12 expected over 72 decodes.
+    A bare tag byte matches often. For 256-byte blocks, tests/test_grid.py records 4 hits in 20,000
+    seeded random samples (0.020 %, or about 0.014 expected hits over 72 decodes at that measured rate).
     """
     if len(data) < 2 or not data[0] & 0x80:
         return False
