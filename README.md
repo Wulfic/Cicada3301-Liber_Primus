@@ -19,12 +19,17 @@ A research workspace for the unsolved pages of the Liber Primus, built on logic 
 | 73, 74 | LP2 p56–57 | ✅ solved (AN END, PARABLE) |
 | 00, 02, 67 | — | no runes (title pages, base-60 grid) |
 
+The base-60 grid spans **LP2 pages 49–51 / scans 66–68** and contains **256 cells**. The numeric transcription
+follows five prior community corrections credited to Inky; see [canonical provenance](data/canonical/PROVENANCE.md).
+Stage M/N test the complete grid under the named families in findings §§12–13. These bounded tests have not
+produced a plaintext.
+
 ## Quick start
 
 Python 3.11 or newer, standard library only.
 
 ```
-python -m unittest discover -s tests -t . -v      # proves the data and the core are right (102 tests)
+python -m unittest discover -s tests -t . -v      # proves the data and the core are right (105 tests)
 ```
 
 ```python
@@ -60,8 +65,8 @@ tools/
   lpcore/                  ★ tested core: corpus loader, gematria, deterministic ciphers, verifier, statistics
   rebuild_page_files.py    regenerates pages/*/runes.txt + README.md (dry-run unless --write)
   run_stage_i.py           reproduces the stage-I key-source run (findings §8); writes one TSV of results
-  run_stage_m.py           reproduces the stage-M base-60 grid run (findings §12); writes one TSV of results
-  run_stage_n.py           reproduces the stage-N grid-byte decryptions (findings §13); writes one TSV of results
+  run_stage_m.py           reproduces the stage-M full-grid key tests (findings §12); writes one TSV of results
+  run_stage_n.py           reproduces the stage-N 256-byte readings (findings §13); writes one TSV of results
   legacy/                  107 pre-2026-09-29 scripts, untested and built on misaligned data; history only
 
 tests/                     ★ the proof: python -m unittest discover -s tests -t . -v

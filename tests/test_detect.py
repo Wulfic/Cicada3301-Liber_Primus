@@ -186,15 +186,15 @@ class TestStageICandidates(unittest.TestCase):
 
 
 class TestStageMGrid(unittest.TestCase):
-    """The scan 66–67 base-60 grid as a key (declared in TODO.md stage M before the run)."""
+    """The scan 66–68 base-60 grid as a key (declared in TODO.md stage M before the run)."""
 
     def test_grid_is_a_byte_stream(self) -> None:
-        self.assertEqual(len(keys.grid_tokens(CORPUS)), 184)
+        self.assertEqual(len(keys.grid_tokens(CORPUS)), 256)
         data = keys.grid_bytes(CORPUS)
-        self.assertEqual((min(data), max(data)), (4, 255))
+        self.assertEqual((min(data), max(data)), (0, 255))
         self.assertEqual(bytes(data[:4]).hex(), "cbe7a7ba")                    # 3N 3p 2l 36
-        self.assertEqual(len(keys.grid_5bit(CORPUS)), 294)
-        self.assertEqual(len(keys.grid_digits(CORPUS)), 368)
+        self.assertEqual(len(keys.grid_5bit(CORPUS)), 409)
+        self.assertEqual(len(keys.grid_digits(CORPUS)), 512)
         self.assertEqual(keys.grid_rune_offset(CORPUS), 2474)                   # of segment 15's 3,316 runes
 
     def test_power_check(self) -> None:
