@@ -113,6 +113,27 @@ def compare_words(plain_words: list[tuple[int, ...]], english: list[str]) -> lis
     ]
 
 
+def render_words(plain_words: list[tuple[int, ...]], english: list[str]) -> list[str]:
+    """Latin rendering of solved rune words: the translation's own word wherever one exists.
+
+    A rune can stand for several letters (ᚳ = C/K/Q, ᚢ = U/V, ᛡ = IA/IO, ᛝ = NG/ING), so the one-spelling
+    `indices_to_latin` turns KNOW into CNOW. Only the English can choose, so each rune word is rendered as its
+    English word after `word_matches` confirms the runes spell it. Words past the end of `english` (square cells)
+    fall back to `indices_to_latin`. Raises AlignmentError if a rune word does not spell its English word.
+    """
+    if len(english) > len(plain_words):
+        raise AlignmentError(f"{len(english)} English words for {len(plain_words)} rune words")
+    out = []
+    for i, pw in enumerate(plain_words):
+        if i >= len(english):
+            out.append(indices_to_latin(pw))
+        elif word_matches(pw, english[i]):
+            out.append(english[i])
+        else:
+            raise AlignmentError(f"rune word {i} ({indices_to_latin(pw)}) does not spell {english[i]!r}")
+    return out
+
+
 def split_like(stream: list[int], words: list[tuple[int, ...]]) -> list[tuple[int, ...]]:
     """Cut a flat stream back into words with the same lengths as `words`."""
     out, pos = [], 0

@@ -4,7 +4,7 @@
 and what to do next. Every claim on it is backed by a test or a linked document. If something here
 disagrees with the tests, the tests win, and this page needs fixing.
 
-**Last updated:** 2026-10-01 · **Tests:** 168, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
+**Last updated:** 2026-10-01 · **Tests:** 170, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
 
 ---
 
@@ -261,6 +261,7 @@ The ordered list is in §1. These questions are also open and cheap to state:
 
 | Date | What happened | Commits |
 |---|---|---|
+| 2026-10-01 | **C/K rendering** (user report): solved plaintext in the page READMEs read CNOW, LICE, BOOC, because `indices_to_latin` has one spelling per rune (also UOICE, INSTRUCTIAN, THNGS). Display only: every scored path works on rune index 5, where C, K and Q are one value, so no result changes. `verify.render_words` now renders each solved word as the translation's word after `word_matches` confirms it; 17 page files regenerated | this commit |
 | 2026-10-01 | **Named keyword Quagmire** (TODO V): 34 LP keywords → 68 alphabets → 314,432 triples per key family, scored with C13's labelled LLR (exact per member; false exclusion ≤ e^−10 whatever the family size). C19: English (3 forms) and digits excluded under every triple, hex under all but 431, uniform A–Z under 103,864. Gates passed (0 / 300 own-member exclusions). No lead. A declared expectation failed: not every testable member was excluded, and LP2 sits inside the flat-cipher range | `8880e3b` `7d44b09` + this commit |
 | 2026-10-01 | **Quagmire relabelling** (TODO U): a Quagmire cipher is the additive one renamed, so key-free statistics cannot see its alphabets. Audit of C1–C16. C17: doublet rate in [2/29 − Σb², Σb²] under any labels; the deficit needs V_eff < 16.9. C18: under random alphabets, English, digit and hex keys stay excluded (20 / 20 rows, worst P 1.7e-11); uniform letters untestable. Declared gate roles were swapped, caught by `--quick` and amended before LP2 was scored | `4051fe2` `f2ecd72` + this commit |
 | 2026-10-01 | **Flatness of random tabulae** (TODO T): C16. A random-alphabet mixture over V_eff classes adds ≈ 10,400 / V_eff to χ²; LP2's 26.36 excludes V_eff ≤ 168 / 174 by the declared rule, 153 / 133 after the anti-doublet correction (×0.939). Gates passed (formula within 7.1 %, 0 / 200 false exclusions). 15 of stage S's 20 classings excluded under any alignment; raw bytes and Latin-square tabulae stay open | `f0c8e39` + this commit |

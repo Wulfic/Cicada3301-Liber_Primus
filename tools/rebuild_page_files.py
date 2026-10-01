@@ -25,9 +25,9 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from tools.lpcore.corpus import REPO_ROOT, Corpus, load_corpus, lp_location
-from tools.lpcore.gematria import RUNE_INDEX, indices_to_latin
+from tools.lpcore.gematria import RUNE_INDEX
 from tools.lpcore.solved import SEGMENT_TITLES, SOLVED_BY_SEGMENT, SOLVED_SECTIONS, decrypt_section
-from tools.lpcore.verify import load_translation
+from tools.lpcore.verify import load_translation, render_words
 
 log = logging.getLogger("rebuild_page_files")
 
@@ -76,17 +76,22 @@ def _page_rune_ranges(corpus: Corpus) -> dict[int, tuple[int, int]]:
     return ranges
 
 
-def _plaintext_by_scan(corpus: Corpus, translation: dict) -> dict[int, list[str]]:
-    """Verified plaintext words of solved sections, keyed by the scan each word starts on."""
-    out: dict[int, list[str]] = {}
+def _plaintext_by_scan(corpus: Corpus, translation: dict) -> dict[int, list[tuple[str, bool]]]:
+    """(word, checked) for the plaintext of solved sections, keyed by the scan each word starts on.
+
+    Checked words are the translation's own spelling (KNOW, not CNOW; see `render_words`). Unchecked words have
+    no English in the translation (segment 2's square cells) and keep the canonical one-spelling transliteration.
+    """
+    out: dict[int, list[tuple[str, bool]]] = {}
     for section in SOLVED_SECTIONS:
-        plain_words, _ = decrypt_section(corpus, translation, section)
-        for word, plain in zip(corpus.rune_words(section.segment), plain_words):
-            out.setdefault(word.scan, []).append(indices_to_latin(plain))
+        plain_words, english = decrypt_section(corpus, translation, section)
+        rendered = render_words(plain_words, english)
+        for i, (word, text) in enumerate(zip(corpus.rune_words(section.segment), rendered)):
+            out.setdefault(word.scan, []).append((text, i < len(english)))
     return out
 
 
-def page_readme(corpus: Corpus, scan: int, plaintext: dict[int, list[str]],
+def page_readme(corpus: Corpus, scan: int, plaintext: dict[int, list[tuple[str, bool]]],
                 ranges: dict[int, tuple[int, int]]) -> str:
     part, number = lp_location(scan)
     page = corpus.page_by_scan(scan)
@@ -120,8 +125,15 @@ def page_readme(corpus: Corpus, scan: int, plaintext: dict[int, list[str]],
             f"| Runes on this page | {len(page.runes)} |",
             "",
         ]
-        if plaintext.get(scan):
-            lines += ["## Plaintext (words beginning on this page)", "", " ".join(plaintext[scan]), ""]
+        checked = [text for text, ok in plaintext.get(scan, []) if ok]
+        unchecked = [text for text, ok in plaintext.get(scan, []) if not ok]
+        if checked or unchecked:
+            lines += ["## Plaintext (words beginning on this page)", ""]
+        if checked:
+            lines += [" ".join(checked), ""]
+        if unchecked:
+            lines += ["Square cells (no English in the translation; canonical transliteration, so ᚳ shows as C,",
+                      "ᚢ as U, ᛡ as IA, ᛝ as NG):", "", " ".join(unchecked), ""]
     lines += [f"**Runes:** [`runes.txt`](runes.txt) · **Scan:** [`images/{scan:02d}.jpg`](images/{scan:02d}.jpg)", ""]
     return "\n".join(lines)
 

@@ -50,7 +50,9 @@ The snapshot below goes stale. These files do not:
 
 Spelling traps (`ALTERNATE_SPELLINGS`): U/V share a rune, C/K/Q share one (QUESTION is written CWESTION; the
 translation even keeps "KWESTION"), NG can stand for ING, IA for IO, and S covers Z. Never hand-transliterate. Use
-`gematria.spellings_of(word)` and `gematria.word_matches(indices, word)`.
+`gematria.spellings_of(word)` and `gematria.word_matches(indices, word)`. `indices_to_latin` prints one spelling per
+rune (ᚳ → C, so KNOW reads CNOW). To display solved text use `verify.render_words`, which takes the spelling from
+the English.
 
 **The plaintext uses 26 of the 29 runes.** In the 2,901 solved plaintext runes, AE, EO and OE never occur, and
 J (3), X (5) and IA (16) are rare (test `test_letter_counts`). A claimed LP2 decryption that is rich in AE/EO/OE

@@ -17,6 +17,7 @@ from tools.lpcore.verify import (
     english_words,
     interrupter_positions,
     load_translation,
+    render_words,
     split_like,
 )
 
@@ -150,6 +151,16 @@ class TestVerifyHelpers(unittest.TestCase):
         # ᚠ at offset 1 is plaintext F of "OF"; the ᚠ in the second word is an enciphered letter.
         self.assertEqual(interrupter_positions([w("ᚩᚠ"), w("ᚠᚠ")], ["OF", "AT"]), {1})
 
+    def test_render_words_takes_the_spelling_from_the_english(self) -> None:
+        # ᚳ is C/K, ᚢ is U/V: one rune word renders as whichever word the English says it is.
+        know, can, voice = w("ᚳᚾᚩᚹ"), w("ᚳᚪᚾ"), w("ᚢᚩᛁᚳᛖ")
+        self.assertEqual(render_words([know, can, voice], ["KNOW", "CAN", "VOICE"]), ["KNOW", "CAN", "VOICE"])
+        self.assertEqual(render_words([know, can], ["KNOW"]), ["KNOW", "CAN"])   # no English: canonical spelling
+        with self.assertRaises(AlignmentError):
+            render_words([know], ["SNOW"])                                       # runes do not spell it
+        with self.assertRaises(AlignmentError):
+            render_words([know], ["KNOW", "EXTRA"])
+
 
 class TestSolvedSectionsReproduce(unittest.TestCase):
     """Every solved section must decrypt from CANONICAL runes to the published English exactly."""
@@ -167,6 +178,18 @@ class TestSolvedSectionsReproduce(unittest.TestCase):
         welcome = SOLVED_BY_SEGMENT[1]
         plain_words, english = decrypt_section(CORPUS, TRANSLATION, welcome, method=("vigenere", FIRFUMFERENFE))
         self.assertGreater(len(compare_words(plain_words, english)), 50)
+
+    def test_rendered_plaintext_keeps_k(self) -> None:
+        # User report 2026-10-01: rendered solves read CNOW, LICE, BOOC. Every K of the English must survive.
+        rendered, english = [], []
+        for section in SOLVED_SECTIONS:
+            plain_words, eng = decrypt_section(CORPUS, TRANSLATION, section)
+            rendered += render_words(plain_words[:len(eng)], eng)
+            english += eng
+        self.assertEqual(rendered, english)
+        self.assertEqual(sum(x.count("K") for x in rendered), sum(x.count("K") for x in english))
+        self.assertEqual(sum(x.count("K") for x in english), 19)                  # pinned: solved English has 19 K
+        self.assertNotIn("CNOW", rendered)
 
     def test_only_documented_errata(self) -> None:
         self.assertEqual(set(ERRATA), {(1, 95), (4, 24)})

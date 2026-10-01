@@ -29,7 +29,7 @@ produced a plaintext.
 Python 3.11 or newer. The core is standard library only; `numpy` is needed for `tools/lpcore/fastdetect.py`, `tools/lpcore/alphabets.py`, `tools/lpcore/flatness.py`, stages R, S and T and their tests.
 
 ```
-python -m unittest discover -s tests -t . -v      # proves the data and the core are right (143 tests)
+python -m unittest discover -s tests -t . -v      # proves the data and the core are right (170 tests)
 ```
 
 ```python
@@ -38,7 +38,7 @@ from tools.lpcore.gematria import indices_to_latin
 
 corpus = load_corpus()                     # canonical LP1 + LP2, keyed by scan number
 runes = corpus.segment_runes(7)            # first unsolved section, as Gematria Primus indices 0–28
-print(len(runes), indices_to_latin(runes[:20], sep=" "))
+print(len(runes), indices_to_latin(runes[:20], sep=" "))   # one spelling per rune: ᚳ prints C even for K
 ```
 
 ## Repository layout
