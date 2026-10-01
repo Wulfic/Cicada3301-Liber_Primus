@@ -24,7 +24,7 @@ A research workspace for the unsolved pages of the Liber Primus, built on logic 
 Python 3.11 or newer, standard library only.
 
 ```
-python -m unittest discover -s tests -t . -v      # proves the data and the core are right (69 tests)
+python -m unittest discover -s tests -t . -v      # proves the data and the core are right (73 tests)
 ```
 
 ```python

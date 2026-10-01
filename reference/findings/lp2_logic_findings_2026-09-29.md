@@ -213,3 +213,31 @@ give χ² ≈ 7,000–10,000. The Leo-Y-Zhang ledger covered lags 1–60; L1 alr
 crib alone cannot fail. The only declared model for a fragment was "it reads as English", and C10 tests that on
 all 12,956 runes at once, with far more power than a 10-rune title. A crib becomes testable again only together
 with a concrete key-source hypothesis, and then `detect.log_lr` scores the whole section anyway.
+
+## 10. No ciphertext rune chooses the alphabet (2026-10-01, TODO stage K)
+
+Rule declared in `TODO.md` before the run. Function: `stats.transition_chi2`. Tests: `tests/test_keyspace.py`.
+
+**C12.** Suppose an earlier cipher rune picks the alphabet: c_i = σ_{c_{i−L}}(p_i) for any 29 secret permutations.
+This family includes keyed autokeys with a secret table, c_i = p_i + f(c_{i−1}), and affine chains. Then row x of
+the lag-L transition table is a permutation of the plaintext distribution, with IoC ≈ 1.79 whatever σ is. The
+test is Pearson χ² over the off-diagonal cells (the diagonal is where the doublet rule acts), against
+E_xy = R_x · f_y / (1 − f_x), with df = 783 and the p-value from Wilson–Hilferty.
+
+| | Observed |
+|---|---|
+| LP2, lags 1–1000 | **0 flagged.** The best is lag 142, p = 3.9 × 10⁻³, against the declared threshold of 10⁻⁵. At lag 1 off the diagonal: χ² = 785.5 on 783 df |
+| Calibration: random streams of LP2's section sizes | 0.1–0.2 % of lags at p < 0.01 (nominal 1 %): the test is slightly conservative. None flagged |
+| Positive control: random σ tables, solved plaintext, LP2-sized | χ² = 14,445 (L = 1) and 7,592 (L = 500) |
+
+C12 subsumes C11 and covers the lag-1 sum, which L1 and C11 did not test.
+
+**Not covered:** the same construction with a flat stream key added on top, c_i = σ_{c_{i−L}}(p_i + k_i), whose rows
+are flat. Also not covered: alphabets chosen by *plaintext* runes, and contexts of two or more runes. A
+two-rune context gives 841 rows of about 15 entries each, too sparse for χ².
+
+**Where this leaves the cipher (C1–C12).** On top of whatever does the anti-doublet re-keying, there is a key
+stream whose values are near-flat mod 29. It is not periodic, not English text, not derived from the primes or
+the solved text, and not a function of the ciphertext alone. That is the "OTP-class" verdict of both community
+ledgers, now with each piece tested on canonical data. Only a named key source can go further, and
+`detect.log_lr` is the tool for testing one.

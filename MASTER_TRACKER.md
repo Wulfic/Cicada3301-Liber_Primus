@@ -4,7 +4,7 @@
 and what to do next. Every claim on it is backed by a test or a linked document. If something here
 disagrees with the tests, the tests win, and this page needs fixing.
 
-**Last updated:** 2026-10-01 · **Tests:** 69, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
+**Last updated:** 2026-10-01 · **Tests:** 73, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
 
 ---
 
@@ -18,14 +18,15 @@ The doublet leak has been characterised: the 86 survivors are random at a consta
 scheme is refuted (§3.2 "The leak", findings §7). A drift-tolerant key detector now exists (`tools/lpcore/detect.py`,
 exact forward algorithm, false-positive bound e^−30 per test). It found none of the riddle-derived keys, and
 periodic keys are excluded (C9, findings §8). The key is not English text from any source, and the cipher is not
-an autokey on its ciphertext (C10, C11, findings §9). So the key stream is random-like numbers, which is why
+an autokey on its ciphertext (C10, C11, findings §9). No earlier cipher rune chooses the alphabet, for any secret
+alphabets (C12, findings §10). So the key stream is random-like numbers, which is why
 title cribs were closed as untestable.
 
 **Next actions, in order** (detail in [findings §6](reference/findings/lp2_logic_findings_2026-09-29.md)):
 
-1. **Ciphertext-selected alphabets (stage K, to plan).** C11 excludes c_i = p_i ± c_{i−L}. The general form
-   c_i = σ_{c_{i−L}}(p_i), where the previous rune picks a secret alphabet, makes each row of the lag-L
-   transition table a permuted English distribution. That is testable without a key.
+1. **What values can the key take? (stage L, to plan).** C10's logic generalises: a key built from a small
+   alphabet (decimal digits, hex digits, letters A–Z, base-60 digits, two-digit groups) leaves an uneven cipher
+   distribution in every mode and offset. That would exclude whole classes of digit and hash keys without decoding any.
 2. **Any new key source goes through `detect.log_lr`.** Add it to `tools/run_stage_i.py` style: declared first,
    every mode and shift recorded, pass at 30 nats.
 
@@ -86,7 +87,7 @@ Errata, each with its evidence in `solved.py`: **WIDSOM** is the book's own typo
 | **all** | | **12,956** | **86** | **0.66 %** vs 3.45 % expected (z = −17) | |
 
 Everything else is flat: IoC, rune frequencies, and repeats at lags 2–10. The constraints derived from that
-are C1–C7 in [findings §2](reference/findings/lp2_logic_findings_2026-09-29.md) (C8 is in §7, C9 in §8, C10–C11 in §9):
+are C1–C7 in [findings §2](reference/findings/lp2_logic_findings_2026-09-29.md) (C8 is in §7, C9 in §8, C10–C11 in §9, C12 in §10):
 
 - The anti-doublet rule acts on the continuous rune stream and ignores word boundaries (C1).
 - There is no plaintext-F passthrough, unlike LP1 (C2). The surviving doublets mark no single plaintext letter (C3).
@@ -94,6 +95,8 @@ are C1–C7 in [findings §2](reference/findings/lp2_logic_findings_2026-09-29.m
 - Only lag 1 is affected (C5). One system runs throughout, with no seam between sections (C6). No one-shift-per-word scheme fits (C7).
 - **The key is not English text (C10):** from any source, as letters, prime values or φ(prime values), in any mode
   and offset. The key's values must be near-flat mod 29. **No ciphertext autokey (C11)** at lags 2–1000.
+- **No ciphertext-selected alphabet (C12):** c_i = σ_{c_{i−L}}(p_i) is excluded for any secret alphabets and
+  any L ≤ 1000. This includes keyed autokeys c_i = p_i + f(c_{i−1}).
 - **No periodic key (C9):** lags 11–1000 are normal. This excludes every period ≤ 1000 under a re-key rule that keeps
   the key in step, and every period ≤ 25 under a drifting one (findings §8).
 
@@ -141,6 +144,7 @@ RANDOM.ORG and RAND archives (~14.5 billion offsets). Both conclude "OTP-class" 
   numbers do not decode the segment 10 title (0 of 30).
 - **Any English running key, plaintext autokey at any lag, ciphertext autokey at lags 2–1000** (C10, C11; findings §9).
   Section-title cribs are closed as untestable without a key model.
+- **Ciphertext-selected alphabets** c_i = σ_{c_{i−L}}(p_i), any σ, L ≤ 1000 (C12, findings §10).
 - The "Echo446Ghq full solution" is debunked ([analysis](reference/community/echo446ghq_analysis.md)).
 
 ### 4.3 Invalid claims from before 2026-09-29
@@ -190,6 +194,7 @@ The ordered list is in §1. These questions are also open and cheap to state:
 
 | Date | What happened | Commits |
 |---|---|---|
+| 2026-10-01 | **Ciphertext-selected alphabets** (TODO K): C12, no lag 1–1000 transition table carries plaintext structure, for any secret alphabets | `55c78b1` + this commit |
 | 2026-10-01 | **Key statistics** (TODO J): C10, no English running key from any text (LLR −255 to −333; still excluded at 25 % English-like); C11, no ciphertext autokey at lags 2–1000. Title cribs closed as untestable | `b1fa1bb` + this commit |
 | 2026-10-01 | **Key-source riddles** (TODO I): drift-tolerant detector, C9 (no periodic key), 2,610 candidate decodes all fail, segment 10 title not decoded. AN END control failed by length (29.6 < 30), recorded | `8641c50` `3720710` |
 | 2026-10-01 | **Doublet leak characterised** (TODO H): L1–L5 and C8, `tools/lpcore/leak.py`, 13 tests. Key-switch refuted; C6 promoted to a test | `d66cbb2` |
