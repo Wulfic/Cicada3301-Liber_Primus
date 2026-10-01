@@ -1,0 +1,201 @@
+key	runes	rekey	phase	positive_log_lr	negative_log_lr
+PS131 pairs@0 mod	729	fresh	27	238.26	-76.79
+PS131 pairs@0 mod	729	next	22	184.98	-82.27
+PS131 pairs@0 mod	3316	fresh	55	1083.49	-428.66
+PS131 pairs@0 mod	3316	next	52	1003.89	-388.00
+PS131 pairs@0 reject	729	fresh	51	229.02	-89.23
+PS131 pairs@0 reject	729	next	39	200.02	-80.66
+PS131 pairs@0 reject	3316	fresh	41	1108.18	-444.81
+PS131 pairs@0 reject	3316	next	31	993.48	-395.61
+PS131 pairs@1 mod	729	fresh	20	226.05	-88.41
+PS131 pairs@1 mod	729	next	48	187.63	-78.63
+PS131 pairs@1 mod	3316	fresh	52	1108.57	-409.04
+PS131 pairs@1 mod	3316	next	32	968.15	-401.41
+PS131 pairs@1 reject	729	fresh	26	223.55	-96.57
+PS131 pairs@1 reject	729	next	3	221.78	-91.08
+PS131 pairs@1 reject	3316	fresh	12	1116.55	-343.77
+PS131 pairs@1 reject	3316	next	39	1014.57	-402.30
+PS131 triples@0 mod	729	fresh	29	228.14	-78.54
+PS131 triples@0 mod	729	next	22	228.11	-91.41
+PS131 triples@0 mod	3316	fresh	24	1107.34	-425.27
+PS131 triples@0 mod	3316	next	31	964.85	-406.66
+PS131 triples@0 reject	729	fresh	6	226.81	-93.84
+PS131 triples@0 reject	729	next	11	201.70	-96.87
+PS131 triples@0 reject	3316	fresh	33	1107.00	-422.48
+PS131 triples@0 reject	3316	next	39	971.07	-402.63
+PS131 triples@1 mod	729	fresh	39	228.89	-103.16
+PS131 triples@1 mod	729	next	2	169.09	-87.56
+PS131 triples@1 mod	3316	fresh	23	1108.36	-413.59
+PS131 triples@1 mod	3316	next	17	1019.27	-448.74
+PS131 triples@1 reject	729	fresh	11	232.28	-81.24
+PS131 triples@1 reject	729	next	20	217.43	-90.15
+PS131 triples@1 reject	3316	fresh	3	1143.71	-414.76
+PS131 triples@1 reject	3316	next	33	997.10	-409.70
+PS131 triples@2 mod	729	fresh	10	232.63	-96.97
+PS131 triples@2 mod	729	next	22	200.39	-90.62
+PS131 triples@2 mod	3316	fresh	5	1095.70	-342.89
+PS131 triples@2 mod	3316	next	4	963.49	-481.03
+PS131 triples@2 reject	729	fresh	5	216.32	-91.28
+PS131 triples@2 reject	729	next	31	196.26	-102.39
+PS131 triples@2 reject	3316	fresh	25	1116.27	-403.22
+PS131 triples@2 reject	3316	next	29	982.39	-402.05
+PS132 pairs@0 mod	729	fresh	9	234.29	-80.13
+PS132 pairs@0 mod	729	next	63	197.60	-96.67
+PS132 pairs@0 mod	3316	fresh	2	1122.17	-398.73
+PS132 pairs@0 mod	3316	next	55	999.41	-395.61
+PS132 pairs@0 reject	729	fresh	3	234.36	-69.73
+PS132 pairs@0 reject	729	next	13	218.95	-92.45
+PS132 pairs@0 reject	3316	fresh	6	1115.81	-422.99
+PS132 pairs@0 reject	3316	next	35	985.72	-436.18
+PS132 pairs@1 mod	729	fresh	64	233.36	-93.34
+PS132 pairs@1 mod	729	next	15	226.96	-95.49
+PS132 pairs@1 mod	3316	fresh	14	1095.66	-374.12
+PS132 pairs@1 mod	3316	next	28	965.63	-372.51
+PS132 pairs@1 reject	729	fresh	41	222.39	-91.89
+PS132 pairs@1 reject	729	next	44	216.98	-92.14
+PS132 pairs@1 reject	3316	fresh	19	1104.57	-400.65
+PS132 pairs@1 reject	3316	next	37	1015.69	-456.92
+PS132 triples@0 mod	729	fresh	8	231.42	-93.91
+PS132 triples@0 mod	729	next	27	188.88	-74.63
+PS132 triples@0 mod	3316	fresh	36	1117.17	-423.10
+PS132 triples@0 mod	3316	next	32	961.00	-397.27
+PS132 triples@0 reject	729	fresh	21	226.57	-84.19
+PS132 triples@0 reject	729	next	36	192.37	-92.16
+PS132 triples@0 reject	3316	fresh	3	1097.82	-421.49
+PS132 triples@0 reject	3316	next	2	944.16	-435.85
+PS132 triples@1 mod	729	fresh	32	232.06	-96.73
+PS132 triples@1 mod	729	next	4	201.37	-83.83
+PS132 triples@1 mod	3316	fresh	4	1119.33	-404.77
+PS132 triples@1 mod	3316	next	16	1019.53	-393.11
+PS132 triples@1 reject	729	fresh	35	230.58	-77.10
+PS132 triples@1 reject	729	next	7	208.61	-95.88
+PS132 triples@1 reject	3316	fresh	19	1105.60	-361.80
+PS132 triples@1 reject	3316	next	18	1013.47	-432.89
+PS132 triples@2 mod	729	fresh	22	225.32	-82.44
+PS132 triples@2 mod	729	next	38	185.75	-79.28
+PS132 triples@2 mod	3316	fresh	41	1096.09	-446.23
+PS132 triples@2 mod	3316	next	7	957.10	-410.25
+PS132 triples@2 reject	729	fresh	2	232.54	-87.85
+PS132 triples@2 reject	729	next	10	199.82	-85.53
+PS132 triples@2 reject	3316	fresh	42	1097.21	-426.16
+PS132 triples@2 reject	3316	next	30	985.88	-411.84
+RSA-n-2014 pairs@0 mod	729	fresh	44	221.73	-84.48
+RSA-n-2014 pairs@0 mod	729	next	48	195.79	-102.40
+RSA-n-2014 pairs@0 mod	3316	fresh	6	1115.09	-423.68
+RSA-n-2014 pairs@0 mod	3316	next	32	970.74	-435.17
+RSA-n-2014 pairs@0 reject	729	fresh	49	233.29	-74.23
+RSA-n-2014 pairs@0 reject	729	next	50	187.19	-85.87
+RSA-n-2014 pairs@0 reject	3316	fresh	27	1132.72	-387.84
+RSA-n-2014 pairs@0 reject	3316	next	49	1011.54	-382.73
+RSA-n-2014 pairs@1 mod	729	fresh	33	237.32	-88.67
+RSA-n-2014 pairs@1 mod	729	next	20	202.23	-101.38
+RSA-n-2014 pairs@1 mod	3316	fresh	61	1119.76	-400.51
+RSA-n-2014 pairs@1 mod	3316	next	5	934.34	-387.58
+RSA-n-2014 pairs@1 reject	729	fresh	3	225.84	-94.35
+RSA-n-2014 pairs@1 reject	729	next	29	192.05	-86.52
+RSA-n-2014 pairs@1 reject	3316	fresh	23	1130.82	-424.37
+RSA-n-2014 pairs@1 reject	3316	next	42	1011.08	-407.76
+RSA-n-2014 triples@0 mod	729	fresh	18	231.85	-88.88
+RSA-n-2014 triples@0 mod	729	next	30	209.01	-74.45
+RSA-n-2014 triples@0 mod	3316	fresh	37	1118.76	-411.88
+RSA-n-2014 triples@0 mod	3316	next	39	964.96	-420.73
+RSA-n-2014 triples@0 reject	729	fresh	3	237.52	-79.22
+RSA-n-2014 triples@0 reject	729	next	12	187.86	-97.87
+RSA-n-2014 triples@0 reject	3316	fresh	10	1114.04	-451.62
+RSA-n-2014 triples@0 reject	3316	next	12	986.30	-417.47
+RSA-n-2014 triples@1 mod	729	fresh	37	228.87	-96.60
+RSA-n-2014 triples@1 mod	729	next	18	194.89	-98.25
+RSA-n-2014 triples@1 mod	3316	fresh	32	1095.45	-409.14
+RSA-n-2014 triples@1 mod	3316	next	13	997.56	-386.89
+RSA-n-2014 triples@1 reject	729	fresh	27	233.91	-83.87
+RSA-n-2014 triples@1 reject	729	next	39	203.35	-79.74
+RSA-n-2014 triples@1 reject	3316	fresh	23	1137.68	-370.65
+RSA-n-2014 triples@1 reject	3316	next	0	960.92	-402.53
+RSA-n-2014 triples@2 mod	729	fresh	20	227.57	-86.53
+RSA-n-2014 triples@2 mod	729	next	19	204.69	-96.13
+RSA-n-2014 triples@2 mod	3316	fresh	31	1113.68	-444.40
+RSA-n-2014 triples@2 mod	3316	next	13	1009.08	-375.10
+RSA-n-2014 triples@2 reject	729	fresh	14	238.82	-97.77
+RSA-n-2014 triples@2 reject	729	next	4	220.42	-88.41
+RSA-n-2014 triples@2 reject	3316	fresh	4	1121.24	-418.37
+RSA-n-2014 triples@2 reject	3316	next	6	1015.98	-405.91
+cookie-167 mod	729	fresh	23	228.45	-78.87
+cookie-167 mod	729	next	24	216.98	-95.62
+cookie-167 mod	3316	fresh	25	1103.91	-418.89
+cookie-167 mod	3316	next	14	1005.30	-443.62
+cookie-167 reject	729	fresh	3	235.66	-98.63
+cookie-167 reject	729	next	8	193.54	-86.32
+cookie-167 reject	3316	fresh	21	1111.72	-396.90
+cookie-167 reject	3316	next	5	1019.02	-456.04
+cookie-761 mod	729	fresh	7	227.11	-102.70
+cookie-761 mod	729	next	22	178.86	-85.44
+cookie-761 mod	3316	fresh	31	1112.58	-478.80
+cookie-761 mod	3316	next	3	1017.84	-447.01
+cookie-761 reject	729	fresh	29	231.88	-93.97
+cookie-761 reject	729	next	26	215.94	-67.66
+cookie-761 reject	3316	fresh	24	1102.13	-379.68
+cookie-761 reject	3316	next	20	1010.33	-408.77
+AN-END-hash mod	729	fresh	25	229.22	-79.82
+AN-END-hash mod	729	next	63	205.38	-78.10
+AN-END-hash mod	3316	fresh	10	1119.39	-431.34
+AN-END-hash mod	3316	next	55	1012.51	-383.98
+AN-END-hash reject	729	fresh	37	229.02	-83.36
+AN-END-hash reject	729	next	42	207.23	-83.03
+AN-END-hash reject	3316	fresh	51	1116.49	-400.33
+AN-END-hash reject	3316	next	38	1031.28	-407.34
+page_00-hex mod	729	fresh	885	224.85	-75.10
+page_00-hex mod	729	next	265	184.15	-73.16
+page_00-hex mod	3316	fresh	935	1104.46	-394.26
+page_00-hex mod	3316	next	221	973.72	-385.37
+page_00-hex reject	729	fresh	543	232.27	-78.70
+page_00-hex reject	729	next	512	178.32	-82.21
+page_00-hex reject	3316	fresh	893	1118.39	-392.94
+page_00-hex reject	3316	next	505	990.21	-394.57
+onion-2-hex mod	729	fresh	142	231.93	-68.37
+onion-2-hex mod	729	next	29	195.13	-80.04
+onion-2-hex mod	3316	fresh	189	1122.27	-390.03
+onion-2-hex mod	3316	next	29	1019.48	-380.96
+onion-2-hex reject	729	fresh	47	229.44	-86.47
+onion-2-hex reject	729	next	201	213.79	-84.84
+onion-2-hex reject	3316	fresh	33	1101.85	-398.53
+onion-2-hex reject	3316	next	217	974.17	-410.50
+hint mod	729	fresh	1610	218.38	-78.10
+hint mod	729	next	3098	192.61	-77.93
+hint mod	3316	fresh	1613	1080.41	-396.02
+hint mod	3316	next	2176	1016.96	-383.17
+hint reject	729	fresh	1320	230.20	-78.07
+hint reject	729	next	405	214.49	-66.91
+hint reject	3316	fresh	1800	1108.77	-396.22
+hint reject	3316	next	777	995.82	-387.88
+hint-reversed mod	729	fresh	1781	229.34	-60.86
+hint-reversed mod	729	next	2039	185.20	-74.50
+hint-reversed mod	3316	fresh	1768	1112.60	-385.23
+hint-reversed mod	3316	next	26	969.45	-392.33
+hint-reversed reject	729	fresh	1990	230.13	-77.40
+hint-reversed reject	729	next	2408	201.87	-75.03
+hint-reversed reject	3316	fresh	1725	1133.28	-381.79
+hint-reversed reject	3316	next	1403	959.68	-392.55
+page_17.bin mod	729	fresh	5721	218.83	-71.29
+page_17.bin mod	729	next	21765	201.82	-63.80
+page_17.bin mod	3316	fresh	11107	1065.07	-376.75
+page_17.bin mod	3316	next	16299	955.26	-378.24
+page_17.bin reject	729	fresh	9278	225.33	-69.52
+page_17.bin reject	729	next	4377	206.85	-67.52
+page_17.bin reject	3316	fresh	36176	1114.85	-378.54
+page_17.bin reject	3316	next	39508	1018.18	-391.91
+page_21.bin mod	729	fresh	22691	224.40	-66.30
+page_21.bin mod	729	next	53134	194.35	-70.25
+page_21.bin mod	3316	fresh	45558	1110.46	-378.96
+page_21.bin mod	3316	next	228	991.70	-388.10
+page_21.bin reject	729	fresh	11955	222.70	-69.63
+page_21.bin reject	729	next	31540	184.24	-68.66
+page_21.bin reject	3316	fresh	40568	1107.32	-375.78
+page_21.bin reject	3316	next	12888	999.05	-391.03
+page_43.bin mod	729	fresh	5528	227.72	-66.86
+page_43.bin mod	729	next	19433	204.46	-68.03
+page_43.bin mod	3316	fresh	14812	1066.38	-393.14
+page_43.bin mod	3316	next	44096	984.42	-367.93
+page_43.bin reject	729	fresh	7468	214.88	-69.98
+page_43.bin reject	729	next	35831	178.57	-71.40
+page_43.bin reject	3316	fresh	4446	1096.23	-388.02
+page_43.bin reject	3316	next	35499	988.57	-377.96

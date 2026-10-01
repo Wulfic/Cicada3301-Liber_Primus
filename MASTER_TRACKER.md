@@ -4,7 +4,7 @@
 and what to do next. Every claim on it is backed by a test or a linked document. If something here
 disagrees with the tests, the tests win, and this page needs fixing.
 
-**Last updated:** 2026-10-01 · **Tests:** 102, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
+**Last updated:** 2026-10-01 · **Tests:** 108, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
 
 ---
 
@@ -27,16 +27,20 @@ That is the community's "OTP-class" verdict, with each piece now tested on canon
 detector (`tools/lpcore/detect.py`, false-positive bound e^−30) tests any named key source. It found none among
 the riddle-derived keys (findings §8). The base-60 grid on scans 66–67 is 184 bytes; it is not the key, and it does
 not decrypt under the book's own keys or hash (findings §12–§13). Title cribs were closed as untestable (findings §9).
+Cicada's published numbers and every OutGuess payload in the repo also fail as keys, from any start phase (findings §16).
 
-**Next actions, in order** (all low prior; detail in [findings §6–§14](reference/findings/lp2_logic_findings_2026-09-29.md)):
+**Next actions, in order** (all low prior; detail in [findings §6–§16](reference/findings/lp2_logic_findings_2026-09-29.md)):
 
-1. **Named wide-alphabet key sources**, each declared first and scored with `detect.log_lr` in the style of
-   `tools/run_stage_i.py`: every mode and shift recorded, pass at 30 nats. Still untested: two-digit groupings of
-   Cicada numbers (the 2012 P.S. number, the 2013–2014 numbers), and OutGuess payloads re-run with drift (the
-   ledger used fixed sync).
-2. **Non-additive per-position alphabets** c = σ_{k_i}(p). These need a detector that does not depend on the
-   plaintext's letter labels (IoC or Dirichlet emissions). Design it before testing anything with it.
-3. **The grid's 184 bytes** are still undeciphered (findings §13).
+1. **Non-additive per-position alphabets** c = σ_{k_i}(p), tested against the named keys already rejected as
+   additive. This needs a detector that does not depend on the plaintext's letter labels. A synthetic check
+   (2026-10-01, not yet a test) bears on its design. Within-class coincidences, with classes being the key's raw
+   values, give z ≈ 86–240 on 12,956 runes **in step**, but nothing at 1 % key desync. So the test can only be an
+   in-step one, with its null taken from offsets of the key rather than from a formula. That is still worth doing:
+   the surviving re-key models (fresh draw, missed hand check) keep the key in step, and every solved LP1 key runs
+   without desync. Declare it first.
+2. **The grid's 184 bytes** are still undeciphered (findings §13).
+3. **More named sources** only with a new primary source: OutGuess output from scans the repo does not hold
+   (community `lp_outguessed/`), or a named generator (catalog row 22). The material on disk is exhausted (§16).
 
 **Before you start anything:** read §4 (ruled out) and §6 (rules of evidence). Plans go in [`TODO.md`](TODO.md).
 
@@ -167,6 +171,10 @@ RANDOM.ORG and RAND archives (~14.5 billion offsets). Both conclude "OTP-class" 
 - **The scan 66–67 base-60 grid as a key** (bytes, 5-bit groups, base-60 digits; 3,132 decodes; findings §12).
 - **Keys made of single decimal digits, hex digits or letters**, in any mode and offset (C13, findings §11). This
   covers π/e digits, the P.S. number, RAND digits, and hash hex read one symbol per rune.
+- **Cicada's numbers and OutGuess payloads as additive keys, from any phase** (stage R, findings §16): the
+  P.S. number (131 and 132 digits) and the 2014 RSA n as digit pairs or triples; the cookies, AN END hash,
+  `page_00` hex, second-onion hex, wisdom/folly hint (both directions) and the three 58,152-byte `.bin` payloads
+  as bytes, mod 29 or by rejection. 43,500 drift-tolerant decodes; best on a real section −50.8 vs +30; controls ≥ +169.
 - The "Echo446Ghq full solution" is debunked ([analysis](reference/community/echo446ghq_analysis.md)).
 
 ### 4.3 Invalid claims from before 2026-09-29
@@ -216,7 +224,8 @@ The ordered list is in §1. These questions are also open and cheap to state:
 
 | Date | What happened | Commits |
 |---|---|---|
-| 2026-10-01 | **Consolidation** (TODO Q): constraint register (findings §0); C3 now a test (all 29 letters excluded); C15, no homophonic substitution (χ² ≥ 4,802); every §3.2 number pinned; `tests/test_docs.py` checks cited names; errata in C3 (75 → 25) and C7 (2.6 → 2.39 %) | this commit |
+| 2026-10-01 | **Cicada numbers and OutGuess payloads** (TODO R): 25 sources × 2 mappings, any start phase (`starts=` prior), 43,500 decodes; none passes (best −50.8 on a real section; controls ≥ +169). `fastdetect` (numpy, tested equal). Synthetic check: a label-free coincidence test has power only in step | `2c209dc` + this commit |
+| 2026-10-01 | **Consolidation** (TODO Q): constraint register (findings §0); C3 now a test (all 29 letters excluded); C15, no homophonic substitution (χ² ≥ 4,802); every §3.2 number pinned; `tests/test_docs.py` checks cited names; errata in C3 (75 → 25) and C7 (2.6 → 2.39 %) | `028ef53` `d8115fd` |
 | 2026-10-01 | **Skip-next rule** (TODO O): C14, the re-keying is not "skip to the next key value" (LLR −21.3; held-out models −20/−32) | `0d4d86b` + this commit |
 | 2026-10-01 | **Grid bytes** (TODO N): 72 byte decryptions and 384 rune readings under LP-native keys; none passes (best 44 % printable, best log LR −4.8) | `14afdff` + this commit |
 | 2026-10-01 | **Base-60 grid** (TODO M): scans 66–67 parse as 184 bytes. As a key (3 readings × 3 modes × 29 shifts × 12 alignments) nothing passes; the power check gives +45…+122 | `4d66364` + this commit |

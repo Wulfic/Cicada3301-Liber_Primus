@@ -44,6 +44,7 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 | The square's numbers on the segment 10 title | 30 | 0 English | `test_segment_10_title_is_not_decoded_by_the_square` |
 | The base-60 grid as a key (stage M) | 3,132 | −5.5 vs +30 | `test_recorded_family_fails` |
 | The grid bytes under LP-native keys (stage N) | 456 | 44 % printable vs 90 %; −4.8 vs +30 | `test_recorded_verdict` |
+| Cicada's numbers and OutGuess payloads, any phase (stage R) | 43,500 | −50.8 vs +30 | `test_recorded_family_is_complete_and_fails` |
 
 ## 1. State of the art (web check, September 2026)
 
@@ -421,3 +422,54 @@ decides (catalog row 3).
   words × 10 / 178 (the share of solved 2-rune words that end in F) gives **25.2**. Observed: 1.
 - C7 said a per-word shift leaves "2.6 %" doublets inside words. The solved plaintext gives **52 / 2,175 = 2.39 %**.
   Against LP2's 63 / 10,060 that is z = −11.6.
+
+## 16. Cicada's own numbers and OutGuess payloads are not the key, from any phase (2026-10-01, TODO stage R)
+
+Declared in `TODO.md` and committed (`2c209dc`) before any LP2 decode. Run: `python -m tools.run_stage_r` (about
+1 hour on 16 cores), rows in [`stage_r_candidates.tsv`](stage_r_candidates.tsv), controls in
+[`stage_r_controls.tsv`](stage_r_controls.tsv). Tests: `tests/test_detect.py` (`TestStageRCicadaNumbers`, and
+`test_fast_detector_equals_the_reference`).
+
+**What is new.** Each source is read **cyclically from an unknown phase**, and the phase is not searched.
+`detect.log_lr(starts=…)` puts a uniform prior on every start, so one decode is the mean LR over all phases. It
+keeps the e^−30 bound per decode and costs at most log 58,152 ≈ 11 nats of power. This covers short sources used
+as a repeating key under drift (C9 reaches only periods ≤ 25 there) and long payloads read from any offset. The
+ledger ran OutGuess payloads in fixed sync only. `tools/lpcore/fastdetect.py` is a numpy version of the same
+forward pass, about 5× faster, and is tested equal to `detect.log_lr`.
+
+**Family.** 25 sources × 2 mappings (`mod` = v mod 29; `reject` = drop v ≥ 29·⌊V/29⌋ first, as a careful pad
+generator would) × 3 modes × 29 shifts × 10 alignments (9 sections, LP2 continuous) = **43,500 decodes**, with a
+false-positive bound of 4.1 × 10⁻⁹.
+
+| Source | Values | Provenance (tier) |
+|---|---|---|
+| 2012 P.S. number, digit pairs (2 phases) and triples (3 phases) | 131 digits → 43–65 | `community_research.md` §2b (community) |
+| The same with a trailing `1` (132 digits) | 43–66 | archived tracker §9.5; unresolved, so both ran |
+| 2014 RSA modulus n, pairs and triples | 130 digits → 42–65 | `people_2014.md`, OutGuess of 1033.jpg (community) |
+| Onion cookies 167 and 761 | 32 bytes each | `community_research.md` §2c (community) |
+| AN END hash | 64 bytes | `keys.an_end_hash` (canonical) |
+| `page_00.txt` signed hex | 991 bytes | `data/outguess/` |
+| 2014 second-onion hex ("Patience is a virtue") | 256 bytes | `people_2014.md` (community) |
+| Wisdom/folly hint, forward and reversed | 3,368 bytes | `data/outguess/`; `wisdom_hint` = `folly_hint`, and `folly_rev_hint` is its exact reverse |
+| `page_17.bin`, `page_21.bin`, `page_43.bin` | 58,152 bytes each | `data/outguess/` |
+
+Some 132-digit variants equal their 131-digit ones, because the extra digit never enters a group. They were run
+anyway as declared, which only makes the bound more conservative.
+
+**Result: nothing passes.**
+
+| Check | Value |
+|---|---|
+| Positive controls (solved text enciphered by each key, keep 0.19, fresh and next re-key, 729 and 3,316 runes) | 200 of 200 ≥ 30; least **+169.1** |
+| Negative controls (same ciphertext, random key of the same length) | 200 of 200 < 30; greatest −60.9 |
+| Best decode on a real section | **−50.8** (`page_17.bin` mod, section 7, beaufort, shift 18) |
+| Best decode on LP2 continuous | −1,479.7 |
+| Best decode overall | +2.4, on the 9-rune section 10 (no power) |
+
+Every source's best on a real section lies between −50.8 and −77.2.
+
+**Reading.** None of the payloads on disk, and none of Cicada's published numbers in pair, triple or byte form,
+is an additive LP2 key. That holds under any mode, shift or start phase, with drift, and per section or
+continuous. This closes tracker §1 item 1 for the material in the repo. Not covered: other mappings of these
+numbers (base conversion, factors, hashes), OutGuess output from scans the repo does not hold (community
+`lp_outguessed/`), and any non-additive use (the label-free detector in tracker §1).

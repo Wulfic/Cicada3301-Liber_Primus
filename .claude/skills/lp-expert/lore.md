@@ -1,6 +1,6 @@
 # Cicada motifs and key-source leads, with status
 
-Snapshot as of 2026-10-01 (C1–C15). **Status comes from tracker §4 and the findings doc. If they disagree with
+Snapshot as of 2026-10-01 (C1–C15, stage R). **Status comes from tracker §4 and the findings doc. If they disagree with
 this file, they win, so update this file.** "Open" means no test in this repo has scored it, not that it is
 promising.
 
@@ -18,7 +18,7 @@ Status legend: **✗ excluded** (by a test or a cited ledger) · **◐ partly** 
 | Fibonacci and spiral reading | scan 32 square = \|3301 − p(F+1)\| | ✗ the square as a key (period 16, C9); Pisano period mod 29 = 14 ✗ |
 | 4×4 square numbers on the segment 10 title | scan 32 | ✗ 0 of 30 decodes give English (§8) |
 | Base-60 grid, 184 bytes | scans 66–67, inside seg 15 | ✗ as a key (§12); ✗ as LP ciphertext or XOR/Vigenère under LP-native keys (§13); **○ what it encodes** |
-| AN END deep-web hash (512-bit) | scan 73; `keys.an_end_hash` | ✗ as a byte key for the grid (§13); the page itself was never found (community) |
+| AN END deep-web hash (512-bit) | scan 73; `keys.an_end_hash` | ✗ as a byte key for the grid (§13); ✗ as a cyclic LP2 key from any phase (§16); the page itself was never found (community) |
 | Instar / emergence / circumference / "within" | 0.1.0.7, PARABLE | thematic only: no falsifiable key proposed |
 | "EITHER THE WORDS OR THEIR NUMBERS" | 0.0.0.8 | word sums ✗ (K-C); other word→number maps ○ |
 | Section sizes 729, 1729, 1021, 3316 | tracker §5 | curiosities; no prediction stated |
@@ -30,13 +30,13 @@ message) before investing in it.
 
 | Lead | Claimed content | Status |
 |---|---|---|
-| 2012 P.S. number | a 131-digit decimal integer (both repo copies agree; `echo446ghq_analysis.md`'s "128-digit" is wrong). Provenance conflicts between docs (2012 end message vs posted with the LP); confirm against a primary source | ◐ one digit per rune ✗ (C13). Two-digit groups, base conversions and factors ○: next action 1 in the tracker |
-| 2013–2014 numbers | various | ○ two-digit groupings, next action 1 |
-| OutGuess payloads | `data/outguess/` (`page_*.txt`, `*.bin`, wisdom/folly hints) | ◐ ledger ran them in fixed sync; **○ with drift** (`detect.log_lr`), next action 1 |
+| 2012 P.S. number | a 131-digit decimal integer (both repo copies agree; `echo446ghq_analysis.md`'s "128-digit" is wrong). Provenance conflicts between docs (2012 end message vs posted with the LP); confirm against a primary source | ✗ one digit per rune (C13); ✗ pairs and triples, both 131- and 132-digit forms, any phase (stage R, findings §16). Base conversions and factors ○ |
+| 2013–2014 numbers | 2014 RSA n (130 digits), second-onion hex (256 bytes), in `people_2014.md` | ✗ pairs, triples, bytes, any phase (§16). Others not on disk ○ |
+| OutGuess payloads | `data/outguess/` (`page_*.txt`, `*.bin`, wisdom/folly hints) | ✗ every payload on disk, as bytes (mod or rejection), any phase, with drift (§16). The three `.bin` are 58,152 random-looking bytes. Scans not on disk ○ |
 | Telnet "primes" output with a gap (73 … 1223 missing) | ? | ○ the gap as an index set or permutation; prime *values* are ✗ |
-| Onion cookies 167 / 761 (reversal pair) with 256-bit hex values | ? | ◐ hex read one digit per rune ✗ (C13); as bytes ○ |
+| Onion cookies 167 / 761 (reversal pair) with 256-bit hex values | ? | ✗ hex digits (C13); ✗ as bytes, any phase (§16) |
 | Trailing-whitespace prime sequences in signed messages | ? | ○ but short, so C9 kills any periodic use |
-| Wisdom / folly files (identical, from `/tmp` on the Cicada ISO) | binary in `data/outguess/` | ○ content undeciphered |
+| Wisdom / folly files (identical, from `/tmp` on the Cicada ISO) | binary in `data/outguess/` | ✗ as a key, both directions (§16); `folly_rev_hint` is the exact reverse; content undeciphered ○ |
 | LFSR or PRNG keystream seeded from Cicada numbers | community §7a | ◐ ledger: common KDFs/PRNGs ✗. A *named* LFSR (taps + seed) ○, and it needs a declared mapping to mod 29 |
 | Public random archives (Bitcoin, NIST Beacon, RANDOM.ORG, RAND) | Dukotah ledger | ✗ ~14.5 billion offsets |
 

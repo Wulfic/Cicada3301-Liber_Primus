@@ -10,8 +10,8 @@ import csv
 import math
 import unittest
 
-from tools import run_stage_i, run_stage_m
-from tools.lpcore import detect, keys, leak, stats
+from tools import run_stage_i, run_stage_m, run_stage_r
+from tools.lpcore import detect, fastdetect, keys, leak, stats
 from tools.lpcore.corpus import load_corpus
 from tools.lpcore.gematria import N, runes_to_indices
 from tools.lpcore.solved import DIVINITY, FIRFUMFERENFE
@@ -57,6 +57,35 @@ class TestDetectorMechanics(unittest.TestCase):
         exact = detect.log_lr(cipher, key, Q, prune=0.0)
         self.assertLessEqual(detect.log_lr(cipher, key, Q, prune=1e-3), exact + 1e-9)
         self.assertAlmostEqual(detect.log_lr(cipher, key, Q), exact, places=6)
+
+    def test_start_prior_is_the_mean_of_single_starts(self) -> None:
+        # Stage R: a uniform prior over starts must equal log(mean LR over those starts), so the bound holds.
+        cipher, key, starts = LP2[2][:120], keys.random_key(300, 11), [0, 5, 17, 40]
+        each = [detect.log_lr(cipher, key, Q, start=s, prune=0.0) for s in starts]
+        top = max(each)
+        mean = top + math.log(sum(math.exp(v - top) for v in each) / len(each))
+        self.assertAlmostEqual(detect.log_lr(cipher, key, Q, starts=starts, prune=0.0), mean, places=6)
+        self.assertAlmostEqual(detect.log_lr(cipher, key, Q, starts=[5]), detect.log_lr(cipher, key, Q, start=5))
+        for bad in ({"starts": []}, {"starts": [1, 1]}, {"starts": [0], "start": 3}):
+            with self.assertRaises(ValueError):
+                detect.log_lr(cipher, key, Q, **bad)
+
+    def test_fast_detector_equals_the_reference(self) -> None:
+        # fastdetect is only a faster route to detect.log_lr; any disagreement means fastdetect is wrong.
+        cipher = LP2[3][:400]
+        for mode in detect.MODES:
+            for shift, key, starts in ((0, keys.random_key(900, 4), [0]), (13, keys.random_key(300, 5), [7]),
+                                       (21, keys.random_key(250, 6), range(250))):      # 250 < 400 + start: runs out
+                with self.subTest(mode=mode, shift=shift):
+                    ref = detect.log_lr(cipher, key, Q, mode=mode, shift=shift, starts=starts)
+                    fast = fastdetect.log_lr(cipher, key, Q, mode=mode, shift=shift, starts=starts)
+                    self.assertAlmostEqual(fast, ref, places=6)
+        plain, key = PLAIN[:500], totient_key(700)
+        hit = keys.encrypt_dodging(plain, key, keep=0.19, seed=9)
+        self.assertAlmostEqual(fastdetect.log_lr(hit, key, Q), detect.log_lr(hit, key, Q), places=6)
+        for bad in ({"starts": []}, {"starts": [2, 2]}, {"mode": "xor"}):
+            with self.assertRaises(ValueError):
+                fastdetect.log_lr(cipher, key, Q, **bad)
 
     def test_fixed_sync_equals_forward_without_drift(self) -> None:
         cipher, key = LP2[1][:200], keys.random_key(200, 3)
@@ -216,6 +245,51 @@ class TestStageMGrid(unittest.TestCase):
                    and r["mode"] == "sub" and r["shift"] == "3")
         key = run_stage_m.grid_keys(CORPUS)["G-B bytes"]
         lr = detect.log_lr(CORPUS.segment_runes(15), key, Q, mode="sub", shift=3)
+        self.assertAlmostEqual(lr, float(row["log_lr_nats"]), places=2)
+
+
+class TestStageRCicadaNumbers(unittest.TestCase):
+    """Verdicts of `python -m tools.run_stage_r` (declared in TODO stage R, commit 2c209dc: pass at 30 nats)."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        with run_stage_r.OUT_PATH.open(encoding="utf-8", newline="") as f:
+            cls.rows = list(csv.DictReader(f, delimiter="	"))
+        with run_stage_r.CONTROLS_PATH.open(encoding="utf-8", newline="") as f:
+            cls.controls = list(csv.DictReader(f, delimiter="	"))
+
+    def test_sources_are_the_declared_ones(self) -> None:
+        raw = run_stage_r.raw_sources(CORPUS)
+        self.assertEqual(len(raw), 25)
+        self.assertEqual((len(run_stage_r.PS_131), len(run_stage_r.PS_132), len(run_stage_r.RSA_N_2014)), (131, 132, 130))
+        sizes = {name: len(values) for name, (values, _) in raw.items()}
+        self.assertEqual([sizes[k] for k in ("cookie-167", "AN-END-hash", "onion-2-hex", "page_00-hex", "hint")],
+                         [32, 64, 256, 991, 3368])
+        self.assertEqual({sizes[f"page_{n}.bin"] for n in (17, 21, 43)}, {58152})
+        folly = run_stage_r.OUTGUESS / "folly_hint.txt"
+        rev = (run_stage_r.OUTGUESS / "folly_rev_hint.txt").read_bytes()
+        self.assertEqual(bytes(raw["hint"][0]), folly.read_bytes())          # wisdom = folly
+        self.assertEqual(bytes(raw["hint-reversed"][0]), rev)                # folly_rev = reversed
+        self.assertEqual(len(run_stage_r.family(CORPUS)), 50)
+
+    def test_every_control_has_power(self) -> None:
+        self.assertEqual(len(self.controls), 50 * 2 * 2)
+        self.assertGreater(min(float(r["positive_log_lr"]) for r in self.controls), 169.0)
+        self.assertLess(max(float(r["negative_log_lr"]) for r in self.controls), -60.0)
+
+    def test_recorded_family_is_complete_and_fails(self) -> None:
+        self.assertEqual(len(self.rows), 25 * 2 * 3 * N * 10)
+        self.assertEqual(len({(r["key"], r["segment"], r["mode"], r["shift"]) for r in self.rows}), len(self.rows))
+        self.assertLess(max(float(r["log_lr_nats"]) for r in self.rows), detect.THRESHOLD)
+        real = [float(r["log_lr_nats"]) for r in self.rows if r["segment"] != "10"]
+        self.assertAlmostEqual(max(real), -50.75, places=2)              # page_17.bin mod, section 7
+
+    def test_a_recorded_row_reproduces_with_the_reference_detector(self) -> None:
+        row = next(r for r in self.rows if r["key"] == "PS131 pairs@0 mod" and r["segment"] == "8"
+                   and r["mode"] == "add" and r["shift"] == "11")
+        key = run_stage_r.family(CORPUS)["PS131 pairs@0 mod"]
+        seg8 = CORPUS.segment_runes(8)
+        lr = detect.log_lr(seg8, run_stage_r.tiled(key, len(seg8)), Q, mode="add", shift=11, starts=range(len(key)))
         self.assertAlmostEqual(lr, float(row["log_lr_nats"]), places=2)
 
 

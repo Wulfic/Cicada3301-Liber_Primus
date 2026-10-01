@@ -90,7 +90,8 @@ additive stream alone cannot make the deficit (C4), so a rule acts at the output
 would-be doublets. The replacement is not "skip to the next key value" (C14). The key is
 near-flat mod 29 and aperiodic (C9). It is not English text in any mapping (C10), and not single digits, hex or
 letters (C13). Its values cannot be chosen by earlier ciphertext alone (C11, C12). It is not primes, φ(primes),
-the solved text's word sums or its rune values (stage I). It is not the base-60 grid (§12). **The open space:**
+the solved text's word sums or its rune values (stage I). It is not the base-60 grid (§12). It is not any Cicada
+number or OutGuess payload in the repo, read as pairs, triples or bytes from any phase (§16). **The open space:**
 a wide-alphabet key from an *unnamed* source scored with `detect.log_lr`, or a non-additive per-position
 alphabet (which needs a label-free detector that has not been built yet).
 

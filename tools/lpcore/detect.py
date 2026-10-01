@@ -62,6 +62,7 @@ def log_lr(
     mode: str = "sub",
     shift: int = 0,
     start: int = 0,
+    starts: Sequence[int] | None = None,
     rho: float = RHO,
     eps: float = EPS,
     prune: float = PRUNE,
@@ -69,6 +70,8 @@ def log_lr(
     """Drift-tolerant log likelihood ratio (nats) that `key` + `shift` decrypts `cipher` in `mode`.
 
     Positions where the key index has run past the end of `key` carry no information (r = 1).
+    `starts` replaces `start` with a uniform prior over several start indices (an unknown key phase or offset).
+    The result is then the log of the mean LR over those starts, so the e^−T bound still holds per call.
     """
     if not 0 <= rho < 0.5:
         raise ValueError("rho must be in [0, 0.5)")
@@ -80,7 +83,16 @@ def log_lr(
     length = len(keyed)
     stay, skip, advance = rho, rho, 1 - 2 * rho
 
-    alpha: dict[int, float] = {start: 1.0}
+    if starts is not None:
+        if start != 0:
+            raise ValueError("pass start or starts, not both")
+        if not starts:
+            raise ValueError("starts must not be empty")
+        alpha: dict[int, float] = {j: 1.0 / len(starts) for j in starts}
+        if len(alpha) != len(starts):
+            raise ValueError("starts must not repeat")
+    else:
+        alpha = {start: 1.0}
     total = 0.0
     for i, c in enumerate(cipher):
         if i:

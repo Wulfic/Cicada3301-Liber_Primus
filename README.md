@@ -21,10 +21,10 @@ A research workspace for the unsolved pages of the Liber Primus, built on logic 
 
 ## Quick start
 
-Python 3.11 or newer, standard library only.
+Python 3.11 or newer. The core is standard library only; `numpy` is needed for `tools/lpcore/fastdetect.py`, stage R and its tests.
 
 ```
-python -m unittest discover -s tests -t . -v      # proves the data and the core are right (102 tests)
+python -m unittest discover -s tests -t . -v      # proves the data and the core are right (108 tests)
 ```
 
 ```python
