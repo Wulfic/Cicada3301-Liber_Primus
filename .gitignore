@@ -71,9 +71,9 @@ data/hillclimb_monitor_*.json
 data/per_page_solutions/
 
 # ─── Large reference files (keep tracked but note size) ──────────────────────
-# data/emerson_essays.txt        # 564 KB — keep tracked
-# data/wordlist.txt              # 4 MB — keep tracked
-# reference/LiberPrimus.pdf      # 55 MB — consider LFS
+# data/corpora/emerson_essays.txt  # 564 KB — keep tracked
+# data/corpora/wordlist.txt        # 4 MB — keep tracked
+# reference/sources/LiberPrimus.pdf # 55 MB — consider LFS
 
 # ─── Local agent / MCP config — CONTAINS CREDENTIALS, NEVER COMMIT ────────────
 # .claude/mcp.vscode-reference.json holds bearer tokens. AGENTS.md is the only tracked

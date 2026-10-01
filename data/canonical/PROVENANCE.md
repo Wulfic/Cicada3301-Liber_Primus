@@ -1,7 +1,7 @@
 # Canonical Liber Primus data — provenance
 
 **This directory is the single source of truth for rune text.** Everything else in the repo
-(`pages/page_XX/runes.txt`, `data/runes_full.txt`, the transcript in `reference/`) is either
+(`pages/page_XX/runes.txt`, `data/archive/legacy_inputs/runes_full.txt`, the transcript in `reference/sources/`) is either
 generated from these files or a legacy copy. Load text through `tools/lpcore/corpus.py`.
 
 | File | Source | Upstream commit | sha256 |
@@ -20,7 +20,7 @@ Downloaded 2026-09-29.
 
 ## Verification performed before adoption (2026-09-29)
 
-- **Rune-for-rune identical** to the repo's older `data/runes_full.txt` on all 57 LP2 rune pages.
+- **Rune-for-rune identical** to the repo's older `data/archive/legacy_inputs/runes_full.txt` on all 57 LP2 rune pages.
   The only differences are ~6 `.`↔`-` separator choices, a few `&`/`$` placements, and the numeric
   grids (4×4 square on LP2 p15, base-60 blocks), which the master includes and `runes_full.txt` omits.
 - The master keeps an **empty page for scan 67** (LP2 page 50, base-60 grid only).

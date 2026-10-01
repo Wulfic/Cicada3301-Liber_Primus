@@ -10,3 +10,6 @@
 *.docx binary
 *.bin  binary
 *.gz   binary
+
+# Binary despite the .txt name (outguess payloads with NUL/CR bytes).
+data/outguess/*_hint.txt binary

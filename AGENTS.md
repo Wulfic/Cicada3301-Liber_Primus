@@ -11,7 +11,7 @@ objection". When something is wrong, say so plainly and fix it.
 |---|---|
 | Rune text (LP1 + LP2) | `data/canonical/liber_primus_master.txt`. Load it **only** through `tools/lpcore/corpus.py` |
 | Proof the data and core are right | `python -m unittest discover -s tests -t . -v` (every solved section must decrypt) |
-| What is known, refuted and open | `MASTER_TRACKER.md` §0, then `reference/lp2_logic_findings_2026-09-29.md` |
+| What is known, refuted and open | `MASTER_TRACKER.md` §0, then `reference/findings/lp2_logic_findings_2026-09-29.md` |
 | Current plan and progress | `TODO.md` |
 | Repo layout | `README.md` |
 
