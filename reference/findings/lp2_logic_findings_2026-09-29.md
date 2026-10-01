@@ -291,3 +291,26 @@ with a false-positive bound of 3 × 10⁻¹⁰.
 
 The only positive scores come from the 9-rune section 10 (at most +4.8), which has no power. What the 184 bytes
 encode is still open. They may be ciphertext under another layer; this stage did not try to decrypt them.
+
+## 13. The grid bytes do not decrypt under LP-native keys (2026-10-01, TODO stage N)
+
+Rules declared in `TODO.md` before the run. Run: `python -m tools.run_stage_n` (3 s), rows in
+[`stage_n_results.tsv`](stage_n_results.tsv). Tests: `tests/test_grid.py`.
+
+**Byte readings: 72 decryptions, none passes.** The operations were XOR, b − k and b + k mod 256, with the grid read
+forward and reversed. The keys, each repeated: the AN END hash (64 bytes, canonical scan 73) and its reverse;
+φ(prime) mod 256 and the primes mod 256; DIVINITY, FIRFUMFERENFE and CIRCUMFERENCE as ASCII in upper and lower
+case; "3301"; and the scan-32 square cells mod 256. A pass needed ≥ 90 % printable ASCII or a file signature.
+The best output is 44.0 % printable, where random bytes give about 38 %, and no output matched a signature.
+Every key/operation pair recovers ASCII text enciphered the same way (positive control).
+
+**Rune readings: 384 decodes, none passes.** The grid was read as LP ciphertext in two ways: bytes mod 29 and
+base-60 digits mod 29, each forward and reversed. Keys: a constant (3 modes × 29 shifts, which covers Caesar,
+atbash and atbash + 3), φ(prime), DIVINITY and FIRFUMFERENFE. The best log LR is −4.8, against a pass mark of 30;
+184 runes of real LP ciphertext under the right φ key scores above 30 (control).
+
+*Caveat recorded:* an OpenPGP header check (a well-formed header whose length fits) still passes 0.17 % of random
+184-byte blocks, about 0.12 expected false hits over 72 decodes. None occurred.
+
+**Reading.** The grid is not LP-style rune ciphertext under any solved-section method, and not a simple XOR or
+Vigenère of ASCII under the book's own keys or hash. Whatever it is needs another key, or more than one layer.

@@ -9,39 +9,7 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-### N — do the grid's 184 bytes decrypt under LP-native keys? (started 2026-10-01)
-
-**Goal.** Tracker §1 item 3. The grid bytes are random-like (6.91 bits per byte; 18 % prime, 49 % even, 52 % with
-the high bit set). Test a short, declared list of LP-native decryptions. No search.
-
-**Declared pass rule.** An output passes if any of these holds:
-- (a) ≥ 90 % of its bytes are printable ASCII (0x20–0x7E, tab, CR, LF). For random bytes P ≈ 0.38 per byte, so
-  the chance is below 10⁻⁵⁰, and multiplicity does not matter.
-- (b) It starts with a known file signature: PNG, JPEG, GIF, gzip, zip, bzip2, PDF, ELF, or OpenPGP armour or packet tags.
-  *Amended before the first run:* a bare OpenPGP tag byte matches 8 of 256 values (3 % per decode, about 4 false
-  passes in 144). An OpenPGP packet now counts only if its header is well formed (old or new format) and its stated
-  body length equals the bytes that follow.
-- (c) For a rune reading, `detect.log_lr` ≥ 30.
-
-**Byte operations.** XOR, b − k and b + k mod 256. Grid read forward and reversed. Each key:
-- **H:** the AN END hash bytes (64, canonical page 73), repeated; also H reversed.
-- **T:** the φ(prime) stream mod 256 (AN END's key) and the primes mod 256.
-- **W:** the ASCII words DIVINITY, FIRFUMFERENFE, CIRCUMFERENCE and 3301, upper and lower case, repeated.
-- **S:** the scan-32 square cells mod 256, in spiral order, repeated.
-
-**Rune readings.** Bytes mod 29 and base-60 digits mod 29, read as LP ciphertext and scored by `detect.log_lr` under:
-a constant key (3 modes × 29 shifts, which includes Caesar, atbash and atbash + 3); the φ(prime) key; DIVINITY; and
-FIRFUMFERENFE.
-
-**Positive controls.** ASCII text encrypted with each byte operation and key must pass (a) after decryption.
-LP plaintext in runes, encrypted as bytes with the φ key, must pass (c).
-
-**Prediction.** Nothing passes.
-
-**Not doing.** Unlisted keys, any optimiser, guessing at multi-layer schemes.
-
-**Blast radius.** `tools/lpcore/keys.py` (hash parser), `tools/run_stage_n.py`, tests, docs.
-**Rollback:** `git revert`.
+*(none. The next research step is MASTER_TRACKER §1, item 1. Plan it here before starting.)*
 
 ## Owner items
 
@@ -55,6 +23,7 @@ LP plaintext in runes, encrypted as bytes with the φ key, must pass (c).
 
 | Date | Stage | Result | Commits |
 |---|---|---|---|
+| 2026-10-01 | **N** grid bytes | Declared first (PGP rule amended before the run). 72 byte decryptions + 384 rune readings under LP-native keys: none passes (best 44 % printable; best log LR −4.8). → findings §13, `tools/run_stage_n.py`, `tests/test_grid.py` | `14afdff` + this |
 | 2026-10-01 | **M** base-60 grid | Declared first. Scans 66–67 = 184 bytes (60a + b ≤ 255). Bytes / 5-bit / digits as a key: 3,132 decodes, none passes (best −5.5 on a real alignment; power check +45…+122). → findings §12, `tools/run_stage_m.py` | `4d66364` + this |
 | 2026-10-01 | **L** key alphabets | Rules and predictions declared first. C13: no decimal-digit (−214), hex (−19.5), letter (−14.3) or English-Latin (−122) key, best of 87 mode/offsets; controls +24…+251. Bytes, 00–99, base 60 untestable this way. → findings §11 | `0c59200` + this |
 | 2026-10-01 | **K** ciphertext-selected alphabets | Rule declared first. C12: off-diagonal lag-L transition χ² flat for L = 1–1000 (best p 3.9e-3 vs 1e-5); calibration conservative; controls χ² 7.6k–14k. Subsumes C11. → findings §10 | `55c78b1` + this |

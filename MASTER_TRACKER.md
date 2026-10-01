@@ -4,7 +4,7 @@
 and what to do next. Every claim on it is backed by a test or a linked document. If something here
 disagrees with the tests, the tests win, and this page needs fixing.
 
-**Last updated:** 2026-10-01 · **Tests:** 80, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
+**Last updated:** 2026-10-01 · **Tests:** 85, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
 
 ---
 
@@ -20,7 +20,8 @@ exact forward algorithm, false-positive bound e^−30 per test). It found none o
 periodic keys are excluded (C9, findings §8). The key is not English text from any source, and the cipher is not
 an autokey on its ciphertext (C10, C11, findings §9). No earlier cipher rune chooses the alphabet, for any secret
 alphabets (C12, findings §10). The key's values are not decimal digits, hex digits or letters (C13, findings §11). The base-60 grid on scans
-66–67 is a 184-byte stream, and it is not the key (findings §12). So the key stream is random-like numbers, which is why
+66–67 is a 184-byte stream. It is not the key, and it does not decrypt under the book's own keys or hash
+(findings §12–§13). So the key stream is random-like numbers, which is why
 title cribs were closed as untestable.
 
 **Next actions, in order** (detail in [findings §6](reference/findings/lp2_logic_findings_2026-09-29.md)):
@@ -30,8 +31,8 @@ title cribs were closed as untestable.
    `detect.log_lr`. Done: the scan 66–67 grid (§12). Still untested: two-digit groupings of Cicada numbers
    (the P.S. number, the 2013–2014 numbers), and OutGuess payloads re-run with drift (the ledger used fixed sync).
    Declare each before running.
-3. **What are the grid's 184 bytes?** They are random-like (6.91 bits per byte). Testing whether they decrypt
-   under LP-native ideas (the totient stream, DIVINITY-style keys, XOR with the hash on AN END) is cheap and new.
+3. ~~**What are the grid's 184 bytes?**~~ Not decrypted by any LP-native key, operation or rune reading
+   (findings §13). Still open.
 2. **Any new key source goes through `detect.log_lr`.** Add it to `tools/run_stage_i.py` style: declared first,
    every mode and shift recorded, pass at 30 nats.
 
@@ -151,6 +152,8 @@ RANDOM.ORG and RAND archives (~14.5 billion offsets). Both conclude "OTP-class" 
 - **Any English running key, plaintext autokey at any lag, ciphertext autokey at lags 2–1000** (C10, C11; findings §9).
   Section-title cribs are closed as untestable without a key model.
 - **Ciphertext-selected alphabets** c_i = σ_{c_{i−L}}(p_i), any σ, L ≤ 1000 (C12, findings §10).
+- **Grid bytes as LP ciphertext or as XOR/Vigenère of ASCII** under the AN END hash, φ(prime), primes, the solved
+  keys as ASCII, or the square's cells (456 readings, findings §13).
 - **The scan 66–67 base-60 grid as a key** (bytes, 5-bit groups, base-60 digits; 3,132 decodes; findings §12).
 - **Keys made of single decimal digits, hex digits or letters**, in any mode and offset (C13, findings §11). This
   covers π/e digits, the P.S. number, RAND digits, and hash hex read one symbol per rune.
@@ -203,6 +206,7 @@ The ordered list is in §1. These questions are also open and cheap to state:
 
 | Date | What happened | Commits |
 |---|---|---|
+| 2026-10-01 | **Grid bytes** (TODO N): 72 byte decryptions and 384 rune readings under LP-native keys; none passes (best 44 % printable, best log LR −4.8) | `14afdff` + this commit |
 | 2026-10-01 | **Base-60 grid** (TODO M): scans 66–67 parse as 184 bytes. As a key (3 readings × 3 modes × 29 shifts × 12 alignments) nothing passes; the power check gives +45…+122 | `4d66364` + this commit |
 | 2026-10-01 | **Key alphabets** (TODO L): C13, the key is not decimal digits (−214), hex (−19.5) or letters (−14.3; English Latin −122); bytes, digit pairs and base 60 are untestable this way | `0c59200` + this commit |
 | 2026-10-01 | **Ciphertext-selected alphabets** (TODO K): C12, no lag 1–1000 transition table carries plaintext structure, for any secret alphabets | `55c78b1` + this commit |
