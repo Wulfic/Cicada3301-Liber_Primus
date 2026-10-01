@@ -54,6 +54,11 @@ offset. Would-be doublets are re-keyed with a fresh value and leak 19 % of the t
 - **Outputs (to be written):** a stage V runner (`--quick`: gates only, never scores LP2), a stage V results TSV
   (gate rows, per-family counts, and every member not excluded), new `quagmire` helpers (keyed alphabets,
   vectorised best LLR), and a keyword-alphabets test module.
+- **Amendment to the outputs only (before LP2 was scored).** About 90 % of the letters A–Z members are untestable,
+  so "a row for every member not excluded" could mean ~10⁵ rows. Member rows are now written for every *testable*
+  member not excluded and for every lead. Untestable members that are not excluded are counted per family. The
+  runner is deterministic, so the full per-member table is reproducible. Family, statistic, thresholds and gates
+  are unchanged. The `--quick` run (5 ciphers; never scores LP2) passed G1 and G2 before this commit.
 
 **Not doing:** other keyed-alphabet constructions (continuing after the keyword's last letter, columnar-mixed),
 26-letter Latin keyword alphabets, per-section alphabets, keys with dependent values, named key streams in step,

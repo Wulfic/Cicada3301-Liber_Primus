@@ -11,6 +11,9 @@ Two key-independent handles survive the relabelling:
   averaged over the plaintext's differences, so it lies in the same interval for any π and any plaintext.
 * **Flatness (C18).** The cipher marginal is π₂(π₁q ⊛ π₃b). If π₁ is uniformly random, E|â(f)|² = (29Σq² − 1)/28
   at every f ≠ 0, so E[λ] = n·(29Σq² − 1)(29Σb² − 1)/28 for any b. Each draw's λ is computed exactly.
+
+With **named** alphabets (stage V) π₂ is known, so the labels come back and C13's labelled unigram LLR applies to each
+member exactly (`keyed_alphabet`, `log_models`, `best_llr`).
 """
 
 from __future__ import annotations
@@ -152,3 +155,72 @@ def family_p(chi2: float, df: int, lams: np.ndarray, chunk: int = 2000, floor: f
         if part.max() < floor:
             break
     return total / ordered.size
+
+
+# --- Stage V: named keyword alphabets, labelled ------------------------------------------------------------------
+
+MODE_SIGNS = {"sub": (1, 1), "add": (1, -1), "beaufort": (-1, 1)}   # (s, t) in c = π₂(s·π₁(p) + t·π₃(k) + a)
+
+
+def keyed_alphabet(word: Sequence[int]) -> list[int]:
+    """The keyword's distinct runes in order of first use, then the remaining runes in Gematria order."""
+    if any(not 0 <= r < N for r in word):
+        raise ValueError("keyword runes must be indices 0..28")
+    out = list(dict.fromkeys(word))
+    return out + [r for r in range(N) if r not in out]
+
+
+def inverse(perm: Sequence[int]) -> list[int]:
+    if sorted(perm) != list(range(N)):
+        raise ValueError("not a permutation of 0..28")
+    out = [0] * N
+    for i, v in enumerate(perm):
+        out[v] = i
+    return out
+
+
+def log_models(q: Sequence[float], b: Sequence[float], alphabets: np.ndarray) -> np.ndarray:
+    """log(29·r₀) for every (π₁, π₃, mode), shape (A·A, 3, 29), row π₁·A + π₃, modes in MODE_SIGNS order.
+
+    r₀(x) = P(s·π₁(p) + t·π₃(k) = x) for p ~ q and k ~ b independent. The offset a and π₂ are applied by `best_llr`.
+    With identity alphabets this is `stats.cipher_distribution` at shift 0.
+    """
+    qa, ba = np.asarray(q, dtype=float), _distribution(b)
+    if qa.shape != (N,) or not math.isclose(qa.sum(), 1.0, abs_tol=1e-9) or qa.min() <= 0:
+        raise ValueError("q must be a strictly positive distribution over 29 runes")
+    na = len(alphabets)
+    rows = np.arange(na)[:, None]
+    av = np.zeros((na, N))
+    bv = np.zeros((na, N))
+    av[rows, alphabets] = qa                   # π₁q: letter p lands on π₁(p)
+    bv[rows, alphabets] = ba
+    neg = (-np.arange(N)) % N
+    out = np.empty((na * na, len(MODE_SIGNS), N))
+    for m, (s, t) in enumerate(MODE_SIGNS.values()):
+        fa = np.fft.fft(av if s > 0 else av[:, neg], axis=1)
+        fb = np.fft.fft(bv if t > 0 else bv[:, neg], axis=1)
+        r = np.real(np.fft.ifft(fa[:, None, :] * fb[None, :, :], axis=2)).reshape(na * na, N)
+        out[:, m, :] = np.log(N * r)           # r > 0: q is strictly positive and b sums to 1
+    return out
+
+
+def best_llr(models: np.ndarray, counts: np.ndarray, alphabets: np.ndarray,
+             budget: int = 20_000_000) -> np.ndarray:
+    """Best `stats.unigram_llr` over mode × offset for every member, shape (C, A·A, A), last axis π₂.
+
+    LLR(a) = Σ_x O[π₂(x)]·log(29·r₀(x − a)), since c = π₂(x). `counts` is (C, 29), one row per cipher.
+    """
+    counts = np.atleast_2d(np.asarray(counts, dtype=float))
+    if counts.shape[1] != N or models.shape[1:] != (len(MODE_SIGNS), N):
+        raise ValueError("best_llr: bad shapes")
+    relabelled = counts[:, alphabets]                                 # (C, A, 29): O[π₂(x)]
+    shift = (np.arange(N)[None, :] - np.arange(N)[:, None]) % N      # [a, x] → x − a
+    rhs = relabelled.reshape(-1, N).T                                 # (29, C·A)
+    step = max(1, budget // (len(MODE_SIGNS) * N * rhs.shape[1]))
+    parts = []
+    for start in range(0, len(models), step):
+        circ = models[start:start + step][:, :, shift]                 # (m, 3, 29a, 29x)
+        llr = circ.reshape(-1, N) @ rhs                                 # (m·87, C·A)
+        llr = llr.reshape(-1, len(MODE_SIGNS) * N, counts.shape[0], len(alphabets)).max(axis=1)
+        parts.append(llr.transpose(1, 0, 2))
+    return np.concatenate(parts, axis=1)
