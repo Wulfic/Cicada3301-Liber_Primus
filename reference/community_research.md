@@ -223,3 +223,29 @@ Factor the 131-digit P.S. number to see if it yields prime factors useful as cip
 5. **Get the outguess data** from rtkd/iddqd for ALL unsolved pages
 6. **The F-skip mechanism** from solved pages might still apply
 7. **Consider transposition BEFORE substitution** — the flat frequency alone doesn't rule out a transposition layer followed by a stream cipher
+
+---
+
+## 10. 2026-09-29 update — state of the art, and corrections to §9
+
+**Nobody has solved it.** Two public 2026 analyses supersede much of this file. Details and the
+logic-only results derived on our canonical data are in
+[`lp2_logic_findings_2026-09-29.md`](lp2_logic_findings_2026-09-29.md).
+
+- [Leo-Y-Zhang/LiberPrimusAnalysis](https://github.com/Leo-Y-Zhang/LiberPrimusAnalysis) —
+  the only structure in the 12,956 unsolved runes is a doublet deficit: 86 observed vs 447
+  expected, z = −17. Excluded, each with a positive control: periodic keys (±F-interrupter),
+  46 integer sequences (raw and chain), autokeys, prime feedback, Cicada running keys, shared keys, digraphic.
+- [Dukotah/cicada3301](https://github.com/Dukotah/cicada3301) — "OTP-class, not unsolvable".
+  Excluded: about 200 key texts, KDFs and PRNGs, and public random archives. Open: short-seed keystreams.
+
+**Corrections to §9, from our own tests** (`python -m unittest discover -s tests -t . -v`):
+- §9.3: single-rune words do NOT give known plaintext at a fixed key position once a skip rule
+  desynchronises the stream. They still constrain the plaintext (A or I), not the key.
+- §9.6: **the F-skip mechanism does not apply in LP2.** ᚠ is flat (458 vs 447 expected).
+  Passthrough would add about 190 extra ᚠ.
+- §9.2/§9.4: prime-based streams, including φ(prime), Fibonacci-prime and spiral orders, all
+  predict 3.2–3.6 % doublets on LP-English. Observed: 0.66 %. A stream alone cannot be the cipher;
+  there must be an output rule on top.
+- §9.7: a transposition before a stream cipher cannot create a lag-1 doublet deficit either.
+  The deficit lives in the final output.

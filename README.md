@@ -27,8 +27,8 @@ Active research workspace for decrypting the Liber Primus. All progress, keys, f
 │       └── images/            # Page scans & enhanced images
 │
 ├── data/                      # Corpus, keys, derived data
+│   ├── canonical/             # ★ canonical rune text + translation (source of truth, see PROVENANCE.md)
 │   ├── gematria_primus.md     # 29-char runic alphabet & values
-│   ├── verified_keys.json     # Hill-climbed keys (71/83 alternation pattern)
 │   ├── runes_full.txt         # Concatenated runes (all pages)
 │   ├── self_reliance.txt      # Emerson — referenced in solved text
 │   ├── emerson_essays.txt     # Full Emerson corpus
@@ -39,7 +39,7 @@ Active research workspace for decrypting the Liber Primus. All progress, keys, f
 │   ├── folly_rev_hint.txt     # Outguess hint (folly reversed)
 │   ├── wisdom_hint.txt        # Outguess hint (wisdom)
 │   ├── outguess/              # 5 outguess-extracted messages
-│   └── runeglish/             # 68 runeglish transliterations
+│   └── archive/hillclimbers/  # LEGACY hill-climb outputs on misaligned data — not evidence (see its README)
 │
 ├── reference/                 # Community research & external docs
 │   ├── community_research.md  # Wiki/Reddit/GitHub findings
@@ -52,26 +52,31 @@ Active research workspace for decrypting the Liber Primus. All progress, keys, f
 │   ├── RuneSolver.py          # Community rune solver tool
 │   └── ...                    # IRC logs, cuneiform ref, images, etc.
 │
+├── tests/                     # unittest suite: python -m unittest discover -s tests -t . -v
+│
 └── tools/                     # Python scripts
-    ├── batch_solver.py        # Multi-page batch attack
-    ├── generate_runeglish.py  # Rune → runeglish transliteration
-    ├── populate_runes.py      # Extract runes from page images
-    ├── solve_p61_p62.py       # F-skip breakthrough solver
-    └── translate_runes.py     # Rune ↔ English translation
+    ├── lpcore/                # ★ tested core: corpus loader, gematria, deterministic ciphers, verifier
+    ├── rebuild_page_files.py  # regenerates pages/page_XX/{runes.txt,README.md} (dry-run default)
+    └── legacy/                # 107 pre-2026-09-29 scripts, untested, read misaligned data (see its README)
 ```
 
 ## Liber Primus Status
 
-| Category | Pages | Count | Notes |
-|----------|-------|-------|-------|
-| ✅ **Solved** | 01, 03–17, 55–58, 59–64, 67–68, 71–74 | 32 | Confirmed readable English / Old English plaintext |
-| ⚠️ **Partial** | 00, 02, 18, 19 | 4 | P00: Old English; P02: key 43, fragments; P18/P19: key partially recovered |
-| 🟡 **Partial** | 20 | 1 | 166 prime-index runes decoded; 646 non-prime runes still scrambled |
-| 🔴 **High IoC** | 21–30 | 10 | P63 keywords applied → IoC 1.86–2.31, but text unreadable (transposition layer remains) |
-| 🔴 **Caesar layer** | 31–54 | 24 | Caesar shifts identified, IoC ~1.0, additional cipher layer unsolved |
-| 📄 **Image / Special** | 65–66, 69–70 | 4 | No standard rune ciphertext; P65 has a grid (11 × 11) |
+Page folders are keyed by **scan number**: `pages/page_XX/` holds `images/XX.jpg` and the runes on that scan.
+Status is **asserted by tests** (`python -m unittest discover -s tests -t . -v`), not claimed.
 
-> **Note:** Many per-page READMEs contain incorrect "SOLVED" labels from hill-climbing that produced gibberish. Always trust MASTER_TRACKER.md over individual page READMEs.
+| Scans (`page_XX`) | Book | Content | Status |
+|---|---|---|---|
+| 00, 02 | LP1 | title pages | no runes |
+| 01, 03–16 | LP1 | A WARNING · WELCOME · SOME WISDOM · A KOAN · AN INSTRUCTION · THE LOSS OF DIVINITY · A KOAN · AN INSTRUCTION | ✅ solved (all reproduced from canonical runes) |
+| 17–66, 68–72 | LP2 p0–55 | 9 sections, 12,956 runes | 🔴 **unsolved** |
+| 67 | LP2 p50 | base-60 grid | no runes |
+| 73 | LP2 p56 | AN END (φ(prime) stream) | ✅ solved |
+| 74 | LP2 p57 | PARABLE (plaintext) | ✅ solved |
+
+> **2026-09-29 correction:** before this date the page files did not match their scans (`page_N` held LP2 page N),
+> and many "discoveries" in older notes were artifacts of that or of hill-climbing. See **§0 of MASTER_TRACKER.md**.
+> Canonical text: [`data/canonical/`](data/canonical/PROVENANCE.md) · tested core: [`tools/lpcore/`](tools/lpcore/__init__.py).
 
 ---
 
