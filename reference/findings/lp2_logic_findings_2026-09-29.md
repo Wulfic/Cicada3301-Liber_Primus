@@ -88,9 +88,8 @@ per-section rates. Promote it to a test before building on them.
 2. ~~**Key-source riddles not in either community ledger.**~~ **Done 2026-10-01, see §8.** The prime family,
    word sums and plaintext values all fail under a drift-tolerant detector. Periodic keys are excluded (C9). The
    square does not decode the segment 10 title.
-3. **Section titles** are short, structured, and one of them is "A" + 9 runes. Crib ideas must
-   state their prediction for the *key* fragment (e.g. "reads as English" for a running key)
-   before running.
+3. ~~**Section titles.**~~ **Closed 2026-10-01, see §9.** A crib is falsifiable only under a key model, and the
+   "reads as English" model is excluded on the whole text by C10.
 
 ## 7. The doublet leak, characterised (2026-10-01, TODO stage H)
 
@@ -173,3 +172,44 @@ enciphered the same way. Chance rate, measured first: 0 of 20,000 random keys pa
 **Reading.** Prime-based streams, with or without drift and in every mode and shift, are not the LP2 key. Nor are
 the solved text's word sums or rune values. Periodic keys are gone. What is left are long, aperiodic keys from
 a source nobody has named, or a non-additive cipher.
+
+## 9. What the key's own statistics must be (2026-10-01, TODO stage J)
+
+Rules declared in `TODO.md` before the run. Functions: `stats.running_key_distribution`, `stats.unigram_llr`,
+`stats.lag_combination_chi2`. Tests: `tests/test_keyspace.py`. Neither result needs a key.
+
+**C10: the key is not English text, from any source.** Let c = p + k (sub), p − k (add) or k − p (beaufort), with p
+and k both English. Then c's rune distribution is the convolution or correlation r of two English unigrams, and r
+is not flat. Before looking at LP2 the prediction was IoC(r) = 1.054 for key letters used as values, and 1.042
+for key letters mapped to their prime values or φ of those, mod 29. That is a χ² excess of about 550–700 on
+12,956 runes, against the observed χ² of 26.4 on 28 df (C2). The test is LLR = Σ_c O_c · log(29 r_c), taking the
+most favourable of the 29 constant key offsets. The hypothesis is excluded at LLR ≤ −10.
+
+| Key letters as | λ = 1 (English key) | λ = 0.5 | λ = 0.25 (only a quarter English-like) |
+|---|---|---|---|
+| letters (values 0–28) | −333 / −287 / −287 | −75 / −68 / −68 | −15.7 / −14.4 / −14.4 |
+| prime values mod 29 | −255 / −273 / −268 | −121 / −124 / −121 | −83 / −80 / −79 |
+| φ(prime values) mod 29 | −255 / −273 / −268 | −121 / −124 / −121 | −83 / −80 / −79 |
+
+Columns give sub / add / beaufort. The key distribution in each column is λ·English + (1 − λ)·uniform. **All
+27 are excluded.** Positive controls: on 2,901 runes, the solved text enciphered with itself as a running key
+scores +70 (+74 with prime values); a random key scores −62. A true English running key would score about +300
+on LP2. Prime values mod 29 are not a permutation (31 ≡ 2, and so on), so a key made of prime values is uneven
+*whatever the text*; that is why those rows stay negative even at λ = 0.25.
+
+Consequences:
+- No running key from any English text, public or not, in these three mappings. This covers Dukotah's
+  "public but unswept pad" item whenever the pad is English text.
+- No plaintext autokey at any lag, since its key is the plaintext itself.
+- The key stream's values mod 29 must be close to flat: random-like numbers, not text.
+
+**C11: no autokey on the ciphertext, at any lag 2–1000.** Under c_i = p_i ± c_{i−L}, the lag-L difference or sum
+of the ciphertext *is* the plaintext, so its histogram would be English. Across 1,998 tests (lags 2–1000 ×
+difference and sum), none is flagged. The best is lag 880, difference, χ² = 58.9 on 28 df, p = 5.6 × 10⁻⁴,
+against the declared threshold of 5.0 × 10⁻⁶. Positive controls (an autokey at L = 7 and L = 500, both signs)
+give χ² ≈ 7,000–10,000. The Leo-Y-Zhang ledger covered lags 1–60; L1 already covers the lag-1 difference.
+
+**Title cribs are closed as untestable.** Against a key with no model, any crib yields *some* key fragment, so a
+crib alone cannot fail. The only declared model for a fragment was "it reads as English", and C10 tests that on
+all 12,956 runes at once, with far more power than a 10-rune title. A crib becomes testable again only together
+with a concrete key-source hypothesis, and then `detect.log_lr` scores the whole section anyway.
