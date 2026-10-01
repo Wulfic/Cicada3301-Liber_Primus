@@ -2,11 +2,13 @@
 
 C10: the key is not English text (any text), as letters, prime values or φ(prime values), in any mode and shift.
 C11: the cipher is not an autokey on its own ciphertext at any lag 2–1000.
+C12: no earlier ciphertext rune (lag 1–1000) chooses the alphabet, c_i = σ_{c_{i−L}}(p_i), for any σ.
 Each verdict pins the observed numbers; each statistic has a positive control.
 """
 
 from __future__ import annotations
 
+import random
 import unittest
 from collections import Counter
 
@@ -26,6 +28,20 @@ MAPPINGS = {
 }
 C10_EXCLUDE = -10.0                 # nats, declared
 C11_BONFERRONI = 0.01 / 1998        # lags 2..1000 × (difference, sum), declared
+C12_LAGS = range(1, 1001)
+C12_BONFERRONI = 0.01 / len(C12_LAGS)
+
+
+def split_like_lp2(stream: list[int]) -> list[list[int]]:
+    out, j = [], 0
+    for s in LP2:
+        out.append(stream[j:j + len(s)])
+        j += len(s)
+    return out
+
+
+def c12_p(streams: list[list[int]], lag: int) -> float:
+    return stats.chi2_sf_wilson_hilferty(*stats.transition_chi2(streams, lag))
 
 
 def counts(stream: list[int]) -> list[int]:
@@ -96,6 +112,40 @@ class TestC11CiphertextAutokey(unittest.TestCase):
         self.assertGreater(p, C11_BONFERRONI)                                 # verdict: nothing flagged
         self.assertEqual((lag, sign), (880, -1))
         self.assertAlmostEqual(p, 5.59e-4, delta=0.01e-4)
+
+
+class TestC12CiphertextSelectedAlphabets(unittest.TestCase):
+    def test_wilson_hilferty(self) -> None:
+        self.assertAlmostEqual(stats.chi2_sf_wilson_hilferty(783.0, 783), 0.5, delta=0.01)
+        # Agrees with the exact even-df tail where both apply.
+        for x in (700.0, 800.0, 900.0):
+            self.assertAlmostEqual(stats.chi2_sf_wilson_hilferty(x, 782), leak.chi2_sf_even_df(x, 782), delta=2e-3)
+
+    def test_calibration_on_random_streams(self) -> None:
+        # Declared: about 1 % of lags at p < 0.01 (allowed 0–3 %), none flagged. Observed 0.2 %: conservative.
+        ps = [c12_p(split_like_lp2(keys.random_key(sum(map(len, LP2)), 101)), lag) for lag in C12_LAGS]
+        self.assertLessEqual(sum(p < 0.01 for p in ps) / len(ps), 0.03)
+        self.assertGreater(min(ps), C12_BONFERRONI)
+
+    def test_positive_controls(self) -> None:
+        plain = (PLAIN * 5)[:sum(map(len, LP2))]
+        for lag in (1, 500):
+            rng = random.Random(lag)
+            sigma = [rng.sample(range(N), N) for _ in range(N)]
+            c = keys.random_key(lag, lag)
+            for i in range(lag, len(plain)):
+                c.append(sigma[c[i - lag]][plain[i]])
+            with self.subTest(lag=lag):
+                self.assertLess(c12_p(split_like_lp2(c), lag), C12_BONFERRONI)
+
+    def test_no_ciphertext_selected_alphabet(self) -> None:
+        p, lag = min((c12_p(LP2, lag), lag) for lag in C12_LAGS)
+        self.assertGreater(p, C12_BONFERRONI)                                   # verdict: nothing flagged
+        self.assertEqual(lag, 142)
+        self.assertAlmostEqual(p, 3.92e-3, delta=0.01e-3)
+        chi2, df = stats.transition_chi2(LP2, 1)
+        self.assertEqual(df, 783)
+        self.assertAlmostEqual(chi2, 785.5, delta=0.1)                          # lag 1 off the diagonal: flat
 
 
 if __name__ == "__main__":

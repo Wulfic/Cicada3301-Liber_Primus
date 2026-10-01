@@ -168,3 +168,40 @@ def lag_combination_chi2(streams: Sequence[Sequence[int]], lag: int, sign: int) 
         raise ValueError("lag_combination_chi2: no pairs at this lag")
     chi2 = sum((o - pairs * e) ** 2 / (pairs * e) for o, e in zip(observed, expected))
     return chi2, pairs
+
+
+def chi2_sf_wilson_hilferty(x: float, df: int) -> float:
+    """P(χ²_df ≥ x) by the Wilson–Hilferty cube-root normal approximation (good for df in the hundreds)."""
+    if df <= 0:
+        raise ValueError("df must be positive")
+    z = ((x / df) ** (1 / 3) - (1 - 2 / (9 * df))) / math.sqrt(2 / (9 * df))
+    return 0.5 * math.erfc(z / math.sqrt(2))
+
+
+def transition_chi2(streams: Sequence[Sequence[int]], lag: int) -> tuple[float, int]:
+    """(Pearson χ², df) that the rune at i is independent of the rune at i − lag, diagonal cells excluded (C12).
+
+    Under c_i = σ_{c_{i−lag}}(p_i) every row is a permuted plaintext distribution, so χ² is far above df.
+    E_xy = R_x · f_y / (1 − f_x): row x's off-diagonal total spread by the pooled frequencies f.
+    """
+    if lag < 1:
+        raise ValueError("lag must be >= 1")
+    freq: Counter[int] = Counter()
+    for s in streams:
+        freq.update(s)
+    n = sum(freq.values())
+    f = [freq[r] / n for r in range(N)]
+    table = [[0] * N for _ in range(N)]
+    for s in streams:
+        for a, b in zip(s, s[lag:]):
+            table[a][b] += 1
+    chi2 = 0.0
+    for x in range(N):
+        row = sum(table[x]) - table[x][x]
+        if row == 0:
+            raise ValueError(f"transition_chi2: empty row {x} at lag {lag}")
+        for y in range(N):
+            if y != x:
+                e = row * f[y] / (1 - f[x])
+                chi2 += (table[x][y] - e) ** 2 / e
+    return chi2, N * (N - 2)
