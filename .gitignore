@@ -76,13 +76,27 @@ data/per_page_solutions/
 # reference/sources/LiberPrimus.pdf # 55 MB — consider LFS
 
 # ─── Local agent / MCP config — CONTAINS CREDENTIALS, NEVER COMMIT ────────────
-# .claude/mcp.vscode-reference.json holds bearer tokens. AGENTS.md is the only tracked
-# agent-facing file; agent memory, skill trees and local agent config stay in this checkout.
+# .claude/mcp.vscode-reference.json holds bearer tokens. Tracked agent files: AGENTS.md,
+# CLAUDE.md and .claude/skills/ (the skills this repo enables). Everything else under
+# .claude/, agent memory and local agent config stay in this checkout.
 .mcp.json
-.claude/
+.claude/*
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/build-run/
+!.claude/skills/debug-errors/
+!.claude/skills/git-github/
+!.claude/skills/guard-destructive/
+!.claude/skills/lp-attack/
+!.claude/skills/lp-claim-audit/
+!.claude/skills/lp-expert/
+!.claude/skills/plan-work/
+!.claude/skills/recall-session/
+!.claude/skills/save-memory/
+.claude/mcp.vscode-reference.json
+.claude/settings.local.json
 .github/skills/
 .github/copilot-instructions.md
-CLAUDE.md
 .agent/
 .env
 .env.*
