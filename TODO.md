@@ -9,7 +9,57 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-*(none. The next research step is MASTER_TRACKER §1, item 1. Plan it here before starting.)*
+### V — Quagmire with named keyword alphabets, labelled (2026-10-01)
+
+**Goal.** MASTER_TRACKER §1 item 1. Stage U treated the alphabets of c = π₂(π₁(p) + π₃(k)) as random, and a uniform
+A–Z key was untestable there. Here every alphabet is **named**, from a declared list of LP keywords. Naming π₂ gives
+back the labels, so C13's own statistic (labelled unigram LLR against flat, best over mode × offset) applies exactly
+to each member. It is stronger than the label-free χ²: on flat data E[LLR] ≈ −λ/2 with sd ≈ √λ.
+
+**Model:** c_i = π₂(s·π₁(p_i) + t·π₃(k_i) + a), with k_i iid from family b and independent of the plaintext. Mode
+sub is (s, t) = (+, +), add is (+, −), beaufort is (−, +), as in `stats.cipher_distribution`. a ∈ Z₂₉ is the constant
+offset. Would-be doublets are re-keyed with a fresh value and leak 19 % of the time (`quagmire.encrypt`).
+- **Keywords (declared, 34):** the solved keys DIVINITY and FIRFUMFERENFE (literal runes, `solved.py`), and
+  CIRCUMFERENCE. The solved section titles: A WARNING, WELCOME, WISDOM, SOME WISDOM, KNOW THIS, A KOAN, AN
+  INSTRUCTION, THE LOSS OF DIVINITY, AN END, PARABLE. Every distinct word of the PARABLE plaintext: LIKE, THE,
+  INSTAR, TUNNELING, TO, SURFACE, WE, MUST, SHED, OUR, OWN, CIRCUMFERENCES, FIND, (DIVINITY), WITHIN, AND, EMERGE.
+  And LIBER PRIMUS, PRIMUS, CICADA, PRIMES, TOTIENT. Multi-word keywords are written without spaces. A word becomes
+  runes by `gematria.spellings_of(word)[0]`, the greedy longest-match spelling (THE → ᚦᛖ).
+- **Alphabets A:** the identity, plus each keyword's keyed alphabet K (its distinct runes in order, then the rest in
+  Gematria order) and its inverse K⁻¹ (Quagmire places letters by position, so both roles occur). Duplicate
+  permutations are collapsed. Prototype count: 68.
+- **Family:** every triple (π₁, π₂, π₃) ∈ A³ (Quagmire I–IV are subsets), so 314,432 members per key family. Each
+  member's free parameters are mode × offset (87), as in C13.
+- **Key families b (stage U's six):** English as runes, English as prime values mod 29, English as Latin A–Z,
+  decimal digits, hex digits, uniform letters A–Z. Values are 0…V−1 before π₃, as in stages L and U.
+- **Statistic:** best over 87 of `stats.unigram_llr` on the pooled LP2 counts (segments 7–15, 12,956 runes), with
+  model r = π₂(π₁q ⊛ π₃b) and q = `detect.unigram` of the solved plaintext (C13's q).
+- **Exclude** a member if its best LLR ≤ −10 (C13's line). **Not excluded** otherwise. **Lead** if ≥ +10: that is
+  only a marginal fit, so it would need its own declared key test.
+- **Error bound.** For the true member, P(LLR at its true mode and offset ≤ −10) ≤ e^−10 (Markov on the reverse
+  ratio), and the best over 87 can only be higher. At most one member is true, so the chance of excluding it is
+  ≤ e^−10 ≈ 4.5 × 10⁻⁵ whatever the family size. G1 checks this holds under dodging.
+- **G1 calibration (void rule):** 300 synthetic ciphers (50 per key family) at 12,956 runes, from word-shuffled
+  solved plaintext, keep 0.19. Each uses a seeded random member, mode and offset. If any is excluded by its own
+  member, the run is **VOID**.
+- **G2 power, per member:** 20 flat-key synthetic ciphers (keep 0.19). A member is **testable** if the rule excludes
+  it on ≥ 18 / 20; otherwise it is recorded as **untestable** whatever LP2 gives.
+- **Model-only facts seen before this declaration** (scratch script; synthetic only, LP2 never read): the vectorised
+  LLR equals `stats.cipher_distribution` + `unigram_llr` on the identity triple (9.966042797 both). The share of
+  members testable is 100 % for English (3 forms) and digits, 99.3 % for hex, and **10.6 % for uniform letters
+  A–Z** (median flat best −9.6). The worst own-member score in 120 synthetic ciphers was +9.2 (letters A–Z).
+- **Expected if the constraints extend:** every testable member excluded in all six families, so English, digits
+  and hex are out under every named keyword alphabet. For letters A–Z, about 1 in 10 members excluded and the rest
+  untestable. The identity triple must reproduce C13's −14.3 (letters A–Z), −19.5 (hex) and −214.3 (digits).
+- **Outputs (to be written):** a stage V runner (`--quick`: gates only, never scores LP2), a stage V results TSV
+  (gate rows, per-family counts, and every member not excluded), new `quagmire` helpers (keyed alphabets,
+  vectorised best LLR), and a keyword-alphabets test module.
+
+**Not doing:** other keyed-alphabet constructions (continuing after the keyword's last letter, columnar-mixed),
+26-letter Latin keyword alphabets, per-section alphabets, keys with dependent values, named key streams in step,
+adversarial alphabets. **Rejected:** the label-free flatness χ² per (π₁, π₃). It ignores π₂, so it covers more
+ciphers, but it has less power, and the family here names π₂ anyway.
+**Blast radius:** additive. New helpers, runner, TSV, tests and docs. **Rollback:** `git revert` the stage commits.
 
 ## Owner items
 
