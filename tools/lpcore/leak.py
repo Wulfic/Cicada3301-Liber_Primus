@@ -117,6 +117,22 @@ def poisson_sf(k: int, lam: float) -> float:
     return min(1.0, total)
 
 
+def poisson_cdf(k: int, lam: float) -> float:
+    """P(X ≤ k) for X ~ Poisson(lam), summed downward from k so a tiny lower tail is not lost to 1 − sf."""
+    if k < 0:
+        return 0.0
+    if lam == 0.0:
+        return 1.0
+    term = math.exp(-lam + k * math.log(lam) - math.lgamma(k + 1))
+    total = 0.0
+    for j in range(k, -1, -1):
+        total += term
+        term *= j / lam
+        if j < lam and term < total * 1e-17:
+            break
+    return min(1.0, total)
+
+
 def chi2_sf_even_df(x: float, df: int) -> float:
     """P(χ²_df ≥ x) in closed form; df must be even."""
     if df <= 0 or df % 2:
@@ -208,6 +224,61 @@ def dispersion_index(pairs: Sequence[Pair], window: int) -> float:
     mean = sum(counts) / len(counts)
     var = sum((c - mean) ** 2 for c in counts) / (len(counts) - 1)
     return var / mean
+
+
+# --- C3: do the survivors mark one plaintext letter? (TODO stage Q) ------------------------------
+#
+# Under c_i = c_{i−1} + (p_i − x)·k_i with k_i ≠ 0 (mod 29), c_i = c_{i−1} exactly where p_i = x. The doublets would
+# then sit where the letter x sits in words, and their number would be x's share of the plaintext.
+
+WORD_CLASSES = ("initial", "medial", "final", "sole")
+
+
+def word_class(index: int, length: int) -> str:
+    """Position class of rune `index` in a word of `length` runes."""
+    if not 0 <= index < length:
+        raise ValueError(f"word_class: index {index} outside a word of {length}")
+    if length == 1:
+        return "sole"
+    if index == 0:
+        return "initial"
+    return "final" if index == length - 1 else "medial"
+
+
+def word_stream_doublet_classes(words: Sequence[Sequence[int]]) -> list[str]:
+    """Word class of the second rune of every doublet in one continuous stream of words."""
+    cells = [(r, word_class(i, len(w))) for w in words for i, r in enumerate(w)]
+    return [cls for (a, _), (b, cls) in zip(cells, cells[1:]) if a == b]
+
+
+def doublet_classes(corpus: Corpus, segments: Sequence[int] = UNSOLVED_SEGMENTS) -> list[str]:
+    """`word_stream_doublet_classes` over each segment. Pairs never cross a segment boundary."""
+    return [cls for seg in segments
+            for cls in word_stream_doublet_classes([w.runes for w in corpus.rune_words(seg)])]
+
+
+def letter_class_counts(words: Sequence[Sequence[int]]) -> dict[str, list[int]]:
+    """{class: count of each letter 0..28 at that word position} over plaintext words."""
+    out = {cls: [0] * N for cls in WORD_CLASSES}
+    for w in words:
+        for i, r in enumerate(w):
+            out[word_class(i, len(w))][r] += 1
+    return out
+
+
+def marker_letter_llr(classes: Sequence[str], words: Sequence[Sequence[int]], letter: int,
+                      pseudo: float = 10.0) -> float:
+    """LLR (nats) that doublets sit where `letter` sits in plaintext words, against doublets at random runes.
+
+    Σ_doublets log[P̂(x | class) / f_x], with P̂(x | class) = (n_x,class + pseudo·f_x) / (n_class + pseudo): the
+    Bayes form of P(class | x) / P(class), shrunk toward the base rate f_x when a class is thin.
+    """
+    counts = letter_class_counts(words)
+    total = sum(sum(row) for row in counts.values())
+    f = sum(row[letter] for row in counts.values()) / total
+    if f == 0.0:
+        raise ValueError(f"letter {letter} never occurs in the plaintext; its model predicts no doublets")
+    return sum(math.log((counts[c][letter] + pseudo * f) / (sum(counts[c]) + pseudo) / f) for c in classes)
 
 
 # --- L5: the community key-switch scheme (reference/community/images/Algorithm.png) ------------------

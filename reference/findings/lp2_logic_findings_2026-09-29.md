@@ -3,6 +3,48 @@
 No hill-climbing, no optimisers. Every number below is reproduced by the test suite
 (`python -m unittest discover -s tests -t . -v`) from canonical data (`data/canonical/`).
 
+## 0. Constraint register
+
+One row per constraint, with the test that pins it. **This is the index. The sections below hold the evidence.**
+`tests/test_docs.py` fails if a C-number in the tracker has no row here, or if a test named here does not exist.
+
+| # | Constraint on the LP2 cipher | Observed vs declared line | Test | § |
+|---|---|---|---|---|
+| C1 | The anti-doublet rule ignores word boundaries | within-word 0.63 %, across 0.80 %, vs 3.45 % | `test_suppression_ignores_word_boundaries` | 2 |
+| C2 | No plaintext-F passthrough; unigrams flat | ᚠ 458 vs 447 (passthrough adds ≈ 190); χ² 26.4 on 28 df | `test_no_plaintext_f_passthrough`, `test_unigrams_are_flat` | 2 |
+| C3 | The survivors mark no plaintext letter | 26 letters by count (p < 10⁻⁶); NG, IA, EA by position, LLR −106 / −149 / −68 ≤ −10 | `test_every_letter_is_excluded` | 2, 15 |
+| C4 | No additive cipher with a plaintext-independent key makes the deficit | predicted 3.20–3.60 % vs 0.66 % | `test_additive_ciphers_cannot_produce_the_deficit` | 2 |
+| C5 | Only lag 1 is affected | lags 2–10: 3.38–3.69 % | `test_only_lag_one_is_depleted` | 2 |
+| C6 | One system, no seam between sections | χ² 5.33 on 8 df, p = 0.72; early vs late p = 0.099 | `test_l4_survivors_are_homogeneous_and_unclustered`, `test_early_and_late_sections_do_not_differ` | 2, 7 |
+| C7 | No one-shift-per-word scheme | predicted 2.39 % within words vs 0.63 % (z = −11.6) | `test_per_word_shift_is_excluded` | 2 |
+| C8 | A re-key leaks exactly where the replacement equals the original | algebraic identity (p + k′ = c₋₁ ⇔ k′ = k) | `test_key_switch_mechanics` (the k′ = k + 1 case) | 7 |
+| C9 | No periodic key | lags 11–1000: best p = 3.4 × 10⁻⁴ vs 1.0 × 10⁻⁵ | `test_no_period_in_the_unsolved_text` | 8 |
+| C10 | The key is not English text (letters, prime values, φ) | LLR −255 … −333 ≤ −10 | `test_no_english_running_key` | 9 |
+| C11 | No ciphertext autokey, lags 2–1000 | best p = 5.6 × 10⁻⁴ vs 5.0 × 10⁻⁶ | `test_no_ciphertext_autokey` | 9 |
+| C12 | No alphabet chosen by c_{i−L}, L ≤ 1000 | best p = 3.9 × 10⁻³ vs 10⁻⁵ | `test_no_ciphertext_selected_alphabet` | 10 |
+| C13 | The key is not single digits, hex digits or letters | LLR −214 / −19.5 / −14.3 / −122 ≤ −10 | `test_small_key_alphabets_are_excluded` | 11 |
+| C14 | The re-keying is not "skip to the next key value" | LLR −21.3 ≤ −10 | `test_skip_next_is_excluded` | 14 |
+| C15 | No homophonic substitution (without a stream on top) | least possible χ² 4,802 ≥ 200, vs 26.4 observed | `test_homophonic_substitution_is_excluded` | 15 |
+
+**The leak** (how the 86 survivors are spread, §7):
+
+| # | Finding | Observed vs line | Test |
+|---|---|---|---|
+| L1 | Suppressed doublets spread evenly over Δc = 1–28 (no nudge) | max \|z\| 2.58 < 3.5 | `test_l1_suppressed_doublets_spread_evenly` |
+| L2 | The rule spans line and page breaks | line-break 4 / 585 vs within-line 0.66 %, p = 0.54 | `test_l2_rule_spans_line_and_page_breaks` |
+| L3 | Survivors fall on no period, m = 2–32 | best p = 0.036 vs 1.6 × 10⁻⁴ | `test_l3_no_period_in_survivor_positions` |
+| L4 | Survivors are homogeneous and unclustered | dispersion 1.02 | `test_l4_survivors_are_homogeneous_and_unclustered` |
+| L5 | The community key-switch leaves too few doublets | λ = 27 / 45 vs 86; P ≤ 3 × 10⁻⁸ | `test_l5_key_switch_cannot_leave_86_doublets` |
+
+**Named key families scored and failed** (each a declared, recorded family):
+
+| Family | Decodes | Best vs pass | Test |
+|---|---|---|---|
+| Primes, word sums, plaintext values (stage I) | 2,610 | −65 vs +30 nats | `test_recorded_family_is_complete_and_fails` |
+| The square's numbers on the segment 10 title | 30 | 0 English | `test_segment_10_title_is_not_decoded_by_the_square` |
+| The base-60 grid as a key (stage M) | 3,132 | −5.5 vs +30 | `test_recorded_family_fails` |
+| The grid bytes under LP-native keys (stage N) | 456 | 44 % printable vs 90 %; −4.8 vs +30 | `test_recorded_verdict` |
+
 ## 1. State of the art (web check, September 2026)
 
 Nobody has solved the unsolved LP2 pages. Two public 2026 analyses matter:
@@ -31,12 +73,12 @@ Each result needs no key and no search. Each has a named regression test.
 | # | Finding | Evidence | Test |
 |---|---|---|---|
 | C1 | **The anti-doublet rule ignores word boundaries.** It acts on the continuous rune stream, the same way the solved-section keys run through word breaks. | within-word 63/10,060 = 0.63 %; across-word 23/2,887 = 0.80 %; both far below 3.45 % | `test_suppression_ignores_word_boundaries` |
-| C2 | **LP2 does not use LP1's "plaintext F unenciphered" convention**, or its plaintext is almost free of F. | ᚠ occurs 458 times vs 447 expected (flat; χ² = 26.4 on 28 df). F-passthrough would add roughly the plaintext F-rate, about 1.5 % of 12,956 ≈ 190 extra ᚠ. | `test_no_plaintext_f_passthrough` |
-| C3 | **The surviving doublets do not mark any single plaintext letter.** This refutes the chain-multiplicative family c = c₋₁ + (p − x)·k over Z₂₉\*. | F predicts about 75 doublets at the end of 2-rune words (OF, IF); we observe 1. A positional log-likelihood against random placement is ≤ −0.3 for all 29 letters. EA's 0.62 % frequency matching 0.66 % is a coincidence. | analysis script (§5) |
+| C2 | **LP2 does not use LP1's "plaintext F unenciphered" convention**, or its plaintext is almost free of F. | ᚠ occurs 458 times vs 447 expected (flat; χ² = 26.4 on 28 df). F-passthrough would add roughly the plaintext F-rate, about 1.5 % of 12,956 ≈ 190 extra ᚠ. | `test_no_plaintext_f_passthrough`, `test_unigrams_are_flat` |
+| C3 | **The surviving doublets do not mark any single plaintext letter.** This refutes the chain-multiplicative family c = c₋₁ + (p − x)·k over Z₂₉\*. | Under x = F, OF and IF would put about 25 doublets at the end of 2-rune words; 1 is observed. 26 letters predict the wrong count; NG, IA and EA predict the wrong word positions. EA's 0.62 % frequency matching 0.66 % is a coincidence. Declared test and numbers: §15 | `test_every_letter_is_excluded`, `test_f_would_end_two_rune_words` |
 | C4 | **No additive mod-29 cipher with a plaintext-independent key can produce the deficit**, whatever the key text. | Predicted rate Σ P(Δp=d)·P(Δk=−d) with LP-English as the model: English running key / long-lag autokey 3.60 %; φ(prime) 3.20 %; prime values 3.20 %; any flat key 3.45 %. Observed: 0.66 %. | `test_additive_ciphers_cannot_produce_the_deficit` |
 | C5 | **Only lag 1 is affected.** Repeats at lags 2–10 are normal. | 3.38–3.69 % at every lag from 2 to 10 | `test_only_lag_one_is_depleted` |
 | C6 | **One system throughout, with no seam.** Every unsolved section shows the deficit. | z from −4.1 to −8.9 per section; early (0.53 %) vs late (0.77 %) sections are not significantly different (p ≈ 0.10). All 9 sections: χ² = 5.33, df 8, p = 0.72 (§7 L4) | `test_l4_survivors_are_homogeneous_and_unclustered` |
-| C7 | **Any scheme that uses one shift per word is excluded.** | A per-word shift preserves plaintext bigram differences inside words (2.6 % doublets for LP-English). Observed within-word rate: 0.63 %. | follows from C1 |
+| C7 | **Any scheme that uses one shift per word is excluded.** | A per-word shift preserves plaintext bigram differences inside words, so the within-word doublet rate would be LP-English's own: 52 / 2,175 = 2.39 %. Observed: 0.63 % (z = −11.6). | `test_per_word_shift_is_excluded` |
 
 Reading of C1–C7: the deficit comes from a rule applied at the output of a non-periodic
 additive stream. It is not a property of any key text, of word structure, or of a particular
@@ -77,11 +119,12 @@ The other squares in the book are also decoded:
 
 ## 5. Reproducing the analysis-script row (C3)
 
-C3 was computed in a one-off session script (C6 is now a test, §7 L4). The inputs are all available from
-`tools.lpcore`: `corpus.rune_words(seg)` for word positions, and `stats.lag_repeats` for
-per-section rates. Promote it to a test before building on them.
+*Closed 2026-10-01.* C3 was a one-off script. It is now a declared test (§15), and every row in §2 has a test.
 
 ## 6. What is still open — suggested next logic steps
+
+*Historical: these were the next steps on 2026-09-29. The current open list is `MASTER_TRACKER.md` §1.*
+
 
 1. ~~**Characterise the leak.**~~ **Done 2026-10-01, see §7.** Nothing separates the survivors.
    The key-switch scheme is refuted. C8 states what any re-keying rule must satisfy.
@@ -343,3 +386,38 @@ it out.
 **Consequence.** If the deficit comes from re-keying, the replacement value is independent of the next key value:
 a fresh draw, a second key, or a value from some other source. The other reading still stands: a check applied by
 hand that misses about 1 doublet in 5.
+
+## 15. Consolidation: C3 as a test, homophonic substitution, and two errata (2026-10-01, TODO stage Q)
+
+Rules declared in `TODO.md` before the run. Functions: `leak.doublet_classes`, `leak.marker_letter_llr`,
+`leak.poisson_cdf`, `stats.homophonic_min_chi2`. Tests: `tests/test_leak.py` (`TestC3MarkerLetter`) and
+`tests/test_stats.py` (`TestHomophonic`, and the fingerprint numbers of tracker §3.2 that had no test before).
+
+**C3, re-derived** (not blind: the 2026-09 one-off result had been seen). Under M_x, c_i = c_{i−1} + (p_i − x)·k_i
+with k_i ≠ 0, a doublet sits exactly where p_i = x, with no leak. So the 86 doublets would be x's count, at x's
+places in words. Rules: x is excluded if the count is off (two-sided Poisson p < 10⁻⁶, rate from the 2,901 solved
+plaintext runes) or if the doublets' word positions (initial 23, medial 44, final 19, sole 0) are not x's
+(LLR ≤ −10, with P(x | class) shrunk toward f_x by 10 pseudo-counts).
+
+| Letters | Rule that excludes them | Value |
+|---|---|---|
+| AE, EO, OE | count | never in the plaintext, so M_x predicts 0 doublets |
+| 23 others | count | p ≤ 1.5 × 10⁻¹⁰ (B, the closest) |
+| NG (λ = 138), IA (71), EA (80) | position | LLR −106.4, −149.4, −67.7 |
+
+Power: on the solved text enciphered under M_x itself, NG, IA and EA each score ≥ +10. On 86 random positions of
+the same text they score ≤ −10. **C3 holds for all 29 letters.**
+
+**C15: no homophonic substitution.** A homophonic cipher gives each plaintext letter its own set of cipher runes.
+The solved plaintext uses 26 letters, so only 3 of the 29 runes are spare. The least χ² of the expected counts
+against flat, over every way to hand out the spares (all 3,654, including leaving runes unused), is **4,802**. The
+best case gives E three runes and O two. Rare letters decide it: J (3 of 2,901) and X (5) would each own a rune
+that LP2 uses about 447 times. With letter rates padded by +1 it is still about 4,710. LP2's observed χ² is 26.4. The
+declared line was 200. This covers homophonic substitution alone; with a flat stream added on top, the stream
+decides (catalog row 3).
+
+**Errata, both in §2 and both corrected there.** Neither changes a verdict.
+- C3 said x = F predicts "about 75" doublets at the end of 2-rune words. That does not reproduce: LP2's 448 two-rune
+  words × 10 / 178 (the share of solved 2-rune words that end in F) gives **25.2**. Observed: 1.
+- C7 said a per-word shift leaves "2.6 %" doublets inside words. The solved plaintext gives **52 / 2,175 = 2.39 %**.
+  Against LP2's 63 / 10,060 that is z = −11.6.

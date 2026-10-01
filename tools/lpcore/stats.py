@@ -8,7 +8,7 @@ from __future__ import annotations
 import math
 from collections import Counter
 from collections.abc import Iterable, Sequence
-from itertools import islice
+from itertools import combinations_with_replacement, islice
 from operator import eq
 
 from .ciphers import primes
@@ -194,6 +194,30 @@ def chi2_sf_wilson_hilferty(x: float, df: int) -> float:
         raise ValueError("df must be positive")
     z = ((x / df) ** (1 / 3) - (1 - 2 / (9 * df))) / math.sqrt(2 / (9 * df))
     return 0.5 * math.erfc(z / math.sqrt(2))
+
+
+def homophonic_min_chi2(q: Sequence[float], n: int) -> tuple[float, tuple[int, ...]]:
+    """(least χ² of the expected rune counts against flat, homophones per letter) over every homophonic substitution.
+
+    Each plaintext letter with q > 0 gets its own set of ≥ 1 cipher runes, used evenly (optimal by convexity).
+    The 29 − k spare runes, k = letters used, are handed out in every possible way, including leaving runes
+    unused (each costs n/29). Exhaustive over all C(29, spare) multisets: no search, no fitting.
+    The result is the noncentrality: n runes from the best substitution would show about this χ² plus 28 (the df).
+    """
+    if len(q) != N or min(q) < 0 or abs(sum(q) - 1) > 1e-9:
+        raise ValueError("homophonic_min_chi2 needs a 29-letter distribution")
+    used = [x for x in range(N) if q[x] > 0]
+    spare = N - len(used)
+    e = n / N
+    best: tuple[float, tuple[int, ...]] = (math.inf, ())
+    for extra in combinations_with_replacement(range(len(used) + 1), spare):   # index len(used) = unused rune
+        homophones = [1 + extra.count(i) for i in range(len(used))]
+        chi2 = extra.count(len(used)) * e
+        chi2 += sum(h * (n * q[x] / h - e) ** 2 / e for x, h in zip(used, homophones))
+        alloc = tuple(homophones[used.index(x)] if x in used else 0 for x in range(N))
+        if chi2 < best[0]:
+            best = (chi2, alloc)
+    return best
 
 
 def transition_chi2(streams: Sequence[Sequence[int]], lag: int) -> tuple[float, int]:

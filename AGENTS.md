@@ -28,8 +28,9 @@ you build on it. The old scripts and their outputs are in `tools/legacy/` and
 - **A hypothesis test is one deterministic decryption with a pass/fail threshold declared before
   the run.** Write the prediction down first (in `TODO.md` or the test), then run it, and record
   the result whether it passed or failed.
-- **Check the exclusion list before proposing an attack.** It is in the findings doc (§1 community
-  ledgers, §2 constraints C1–C7, §6 open items). Re-running an excluded attack wastes the session.
+- **Check the exclusion list before proposing an attack.** It is the findings doc's §0 constraint
+  register (every C- and L-number with its test), its §1 community ledgers, and `MASTER_TRACKER.md` §4.
+  Re-running an excluded attack wastes the session.
 - **Key tests must handle skips.** About 3 % key desync (interrupters) defeats a naive decode.
 - **Every number cited in a doc has a test or a named script that reproduces it.**
 

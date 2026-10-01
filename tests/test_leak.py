@@ -143,6 +143,90 @@ class TestLeakVerdicts(unittest.TestCase):
         self.assertEqual(observed["phi(prime)/primes", "ideal"], (0, 2900))
 
 
+class TestC3MarkerLetter(unittest.TestCase):
+    """Stage Q (declared in TODO.md): do the survivors mark one plaintext letter x?
+
+    Model M_x: c_i = c_{i−1} + (p_i − x)·k_i, k_i ≠ 0, so a doublet sits exactly where p_i = x. x is excluded if
+    the count is off (two-sided Poisson p < 10⁻⁶) or the doublets' word positions are not x's (LLR ≤ −10).
+    """
+
+    COUNT_P = 1e-6
+    LLR_EXCLUDE = -10.0
+    WORDS = keys.solved_plaintext_words(CORPUS, load_translation())
+    NG, IA, EA = 21, 27, 28
+
+    @classmethod
+    def letter_rate(cls, x: int) -> float:
+        return sum(w.count(x) for w in cls.WORDS) / sum(len(w) for w in cls.WORDS)
+
+    @staticmethod
+    def count_p(lam: float) -> float:
+        return min(1.0, 2 * min(leak.poisson_cdf(86, lam), leak.poisson_sf(86, lam))) if lam else 0.0
+
+    def test_helpers(self) -> None:
+        self.assertEqual([leak.word_class(i, 3) for i in range(3)], ["initial", "medial", "final"])
+        self.assertEqual(leak.word_class(0, 1), "sole")
+        with self.assertRaises(ValueError):
+            leak.word_class(2, 2)
+        self.assertEqual(leak.word_stream_doublet_classes([(1, 2), (2,), (2, 3, 3)]), ["sole", "initial", "final"])
+        direct = sum(math.exp(-20) * 20 ** j / math.factorial(j) for j in range(9))
+        self.assertAlmostEqual(leak.poisson_cdf(8, 20.0), direct, places=12)
+        self.assertAlmostEqual(leak.poisson_cdf(86, 196.4) + leak.poisson_sf(87, 196.4), 1.0, places=12)
+        with self.assertRaises(ValueError):
+            leak.marker_letter_llr(["medial"], self.WORDS, 25)          # AE never occurs in the plaintext
+
+    def test_controls(self) -> None:
+        # Positive: run M_x itself over the solved text five times (12,956 runes in words). Negative: 86 doublets
+        # at random rune positions of the same text. Only NG, IA and EA need the positional rule (see the verdict).
+        rng = random.Random(3)
+        words = (self.WORDS * 5)
+        for x in (self.NG, self.IA, self.EA):
+            c, cipher_words = 0, []
+            for w in words:
+                out = []
+                for p in w:
+                    c = (c + (p - x) * rng.randrange(1, N)) % N
+                    out.append(c)
+                cipher_words.append(out)
+            positive = leak.word_stream_doublet_classes(cipher_words)
+            self.assertEqual(len(positive), 5 * sum(w.count(x) for w in self.WORDS))
+            cells = [leak.word_class(i, len(w)) for w in words for i in range(len(w))]
+            negative = rng.sample(cells, 86)
+            with self.subTest(letter=x):
+                self.assertGreaterEqual(leak.marker_letter_llr(positive[:86], self.WORDS, x), 10.0)
+                self.assertLessEqual(leak.marker_letter_llr(negative, self.WORDS, x), self.LLR_EXCLUDE)
+
+    def test_every_letter_is_excluded(self) -> None:
+        classes = leak.doublet_classes(CORPUS)
+        self.assertEqual(sorted(classes), sorted(["initial"] * 23 + ["medial"] * 44 + ["final"] * 19))
+        not_by_count = []
+        for x in range(N):
+            lam = self.letter_rate(x) * len(PAIRS)
+            if self.count_p(lam) < self.COUNT_P:
+                continue
+            not_by_count.append(x)
+            with self.subTest(letter=x):
+                self.assertLessEqual(leak.marker_letter_llr(classes, self.WORDS, x), self.LLR_EXCLUDE)
+        self.assertEqual(not_by_count, [self.NG, self.IA, self.EA])     # EA's rate matches 0.66 %: coincidence
+        llr = {x: round(leak.marker_letter_llr(classes, self.WORDS, x), 1) for x in not_by_count}
+        self.assertEqual(llr, {self.NG: -106.4, self.IA: -149.4, self.EA: -67.7})
+
+    def test_f_would_end_two_rune_words(self) -> None:
+        # M_F: OF and IF would put doublets at the end of 2-rune words. LP2 has 448 two-rune words; 10 of the 178 in
+        # the solved text end in F, so M_F predicts about 25. One is observed.
+        two = [w for w in self.WORDS if len(w) == 2]
+        lp2_two = [w.runes for s in stats.UNSOLVED_SEGMENTS for w in CORPUS.rune_words(s) if len(w.runes) == 2]
+        predicted = len(lp2_two) * sum(w[1] == 0 for w in two) / len(two)
+        self.assertEqual((len(lp2_two), len(two)), (448, 178))
+        self.assertAlmostEqual(predicted, 25.2, places=1)
+        observed = 0
+        for s in stats.UNSOLVED_SEGMENTS:
+            cells = [(r, i, len(w.runes)) for w in CORPUS.rune_words(s) for i, r in enumerate(w.runes)]
+            observed += sum(a == b and (i, size) == (1, 2) for (a, _, _), (b, i, size) in zip(cells, cells[1:]))
+        self.assertEqual(observed, 1)
+        self.assertLess(leak.poisson_cdf(observed, predicted), 1e-6)
+
+
 class TestC14SkipNext(unittest.TestCase):
     """Stage O (declared in TODO.md): is the re-keying 'skip to the next key value'? Excluded if LLR ≤ −10."""
 

@@ -4,7 +4,7 @@
 and what to do next. Every claim on it is backed by a test or a linked document. If something here
 disagrees with the tests, the tests win, and this page needs fixing.
 
-**Last updated:** 2026-10-01 · **Tests:** 88, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
+**Last updated:** 2026-10-01 · **Tests:** 102, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
 
 ---
 
@@ -14,7 +14,8 @@ disagrees with the tests, the tests win, and this page needs fixing.
 match their scans, so most older "discoveries" were artifacts (see §4.3). Now one canonical transcription
 (`data/canonical/`) is read by one tested loader (`tools/lpcore`), and every solved section decrypts from it exactly.
 
-The unsolved LP2 cipher is pinned down by fourteen key-independent constraints (§3.2, C1–C14). In short: an additive
+The unsolved LP2 cipher is pinned down by fifteen key-independent constraints (§3.2, C1–C15; each with its test in the
+[findings §0 register](reference/findings/lp2_logic_findings_2026-09-29.md#0-constraint-register)). In short: an additive
 stream over mod 29, plus an anti-doublet re-keying rule that leaks about 19 % of the time.
 - **The key stream** is near-flat mod 29 and aperiodic. Its values come from an alphabet of at least ~30 symbols,
   so not digits, hex or letters. It is not English text, not derived from the primes or the solved text, and not
@@ -94,10 +95,14 @@ Errata, each with its evidence in `solved.py`: **WIDSOM** is the book's own typo
 | **all** | | **12,956** | **86** | **0.66 %** vs 3.45 % expected (z = −17) | |
 
 Everything else is flat: IoC, rune frequencies, and repeats at lags 2–10. The constraints derived from that
-are C1–C7 in [findings §2](reference/findings/lp2_logic_findings_2026-09-29.md) (C8 is in §7, C9 in §8, C10–C11 in §9, C12 in §10, C13 in §11, C14 in §14):
+are indexed, one row each with its test, in the [findings §0 register](reference/findings/lp2_logic_findings_2026-09-29.md#0-constraint-register).
+The evidence is in findings §2 (C1–C7), §7 (C8), §8 (C9), §9 (C10–C11), §10 (C12), §11 (C13), §14 (C14) and §15 (C3's test, C15):
 
 - The anti-doublet rule acts on the continuous rune stream and ignores word boundaries (C1).
-- There is no plaintext-F passthrough, unlike LP1 (C2). The surviving doublets mark no single plaintext letter (C3).
+- There is no plaintext-F passthrough, unlike LP1 (C2). The surviving doublets mark no single plaintext letter (C3):
+  26 letters predict the wrong count, and NG, IA and EA the wrong word positions.
+- **No homophonic substitution (C15):** with 26 plaintext letters and 29 runes, the flattest possible cipher still
+  has χ² ≥ 4,802 (LP2: 26.4).
 - **No additive mod-29 cipher with a plaintext-independent key can produce the deficit**, whatever the key text (C4).
 - Only lag 1 is affected (C5). One system runs throughout, with no seam between sections (C6). No one-shift-per-word scheme fits (C7).
 - **The key is not English text (C10):** from any source, as letters, prime values or φ(prime values), in any mode
@@ -142,6 +147,7 @@ RANDOM.ORG and RAND archives (~14.5 billion offsets). Both conclude "OTP-class" 
 
 - No plaintext-F passthrough (C2).
 - No doublet↔plaintext-letter link; this refutes the chain-multiplicative family c = c₋₁ + (p − x)·k (C3).
+- No homophonic substitution of LP-English (C15, findings §15).
 - No additive cipher with a plaintext-independent key, including English running keys, primes and φ(prime) (C4).
 - No per-word shift scheme (C7).
 - The community **key-switch** scheme ([`Algorithm.png`](reference/community/images/Algorithm.png)) leaves 6–10 doublets
@@ -210,6 +216,7 @@ The ordered list is in §1. These questions are also open and cheap to state:
 
 | Date | What happened | Commits |
 |---|---|---|
+| 2026-10-01 | **Consolidation** (TODO Q): constraint register (findings §0); C3 now a test (all 29 letters excluded); C15, no homophonic substitution (χ² ≥ 4,802); every §3.2 number pinned; `tests/test_docs.py` checks cited names; errata in C3 (75 → 25) and C7 (2.6 → 2.39 %) | this commit |
 | 2026-10-01 | **Skip-next rule** (TODO O): C14, the re-keying is not "skip to the next key value" (LLR −21.3; held-out models −20/−32) | `0d4d86b` + this commit |
 | 2026-10-01 | **Grid bytes** (TODO N): 72 byte decryptions and 384 rune readings under LP-native keys; none passes (best 44 % printable, best log LR −4.8) | `14afdff` + this commit |
 | 2026-10-01 | **Base-60 grid** (TODO M): scans 66–67 parse as 184 bytes. As a key (3 readings × 3 modes × 29 shifts × 12 alignments) nothing passes; the power check gives +45…+122 | `4d66364` + this commit |
