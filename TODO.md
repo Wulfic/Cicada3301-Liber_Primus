@@ -9,7 +9,50 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-*(none. The next research step is MASTER_TRACKER §1, item 1. Plan it here before starting.)*
+### T — flatness constraint on per-position alphabets (2026-10-01)
+
+**Goal:** turn findings §17's "what this suggests" into a declared, key-independent constraint (tracker §1 item 1).
+
+**Model:** c_i = σ_{k_i}(p_i). The key takes V values with weights w_v. The σ_v are **independent uniformly random**
+permutations (a secret tabula with unstructured rows). The re-key rule is any rule that redraws a class from the same
+weights. The cipher marginal is P(c) = Σ_v w_v q(σ_v⁻¹(c)), and its noncentrality is λ = n·29·Σ_c (P(c) − 1/29)².
+Over random σ, E[λ] = λ̄ = n·(29·Σq² − 1)·Σw². By permutation symmetry the deviation is isotropic in the 28-dim
+sum-zero space, so (CLT over classes) the observed χ² ≈ (1 + λ̄/28)·χ²₂₈. The CDF for even df is exact:
+F_{2m}(x) = 1 − e^{−x/2} Σ_{j<m} (x/2)^j / j!. Only the weights matter, **not the alignment**, so the bound holds under any
+desync or drift. q is the 2,901-rune solved plaintext (Σq² = 0.0622).
+
+**Not already excluded because:** C9 and §17 cover σ keys only in step with period ≤ 1000. C12 covers σ chosen by
+ciphertext. C15 covers homophonic substitution. C4, C10 and C13 concern additive keys. Stage S (named long keys) was void.
+
+**Statistics (two, declared now):**
+1. *Pooled* (one tabula for all of LP2): χ² of the 12,956 unsolved runes vs flat, already known to be 26.36 (C2 test).
+   P_T(V_eff) = F₂₈(26.36 / (1 + λ̄/28)), with n = 12,956 and V_eff = 1/Σw².
+2. *Per section* (a fresh tabula per section, same V_eff): S = Σ χ²_s over sections 7–9 and 11–15 (seg 10 has 9 runes,
+   so it is left out; df 224). Null: Σ_s (1 + λ̄_s/28)·χ²₂₈, P by seeded Monte Carlo with 2·10⁶ draws. **The LP2 value
+   of S has not been computed yet.**
+
+**Exclude:** a model (V_eff, statistic) is excluded if P ≤ 1e-4 (the same order as C14's e^−10). Report V*, the largest
+V_eff excluded, for each statistic. Apply the pooled rule to the stage S key classings' empirical weights (primes mod 29,
+plaintext runes, hint, `.bin` raw and mod 29, four corpora as letters).
+
+**Validity gates, run on synthetic ciphers before the LP2 per-section value is computed.** If either gate fails, the
+stage is VOID and nothing is excluded:
+- A (formula): word-shuffled solved plaintext, 12,956 runes, iid uniform keys over V ∈ {29, 256, 1024}, random σ,
+  `encrypt_alphabets` with keep = 0.19, 200 ciphers per V. The mean χ² must be within 15 % of 28 + λ̄.
+- B (no false exclusion): the same set-up at V = 1024. The pooled P under the true V must be ≤ 1e-4 for 0 of 200
+  ciphers, and ≤ 0.05 for at most 10 % of them.
+- Power (reported, not a gate): the fraction of V = 29 ciphers excluded, and of ciphers at V*/2.
+- Structural control (reported): additive σ_v(p) = p + v with a uniform key. Its χ² stays near 28, which shows that
+  Latin-square tabulae are outside this test.
+
+**Expected if true** (LP2 = random tabula with few classes): χ² in the hundreds. **Expected if false:** the boundary
+V* lands near a few hundred classes (rough estimate ~200–300 before computing), which excludes every ≤ 29-class key.
+
+**Not doing:** structured σ families. A Latin-square tabula (Vigenère, Quagmire, affine with flat shifts) under a
+near-flat key gives an exactly flat mixture, so this test cannot see it, and the doc will say so. No keyed decodes.
+No change to the plaintext model after the run (the scaling with Σq² is reported, not gated).
+**Blast radius:** additive only: `tools/lpcore/flatness.py`, `tools/run_stage_t.py`, `tests/test_flatness.py`, a TSV,
+and docs. **Rollback:** `git revert <commit>`.
 
 ## Owner items
 
