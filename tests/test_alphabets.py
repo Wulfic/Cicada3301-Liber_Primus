@@ -6,14 +6,17 @@ uniform cipher is exactly 1, and a synthetic σ cipher scores far above the thre
 
 from __future__ import annotations
 
+import csv
 import itertools
 import math
 import random
 import unittest
+from collections import Counter
 
 import numpy as np
 
 from tests.test_detect import C9_BONFERRONI, LP2, PLAIN, split_like_lp2
+from tools import run_stage_s
 from tools.lpcore import alphabets, detect, leak, stats
 from tools.lpcore.gematria import N
 
@@ -105,6 +108,69 @@ class TestC9CoversShortSigmaKeys(unittest.TestCase):
             streams = split_like_lp2(alphabets.encrypt_alphabets(plain, key, keep=0.19, seed=period))
             ((_, hits, total),) = stats.lag_scan(streams, [period])
             self.assertLess(leak.binom_sf(hits, total, stats.repeat_probability(streams)), C9_BONFERRONI)
+
+
+def read_tsv(path) -> list[dict[str, str]]:
+    with path.open(encoding="utf-8", newline="") as f:
+        return list(csv.DictReader(f, delimiter="	"))
+
+
+def control_cipher(name: str, size: int, seed: int, text: list[int]) -> list[int]:
+    """Rebuild one positive-control cipher of run 2 with a given control text."""
+    key, phases, cyclic = run_stage_s.family(run_stage_s.PLAIN)[name]
+    rng = random.Random(f"{run_stage_s.CONTROL_SEED}/{name}/{size}/{seed}")
+    phase = rng.randrange(phases)
+    if text is None:
+        text = run_stage_s.control_text(size, rng)
+    return alphabets.encrypt_alphabets(text, run_stage_s.key_from(key, phase, size, cyclic), keep=0.19,
+                                       seed=rng.randrange(10**9))
+
+
+class TestStageSRecorded(unittest.TestCase):
+    """Stage S is VOID by its declared rule (TODO stage S): it excludes nothing. These tests pin why."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.decodes = read_tsv(run_stage_s.OUT_PATH)
+        cls.controls = read_tsv(run_stage_s.CONTROLS_PATH)
+
+    def test_recorded_family_is_complete(self) -> None:
+        self.assertEqual(len(self.decodes), 20 * 10)
+        self.assertEqual(len(self.controls), 20 * 3 * 2 * 2 + 20)
+
+    def test_run_2_is_void(self) -> None:
+        bad = [r for r in self.controls if r["kind"] == "negative" and float(r["log_mean_lr"]) >= detect.THRESHOLD]
+        self.assertEqual([(r["key"], r["runes"], r["log_mean_lr"]) for r in bad],
+                         [("liber_al_vel_legis letters", "12956", "53.49")])
+
+    def test_real_data_null_holds_and_no_decode_scores(self) -> None:
+        nulls = [float(r["log_mean_lr"]) for r in self.controls if r["kind"] == "lp2-null"]
+        self.assertEqual(len(nulls), 20)
+        self.assertAlmostEqual(max(nulls), -489.50, places=2)
+        self.assertAlmostEqual(max(float(r["log_mean_lr"]) for r in self.decodes), 0.84, places=2)
+
+    def test_a_recorded_decode_reproduces(self) -> None:
+        row = next(r for r in self.decodes if r["key"] == "deor_poem letters" and r["segment"] == "7")
+        key, phases, cyclic = run_stage_s.family(run_stage_s.PLAIN)["deor_poem letters"]
+        value, _, _ = alphabets.log_mean_lr(LP2[0], key, phases, ALPHA, cyclic=cyclic)
+        self.assertAlmostEqual(value, float(row["log_mean_lr"]), places=2)
+
+    def test_run_1_diagnosis_tiled_text_made_the_control_periodic(self) -> None:
+        tiled = (run_stage_s.PLAIN[::-1] * 5)[:12956]                           # run 1's control text
+        cipher = control_cipher("plaintext rune", 12956, 0, tiled)
+        same = sum(a == b for a, b in zip(cipher, cipher[2901:])) / (len(cipher) - 2901)
+        self.assertAlmostEqual(same, 0.968, places=3)
+        ((_, hits, total),) = stats.lag_scan([[r for s in LP2 for r in s]], [2901])
+        self.assertEqual((hits, total), (328, 10055))
+
+    def test_run_2_diagnosis_sigma_controls_are_not_flat(self) -> None:
+        # Random σ per class leaves the cipher's marginal uneven; a DM score against uniform rewards that, so the
+        # synthetic negative controls were never nulls. LP2 itself is flat (χ² 26.4).
+        def chi2(c: list[int]) -> float:
+            counts, e = Counter(c), len(c) / N
+            return sum((counts[x] - e) ** 2 / e for x in range(N))
+        self.assertAlmostEqual(chi2(control_cipher("liber_al_vel_legis letters", 12956, 0, None)), 1141.0, places=1)
+        self.assertAlmostEqual(chi2(control_cipher("page_17.bin mod29", 12956, 0, None)), 355.6, places=1)
 
 
 if __name__ == "__main__":

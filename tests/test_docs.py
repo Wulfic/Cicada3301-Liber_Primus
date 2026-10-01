@@ -15,7 +15,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 FINDINGS = ROOT / "reference" / "findings" / "lp2_logic_findings_2026-09-29.md"
 DOCS = [ROOT / name for name in ("MASTER_TRACKER.md", "README.md", "TODO.md", "AGENTS.md")] + [FINDINGS]
-MODULES = ("ciphers", "corpus", "detect", "gematria", "keys", "leak", "solved", "stats", "verify")
+MODULES = ("alphabets", "ciphers", "corpus", "detect", "fastdetect", "gematria", "keys", "leak", "solved", "stats",
+           "verify")
 PATH_PREFIXES = ("tools/", "tests/", "data/", "reference/", "pages/")
 PLACEHOLDER = re.compile(r"[<>*]|XX|_N\b|\.\.\.|…")
 

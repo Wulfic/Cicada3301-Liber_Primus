@@ -17,7 +17,7 @@ Status legend: **✗ excluded** (by a test or a cited ledger) · **◐ partly** 
 | 3301 / 1033 (reversal; LP1 magic sums) | scans 05, 16 | ✗ as a period or short key (C9); not tested as a seed of a generator |
 | Fibonacci and spiral reading | scan 32 square = \|3301 − p(F+1)\| | ✗ the square as a key (period 16, C9); Pisano period mod 29 = 14 ✗ |
 | 4×4 square numbers on the segment 10 title | scan 32 | ✗ 0 of 30 decodes give English (§8) |
-| Base-60 grid, 184 bytes | scans 66–67, inside seg 15 | ✗ as a key (§12); ✗ as LP ciphertext or XOR/Vigenère under LP-native keys (§13); **○ what it encodes** |
+| Base-60 grid, 256 bytes | scans 66–68, inside seg 15 | ✗ as a key (§12); ✗ as LP ciphertext or XOR/Vigenère under LP-native keys (§13); **○ what it encodes** |
 | AN END deep-web hash (512-bit) | scan 73; `keys.an_end_hash` | ✗ as a byte key for the grid (§13); ✗ as a cyclic LP2 key from any phase (§16); the page itself was never found (community) |
 | Instar / emergence / circumference / "within" | 0.1.0.7, PARABLE | thematic only: no falsifiable key proposed |
 | "EITHER THE WORDS OR THEIR NUMBERS" | 0.0.0.8 | word sums ✗ (K-C); other word→number maps ○ |

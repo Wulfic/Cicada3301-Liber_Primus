@@ -37,7 +37,7 @@ written here, with no test yet. An "arg" row needs a test before it can go in th
 | 21 | Common PRNGs / KDFs; public random archives | — | ✗ | Dukotah ledger (~14.5 billion offsets) |
 | 22 | *Named* custom generator (LFSR with stated taps and seed, hash chain of a stated phrase) | — | ○ | needs exact definition + mod-29 mapping + `detect.log_lr` |
 | 23 | Two or more additive layers | only the sum is visible | constraints apply to the sum | test the composed stream, not one layer |
-| 24 | Per-position alphabet c = σ_{k_i}(p), non-additive | label-free emissions | ○ | next action 1. Synthetic: within-class coincidences have power only in step (z 86–240 at 12,956 runes, ~0 at 1 % desync) |
+| 24 | Per-position alphabet c = σ_{k_i}(p), non-additive | label-free emissions (`alphabets.log_mean_lr`); uneven marginal | ◐ | ✗ any key of period ≤ 1000 in step (C9, §17). Long named keys: stage S **void** (§17), so open. Random σ over few classes leaves χ² ≫ 26.4: a flatness constraint is the next declared test. A re-run needs flat synthetic negatives |
 | 25a | Chain-multiplicative c = c₋₁ + (p − x)·k (doublets mark plaintext x) | doublet count and word positions are x's | ✗ | C3, all 29 letters (findings §15) |
 | 25 | Bitwise ops on 5-bit rune codes (XOR) | produces values 29–31 | arg | needs a stated reduction to 29 values, or it emits impossible runes |
 | 26 | One-time pad, truly random | indistinguishable | consistent with all data | breakable only by finding the pad |
@@ -58,7 +58,7 @@ written here, with no test yet. An "arg" row needs a test before it can go in th
 
 | Object | Where | Status |
 |---|---|---|
-| Base-60 grid, 184 bytes | `keys.grid_bytes` | not a key (§12); not decrypted by LP-native keys (§13); **what it encodes ○** |
+| Base-60 grid, 256 bytes (scans 66–68) | `keys.grid_bytes` | not a key (§12); not decrypted by LP-native keys (§13); **what it encodes ○** |
 | OutGuess payloads | `data/outguess/` | ✗ as keys with drift, any phase (§16). Scans not on disk ○ |
 | Cicada numbers in two-digit groups | `lp-expert/lore.md` | ✗ P.S. and 2014 n, pairs and triples, any phase (§16) |
 | AN END hash | `keys.an_end_hash` | ✗ as a byte key for the grid (§13); ✗ as a cyclic LP2 key with drift, any phase (§16) |

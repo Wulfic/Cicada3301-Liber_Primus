@@ -4,7 +4,7 @@
 and what to do next. Every claim on it is backed by a test or a linked document. If something here
 disagrees with the tests, the tests win, and this page needs fixing.
 
-**Last updated:** 2026-10-01 · **Tests:** 108, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
+**Last updated:** 2026-10-01 · **Tests:** 126, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
 
 ---
 
@@ -32,17 +32,19 @@ of arbitrary transformations or other grid-derived keys.
 The earlier 184-byte runs covered only a prefix. The five numeric-cell updates follow prior community work
 credited to Inky in 2021; see [provenance](data/canonical/PROVENANCE.md). Title cribs were closed as untestable (findings §9).
 Cicada's published numbers and every OutGuess payload in the repo also fail as keys, from any start phase (findings §16).
+A label-free test of per-position alphabets on the long named keys was **void** by its own rule and excludes nothing;
+C9 does cover such keys when their period is ≤ 1000 (findings §17).
 
-**Next actions, in order** (all low prior; detail in [findings §6–§16](reference/findings/lp2_logic_findings_2026-09-29.md)):
+**Next actions, in order** (all low prior; detail in [findings §6–§17](reference/findings/lp2_logic_findings_2026-09-29.md)):
 
-1. **Non-additive per-position alphabets** c = σ_{k_i}(p), tested against the named keys already rejected as
-   additive. This needs a detector that does not depend on the plaintext's letter labels. A synthetic check
-   (2026-10-01, not yet a test) bears on its design. Within-class coincidences, with classes being the key's raw
-   values, give z ≈ 86–240 on 12,956 runes **in step**, but nothing at 1 % key desync. So the test can only be an
-   in-step one, with its null taken from offsets of the key rather than from a formula. That is still worth doing:
-   the surviving re-key models (fresh draw, missed hand check) keep the key in step, and every solved LP1 key runs
-   without desync. Declare it first.
-2. **The grid's 256 bytes** are still undeciphered (findings §13).
+1. **A flatness constraint on per-position alphabets** c = σ_{k_i}(p) (findings §17, "what this suggests"). It needs
+   no key. Random σ_v over V roughly equal key classes leaves an expected χ² excess of about 10,400 / V at LP2's
+   length, against LP2's 26.4. If that holds as a declared test, only σ families whose mixture is flat survive
+   (additive and Quagmire under a flat key), or keys with hundreds of effective classes. Declare it first: the
+   predicted excess as a function of the class weights, checked on synthetic ciphers *before* LP2. Only after that
+   should a named-key σ test be re-declared, with negative controls built from **flat** synthetic ciphers (stage S
+   was void because its synthetic ciphers were not flat).
+2. **The grid's 256 bytes** are still undeciphered (findings §12–§13).
 3. **More named sources** only with a new primary source: OutGuess output from scans the repo does not hold
    (community `lp_outguessed/`), or a named generator (catalog row 22). The material on disk is exhausted (§16).
 
@@ -121,7 +123,8 @@ The evidence is in findings §2 (C1–C7), §7 (C8), §8 (C9), §9 (C10–C11), 
 - **Not skip-next (C14):** a "skip to the next key value" rule needs a key repeating adjacent values ~19 % of the
   time, and that would leak English differences into Δc. LLR −21.3. The replacement must be independent of the key stream.
 - **No periodic key (C9):** lags 11–1000 are normal. This excludes every period ≤ 1000 under a re-key rule that keeps
-  the key in step, and every period ≤ 25 under a drifting one (findings §8).
+  the key in step, and every period ≤ 25 under a drifting one (findings §8). In step it holds for per-position alphabets
+  c = σ_{k_i}(p) too, whatever σ is (findings §17).
 
 **Reading:** a rule applied at the output of a non-periodic additive stream. It is not a property of the key
 text, of word structure, or of any plaintext letter.
@@ -180,6 +183,8 @@ RANDOM.ORG and RAND archives (~14.5 billion offsets). Both conclude "OTP-class" 
   P.S. number (131 and 132 digits) and the 2014 RSA n as digit pairs or triples; the cookies, AN END hash,
   `page_00` hex, second-onion hex, wisdom/folly hint (both directions) and the three 58,152-byte `.bin` payloads
   as bytes, mod 29 or by rejection. 43,500 drift-tolerant decodes; best on a real section −50.8 vs +30; controls ≥ +169.
+- **Per-position alphabets c = σ_{k_i}(p) with any short key in step** (period ≤ 1000: C9, findings §17). The same
+  question for the *long* named keys (primes, solved text, hint, `.bin` payloads, corpora) is **open**: stage S was void.
 - The "Echo446Ghq full solution" is debunked ([analysis](reference/community/echo446ghq_analysis.md)).
 
 ### 4.3 Invalid claims from before 2026-09-29
@@ -229,8 +234,9 @@ The ordered list is in §1. These questions are also open and cheap to state:
 
 | Date | What happened | Commits |
 |---|---|---|
+| 2026-10-01 | **Per-position alphabets** (TODO S): label-free DM detector (`alphabets.py`, tested). C9 extended to σ keys. The 200-decode run on long named keys is **void** twice by its declared rule (run 1: tiled control text shared the key period; run 2: random-σ control ciphers are not flat, χ² 355–1,141). LP2 decodes ≤ +0.84, real-data nulls ≤ −489.5, but nothing is excluded. New lead: a flatness constraint | `8c93b22` `2c62782` `3f5b830` + this commit |
 | 2026-10-01 | **Full-grid correction:** scans 66–68 supply all 256 cells; five numeric corrections follow Inky's 2021 iddqd update. Prime byte streams continue through all 256 positions. The regenerated 3,132 Stage M and 456 Stage N candidates give no pass; best nontrivial M score −13.75, N 42.6 % printable / +4.63 nats. Payload and stream regressions added; findings §§12–13 supersede the historical prefix results | `4f326e5` (PR #1) |
-| 2026-10-01 | **Cicada numbers and OutGuess payloads** (TODO R): 25 sources × 2 mappings, any start phase (`starts=` prior), 43,500 decodes; none passes (best −50.8 on a real section; controls ≥ +169). `fastdetect` (numpy, tested equal). Synthetic check: a label-free coincidence test has power only in step | `2c209dc` + this commit |
+| 2026-10-01 | **Cicada numbers and OutGuess payloads** (TODO R): 25 sources × 2 mappings, any start phase (`starts=` prior), 43,500 decodes; none passes (best −50.8 on a real section; controls ≥ +169). `fastdetect` (numpy, tested equal). Synthetic check: a label-free coincidence test has power only in step | `2c209dc` `14320cb` |
 | 2026-10-01 | **Consolidation** (TODO Q): constraint register (findings §0); C3 now a test (all 29 letters excluded); C15, no homophonic substitution (χ² ≥ 4,802); every §3.2 number pinned; `tests/test_docs.py` checks cited names; errata in C3 (75 → 25) and C7 (2.6 → 2.39 %) | `028ef53` `d8115fd` |
 | 2026-10-01 | **Skip-next rule** (TODO O): C14, the re-keying is not "skip to the next key value" (LLR −21.3; held-out models −20/−32) | `0d4d86b` + this commit |
 | 2026-10-01 | **Historical grid prefix** (TODO N): the original 184-byte payload gave 72 byte decryptions and 384 rune readings; none passed (best 44 % printable, best log LR −4.8). Superseded by the complete-grid rerun in findings §13 | `14afdff` + this commit |

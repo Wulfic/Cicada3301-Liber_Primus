@@ -63,7 +63,7 @@ is not LP-English. The same gap is why no homophonic substitution can flatten LP
 - **Scan** 00–74 (`pages/page_XX/`, `images/XX.jpg`): the folder key.
 - **LP page** (LP1 / LP2 p0–57): `corpus.lp_location(scan)`. LP2 p0 = scan 17; AN END = scan 73 = LP2 p56.
 - **Segment** 0–17 (`$` breaks in the master): the cipher unit. Unsolved = 7–15 (`stats.UNSOLVED_SEGMENTS`).
-  Segment 10 is only 9 runes plus the 4×4 square. The base-60 grid sits on scans 66–67 *inside* segment 15.
+  Segment 10 is only 9 runes plus the 4×4 square. The base-60 grid (256 cells) sits on scans 66–68 *inside* segment 15.
 
 Before 2026-09-29, `pages/page_N/runes.txt` held the wrong text. Any older claim that names a page number is
 suspect until it has been re-derived from canonical data (tracker §4.3).

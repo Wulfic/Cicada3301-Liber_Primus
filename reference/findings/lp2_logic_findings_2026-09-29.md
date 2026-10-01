@@ -20,7 +20,7 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 | C6 | One system, no seam between sections | χ² 5.33 on 8 df, p = 0.72; early vs late p = 0.099 | `test_l4_survivors_are_homogeneous_and_unclustered`, `test_early_and_late_sections_do_not_differ` | 2, 7 |
 | C7 | No one-shift-per-word scheme | predicted 2.39 % within words vs 0.63 % (z = −11.6) | `test_per_word_shift_is_excluded` | 2 |
 | C8 | A re-key leaks exactly where the replacement equals the original | algebraic identity (p + k′ = c₋₁ ⇔ k′ = k) | `test_key_switch_mechanics` (the k′ = k + 1 case) | 7 |
-| C9 | No periodic key | lags 11–1000: best p = 3.4 × 10⁻⁴ vs 1.0 × 10⁻⁵ | `test_no_period_in_the_unsolved_text` | 8 |
+| C9 | No periodic key, additive or per-position alphabets σ_{k_i} (in step) | lags 11–1000: best p = 3.4 × 10⁻⁴ vs 1.0 × 10⁻⁵ | `test_no_period_in_the_unsolved_text`, `test_sigma_periodic_keys_are_flagged_at_their_period` | 8, 17 |
 | C10 | The key is not English text (letters, prime values, φ) | LLR −255 … −333 ≤ −10 | `test_no_english_running_key` | 9 |
 | C11 | No ciphertext autokey, lags 2–1000 | best p = 5.6 × 10⁻⁴ vs 5.0 × 10⁻⁶ | `test_no_ciphertext_autokey` | 9 |
 | C12 | No alphabet chosen by c_{i−L}, L ≤ 1000 | best p = 3.9 × 10⁻³ vs 10⁻⁵ | `test_no_ciphertext_selected_alphabet` | 10 |
@@ -47,6 +47,7 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 | The complete base-60 grid as a key in the tested alignments (stage M) | 3,132 | −13.75 excluding the short title vs +30 | `test_recorded_family_fails` |
 | The complete grid under the named byte/rune readings (stage N) | 456 | 42.6 % printable vs 90 %; +4.63 vs +30 | `test_recorded_verdict` |
 | Cicada's numbers and OutGuess payloads, any phase (stage R) | 43,500 | −50.8 vs +30 | `test_recorded_family_is_complete_and_fails` |
+| Long named keys as per-position alphabets, label-free (stage S) | 200 | **void**: excludes nothing (§17) | `test_run_2_is_void` |
 
 ## 1. State of the art (web check, September 2026)
 
@@ -510,3 +511,51 @@ is an additive LP2 key. That holds under any mode, shift or start phase, with dr
 continuous. This closes tracker §1 item 1 for the material in the repo. Not covered: other mappings of these
 numbers (base conversion, factors, hashes), OutGuess output from scans the repo does not hold (community
 `lp_outguessed/`), and any non-additive use (the label-free detector in tracker §1).
+
+## 17. Per-position alphabets c = σ_{k_i}(p): the label-free test is void (2026-10-01, TODO stage S)
+
+Declared in `TODO.md` and committed (`8c93b22`) before any LP2 decode. Detector: `tools/lpcore/alphabets.py`. Run:
+`python -m tools.run_stage_s` (about 10 minutes on 8 workers), rows in [`stage_s_candidates.tsv`](stage_s_candidates.tsv)
+and [`stage_s_controls.tsv`](stage_s_controls.tsv). Tests: `tests/test_alphabets.py`.
+
+**The question.** Suppose each key value v picks its own secret alphabet σ_v, so c_i = σ_{k_i}(p_i). That covers
+mixed-alphabet tabulae, a running key with a secret tabula, and the additive case. The labelled detector cannot see
+it, because it scores plaintext letters. Inside one key class, though, the cipher repeats as often as the plaintext
+does (Σq² = 0.0622 instead of 1/29), whatever σ_v is.
+
+**The detector works.** Per key phase, the score is a Dirichlet-multinomial likelihood ratio against a uniform
+cipher, with α = 1.165 matched to the plaintext's coincidence rate (`alphabets.dm_alpha`). Its mean over every
+phase keeps the e^−30 bound. Tests pin four properties:
+- an exact mean LR of 1 under a uniform cipher (`test_mean_lr_under_a_uniform_cipher_is_one`);
+- FFT counts equal to direct counts (`test_fft_counts_equal_direct_counts`);
+- power in step at 729 runes, finding the true phase (`test_mod_29_classes_at_729_runes`);
+- no power at 1 % desync (`test_one_percent_desync_kills_the_signal`).
+
+**What holds (C9, extended).** A σ key of period P that stays in step gives positions i and i + P the same alphabet.
+So the lag-P repeat rate is Σq² whatever σ is, and C9's scan sees it. A synthetic check at periods 500 and 1000 is
+flagged below the Bonferroni line (`test_sigma_periodic_keys_are_flagged_at_their_period`). With C9 on LP2, that
+excludes **every per-position-alphabet cipher whose key has period ≤ 1000 and stays in step**. That covers the
+short named sources (the cookies, the AN END hash, the 256-byte grid, `page_00`, the second onion, the P.S. and RSA
+digit groups, the solved text's word sums) under any σ.
+
+**What does not hold: the run on the long named keys is void.** The family was 20 key classings × 10 alignments: the
+primes mod 29, the solved plaintext, the hint, the three `.bin` payloads and four English corpora as letter classes.
+It ran twice, and both runs are void by the rule declared first (a negative control at or above 30 voids the run).
+| Run | Void because | Real-data nulls (shuffled key on LP2) | LP2 decodes |
+|---|---|---|---|
+| 1 | 4 negative controls at +904 … +1,104. The control text (the 2,901-rune plaintext, tiled) and the plaintext keys share period 2,901, so the control cipher repeats at that lag 96.8 % of the time. LP2 at lag 2,901: 328 / 10,055 | all ≤ −489.5 | best +0.84 |
+| 2 | 1 negative control at +53.5 (Liber AL letters, 12,956 runes) | all ≤ −489.5 | identical to run 1, byte for byte |
+
+**Diagnosis of run 2.** A cipher made with random σ_v over a few dozen key classes is **not flat**. The control
+ciphers have χ² = 1,141 (Liber AL letters) and 355.6 (`page_17.bin` mod 29) on 28 df, where LP2 has 26.4 (C2). A DM
+score against a uniform cipher rewards any lumping of an uneven cipher, so the synthetic "negative" controls were
+never nulls. On the real, flat ciphertext the null behaves: every shuffled key scores ≤ −489.5. No LP2 decode reached
+30 (best +0.84). Under the declared rules, though, the run **excludes nothing**. The decodes were seen before the
+controls were fixed, so they can't be promoted to a result now.
+
+**What this suggests (not yet a result).** The same uneven marginal that broke the controls is a key-independent
+handle. Random σ_v over V roughly equal classes gives an expected χ² excess of about n·(29·Σq² − 1)/V ≈ 10,400 / V
+at LP2's length. For LP2's χ² of 26.4 that needs hundreds of effective classes, unless the σ_v are structured so that
+their mixture is flat (additive and Quagmire alphabets are, under a flat key). That is a constraint, written as a
+prediction. It needs its own declared stage before it can enter the register.
+
