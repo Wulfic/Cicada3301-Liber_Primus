@@ -9,7 +9,65 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-*(none. The next research step is MASTER_TRACKER §1, item 1. Plan it here before starting.)*
+### S — per-position alphabets c = σ_{k_i}(p), label-free (2026-10-01)
+
+**Goal.** Tracker §1 item 1 / catalog row 24. Test whether a long named key picks an arbitrary secret alphabet
+per position: c_i = σ_{k_i}(p_i), with one unknown permutation σ_v per key class v. This covers mixed-alphabet
+tabulae (Quagmire-style, c = σ(τ(p) + k)), a running key with a secret tabula, and the additive case. The
+labelled detector (`detect.log_lr`) cannot see any of these except the additive one.
+
+**Model.** Classes v_i = class(K[t + i]) for a named source K read from phase t. Within a class the cipher is
+σ_v(plaintext), so it has the plaintext's coincidence rate (s = Σq² = 0.0622) instead of 1/29. The key stays in
+step: the re-key rule is a fresh draw (the surviving models in tracker §1; skip-next is C14-excluded). A drifting
+rule is out of scope, because a coincidence test has no power under 1 % desync (catalog row 24).
+
+**Detector (new, `tools/lpcore/alphabets.py`).** Per phase, LR(t) = Π_v DM(cipher in class v; α) / 29^−n. DM is a
+symmetric Dirichlet-multinomial sequence probability with α = (1 − s)/(29s − 1) = 1.165, chosen so its expected
+coincidence rate equals the plaintext's. It is invariant under every σ_v, so it needs no plaintext labels. A
+decode is log of the mean of LR(t) over every phase t (a uniform prior, as in stage R). Under an iid-uniform cipher
+E[LR(t)] = 1 for each t, so **P(decode ≥ 30) ≤ e^−30 with no calibration**. LP2's doublet deficit only removes
+coincidences, so on LP2 the bound is conservative. Counts for all phases come from FFT cross-correlation, tested
+equal to a direct per-phase count.
+
+**Not already excluded because:** C2/C4/C10/C13 are marginal arguments about c = p ± k. With arbitrary σ_v the
+mixture Σ_v P(v)·σ_v(q) can be flat, so none of them apply. C12 covers alphabets chosen by *ciphertext*, not by a
+key. Stages I and R scored these sources only with plaintext labels (additive). **Short sources are already
+covered:** a key of period P ≤ 1000 in step gives positions i and i + P the same σ, so the lag-P repeat rate is s
+whatever σ is, and C9 sees it. This stage adds a test that C9 flags a σ-periodic synthetic key (periods 500 and
+1000). So the cookies, AN END hash, grid, `page_00`, second onion, P.S./RSA groups and word sums (726) are not rerun.
+
+**Family (N = 200 decodes, bound 200·e^−30 ≈ 1.9 × 10⁻¹¹).** 20 key classings × 10 alignments (9 sections, each from
+an unknown phase, plus LP2 7–15 continuous from one phase). There are no modes or shifts, because σ absorbs them.
+| Source | Read | Classings | # |
+|---|---|---|---|
+| primes p(n) | linear, phase 0…25,911 | p mod 29 (also φ(p), p ± c, 3301 − p: same partition) | 1 |
+| solved plaintext, 2,901 runes | cyclic | rune index; prime value mod 29 | 2 |
+| `wisdom_hint.txt`, forward and reversed, 3,368 bytes | cyclic | raw byte; byte mod 29 | 4 |
+| `page_17/21/43.bin`, 58,152 bytes | cyclic | raw byte; mod 29; reject (v < 232, then mod 29) | 9 |
+| `data/corpora/` emerson, self_reliance, liber_al, deor | cyclic | each distinct letter (`str.isalpha`, upper-cased) is a class | 4 |
+
+**Controls, per key classing, before LP2 is scored.** Positive: the solved plaintext enciphered under that key with a
+random σ per class, a random phase and the fresh re-key (keep 0.19), at 729, 1,894 and 12,956 runes, 2 seeds each.
+Negative: the same ciphertexts scored against the key shuffled (same class sizes). Real-data null: the shuffled key
+scored on LP2 continuous, one per classing (20).
+
+*Amended before any LP2 decode:* the control text is the solved plaintext **reversed**. Started at its first rune, the
+plaintext-key controls scored about +210 at 729 runes, because at phase 0 the key equals the text and that one phase
+dominated the mean. At the true phase they score about +90, like the letter keys. The detector is unchanged.
+
+**Rules, written now.**
+- *Power* at an alignment of n runes: both positive controls at the largest control size ≤ n score ≥ 30. Segment 10
+  (9 runes) never has power. Expected from the scratch check: classes mod 29 and letters about +65 at 729 runes and
+  +4,000 at 12,956; raw bytes about +11 at 729 (no power), +57 at 1,894 and +1,700 at 12,956.
+- *Pass (candidate):* any decode ≥ 30 on a real alignment. It is not a solve. A follow-up stage would have to be
+  declared to recover the per-class alphabets.
+- *Exclude:* a decode < 30 where there is power.
+- *Inconclusive:* a decode < 30 without power. It is recorded as "no power", never as an exclusion.
+- *Void:* any negative or real-data-null control ≥ 30. That means the null is broken, and nothing from the run counts.
+
+**Not doing.** Drift; two layers (σ then an additive stream); rune transliterations of the corpora (no transliterator
+exists, and building one is its own stage); sources not on disk. **Blast radius:** additive only (new module, runner,
+TSVs, tests, docs). **Rollback:** `git revert` the stage commits.
 
 ## Owner items
 
