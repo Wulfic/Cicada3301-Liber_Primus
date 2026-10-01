@@ -1,7 +1,7 @@
 > 🗄️ **ARCHIVED 2026-10-01. Not the current tracker. Read [`/MASTER_TRACKER.md`](../../MASTER_TRACKER.md) instead.**
 > This is the Feb–May 2026 tracker (sessions 1–21), kept verbatim for history. Everything after its §0 was
 > written against page files that did not match their scans, or comes from hill-climbing. Its file paths
-> point to pre-reorganisation locations (see `data/archive/hillclimbers/20260529/MOVES.txt` and `git log --follow`).
+> point to pre-reorganisation locations (see `data/archive/hillclimbers/20260529/MOVES.txt`). Its edit history: `git log 8b143c1~1 -- MASTER_TRACKER.md`.
 
 # LIBER PRIMUS — MASTER TRACKER
 ## Cicada 3301 (2014) — Comprehensive Solving Record

@@ -4,79 +4,75 @@
 
 # What is Cicada 3301?
 
-Cicada 3301 is an organization that posted three rounds of cryptographic puzzles (2012, 2013, 2014) to recruit codebreakers. The third puzzle — centred on the **Liber Primus**, a 75-page runic manuscript — remains partially unsolved. See [Lemmino's overview](https://www.youtube.com/watch?v=I2O7blSSzpI) or [Nox Populi's deep dive](https://www.youtube.com/watch?v=l0z03ntMJio) for background.
+Cicada 3301 is an organization that posted three rounds of cryptographic puzzles (2012, 2013, 2014) to recruit codebreakers. The third puzzle centres on the **Liber Primus**, a 75-page runic manuscript, and it remains partially unsolved. See [Lemmino's overview](https://www.youtube.com/watch?v=I2O7blSSzpI) or [Nox Populi's deep dive](https://www.youtube.com/watch?v=l0z03ntMJio) for background.
 
-# This Repository
+# This repository
 
-Active research workspace for decrypting the Liber Primus. All progress, keys, failed approaches, and next steps are tracked in a single document:
+A research workspace for the unsolved pages of the Liber Primus, built on logic and reproducible tests rather than search.
 
-> **[MASTER_TRACKER.md](MASTER_TRACKER.md)** — the sole source of truth. Start here.
+> **Start at [MASTER_TRACKER.md](MASTER_TRACKER.md).** It says where the work stands, what is proven, what is ruled out, and what to do next.
 
----
+| Scans (`pages/page_XX`) | Book | Status |
+|---|---|---|
+| 01, 03–16 | LP1 | ✅ solved: every section reproduced from canonical runes by the tests |
+| 17–66, 68–72 | LP2 p0–55 | 🔴 **unsolved**: 9 sections, 12,956 runes |
+| 73, 74 | LP2 p56–57 | ✅ solved (AN END, PARABLE) |
+| 00, 02, 67 | — | no runes (title pages, base-60 grid) |
 
-## Repository Structure
+## Quick start
+
+Python 3.11 or newer, standard library only.
 
 ```
-├── MASTER_TRACKER.md          # All progress, keys, methods, status
-├── README.md
-│
-├── pages/                     # The manuscript — 75 page directories
-│   └── page_XX/
-│       ├── runes.txt          # Raw rune ciphertext
-│       ├── README.md          # Per-page status & notes
-│       └── images/            # Page scans & enhanced images
-│
-├── data/                      # Corpus, keys, derived data
-│   ├── canonical/             # ★ canonical rune text + translation (source of truth, see PROVENANCE.md)
-│   ├── gematria_primus.md     # 29-char runic alphabet & values
-│   ├── runes_full.txt         # Concatenated runes (all pages)
-│   ├── self_reliance.txt      # Emerson — referenced in solved text
-│   ├── emerson_essays.txt     # Full Emerson corpus
-│   ├── deor_poem.txt          # Old English poem (Deor)
-│   ├── wordlist.txt           # English dictionary for scoring
-│   ├── key_search_corpus.txt  # Combined key-search corpus
-│   ├── folly_hint.txt         # Outguess hint (folly)
-│   ├── folly_rev_hint.txt     # Outguess hint (folly reversed)
-│   ├── wisdom_hint.txt        # Outguess hint (wisdom)
-│   ├── outguess/              # 5 outguess-extracted messages
-│   └── archive/hillclimbers/  # LEGACY hill-climb outputs on misaligned data — not evidence (see its README)
-│
-├── reference/                 # Community research & external docs
-│   ├── community_research.md  # Wiki/Reddit/GitHub findings
-│   ├── liber_primus_transcript.md  # Full LP transcript
-│   ├── people_2014.md         # Known 2014 participants
-│   ├── LiberPrimus.pdf        # Original LP scan (55 MB)
-│   ├── cicada_pgp_key.asc     # 3301 PGP public key
-│   ├── cicada_puzzle_paper.pdf # Academic paper on the puzzle
-│   ├── solved_pages.docx      # Community compiled solutions
-│   ├── RuneSolver.py          # Community rune solver tool
-│   └── ...                    # IRC logs, cuneiform ref, images, etc.
-│
-├── tests/                     # unittest suite: python -m unittest discover -s tests -t . -v
-│
-└── tools/                     # Python scripts
-    ├── lpcore/                # ★ tested core: corpus loader, gematria, deterministic ciphers, verifier
-    ├── rebuild_page_files.py  # regenerates pages/page_XX/{runes.txt,README.md} (dry-run default)
-    └── legacy/                # 107 pre-2026-09-29 scripts, untested, read misaligned data (see its README)
+python -m unittest discover -s tests -t . -v      # proves the data and the core are right (35 tests)
 ```
 
-## Liber Primus Status
+```python
+from tools.lpcore.corpus import load_corpus
+from tools.lpcore.gematria import indices_to_latin
 
-Page folders are keyed by **scan number**: `pages/page_XX/` holds `images/XX.jpg` and the runes on that scan.
-Status is **asserted by tests** (`python -m unittest discover -s tests -t . -v`), not claimed.
+corpus = load_corpus()                     # canonical LP1 + LP2, keyed by scan number
+runes = corpus.segment_runes(7)            # first unsolved section, as Gematria Primus indices 0–28
+print(len(runes), indices_to_latin(runes[:20], sep=" "))
+```
 
-| Scans (`page_XX`) | Book | Content | Status |
-|---|---|---|---|
-| 00, 02 | LP1 | title pages | no runes |
-| 01, 03–16 | LP1 | A WARNING · WELCOME · SOME WISDOM · A KOAN · AN INSTRUCTION · THE LOSS OF DIVINITY · A KOAN · AN INSTRUCTION | ✅ solved (all reproduced from canonical runes) |
-| 17–66, 68–72 | LP2 p0–55 | 9 sections, 12,956 runes | 🔴 **unsolved** |
-| 67 | LP2 p50 | base-60 grid | no runes |
-| 73 | LP2 p56 | AN END (φ(prime) stream) | ✅ solved |
-| 74 | LP2 p57 | PARABLE (plaintext) | ✅ solved |
+## Repository layout
 
-> **2026-09-29 correction:** before this date the page files did not match their scans (`page_N` held LP2 page N),
-> and many "discoveries" in older notes were artifacts of that or of hill-climbing. See **§0 of MASTER_TRACKER.md**.
-> Canonical text: [`data/canonical/`](data/canonical/PROVENANCE.md) · tested core: [`tools/lpcore/`](tools/lpcore/__init__.py).
+Folders are grouped by **how far you can trust them**. ★ = source of truth.
+
+```
+MASTER_TRACKER.md          ★ status, facts, exclusions, next steps; start here
+TODO.md                    current plan (written before any code) and stage history
+AGENTS.md                  working rules for anyone, human or AI, changing this repo
+
+pages/page_XX/             one folder per scan, 00–74
+  images/                  the scan(s)
+  runes.txt, README.md     generated from canonical data by tools/rebuild_page_files.py; don't hand-edit
+
+data/                      inputs; see data/README.md
+  canonical/               ★ master rune transcription, translation, keys + PROVENANCE.md
+  corpora/                 candidate key texts (Emerson, Deor, Liber AL) and an English wordlist
+  outguess/                OutGuess-extracted messages and binary hints
+  alternate_scans/         enhanced and difference images
+  archive/                 history, not evidence: legacy solver outputs, superseded inputs
+
+tools/
+  lpcore/                  ★ tested core: corpus loader, gematria, deterministic ciphers, verifier, statistics
+  rebuild_page_files.py    regenerates pages/*/runes.txt + README.md (dry-run unless --write)
+  legacy/                  107 pre-2026-09-29 scripts, untested and built on misaligned data; history only
+
+tests/                     ★ the proof: python -m unittest discover -s tests -t . -v
+
+reference/                 reading material; see reference/README.md
+  findings/                our results, each backed by a test
+  sources/                 primary Cicada material (the full PDF, transcript, PGP key, gematria table)
+  community/               other people's research and tools, unverified until reproduced
+  archive/                 superseded docs of ours, e.g. the pre-2026-09-29 tracker
+```
+
+> **Why "history, not evidence"?** Until 2026-09-29 the page files did not match their scans, and much of the
+> older work was hill-climbing. The claims that turned out to be artifacts are listed in
+> [MASTER_TRACKER.md §4.3](MASTER_TRACKER.md#43-invalid-claims-from-before-2026-09-29).
 
 ---
 

@@ -230,7 +230,7 @@ Factor the 131-digit P.S. number to see if it yields prime factors useful as cip
 
 **Nobody has solved it.** Two public 2026 analyses supersede much of this file. Details and the
 logic-only results derived on our canonical data are in
-[`lp2_logic_findings_2026-09-29.md`](lp2_logic_findings_2026-09-29.md).
+[`lp2_logic_findings_2026-09-29.md`](../findings/lp2_logic_findings_2026-09-29.md).
 
 - [Leo-Y-Zhang/LiberPrimusAnalysis](https://github.com/Leo-Y-Zhang/LiberPrimusAnalysis) —
   the only structure in the 12,956 unsolved runes is a doublet deficit: 86 observed vs 447
