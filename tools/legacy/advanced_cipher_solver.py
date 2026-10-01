@@ -242,32 +242,65 @@ def running_key_decrypt(cipher, key_stream, mode='sub'):
         plain.append(p)
     return plain
 
-def vigenere_fskip(cipher_content, key_indices, mode='sub'):
-    """Vigenère with F-skip: literal F (index 0) in cipher skips key advancement."""
+def vigenere_fskip(cipher_content, key_indices, mode='sub', conditional_on_key=True, key_start=0):
+    """Vigenère with F-skip.
+
+    Two semantics supported via `conditional_on_key`:
+      - True (conditional): treat a cipher F (ᚠ) as a literal F *only* when the
+        current key element is also F; otherwise apply the key normally.
+      - False (unconditional / legacy): treat any cipher F as a literal F and
+        do NOT advance the key (legacy behaviour seen in some scripts).
+
+    `key_start` allows continuing a key stream from a given key position.
+    """
     plain = []
-    key_pos = 0
-    klen = len(key_indices)
-    
+    key_pos = int(key_start)
+    klen = len(key_indices) if key_indices else 0
+
     for ch in cipher_content:
         if ch not in RUNE_TO_IDX:
             continue
         c = RUNE_TO_IDX[ch]
-        
-        if c == 0:  # F rune
-            # Check if this is a literal F (key not applied)
-            plain.append(0)  # Output F
-            # Key does NOT advance
+
+        if c == 0:  # Cipher rune is ᚠ (F)
+            if conditional_on_key:
+                # Only treat as literal F when current key element is also F
+                if klen > 0 and key_indices[key_pos % klen] == 0:
+                    plain.append(0)
+                    # key_pos does NOT advance
+                else:
+                    # Apply key normally
+                    if klen == 0:
+                        plain.append(c)
+                    else:
+                        k = key_indices[key_pos % klen]
+                        if mode == 'sub':
+                            p = (c - k) % 29
+                        elif mode == 'add':
+                            p = (c + k) % 29
+                        elif mode == 'beaufort':
+                            p = (k - c) % 29
+                        plain.append(p)
+                        key_pos += 1
+            else:
+                # Legacy behaviour: any cipher F is literal and does NOT advance key
+                plain.append(0)
+                # key_pos unchanged
         else:
-            k = key_indices[key_pos % klen]
-            if mode == 'sub':
-                p = (c - k) % 29
-            elif mode == 'add':
-                p = (c + k) % 29
-            elif mode == 'beaufort':
-                p = (k - c) % 29
-            plain.append(p)
-            key_pos += 1
-    
+            # Regular cipher rune: apply key (if available)
+            if klen == 0:
+                plain.append(c)
+            else:
+                k = key_indices[key_pos % klen]
+                if mode == 'sub':
+                    p = (c - k) % 29
+                elif mode == 'add':
+                    p = (c + k) % 29
+                elif mode == 'beaufort':
+                    p = (k - c) % 29
+                plain.append(p)
+                key_pos += 1
+
     return plain
 
 def progressive_key(cipher, seed, step=1):
