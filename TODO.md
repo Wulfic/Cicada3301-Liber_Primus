@@ -4,6 +4,31 @@ Plans are written here BEFORE code (AGENTS.md). Newest stage first within a sess
 
 ---
 
+## 2026-10-01 — Stage G: organise the repo for clarity (owner request)
+
+**Goal:** someone returning after a break, or new to the repo, can open `MASTER_TRACKER.md` and know exactly
+where things stand and what's next; every folder's purpose is obvious from its name and its README.
+**Approach:** `git mv` only (history kept); every changed link updated in the same commit; tests run before each commit.
+**Rejected:** editing the old tracker body in place. It is ~1,400 lines, mostly invalidated, and correcting
+it line by line would never finish. It is archived verbatim with a banner instead.
+**Not doing:** no content changes to page files, canonical data, `tools/lpcore`, or archived files (apart from the banner);
+no analysis work (D3 waits); no push.
+**Blast radius:** paths of reference/data files that only docs link to (nothing in `tools/lpcore` or `tests` reads them; checked
+with grep). One deletion: `data/key_search_corpus.txt`, a byte-identical copy (`cmp`) of
+`reference/liber_primus_transcript.md`, tracked, so it can be restored from git.
+
+- [ ] G1. `.gitattributes`: LF for text and explicit binaries. Renormalize, check that the diff is empty or EOL-only. Commit.
+- [ ] G2. `reference/` → `sources/` (primary Cicada material), `community/` (others' research, tools, images), `findings/` (ours),
+      `archive/`. `data/` → `canonical/`, `corpora/` (candidate key texts + wordlist), `outguess/` (+ the 3 hint files),
+      `alternate_scans/`, `archive/` (`runes_full.txt` → `archive/legacy_inputs/`). A README in each folder. Links fixed. Commit.
+- [ ] G3. `MASTER_TRACKER.md` → `reference/archive/MASTER_TRACKER_2026-04_pre-correction.md` (verbatim + banner). Write a new,
+      short tracker: resume-here, status, established facts, refuted claims, open questions, rules, session log. Commit.
+- [ ] G4. `README.md` (quick start + layout) and this file trimmed to active work, with done stages collapsed to one line + commit. Commit.
+
+**Rollback:** each step is one commit → `git revert <sha>`.
+
+---
+
 ## 2026-10-01 — Stage F: remove material from other projects + first commits ✅
 
 **Owner request:** remove anything not specific to this project (no Ko-fi, no Minecraft), then commit stages A–F.

@@ -1,0 +1,12 @@
+# Text is stored and checked out with LF on every platform (stops the CRLF warnings on Windows).
+* text=auto eol=lf
+
+# Binary: never touch line endings, never diff as text.
+*.jpg  binary
+*.jpeg binary
+*.png  binary
+*.gif  binary
+*.pdf  binary
+*.docx binary
+*.bin  binary
+*.gz   binary
