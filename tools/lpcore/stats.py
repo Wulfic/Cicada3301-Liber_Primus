@@ -5,6 +5,7 @@ Every function is deterministic and parameter-free beyond its inputs; nothing he
 
 from __future__ import annotations
 
+import math
 from collections import Counter
 from collections.abc import Iterable, Sequence
 from itertools import islice
@@ -113,3 +114,57 @@ def lag_scan(streams: Sequence[Sequence[int]], lags: Iterable[int]) -> list[tupl
         hits = sum(sum(map(eq, s, s[m:])) for s in streams)
         out.append((m, hits, sum(max(0, len(s) - m) for s in streams)))
     return out
+
+
+# --- C10/C11: what the key's own statistics must be (TODO stage J) -------------------------------
+
+def running_key_distribution(q: Sequence[float], mapping: Sequence[int], mode: str, lam: float = 1.0,
+                             shift: int = 0) -> list[float]:
+    """Distribution of the cipher rune when p ~ q and the key value is σ(k) + shift, k ~ λ·q + (1 − λ)·uniform.
+
+    `mode` names the decryption, as in `ciphers.apply_stream`: "sub" (c = p + k), "add" (c = p − k),
+    "beaufort" (c = k − p). σ = `mapping`, a table from key letter to key value.
+    """
+    if mode not in ("sub", "add", "beaufort") or not 0.0 <= lam <= 1.0 or len(q) != N or len(mapping) != N:
+        raise ValueError("running_key_distribution: bad arguments")
+    key = [0.0] * N
+    for letter in range(N):
+        key[(mapping[letter] + shift) % N] += lam * q[letter] + (1 - lam) / N
+    out = [0.0] * N
+    for p in range(N):
+        for k in range(N):
+            c = {"sub": p + k, "add": p - k, "beaufort": k - p}[mode] % N
+            out[c] += q[p] * key[k]
+    return out
+
+
+def unigram_llr(counts: Sequence[int], model: Sequence[float]) -> float:
+    """Σ_c O_c · log(29·r_c): log-likelihood of the model against a flat distribution, in nats."""
+    if len(counts) != N or len(model) != N or min(model) <= 0.0:
+        raise ValueError("unigram_llr needs 29 counts and a strictly positive model")
+    return sum(o * math.log(N * r) for o, r in zip(counts, model))
+
+
+def lag_combination_chi2(streams: Sequence[Sequence[int]], lag: int, sign: int) -> tuple[float, int]:
+    """(Pearson χ², pairs) of (s[i+lag] + sign·s[i]) mod 29 within each stream (C11).
+
+    The expectation is built from the streams' own rune frequencies f: P(x) = Σ_a f_a · f_{x − sign·a}.
+    Under a ciphertext autokey c_i = p_i − sign·c_{i−lag} this combination is the plaintext itself.
+    """
+    if lag < 1 or sign not in (1, -1):
+        raise ValueError("lag_combination_chi2: bad arguments")
+    freq = Counter()
+    for s in streams:
+        freq.update(s)
+    total_runes = sum(freq.values())
+    f = [freq[r] / total_runes for r in range(N)]
+    expected = [sum(f[a] * f[(x - sign * a) % N] for a in range(N)) for x in range(N)]
+    observed = [0] * N
+    for s in streams:
+        for a, b in zip(s, s[lag:]):
+            observed[(b + sign * a) % N] += 1
+    pairs = sum(observed)
+    if pairs == 0:
+        raise ValueError("lag_combination_chi2: no pairs at this lag")
+    chi2 = sum((o - pairs * e) ** 2 / (pairs * e) for o, e in zip(observed, expected))
+    return chi2, pairs

@@ -9,7 +9,41 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-*(none. The next research step is MASTER_TRACKER §1, item 1. Plan it here before starting.)*
+### J — what the key's own statistics must be (started 2026-10-01)
+
+**Goal.** Tracker §1 item 1 (title cribs), approached from the key side. A crib against an OTP-class key always
+yields *some* key fragment. It is falsifiable only under a key model, and the natural model ("the key is English
+text, so the fragment reads as English") can be tested on all 12,956 runes at once without any crib.
+
+**Approach. Two key-independent tests, each with positive controls.**
+1. **C10: no English running key, from any text.** If c = p ± k with p and k both English, then c's unigram
+   distribution is r = q ⊛ q_k (a convolution or correlation), and that is not flat. Predicted before looking at
+   LP2 counts, with q = the solved-plaintext unigram: IoC(r) = 1.054 for the identity mapping and 1.042 when key
+   letters map to prime values or φ(prime values) mod 29, in every sign. That is a predicted χ² excess of about
+   550–700 over n = 12,956 runes. (C2 already measured the observed χ² at 26.4 on 28 df, so this is not blind on
+   the data, only on the model.)
+   - **Statistic:** LLR = Σ_c O_c · log(29 r_c), log-likelihood of the H_RK model against a flat one.
+   - **Declared rule:** H_RK is excluded if LLR ≤ −10 nats.
+   - **Robustness:** the key distribution is also diluted toward uniform, k_λ = λ q + (1 − λ) u for λ ∈ {1, 0.5,
+     0.25}, and each λ is reported. A positive control (a synthetic running-key cipher, solved plaintext + LP1 text
+     as key) must give LLR ≥ +10.
+   - **Consequence if excluded:** plaintext autokey at any lag goes too (its key is the plaintext itself).
+   - *Amended during implementation, before the LP2 run:* the LLR is not invariant to the mode's sign or to a
+     constant key offset, so every mode is run separately and the hypothesis takes the most favourable of the 29
+     offsets (the conservative direction for an exclusion).
+2. **C11: no lag-L autokey on the ciphertext (L = 2…1000).** Under c_i = p_i ± c_{i−L}, the lag-L difference
+   (or sum) of the ciphertext *is* the plaintext, so its 29-bin histogram is English, not flat. Statistic: χ² of
+   (c_{i+L} − c_i) and of (c_{i+L} + c_i) mod 29 within sections, against the expectation from the observed
+   frequencies. **Declared rule:** a lag is flagged if p < 0.01 / 1998. Prediction: nothing is flagged.
+   Positive control: synthetic autokey at L = 7 and L = 500 must be flagged.
+3. **Title cribs.** If C10 holds, record why cribs cannot be tested against an unmodelled key, and close the item.
+
+**Rejected.** Cribbing titles against free keys: unfalsifiable. Brute-forcing mappings σ over 29! permutations:
+that's search. Only three natural mappings are declared.
+
+**Not doing.** No new key texts, no optimiser.
+
+**Blast radius.** `tools/lpcore/stats.py` (new functions), `tests/test_keyspace.py`, docs. **Rollback:** `git revert`.
 
 ## Owner items
 
