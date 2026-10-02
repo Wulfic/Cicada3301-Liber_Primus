@@ -9,7 +9,50 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-*(none. The next research step is MASTER_TRACKER §1. Plan it here before starting.)*
+### Y — the grid under every long byte source on disk, at every offset (2026-10-01)
+
+**Goal:** tracker §1 item 1. Findings §22 leaves "aperiodic or running byte keys" open for the grid. Stage N tried only
+short repeating keys, and stages R and W ran the long byte sources against LP2, never against the grid. This stage runs
+each long byte source as a running key on the grid from every phase.
+
+**Sources (6), all already loaded by tools/run_stage_r.py:** page_17.bin, page_21.bin and page_43.bin (58,152 bytes
+each), the wisdom/folly hint (3,368), page_00 hex (991) and the 2014 second-onion hex (256, the grid's exact length).
+The hint read backwards is not a separate source: the statistic ignores order, so reversed key on the forward grid
+equals forward key on the reversed grid, which is run. Sources under ~100 bytes (cookies 32, AN END hash 64, RSA n
+2014 as bytes) are already covered by §22's periodic result (every period ≤ 102 for EN, RUNES and HEX).
+
+**Readings (4):** R, R reversed, C, C reversed, as in stage X (C = column-major over the 32 × 8 grid).
+**Operations (4):** the plaintext candidate m = g ⊕ k, g − k, g + k, k − g (mod 256). They invert XOR, additive,
+subtractive and Beaufort encryption.
+**Offsets:** every phase o of the source, read cyclically: k_i = s[(o + i) mod |s|]. Key in step, one byte per grid byte.
+That makes 179,071 phases × 4 readings × 4 operations = **2,865,136 trials**.
+
+**Statistic:** D = the number of distinct byte values among the 256 bytes of m. It is order-free, and it is low for every
+structured plaintext: English ASCII ≈ 40, rune indices ≤ 29, hex text 16, decimal ≤ 10, base64 ≈ 63. **Null:** if the
+grid is unrelated to s, then for any fixed key g ⊕ k (or g ∓ k) is uniform, so P(D ≤ d) is exact:
+C(256, d) · S(256, d) · d! / 256²⁵⁶ (S = Stirling numbers of the second kind).
+**Rule:** **PASS** if D ≤ 120 in any trial. P(D ≤ 120) = 3.79 × 10⁻¹⁷ per trial, so 1.1 × 10⁻¹⁰ family-wise over all
+trials. **Excluded** (per source × reading × operation): no trial passes. A class whose planted controls fail to pass
+is not covered by the exclusion.
+
+**Controls:**
+- **Positive:** for each source and each class (EN = Emerson windows, RUNES = solved plaintext indices, HEX, B64, as in
+  stage X), plant one 256-byte window m at a seeded phase, reading and operation: replace the grid by the matching
+  inverse of m and the key. The full search over that source must PASS at the planted (phase, reading, op). 24 plants.
+- **Negative:** 3 seeded uniform random 256-byte "grids" through the full search. **Run valid** only if no negative
+  passes, every positive passes, and the negatives' mean D is within 0.5 of 162.0. Otherwise the run is void and nothing
+  is excluded.
+
+**Expected if the grid is a source-keyed text:** one trial with D ≤ ~64 and readable or decodable output.
+**Expected if not:** the per-source minimum of D sits near the 1-in-N quantile of the exact null: about 131–136.
+
+**Not already excluded because:** §13 used repeating keys of ≤ 64 bytes plus prime streams; §22 covers periods ≤ 102
+only; stage R and W used these sources on LP2 runes, not on the grid.
+**Not doing:** desynchronised keys, keys not on disk, other 2-D readings (diagonals, spirals), high-entropy plaintexts
+(compressed or encrypted data under a running key) that D cannot see, and file signatures (the PGP header check passes
+0.02 % of random blocks, about 570 false hits here).
+**Blast radius:** additive. A new runner (tools/run_stage_y.py), a result TSV in reference/findings/, a test file
+(tests/test_stage_y.py) and docs. **Rollback:** git revert the stage commits.
 
 ## Owner items
 
