@@ -61,7 +61,7 @@ testable, and n ≥ 6 is not.
 **Not doing:** a codebook with homophones (several cipher strings per unit chosen at random), blocks that restart at
 lines, pages or paragraphs, word-deterministic ciphers with a stream on top (that is the additive family), and
 n > 8. Words of 1 rune are left out of Zw, since chance collisions swamp them.
-**Blast radius:** additive only (`tools/run_stage_z.py`, two TSVs, `tests/test_stage_z.py`, docs).
+**Blast radius:** additive only (new runner tools/run_stage_z.py, two TSVs, tests/test_stage_z.py, docs; not yet written).
 **Rollback:** `git revert <commit>`.
 
 ## Owner items
