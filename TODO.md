@@ -9,7 +9,60 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-*(none. The next research step is MASTER_TRACKER §1. Plan it here before starting.)*
+### Z — deterministic local encryption: word and block codebooks (2026-10-01)
+
+**Goal.** One key-free test of every cipher in which the ciphertext of a local plaintext unit depends only on that
+unit. Any such cipher maps equal units to equal cipher units, so it keeps the plaintext's repeat count exactly,
+whatever the table. Two families:
+- **Word-deterministic (Zw):** cipher word = T(plaintext word) for a fixed injective T. This covers a key that restarts
+  at every word (c_j = p_j + k_j, j = position in the word, any k), word-length-dependent keys, any per-word
+  transposition plus substitution, and a word codebook. A key that restarts at each word is not periodic in the global
+  position, so C9 does not cover it. C7 (one shift per word) is a stream, not this.
+- **Block-deterministic (Zb, ECB):** aligned n-rune blocks map through a fixed bijection of Z₂₉ⁿ. This covers Hill
+  n ≥ 2 (catalog row 18, open), any polygraphic codebook, and digraphic n = 2 (ledger only, never run here).
+
+**Model.** Zw: c_word = T(p_word). Zb: c[a + n·t … a + n·t + n − 1] = B(p[same]), n = 2…8. Either is followed by the
+measured anti-doublet rule: a would-be doublet in the continuous stream is re-drawn uniformly with prob. 0.81 (C8, keep 0.19).
+
+**Not already excluded because:** C1–C19 test additive streams, tabulae keyed per position, or ciphertext feedback.
+A word-restart key is not a global period (C9), and a fixed block table is no stream (C4, C10, C13). C15 (homophonic)
+is n = 1 only. Catalog row 18 is open; row 17 rests on the ledger.
+
+**Statistic.** K = number of pairs of equal units (words of ≥ 2 runes for Zw; aligned n-blocks for Zb). Words come
+from the corpus's word divisions (numbers ignored). The cells are:
+- Zw-sec: pairs within each section. Zw-all: pairs across all of LP2 (2 cells).
+- Zb, mode "sec": blocks aligned at offset a from each section start, pairs within each section. Mode "cont": the 12,956
+  runes as one stream, offset a, pairs over the whole stream. n = 2…8, a = 0…n−1, both modes: 70 cells.
+- **Family 72 cells.**
+
+**Null (flat).** 1,000 seeded draws: uniform iid runes in LP2's exact section and word lengths (all of segments 7–15),
+with the same anti-doublet rule (continuous within a section). Per cell: mean μ₀, sd σ₀ (floor 1), max.
+
+**Positive controls (power), per cell.** 200 seeded draws for each of 2 sources:
+(E) contiguous Emerson-essays windows and (L) solved-LP plaintext words in random order. Each is cut to LP2's section
+rune counts, enciphered with a fresh random injective table at that cell's unit and alignment, then given the
+anti-doublet rule. Per cell and source: μ_pos, σ_pos.
+
+**Declared rule** (written before LP2 is scored):
+- **Testable** iff, for both sources, μ_pos − 5σ_pos > the null's maximum.
+- **Excluded** iff testable and K_LP2 < μ_pos − 5σ_pos for both sources.
+- **PASS (lead → `lp-claim-audit`)** iff K_LP2 > null max and (K_LP2 − μ₀)/σ₀ ≥ 6. Bonferroni: 72 cells, normal tail
+  about 1e-9 each.
+- Otherwise **inconclusive**.
+- **Run valid** iff in every cell the 1,000 nulls have mean within 3 s.e. of the analytic E[K]. For Zb that is
+  C(B, 2) · Σ P(block)² computed from the null's own marginal; it is only checked for n ≤ 4, where the mean is ≥ 1.
+  The run is void if any n ≤ 4 cell fails.
+
+**Expected if true** (English-only power check, 30 draws, no LP2): Zw ≈ 8,600–10,300 pairs against a flat ≈ 62; Zb n = 2:
+≈ 19,600 against 3,846; n = 3: ≈ 1,400 against 60; n = 4: ≈ 215 against 1.3; n = 5: ≈ 62 against 0.03. **Expected if
+false:** K_LP2 inside the null. **Prediction:** LP2 is OTP-class, so every testable cell is excluded; Zw and n = 2–4 are
+testable, and n ≥ 6 is not.
+
+**Not doing:** a codebook with homophones (several cipher strings per unit chosen at random), blocks that restart at
+lines, pages or paragraphs, word-deterministic ciphers with a stream on top (that is the additive family), and
+n > 8. Words of 1 rune are left out of Zw, since chance collisions swamp them.
+**Blast radius:** additive only (`tools/run_stage_z.py`, two TSVs, `tests/test_stage_z.py`, docs).
+**Rollback:** `git revert <commit>`.
 
 ## Owner items
 
