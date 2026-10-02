@@ -9,7 +9,61 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-*(none. The next research step is MASTER_TRACKER §1, item 1. Plan it here before starting.)*
+### X — key-free structure of the grid's 256 bytes (2026-10-01)
+
+**Goal:** tracker §1 item 1. Stages M/N tried named keys on the grid. This stage asks what the bytes themselves allow,
+for every key at once, as stage T did for LP2.
+
+**Readings.** R = the 256 bytes in printed order (`keys.grid_bytes`). C = column-major: the grid is 32 rows × 8 cells
+(scans 66/67/68 give 10/13/9 rows), read down column 0, then column 1, and so on. Reversal adds nothing to X1 and X2
+(it maps the residue classes mod p onto each other), so it enters only X3 and X4.
+
+**X1 — uniformity (a description, not an exclusion).** Seven statistics: distinct values, χ² over 256 bins, ones among
+2,048 bits, high-nibble χ², low-nibble χ², and adjacent equal bytes in R and in C. Each gets a two-sided Monte Carlo p
+from 100,000 iid uniform 256-byte blocks (seed 3301). **Non-uniform** if any p < 0.01 / 7. Distinct values (161) were
+already published in findings §12, so (a) reproduces a known number.
+
+**X2 — periodic byte substitution (the key-free kill).**
+**Model:** in reading O ∈ {R, C}, c_i = σ_{i mod p}(m_i) for a period p ∈ 1…128, where σ_0…σ_{p−1} are *any* byte
+bijections. That covers repeating-key XOR, b + k and b − k mod 256 under every key of length p, any per-column
+substitution, and (p = 1) any monoalphabetic substitution combined with any transposition. The plaintext m comes from
+class K.
+**Statistic:** C_p(O) = Σ over columns, Σ over byte values, of (n choose 2), the coincident pairs within the residue classes
+mod p. σ cannot change it, so a control is a plaintext window with no key.
+**Classes K and controls** (256-byte windows): EN = raw bytes of data/corpora/emerson_essays.txt, windows at every
+multiple of 64. RUNES = rune indices (bytes 0–28) of the solved plaintext (`keys.solved_plaintext_words`), windows at
+every offset. HEX = random lowercase hex text, 10,000 seeded blocks. B64 = random base64 text, 10,000 seeded blocks.
+Decimal and base-60 text are not run: their coincidence rates (1/10, 1/60) lie between HEX's and B64's.
+**Rules, per cell (O, p, K):**
+- **Structure (PASS)** for (O, p): C_p(O) exceeds all 100,000 uniform null draws. That is an empirical p < 10⁻⁵ per
+  cell, and the 256 cells bound the family-wise rate at 2.6 × 10⁻³.
+- **Excluded** (O, p, K): C_p(O) < the 0.1 % quantile of K's controls at that (O, p). The false-exclusion rate for the
+  true (p, K) is ≤ 10⁻³.
+- **Not excluded** otherwise. This is expected where K's controls overlap the uniform null: large p for every class,
+  and most p for B64.
+**Expected if true:** C_p ≈ P_p · κ_K, where P_p is the number of within-column pairs. κ is about 0.06 for EN and
+1/16 for HEX, so at p = 64 that is ≈ 24 pairs against ≈ 1.5. **Expected if false (uniform bytes):** C_p ≈ P_p / 256.
+
+**X3 — the grid as a 2,048-bit integer.** Four integers: R and C, each big-endian and little-endian. An RSA-2048
+modulus must be odd, have exactly 2,048 bits and no prime factor below 10⁶. **Excluded as a modulus** if any reading
+fails one of those; a Miller–Rabin primality result is also reported per reading. *Disclosure:* the two R readings were
+factored before this declaration (big-endian: even, ÷ 3, 7, 13, 29, 179; little-endian: ÷ 3, 7, 11). That is
+arithmetic, not a thresholded statistic, but it is recorded as observed, not predicted. The C readings are unseen.
+Cicada's key 7A35090F is RSA-4096 (`reference/sources/cicada_pgp_key.asc`), so 256 bytes cannot be a raw signature by it.
+
+**X4 — compression streams and file signatures.** Five decoders (zlib raw deflate, zlib, gzip, bz2, lzma FORMAT_AUTO),
+each on four readings (R, R reversed, C, C reversed), for 20 decodes. Event E: the decoder reaches end-of-stream
+without error. E's chance rate per decoder is calibrated on 100,000 seeded uniform blocks. **PASS:** E on a reading
+whose decoder's calibrated rate × 20 ≤ 0.01. **Inconclusive:** E where the rate is higher (the output is recorded).
+**Excluded:** no E. Stage N's signature list is also applied to the four unkeyed readings (stage N only checked keyed
+outputs).
+
+**Not already excluded because:** §12 and §13 tested named keys only. No C-number concerns the grid's own structure.
+**Not doing:** keyed modern ciphers (AES and the like: untestable without a key), RSA ciphertext (needs n), aperiodic or
+running keys over bytes, p > 128, and other 2-D readings (diagonals, spirals, boustrophedon). Each of those would be a
+new declared hypothesis.
+**Blast radius:** additive only. A new runner (tools/run_stage_x.py), result TSVs in reference/findings/, a test
+(tests/test_stage_x.py), and docs. **Rollback:** git revert the stage commits.
 
 ## Owner items
 
