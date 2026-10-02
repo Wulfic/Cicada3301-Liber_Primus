@@ -1,0 +1,43 @@
+kind	source	class	seed	reading	op	phase	D	passing_trials	verdict
+positive	page_17.bin	EN		R	g+k	26604	27	2	PASS
+positive	page_17.bin	RUNES		C	g^k	24768	23	3	PASS
+positive	page_17.bin	HEX		R-rev	k-g	52359	16	3	PASS
+positive	page_17.bin	B64		R	k-g	53542	63	2	PASS
+positive	page_21.bin	EN		C-rev	g^k	26627	30	4	PASS
+positive	page_21.bin	RUNES		R	g^k	13931	25	3	PASS
+positive	page_21.bin	HEX		R-rev	g+k	6172	16	2	PASS
+positive	page_21.bin	B64		C-rev	g+k	54018	63	1	PASS
+positive	page_43.bin	EN		C	g+k	31630	30	2	PASS
+positive	page_43.bin	RUNES		C	k-g	34108	23	3	PASS
+positive	page_43.bin	HEX		R	g^k	41864	16	4	PASS
+positive	page_43.bin	B64		R-rev	k-g	29766	64	2	PASS
+positive	hint	EN		R	g^k	2812	28	2	PASS
+positive	hint	RUNES		C-rev	k-g	2657	24	3	PASS
+positive	hint	HEX		R-rev	k-g	435	16	3	PASS
+positive	hint	B64		C-rev	k-g	1182	63	2	PASS
+positive	page_00-hex	EN		C-rev	g^k	788	33	4	PASS
+positive	page_00-hex	RUNES		R	k-g	184	23	3	PASS
+positive	page_00-hex	HEX		R-rev	g-k	589	16	3	PASS
+positive	page_00-hex	B64		C	g+k	774	64	1	PASS
+positive	onion-2-hex	EN		C	g^k	234	36	2	PASS
+positive	onion-2-hex	RUNES		C	k-g	215	24	3	PASS
+positive	onion-2-hex	HEX		R	k-g	249	16	3	PASS
+positive	onion-2-hex	B64		C	k-g	118	63	2	PASS
+negative	page_17.bin	uniform	1				138	0	PASS
+negative	page_21.bin	uniform	1				139	0	PASS
+negative	page_43.bin	uniform	1				138	0	PASS
+negative	hint	uniform	1				141	0	PASS
+negative	page_00-hex	uniform	1				142	0	PASS
+negative	onion-2-hex	uniform	1				145	0	PASS
+negative	page_17.bin	uniform	2				137	0	PASS
+negative	page_21.bin	uniform	2				138	0	PASS
+negative	page_43.bin	uniform	2				136	0	PASS
+negative	hint	uniform	2				142	0	PASS
+negative	page_00-hex	uniform	2				143	0	PASS
+negative	onion-2-hex	uniform	2				145	0	PASS
+negative	page_17.bin	uniform	3				139	0	PASS
+negative	page_21.bin	uniform	3				139	0	PASS
+negative	page_43.bin	uniform	3				140	0	PASS
+negative	hint	uniform	3				140	0	PASS
+negative	page_00-hex	uniform	3				140	0	PASS
+negative	onion-2-hex	uniform	3				145	0	PASS
