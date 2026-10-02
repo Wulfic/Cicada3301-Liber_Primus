@@ -4,7 +4,7 @@
 and what to do next. Every claim on it is backed by a test or a linked document. If something here
 disagrees with the tests, the tests win, and this page needs fixing.
 
-**Last updated:** 2026-10-01 · **Tests:** 176, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
+**Last updated:** 2026-10-01 · **Tests:** 188, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
 
 ---
 
@@ -49,10 +49,16 @@ Stage W (findings §21) re-tests stage S's five long byte keys (the hint, the hi
 as random 256-row tabulae, in step, this time with flat negatives. The run is valid (worst negative +0.64) and nothing
 passes. All five are excluded on LP2 continuous (positives ≥ +1,634, LP2 ≈ −900) and on section 15, and two on section 11. The
 shorter sections are untestable. Desync is not covered.
+Stage X (findings §22) asks what the grid's 256 bytes allow by themselves. They look like uniform random bytes. Under any
+per-column byte substitution (so any repeating XOR or add key), English ASCII, rune indices and hex text are excluded
+for every period up to 102, and base64 up to 22. Read as a 2,048-bit integer the grid has small factors in every byte
+order, so it is not an RSA modulus or a prime. It is not a compressed stream or a known file either. The grid is
+OTP-class too: a modern cipher, a hash, random data, or an aperiodic key.
 
 **Next actions, in order** (all low prior; detail in [findings §6–§21](reference/findings/lp2_logic_findings_2026-09-29.md)):
 
-1. **The grid's 256 bytes** are still undeciphered (findings §12–§13).
+1. **The grid's 256 bytes** are still undeciphered. Simple readings are exhausted (findings §12–§13, §22). What is
+   left needs a key for a modern cipher, an RSA modulus, or a new 2-D reading, each declared as its own hypothesis.
 2. **More named sources** only with a new primary source: OutGuess output from scans the repo does not hold
    (community `lp_outguessed/`), or a named generator (catalog row 22). The material on disk is exhausted (§16), and so
    is the material for wide random tabulae (§21): a new byte source can go straight into `tools/run_stage_w.py`'s design.
@@ -220,6 +226,10 @@ RANDOM.ORG and RAND archives (~14.5 billion offsets). Both conclude "OTP-class" 
 - **Random 256-row tabulae keyed in step by the hint (either direction) or an OutGuess payload's raw bytes**
   (findings §21): on LP2 continuous and section 15 for all five, and section 11 for `page_21.bin` and `page_43.bin`. Other
   sections are untestable at their length, and a desynchronised key remains **open**.
+- **The grid as a periodically keyed structured plaintext** (findings §22): any per-column byte substitution with period
+  ≤ 102 (row order) or ≤ 112 (column order) over English ASCII, rune indices or hex text, ≤ 22 over base64; at period 1
+  that includes any substitution plus any transposition. Not an RSA-2048 modulus or prime in any byte order, not a
+  zlib/gzip/bz2/lzma stream, no known file signature. Aperiodic keys and modern ciphers remain **open**.
 - The "Echo446Ghq full solution" is debunked ([analysis](reference/community/echo446ghq_analysis.md)).
 
 ### 4.3 Invalid claims from before 2026-09-29
@@ -269,6 +279,7 @@ The ordered list is in §1. These questions are also open and cheap to state:
 
 | Date | What happened | Commits |
 |---|---|---|
+| 2026-10-01 | **Grid structure, key-free** (TODO X): the 256 bytes are consistent with uniform on 7 statistics. Within-class coincidences, which no per-column σ can change, exclude English, rune and hex plaintext under any repeating byte key of period ≤ 102 (row) / ≤ 112 (column), and base64 ≤ 22. Not an RSA modulus or a prime (small factors in all 4 readings; the 2 row readings were factored before the declaration, disclosed). No decompressor or signature fires (chance rates calibrated). No pass | `225ff30` + this commit |
 | 2026-10-01 | **Byte keys as random tabulae** (TODO W): stage S's five raw-byte classings re-run in step with controls at each alignment's exact length and flat negatives. Valid (worst negative +0.64; nulls ≤ −876.6); no pass (best +0.84). 12 of 50 cells excluded: continuous and section 15 for all five keys (positives ≥ +125.8, LP2 ≤ −72.7), section 11 for two payloads; 38 untestable. LP2 rows equal stage S's, as declared | `106c634` `8af4b7e` `c88b443` + this commit |
 | 2026-10-01 | **C/K rendering** (user report): solved plaintext in the page READMEs read CNOW, LICE, BOOC, because `indices_to_latin` has one spelling per rune (also UOICE, INSTRUCTIAN, THNGS). Display only: every scored path works on rune index 5, where C, K and Q are one value, so no result changes. `verify.render_words` now renders each solved word as the translation's word after `word_matches` confirms it; 17 page files regenerated | `a003cfd` |
 | 2026-10-01 | **Named keyword Quagmire** (TODO V): 34 LP keywords → 68 alphabets → 314,432 triples per key family, scored with C13's labelled LLR (exact per member; false exclusion ≤ e^−10 whatever the family size). C19: English (3 forms) and digits excluded under every triple, hex under all but 431, uniform A–Z under 103,864. Gates passed (0 / 300 own-member exclusions). No lead. A declared expectation failed: not every testable member was excluded, and LP2 sits inside the flat-cipher range | `8880e3b` `7d44b09` + this commit |

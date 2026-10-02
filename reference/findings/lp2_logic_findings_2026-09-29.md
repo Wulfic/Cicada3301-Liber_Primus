@@ -824,3 +824,60 @@ so a key that slips, or a re-key rule that consumes key values, is not excluded 
 Sections 7–10 and 12–14 (and 11 for three keys) on their own phases are untestable at their lengths. Byte keys that are
 not on disk, other mappings of these bytes (the mod-29 and rejection mappings are C16), and structured, non-random
 tabulae (Latin-square: C17–C19) are also not covered.
+
+## 22. What the grid's 256 bytes allow, for every key at once (2026-10-01, TODO stage X)
+
+Declared in `TODO.md` and committed (`225ff30`) before the runner existed. Run: `python -m tools.run_stage_x`
+(2 minutes), rows in [`stage_x_periodic.tsv`](stage_x_periodic.tsv) and [`stage_x_other.tsv`](stage_x_other.tsv).
+Tests: `tests/test_stage_x.py`.
+
+**The question.** §12–§13 tried named keys on the grid. This stage asks which whole cipher families the bytes rule
+out by themselves, as C16 did for LP2. Two readings: R, the printed order (`keys.grid_bytes`), and C, column-major over
+the 32 × 8 grid (scans 66/67/68 hold 10/13/9 rows of 8 cells).
+
+**X1: the bytes look uniform.** All seven statistics fall inside the iid-uniform range (100,000 draws; non-uniform
+needed a two-sided p < 0.0014): 161 distinct values (null mean 162.0, p 0.92), χ² 254.0 over 256 bins (p 1),
+1,017 ones in 2,048 bits (p 0.78), nibble χ² 14.6 and 18.8 (p 0.96, 0.45), and adjacent equal bytes 0 in R and 3 in C
+(p 0.74, 0.16).
+
+**X2: no periodic byte substitution of a structured plaintext.** Model: c_i = σ_{i mod p}(m_i), with any byte bijections
+σ. That covers repeating-key XOR, b ± k mod 256 under every key of length p, any per-column substitution, and, at p = 1,
+any monoalphabetic substitution combined with any transposition. σ preserves the coincident pairs within each residue
+class mod p (`test_coincidences_ignore_any_per_column_bijection`), so plaintext windows serve as controls for all keys at
+once. Excluded means the grid's count is below the 0.1 % quantile of the class's controls.
+
+| Plaintext class (controls) | R: every p excluded up to | C: every p excluded up to | Cells excluded (of 128 per reading) |
+|---|---|---|---|
+| EN: English ASCII (9,024 Emerson windows) | 102 | 112 | R 121, C 120 |
+| RUNES: LP rune indices 0–28 (2,646 windows of the solved plaintext) | 102 | 118 | R 123, C 124 |
+| HEX: lowercase hex text (10,000 random) | 102 | 122 | R 123, C 124 |
+| B64: base64 text (10,000 random) | 22 | 28 | R 39, C 39 |
+
+For scale: at p = 64 the grid has 1 coincident pair in R and 0 in C, against a uniform mean of 1.5. The 0.1 % control
+quantile is 8 (R) and 5 (C) for EN, and 11 for HEX. No cell shows excess structure: the smallest upper-tail p over the
+256 (reading, period) cells is 0.0031, against a pass mark below 10⁻⁵. Pinned by `test_stage_x_tsv_matches_the_grid`,
+`test_stage_x_no_periodic_structure` and `test_stage_x_exclusion_ranges`.
+
+**X3: not an RSA-2048 modulus and not a prime.** Read as a 2,048-bit integer, every reading has a small factor.
+R big-endian is even (2, 3, 7, 13, 29, 179), R little-endian has 2,047 bits (3, 7, 11), C big-endian is even (2, 3, 7, 19),
+and C little-endian has 2,047 bits (3, 7, 13, 61, …). None is prime. The two R readings were factored before the
+declaration and disclosed there. Cicada's key 7A35090F is RSA-4096, so the grid cannot be a raw signature by it either.
+Pinned by `test_stage_x_grid_is_not_an_rsa_modulus`.
+
+**X4: not a compressed stream or a known file.** None of zlib raw deflate, zlib, gzip, bz2 or lzma reaches end-of-stream
+on R, C or their reversals (20 decodes). The chance rates on uniform blocks are 0.55 % for raw deflate and 0 for the
+others. Stage N's signature list matches none of the four unkeyed readings. Pinned by `test_stage_x_uniform_and_no_stream`.
+
+**Not evidence.** No byte repeats within any of the 32 printed rows (C at p = 32: 0 pairs against a mean of 3.5, P ≈ 0.03).
+The declared rules were one-sided, and among 256 cells a 3 % lower tail is expected.
+
+**Reading.** The grid is consistent with 256 uniform random bytes. Every simple way of hiding text in it fails:
+substitution or transposition of English, rune indices or hex, and a repeating key of any period up to 102. It is not a
+modulus, prime, compressed stream or known file header. What remains: the output of a modern cipher (needs a key), a
+hash or random data, an RSA ciphertext under an unknown modulus, a key with period above ~100 or aperiodic (OTP), or a
+plaintext that is itself near-uniform, such as compressed data under a key or base64 at periods above 22. This is the
+grid-side counterpart of LP2's "OTP-class" verdict.
+
+**What this does not cover.** Other 2-D readings (diagonals, spirals, boustrophedon), aperiodic or running byte keys,
+and periods above 128. Plaintext classes other than the four (decimal and base-60 text fall between HEX and B64, so
+short periods are covered).
