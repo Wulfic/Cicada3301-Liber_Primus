@@ -55,6 +55,7 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 | The same 20 classings as random tabulae, by flatness (stage T) | 20 | 15 excluded (≤ 29 classes, P ≤ 2.4 × 10⁻¹²); 5 raw-byte keys not (P ≈ 10⁻³) | `test_named_classings` |
 | Key families under random Quagmire alphabets (stage U) | 24 | 20 excluded (P ≤ 1.7 × 10⁻¹¹); 4 letters A–Z rows untestable | `test_recorded_verdicts` |
 | Six key families under named keyword Quagmire alphabets (stage V) | 1,886,592 | 1,675,593 excluded; 10,332 testable survivors, best +6.51 vs lead +10 | `test_lp2_exclusions_recompute` |
+| The five long byte keys as random tabulae, in step, flat negatives (stage W) | 50 | 12 excluded (continuous, section 15, two at section 11), 38 untestable; best +0.84 vs +30, worst flat negative +0.64 | `test_recorded_headline` |
 
 ## 1. State of the art (web check, September 2026)
 
@@ -777,3 +778,49 @@ limit. That is an information limit of the unigram marginal, which is the only k
 last letter, columnar mixing, 26-letter Latin alphabets. Per-section alphabets. Keys with dependent values, and
 named key streams in step (`detect.log_lr` with a named key and named alphabets). Near-flat keys (V_eff ≳ 30), which
 are invisible to any marginal statistic under any alphabets.
+
+## 21. The long byte keys as random tabulae, in step (2026-10-01, TODO stage W)
+
+Declared in `TODO.md` and committed (`106c634`, citation fix `8af4b7e`) before the runner existed; the
+runner was committed (`c88b443`) before the full run. Run:
+`python -m tools.run_stage_w` (34 minutes on 8 workers), rows in [`stage_w_candidates.tsv`](stage_w_candidates.tsv)
+and [`stage_w_controls.tsv`](stage_w_controls.tsv). Tests: `tests/test_stage_w.py`.
+
+**The question.** C16 leaves random tabulae open when the key has more than ~150 effective classes. On disk, the
+named sources of that kind longer than C9's 1,000-lag reach are five raw byte streams (256 classes): the hint (3,368 B),
+the hint reversed, and the three OutGuess payloads `page_17.bin`, `page_21.bin`, `page_43.bin` (58,152 B each).
+`folly_hint.txt` is byte-identical to the hint and `folly_rev_hint.txt` is its reverse; `page_00` (991 bytes), `page_08`
+(150) and the grid (256) are within C9 in step. Model: c_i = σ_{k_{t+i}}(p_i), an independent random σ_v per byte
+value, any start phase t, re-keying by a fresh draw that keeps the key in step.
+
+**Why stage S didn't settle it.** Stage S scored this exact subfamily with the same detector, but its run is void
+(§17), because the uneven random-σ ciphers it used as negatives were never nulls. Its LP2 numbers were already
+seen, so the declaration fixed them in advance. All 50 reproduce exactly (`test_lp2_decodes_equal_stage_s`). What
+decides the verdict is the new control set, run at each alignment's exact length: 5 positives (random σ per byte
+value, in step, keep 0.19) and 5 **flat negatives** (an additive cipher under a uniform random key, keep 0.19, scored
+against the named key) per cell, plus a shuffled-key null on LP2 for each key.
+
+**Result.** Not void: the worst flat negative scores +0.64 and every LP2 null is ≤ −876.6. No decode passes (best +0.84).
+
+| Alignment | Runes | Positives (all 5 keys) | Worst flat negative | LP2 decodes | Verdict |
+|---|---|---|---|---|---|
+| 7–15 continuous | 12,956 | +1,634.3 … +1,775.3 | −875.3 | −938.9 … −894.0 | **excluded, all 5** |
+| 15 | 3,316 | +125.8 … +174.7 | −61.7 | −85.4 … −72.7 | **excluded, all 5** |
+| 11 | 1,894 | +21.3 … +65.5 | −14.5 | −25.1 … −17.3 | **excluded** for `page_21.bin`, `page_43.bin`; untestable for the other three (a positive at 21.3–29.1) |
+| 9, 13, 14 | 1,524–1,729 | +14.1 … +55.3 | −3.96 | −21.0 … −4.9 | untestable |
+| 7, 8, 12 | 729–1,145 | −4.8 … +25.9 | +0.64 | −6.4 … +0.84 | untestable |
+| 10 | 9 | ≈ 0 | +0.01 | ≈ 0 | untestable |
+
+Pinned by `test_recorded_headline` and `test_verdicts_follow_the_declared_rules`. The rule function is checked on
+synthetic rows by `test_rules_on_synthetic_rows`.
+
+**Reading.** If LP2 used a secret tabula of 256 random alphabets selected by the hint's or a payload's bytes, with the
+key in step and one start phase for the whole of LP2, the in-step coincidence structure would score above +1,600. LP2
+scores about −900, the same as a flat cipher. The same holds for section 15 on its own, from any phase. With C16, this
+closes the random-tabula question for every named key source on disk, **in step**.
+
+**What this does not cover.** Desync: 1 % desync removes this detector's power (`test_one_percent_desync_kills_the_signal`),
+so a key that slips, or a re-key rule that consumes key values, is not excluded here (C14 excludes only skip-next).
+Sections 7–10 and 12–14 (and 11 for three keys) on their own phases are untestable at their lengths. Byte keys that are
+not on disk, other mappings of these bytes (the mod-29 and rejection mappings are C16), and structured, non-random
+tabulae (Latin-square: C17–C19) are also not covered.

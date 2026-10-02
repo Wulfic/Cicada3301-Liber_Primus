@@ -9,47 +9,7 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-### W — byte keys as random tabulae, in step, flat negatives (2026-10-01)
-
-Tracker §1 item 1. Declared before the runner (tools/run_stage_w.py, not yet written) exists.
-
-**Model:** c_i = σ_{k_{t+i}}(p_i). k is the raw byte stream (256 classes) of one named file, read cyclically. σ_v is an
-independent secret permutation for each byte value v, and t is any start phase (a uniform prior over every phase of
-the key). In step: a would-be doublet is re-keyed by a fresh draw that consumes no key value (C14 excludes skip-next).
-**Classings (5):** `wisdom_hint.txt` raw (3,368 B), the same reversed, and `page_17.bin`, `page_21.bin`, `page_43.bin`
-raw (58,152 B each). This is the complete set of named byte sources on disk that are longer than 1,000 values:
-`folly_hint.txt` is byte-identical to `wisdom_hint.txt` (same MD5), `folly_rev_hint.txt` is it reversed, `page_00`
-gives 991 bytes, `page_08` 150, and the grid 256. Sources of 1,000 values or fewer are already C9 in step (§17).
-**Alignments (10):** LP2 continuous (7–15), and each section 7…15 with its own phase.
-**Not already excluded because:** C16 leaves V_eff > 153 open, and these sit at 236.5 and 254.8–254.9 (P 8.7 × 10⁻⁴
-and 1.3 × 10⁻³, above the 10⁻⁴ line). C9 reaches period 1,000; these are 3,368 and 58,152. Stage S scored this exact
-family, but that run is void (§17): its negative controls were uneven random-σ ciphers.
-**Already seen:** stage S's LP2 rows for these 50 decodes (best +0.84). The detector, α and keys here are the same,
-so the LP2 numbers are fixed in advance and will be asserted equal to `stage_s_candidates.tsv`. What this stage adds is
-the controls, which decide the verdict. Before declaring, I scored one synthetic flat cipher per size against
-`page_17.bin` raw (729: −0.8, 3,316: −79.4, 12,956: −910.0) to time the run. No LP2 data was touched.
-**Detector:** `alphabets.log_mean_lr` (mean DM LR over all phases, α = `dm_alpha` of the solved plaintext). Family
-N = 50, bound 50·e^−30 ≈ 4.7 × 10⁻¹².
-**Controls, per (classing, alignment), at that alignment's exact length,** from `run_stage_s.control_text` (solved
-words, shuffled):
-- positive ×5: `alphabets.encrypt_alphabets` under the key at a random phase, keep 0.19;
-- **flat negative ×5:** `keys.encrypt_dodging` with a uniform random key (fresh, keep 0.19), scored against the
-  named key;
-- plus a real-data null per classing: the shuffled key on LP2 continuous.
-
-**Rules (declared now):**
-- **VOID** if any flat negative or real-data null scores ≥ 30.
-- An alignment is **testable** for a classing if all 5 positives score ≥ 30. Otherwise it is **untestable**.
-- **PASS** if any LP2 decode scores ≥ 30.
-- **EXCLUDED** (classing × alignment): testable, and LP2 < 30.
-
-**Expected:** continuous testable for all 5 (stage S positives +1,659…+1,769 at 12,956), section 15 (3,316) testable,
-section 11 (1,894) borderline (stage S +35…+49), sections ≤ 1,729 and segment 10 untestable. Every testable alignment
-excluded.
-**Not doing:** desync (1 % desync kills this detector, so the exclusion holds in step only); the mod-29 and rejection
-mappings (already C16); structured tabulae (Latin-square → C17–C19); new sources.
-**Outputs (to be written):** tools/run_stage_w.py (`--quick`), reference/findings/stage_w_controls.tsv and stage_w_candidates.tsv,
-a test pinning the headline, findings §21. **Blast radius:** additive. **Rollback:** `git revert` the stage commits.
+*(none. The next research step is MASTER_TRACKER §1, item 1. Plan it here before starting.)*
 
 ## Owner items
 
@@ -63,7 +23,8 @@ a test pinning the headline, findings §21. **Blast radius:** additive. **Rollba
 
 | Date | Stage | Result | Commits |
 |---|---|---|---|
-| 2026-10-01 | **C/K rendering** (user report) | Page READMEs rendered solved words with one spelling per rune: CNOW, LICE, BOOC, THINC, ASCED (also UOICE, INSTRUCTIAN, THNGS). Display only: ciphers, detectors, running-key models and keyword spellings all use rune index 5 (C = K = Q), so no result changes. `verify.render_words` takes each word from the translation after `word_matches` confirms the runes spell it, and raises otherwise; segment 2's 13 square cells (no English) stay canonical on a labelled line. Tests: rendered = English word for word, all 19 K kept. 17 page files regenerated. Rejected: a context guess for K; changing `LATIN` | this |
+| 2026-10-01 | **W** byte keys as random tabulae, in step | Declared first (`106c634`; that commit was red on `tests/test_docs.py` because it backticked future paths, fixed in `8af4b7e`). Stage S's 5 raw-byte classings (hint, reversed hint, page_17/21/43.bin) × 10 alignments, `alphabets.log_mean_lr`. Per cell, at the exact length: 5 positives and 5 flat negatives (additive, uniform key, keep 0.19), plus an LP2 shuffled-key null per key. Valid: worst negative +0.64. No pass (best +0.84). **Excluded:** continuous and section 15 for all 5, and section 11 for page_21 and page_43 (12 cells). 38 untestable. LP2 rows equal stage S's, as declared. In step only → findings §21 | `106c634` `8af4b7e` `c88b443` + this |
+| 2026-10-01 | **C/K rendering** (user report) | Page READMEs rendered solved words with one spelling per rune: CNOW, LICE, BOOC, THINC, ASCED (also UOICE, INSTRUCTIAN, THNGS). Display only: ciphers, detectors, running-key models and keyword spellings all use rune index 5 (C = K = Q), so no result changes. `verify.render_words` takes each word from the translation after `word_matches` confirms the runes spell it, and raises otherwise; segment 2's 13 square cells (no English) stay canonical on a labelled line. Tests: rendered = English word for word, all 19 K kept. 17 page files regenerated. Rejected: a context guess for K; changing `LATIN` | `a003cfd` |
 | 2026-10-01 | **V** named keyword Quagmire | Declared first (`8880e3b`); runner and an outputs-only amendment committed before the LP2 run (`7d44b09`). 34 LP keywords → 68 alphabets (K, K⁻¹, id) → 314,432 triples × 6 key families, C13's labelled LLR best over 87, exclude ≤ −10 (false exclusion ≤ e^−10 at any family size). `quagmire.keyed_alphabet` / `log_models` / `best_llr` (brute-force equal; identity reproduces C13). Gates: G1 0 / 300, G2 testable 100 % except hex 99.5 %, letters 13.3 %. **C19:** English ×3 and digits all excluded, hex 314,001, letters A–Z 103,864; best +6.51, no lead. Declared "every testable member excluded" failed (135 hex, 10,197 letters); LP2 sits inside the flat-cipher range → findings §20 | `8880e3b` `7d44b09` + this |
 | 2026-10-01 | **U** Quagmire relabelling | Declared first (`4051fe2`). Gates amended before LP2 was scored (`f2ecd72`): the declared G2/G3 had power and calibration swapped, caught by `--quick`; control draws raised to 100,000. `lpcore/quagmire.py` (encoder, C17 interval, exact λ per alphabet draw, vectorised noncentral CDF tested equal to `flatness`). U1 audit: the cipher is the additive one renamed (tested rune for rune). **C17:** iid key doublet rate in [2/29 − Σb², Σb²] under any labels; the deficit needs Σb² > 0.05925. **C18:** G1 within 0.23 %, G3 0 / 20 in all 24 rows; 20 rows excluded (worst P 1.7e-11, no draw reaches λ_max), letters A–Z untestable (power ≤ 2 / 20). C13's letters exclusion now straight alphabets only. Declared Σb² 0.06233 was a rounding slip (0.06232) → findings §19 | `4051fe2` `f2ecd72` + this |
 | 2026-10-01 | **T** flatness of random tabulae | Declared first (`f0c8e39`; that commit was red on `tests/test_docs.py`, since it cited files not yet written). `lpcore/flatness.py`: exact even-df χ² CDFs, the random-σ scale model, boundaries. Gates passed: A within −7.1…−1.5 %, B 0 / 200 at 1e-4 and 7 % at 0.05. **C16:** V_eff ≤ 168 pooled / 174 per section by the declared rule; 153 / 133 after a post-run anti-doublet correction (×0.939, from the additive control), which the findings quote. 15 / 20 stage S classings excluded; raw bytes open. The declared "power" rows were really calibration (0 false exclusions), relabelled. → findings §18 | `f0c8e39` + this |

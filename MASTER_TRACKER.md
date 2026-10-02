@@ -4,7 +4,7 @@
 and what to do next. Every claim on it is backed by a test or a linked document. If something here
 disagrees with the tests, the tests win, and this page needs fixing.
 
-**Last updated:** 2026-10-01 · **Tests:** 170, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
+**Last updated:** 2026-10-01 · **Tests:** 176, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
 
 ---
 
@@ -45,14 +45,19 @@ Stage V (findings §20) names the alphabets: 34 LP keywords give 68 keyed alphab
 scored with labels (C19). Under every one of them the key is not English or decimal digits, and hex is out for all
 but 431. A uniform A–Z key is excluded for a third of the triples; most of the rest cannot be tested from 12,956
 runes. No triple fits better than flat.
+Stage W (findings §21) re-tests stage S's five long byte keys (the hint, the hint reversed, and the three OutGuess payloads)
+as random 256-row tabulae, in step, this time with flat negatives. The run is valid (worst negative +0.64) and nothing
+passes. All five are excluded on LP2 continuous (positives ≥ +1,634, LP2 ≈ −900) and on section 15, and two on section 11. The
+shorter sections are untestable. Desync is not covered.
 
-**Next actions, in order** (all low prior; detail in [findings §6–§20](reference/findings/lp2_logic_findings_2026-09-29.md)):
+**Next actions, in order** (all low prior; detail in [findings §6–§21](reference/findings/lp2_logic_findings_2026-09-29.md)):
 
-1. **Keys with > 150 classes as random tabulae** (raw bytes, digit pairs, base 60). These are untestable by flatness.
-   They can be tested in step only, with the §17 detector and **flat** negative controls.
-2. **The grid's 256 bytes** are still undeciphered (findings §12–§13).
-3. **More named sources** only with a new primary source: OutGuess output from scans the repo does not hold
-   (community `lp_outguessed/`), or a named generator (catalog row 22). The material on disk is exhausted (§16).
+1. **The grid's 256 bytes** are still undeciphered (findings §12–§13).
+2. **More named sources** only with a new primary source: OutGuess output from scans the repo does not hold
+   (community `lp_outguessed/`), or a named generator (catalog row 22). The material on disk is exhausted (§16), and so
+   is the material for wide random tabulae (§21): a new byte source can go straight into `tools/run_stage_w.py`'s design.
+3. **Desync-tolerant tabula tests.** Stage W's detector loses all power at 1 % desync, so a byte-keyed tabula with a
+   slipping key is still open. A test needs a model of the slip first. Without one it is a theme, not a hypothesis.
 
 **Before you start anything:** read §4 (ruled out) and §6 (rules of evidence). Plans go in [`TODO.md`](TODO.md).
 
@@ -212,6 +217,9 @@ RANDOM.ORG and RAND archives (~14.5 billion offsets). Both conclude "OTP-class" 
 - **Quagmire with alphabets keyed by the 34 declared LP keywords** (C19, findings §20): English and decimal-digit keys
   under all 314,432 triples, hex under all but 431, uniform A–Z under 103,864. The other 210,568 uniform-letter triples
   (mostly untestable from LP2's length), other keywords and other keyed-alphabet constructions remain **open**.
+- **Random 256-row tabulae keyed in step by the hint (either direction) or an OutGuess payload's raw bytes**
+  (findings §21): on LP2 continuous and section 15 for all five, and section 11 for `page_21.bin` and `page_43.bin`. Other
+  sections are untestable at their length, and a desynchronised key remains **open**.
 - The "Echo446Ghq full solution" is debunked ([analysis](reference/community/echo446ghq_analysis.md)).
 
 ### 4.3 Invalid claims from before 2026-09-29
@@ -261,7 +269,8 @@ The ordered list is in §1. These questions are also open and cheap to state:
 
 | Date | What happened | Commits |
 |---|---|---|
-| 2026-10-01 | **C/K rendering** (user report): solved plaintext in the page READMEs read CNOW, LICE, BOOC, because `indices_to_latin` has one spelling per rune (also UOICE, INSTRUCTIAN, THNGS). Display only: every scored path works on rune index 5, where C, K and Q are one value, so no result changes. `verify.render_words` now renders each solved word as the translation's word after `word_matches` confirms it; 17 page files regenerated | this commit |
+| 2026-10-01 | **Byte keys as random tabulae** (TODO W): stage S's five raw-byte classings re-run in step with controls at each alignment's exact length and flat negatives. Valid (worst negative +0.64; nulls ≤ −876.6); no pass (best +0.84). 12 of 50 cells excluded: continuous and section 15 for all five keys (positives ≥ +125.8, LP2 ≤ −72.7), section 11 for two payloads; 38 untestable. LP2 rows equal stage S's, as declared | `106c634` `8af4b7e` `c88b443` + this commit |
+| 2026-10-01 | **C/K rendering** (user report): solved plaintext in the page READMEs read CNOW, LICE, BOOC, because `indices_to_latin` has one spelling per rune (also UOICE, INSTRUCTIAN, THNGS). Display only: every scored path works on rune index 5, where C, K and Q are one value, so no result changes. `verify.render_words` now renders each solved word as the translation's word after `word_matches` confirms it; 17 page files regenerated | `a003cfd` |
 | 2026-10-01 | **Named keyword Quagmire** (TODO V): 34 LP keywords → 68 alphabets → 314,432 triples per key family, scored with C13's labelled LLR (exact per member; false exclusion ≤ e^−10 whatever the family size). C19: English (3 forms) and digits excluded under every triple, hex under all but 431, uniform A–Z under 103,864. Gates passed (0 / 300 own-member exclusions). No lead. A declared expectation failed: not every testable member was excluded, and LP2 sits inside the flat-cipher range | `8880e3b` `7d44b09` + this commit |
 | 2026-10-01 | **Quagmire relabelling** (TODO U): a Quagmire cipher is the additive one renamed, so key-free statistics cannot see its alphabets. Audit of C1–C16. C17: doublet rate in [2/29 − Σb², Σb²] under any labels; the deficit needs V_eff < 16.9. C18: under random alphabets, English, digit and hex keys stay excluded (20 / 20 rows, worst P 1.7e-11); uniform letters untestable. Declared gate roles were swapped, caught by `--quick` and amended before LP2 was scored | `4051fe2` `f2ecd72` + this commit |
 | 2026-10-01 | **Flatness of random tabulae** (TODO T): C16. A random-alphabet mixture over V_eff classes adds ≈ 10,400 / V_eff to χ²; LP2's 26.36 excludes V_eff ≤ 168 / 174 by the declared rule, 153 / 133 after the anti-doublet correction (×0.939). Gates passed (formula within 7.1 %, 0 / 200 false exclusions). 15 of stage S's 20 classings excluded under any alignment; raw bytes and Latin-square tabulae stay open | `f0c8e39` + this commit |
