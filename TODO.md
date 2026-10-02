@@ -53,6 +53,13 @@ anti-doublet rule. Per cell and source: μ_pos, σ_pos.
   C(B, 2) · Σ P(block)² computed from the null's own marginal; it is only checked for n ≤ 4, where the mean is ≥ 1.
   The run is void if any n ≤ 4 cell fails.
 
+**Amendment (before LP2 was scored).** `--quick` (50 nulls, 20 controls per source, LP2 not scored) showed the
+positive counts are right-skewed. A few Emerson windows give K several times the median (Zb n = 4: 122–754), so
+μ_pos − 5σ_pos went negative even where every draw sits far above the null (Zw-sec: E −280). The bound now uses the
+log scale: lower = exp(m − 5s) − 1, with m and s the mean and sd of ln(K + 1) over the 200 draws. **Testable** also
+requires every one of the 200 draws of each source to exceed the null max. Nothing else changes: cells, statistic,
+nulls, PASS rule and validity gate are as declared.
+
 **Expected if true** (English-only power check, 30 draws, no LP2): Zw ≈ 8,600–10,300 pairs against a flat ≈ 62; Zb n = 2:
 ≈ 19,600 against 3,846; n = 3: ≈ 1,400 against 60; n = 4: ≈ 215 against 1.3; n = 5: ≈ 62 against 0.03. **Expected if
 false:** K_LP2 inside the null. **Prediction:** LP2 is OTP-class, so every testable cell is excluded; Zw and n = 2–4 are
