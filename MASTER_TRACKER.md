@@ -4,7 +4,7 @@
 and what to do next. Every claim on it is backed by a test or a linked document. If something here
 disagrees with the tests, the tests win, and this page needs fixing.
 
-**Last updated:** 2026-10-01 · **Tests:** 188, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
+**Last updated:** 2026-10-01 · **Tests:** 198, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
 
 ---
 
@@ -54,14 +54,21 @@ per-column byte substitution (so any repeating XOR or add key), English ASCII, r
 for every period up to 102, and base64 up to 22. Read as a 2,048-bit integer the grid has small factors in every byte
 order, so it is not an RSA modulus or a prime. It is not a compressed stream or a known file either. The grid is
 OTP-class too: a modern cipher, a hash, random data, or an aperiodic key.
+Stage Y (findings §23) runs every long byte source on disk (the three OutGuess payloads, the hint, the `page_00` hex and the
+256-byte second-onion hex) as a running key on the grid, from every phase, in 4 readings and 4 operations: 2.87 million
+trials. The run is valid (24 / 24 plants found, 0 / 18 negatives) and nothing passes. The lowest distinct-byte count is 139,
+at the null's own level, where any text, rune, hex or base64 plaintext would sit at 64 or below. The long on-disk byte
+material is now excluded both as an LP2 key and as an in-step running key for the grid. A slipping key is not covered.
 
-**Next actions, in order** (all low prior; detail in [findings §6–§21](reference/findings/lp2_logic_findings_2026-09-29.md)):
+**Next actions, in order** (all low prior; detail in [findings §6–§23](reference/findings/lp2_logic_findings_2026-09-29.md)):
 
-1. **The grid's 256 bytes** are still undeciphered. Simple readings are exhausted (findings §12–§13, §22). What is
-   left needs a key for a modern cipher, an RSA modulus, or a new 2-D reading, each declared as its own hypothesis.
+1. **The grid's 256 bytes** are still undeciphered. Simple readings are exhausted (findings §12–§13, §22), and so are
+   running keys from the byte material on disk (§23). What is left needs a key for a modern cipher, an RSA modulus, a
+   new 2-D reading, or a new byte source, each declared as its own hypothesis.
 2. **More named sources** only with a new primary source: OutGuess output from scans the repo does not hold
    (community `lp_outguessed/`), or a named generator (catalog row 22). The material on disk is exhausted (§16), and so
-   is the material for wide random tabulae (§21): a new byte source can go straight into `tools/run_stage_w.py`'s design.
+   is the material for wide random tabulae (§21) and for running keys on the grid (§23). A new byte source can go straight
+   into `tools/run_stage_w.py`'s design for LP2 and `tools/run_stage_y.py`'s for the grid.
 3. **Desync-tolerant tabula tests.** Stage W's detector loses all power at 1 % desync, so a byte-keyed tabula with a
    slipping key is still open. A test needs a model of the slip first. Without one it is a theme, not a hypothesis.
 
@@ -230,6 +237,10 @@ RANDOM.ORG and RAND archives (~14.5 billion offsets). Both conclude "OTP-class" 
   ≤ 102 (row order) or ≤ 112 (column order) over English ASCII, rune indices or hex text, ≤ 22 over base64; at period 1
   that includes any substitution plus any transposition. Not an RSA-2048 modulus or prime in any byte order, not a
   zlib/gzip/bz2/lzma stream, no known file signature. Aperiodic keys and modern ciphers remain **open**.
+- **The grid under a running key from the long byte sources on disk** (findings §23): the three OutGuess `.bin` payloads,
+  the hint, the `page_00` hex and the second-onion hex, from every cyclic phase, in step, under ⊕, g − k, g + k and k − g,
+  in row or column order either way. Excluded for any plaintext with at most 120 distinct bytes (text, runes, hex, decimal,
+  base64). A slipping key, sources not on disk and high-entropy plaintexts remain **open**.
 - The "Echo446Ghq full solution" is debunked ([analysis](reference/community/echo446ghq_analysis.md)).
 
 ### 4.3 Invalid claims from before 2026-09-29
@@ -279,6 +290,7 @@ The ordered list is in §1. These questions are also open and cheap to state:
 
 | Date | What happened | Commits |
 |---|---|---|
+| 2026-10-01 | **Grid under long byte keys** (TODO Y): the 6 long byte sources on disk as running keys on the grid, every cyclic phase, 4 readings × 4 operations, 2,865,136 trials. The statistic is distinct bytes D, with an exact null (Stirling numbers); PASS means D ≤ 120 (1.1e-10 family-wise). Valid: 24 / 24 plants found (D 16–64), 0 / 18 negatives (mean D 162.002). No pass; minimum D 139. Erratum: the declared null minimum "131–136" should have read about 136–141 | `edd9c53` + this commit |
 | 2026-10-01 | **Grid structure, key-free** (TODO X): the 256 bytes are consistent with uniform on 7 statistics. Within-class coincidences, which no per-column σ can change, exclude English, rune and hex plaintext under any repeating byte key of period ≤ 102 (row) / ≤ 112 (column), and base64 ≤ 22. Not an RSA modulus or a prime (small factors in all 4 readings; the 2 row readings were factored before the declaration, disclosed). No decompressor or signature fires (chance rates calibrated). No pass | `225ff30` + this commit |
 | 2026-10-01 | **Byte keys as random tabulae** (TODO W): stage S's five raw-byte classings re-run in step with controls at each alignment's exact length and flat negatives. Valid (worst negative +0.64; nulls ≤ −876.6); no pass (best +0.84). 12 of 50 cells excluded: continuous and section 15 for all five keys (positives ≥ +125.8, LP2 ≤ −72.7), section 11 for two payloads; 38 untestable. LP2 rows equal stage S's, as declared | `106c634` `8af4b7e` `c88b443` + this commit |
 | 2026-10-01 | **C/K rendering** (user report): solved plaintext in the page READMEs read CNOW, LICE, BOOC, because `indices_to_latin` has one spelling per rune (also UOICE, INSTRUCTIAN, THNGS). Display only: every scored path works on rune index 5, where C, K and Q are one value, so no result changes. `verify.render_words` now renders each solved word as the translation's word after `word_matches` confirms it; 17 page files regenerated | `a003cfd` |

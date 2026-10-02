@@ -59,7 +59,7 @@ written here, with no test yet. An "arg" row needs a test before it can go in th
 
 | Object | Where | Status |
 |---|---|---|
-| Base-60 grid, 256 bytes (scans 66–68) | `keys.grid_bytes` | not a key (§12); not decrypted by LP-native keys (§13); uniform, no periodic byte cipher of text ≤ 102, not RSA n / prime / compressed (§22); **what it encodes ○** |
-| OutGuess payloads | `data/outguess/` | ✗ as keys with drift, any phase (§16). Scans not on disk ○ |
+| Base-60 grid, 256 bytes (scans 66–68) | `keys.grid_bytes` | not a key (§12); not decrypted by LP-native keys (§13); uniform, no periodic byte cipher of text ≤ 102, not RSA n / prime / compressed (§22); no running key from the long on-disk bytes (§23); **what it encodes ○** |
+| OutGuess payloads | `data/outguess/` | ✗ as keys with drift, any phase (§16); ✗ as running keys for the grid (§23). Scans not on disk ○ |
 | Cicada numbers in two-digit groups | `lp-expert/lore.md` | ✗ P.S. and 2014 n, pairs and triples, any phase (§16) |
 | AN END hash | `keys.an_end_hash` | ✗ as a byte key for the grid (§13); ✗ as a cyclic LP2 key with drift, any phase (§16) |

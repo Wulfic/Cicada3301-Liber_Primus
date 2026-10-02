@@ -9,50 +9,7 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-### Y — the grid under every long byte source on disk, at every offset (2026-10-01)
-
-**Goal:** tracker §1 item 1. Findings §22 leaves "aperiodic or running byte keys" open for the grid. Stage N tried only
-short repeating keys, and stages R and W ran the long byte sources against LP2, never against the grid. This stage runs
-each long byte source as a running key on the grid from every phase.
-
-**Sources (6), all already loaded by tools/run_stage_r.py:** page_17.bin, page_21.bin and page_43.bin (58,152 bytes
-each), the wisdom/folly hint (3,368), page_00 hex (991) and the 2014 second-onion hex (256, the grid's exact length).
-The hint read backwards is not a separate source: the statistic ignores order, so reversed key on the forward grid
-equals forward key on the reversed grid, which is run. Sources under ~100 bytes (cookies 32, AN END hash 64, RSA n
-2014 as bytes) are already covered by §22's periodic result (every period ≤ 102 for EN, RUNES and HEX).
-
-**Readings (4):** R, R reversed, C, C reversed, as in stage X (C = column-major over the 32 × 8 grid).
-**Operations (4):** the plaintext candidate m = g ⊕ k, g − k, g + k, k − g (mod 256). They invert XOR, additive,
-subtractive and Beaufort encryption.
-**Offsets:** every phase o of the source, read cyclically: k_i = s[(o + i) mod |s|]. Key in step, one byte per grid byte.
-That makes 179,071 phases × 4 readings × 4 operations = **2,865,136 trials**.
-
-**Statistic:** D = the number of distinct byte values among the 256 bytes of m. It is order-free, and it is low for every
-structured plaintext: English ASCII ≈ 40, rune indices ≤ 29, hex text 16, decimal ≤ 10, base64 ≈ 63. **Null:** if the
-grid is unrelated to s, then for any fixed key g ⊕ k (or g ∓ k) is uniform, so P(D ≤ d) is exact:
-C(256, d) · S(256, d) · d! / 256²⁵⁶ (S = Stirling numbers of the second kind).
-**Rule:** **PASS** if D ≤ 120 in any trial. P(D ≤ 120) = 3.79 × 10⁻¹⁷ per trial, so 1.1 × 10⁻¹⁰ family-wise over all
-trials. **Excluded** (per source × reading × operation): no trial passes. A class whose planted controls fail to pass
-is not covered by the exclusion.
-
-**Controls:**
-- **Positive:** for each source and each class (EN = Emerson windows, RUNES = solved plaintext indices, HEX, B64, as in
-  stage X), plant one 256-byte window m at a seeded phase, reading and operation: replace the grid by the matching
-  inverse of m and the key. The full search over that source must PASS at the planted (phase, reading, op). 24 plants.
-- **Negative:** 3 seeded uniform random 256-byte "grids" through the full search. **Run valid** only if no negative
-  passes, every positive passes, and the negatives' mean D is within 0.5 of 162.0. Otherwise the run is void and nothing
-  is excluded.
-
-**Expected if the grid is a source-keyed text:** one trial with D ≤ ~64 and readable or decodable output.
-**Expected if not:** the per-source minimum of D sits near the 1-in-N quantile of the exact null: about 131–136.
-
-**Not already excluded because:** §13 used repeating keys of ≤ 64 bytes plus prime streams; §22 covers periods ≤ 102
-only; stage R and W used these sources on LP2 runes, not on the grid.
-**Not doing:** desynchronised keys, keys not on disk, other 2-D readings (diagonals, spirals), high-entropy plaintexts
-(compressed or encrypted data under a running key) that D cannot see, and file signatures (the PGP header check passes
-0.02 % of random blocks, about 570 false hits here).
-**Blast radius:** additive. A new runner (tools/run_stage_y.py), a result TSV in reference/findings/, a test file
-(tests/test_stage_y.py) and docs. **Rollback:** git revert the stage commits.
+*(none. The next research step is MASTER_TRACKER §1. Plan it here before starting.)*
 
 ## Owner items
 
@@ -66,6 +23,7 @@ only; stage R and W used these sources on LP2 runes, not on the grid.
 
 | Date | Stage | Result | Commits |
 |---|---|---|---|
+| 2026-10-01 | **Y** grid under long byte keys | Declared first (`edd9c53`). The 6 long byte sources on disk (3 `.bin` payloads, hint, `page_00` hex, 256-byte second-onion hex) as running keys on the grid, every cyclic phase, in step, readings R / R-rev / C / C-rev, operations ⊕, g − k, g + k, k − g: 2,865,136 trials. Statistic D = distinct bytes, with an exact null (Stirling numbers); PASS at D ≤ 120 (3.79e-17 per trial). Valid: 24 / 24 plants found at their cell (D 16–64), 0 / 18 negatives, mean D 162.002. **No pass; all 96 cells excluded**, min D 139. Erratum: the declared null minimum "131–136" is about 136–141. k − g duplicates g − k in D (bijection), disclosed → findings §23 | `edd9c53` + this |
 | 2026-10-01 | **X** grid structure, key-free | Declared first (`225ff30`). Readings R (printed) and C (column-major, 32 × 8). X1: uniform on all 7 statistics (161 distinct, p 0.92). X2: within-class coincidences C_p, which no per-column σ can change, for p = 1…128 against 100,000 uniform draws and plaintext windows (EN Emerson 9,024, RUNES 2,646, HEX and B64 10,000). No structure (min p 0.0031 vs 10⁻⁵). **Excluded:** every p ≤ 102 (R) / 112–122 (C) for EN, RUNES and HEX; ≤ 22 / 28 for B64. X3: small factors in all 4 integer readings, so not an RSA modulus or prime (R readings factored before the declaration, disclosed). X4: no zlib/gzip/bz2/lzma end-of-stream (raw deflate chance 0.55 %), no signature. Post-run: sympy swapped for a stdlib sieve and Miller–Rabin (X3 rows identical) → findings §22 | `225ff30` + this |
 | 2026-10-01 | **W** byte keys as random tabulae, in step | Declared first (`106c634`; that commit was red on `tests/test_docs.py` because it backticked future paths, fixed in `8af4b7e`). Stage S's 5 raw-byte classings (hint, reversed hint, page_17/21/43.bin) × 10 alignments, `alphabets.log_mean_lr`. Per cell, at the exact length: 5 positives and 5 flat negatives (additive, uniform key, keep 0.19), plus an LP2 shuffled-key null per key. Valid: worst negative +0.64. No pass (best +0.84). **Excluded:** continuous and section 15 for all 5, and section 11 for page_21 and page_43 (12 cells). 38 untestable. LP2 rows equal stage S's, as declared. In step only → findings §21 | `106c634` `8af4b7e` `c88b443` + this |
 | 2026-10-01 | **C/K rendering** (user report) | Page READMEs rendered solved words with one spelling per rune: CNOW, LICE, BOOC, THINC, ASCED (also UOICE, INSTRUCTIAN, THNGS). Display only: ciphers, detectors, running-key models and keyword spellings all use rune index 5 (C = K = Q), so no result changes. `verify.render_words` takes each word from the translation after `word_matches` confirms the runes spell it, and raises otherwise; segment 2's 13 square cells (no English) stay canonical on a labelled line. Tests: rendered = English word for word, all 19 K kept. 17 page files regenerated. Rejected: a context guess for K; changing `LATIN` | `a003cfd` |

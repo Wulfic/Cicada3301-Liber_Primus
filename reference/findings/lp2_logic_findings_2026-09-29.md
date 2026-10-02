@@ -881,3 +881,54 @@ grid-side counterpart of LP2's "OTP-class" verdict.
 **What this does not cover.** Other 2-D readings (diagonals, spirals, boustrophedon), aperiodic or running byte keys,
 and periods above 128. Plaintext classes other than the four (decimal and base-60 text fall between HEX and B64, so
 short periods are covered).
+
+## 23. The grid under every long byte source on disk, at every offset (2026-10-01, TODO stage Y)
+
+Declared in `TODO.md` and committed (`edd9c53`) before the runner existed. Run: `python -m tools.run_stage_y`
+(2 minutes), rows in [`stage_y_results.tsv`](stage_y_results.tsv) and [`stage_y_controls.tsv`](stage_y_controls.tsv).
+Tests: `tests/test_stage_y.py`.
+
+**The question.** §22 left aperiodic and running byte keys open for the grid. Stage N tried only repeating keys of
+≤ 64 bytes and prime streams, and stages R and W ran the long byte sources against LP2, not against the grid. Here each
+long byte source on disk is a running key on the grid, in step, from every cyclic phase.
+
+**Design.** Six sources: `page_17.bin`, `page_21.bin` and `page_43.bin` (58,152 bytes each), the wisdom/folly hint
+(3,368), the `page_00` hex (991) and the 2014 second-onion hex (256 bytes, the grid's exact length). Four readings (R,
+R reversed, C, C reversed, as in §22) and four operations, m = g ⊕ k, g − k, g + k and k − g mod 256. In total that is
+179,071 phases × 16 = **2,865,136 trials**. The statistic is D, the number of distinct byte values in m. Every
+structured plaintext has low D: English ASCII 27–36 in the controls, rune indices ≤ 29, hex 16, base64 about 63. For a fixed
+key, an unrelated grid makes m uniform, so the null is exact: P(D ≤ d) = C(256, d) · S(256, d) · d! / 256²⁵⁶
+(`test_null_cdf_is_exact`). **PASS** means D ≤ 120: 3.79 × 10⁻¹⁷ per trial, 1.1 × 10⁻¹⁰ over the family.
+
+**Controls: the run is valid.** For each source, one planted window per class (EN, RUNES, HEX, B64) at a seeded phase,
+reading and operation was recovered at its planted cell: 24 of 24, with D from 16 to 64. Three uniform random grids
+through the full search gave no pass (minimum D 136), and their mean D was 162.002 against the declared 162.0 ± 0.5.
+Pinned by `test_stage_y_run_was_valid`.
+
+**Result: nothing passes, and every cell is excluded.** All 96 (source, reading, operation) cells are excluded for every
+plaintext class with D ≤ 120. The lowest D over all trials is **139** (`page_43.bin`, R, at phase 43,059 under g ⊕ k and
+10,759 under g − k). The per-cell minima run from 139 to 150, and the expected number of null trials at or below each
+cell's minimum runs from 0.02 to 10.5, which is the null's own spread. No cell sits in the lower tail. The 256-byte
+second-onion hex, the one source of matching length, gives minima of 146–150. Pinned by
+`test_stage_y_tsv_matches_the_grid` (recomputes every row for `page_43.bin`, `page_00` and the onion hex) and
+`test_stage_y_nothing_passes`.
+
+**Erratum in the declaration.** The declared null expectation, "the per-source minimum of D about 131–136", was an
+arithmetic slip. The exact 1-in-N quantile is about 140–141 for one 58,152-phase cell and about 136–137 for the whole
+family. The negatives (136–145) and the real grid (139–150) both match the corrected figure. The rule (D ≤ 120) did not
+depend on it.
+
+**Redundancy, disclosed.** k − g = −(g − k) mod 256 is a byte bijection, so those two operations always give the same D
+(`test_search_finds_a_plant_and_only_at_its_phase`). The effective family is 12 of the 16 combinations. Counting all 16
+leaves the family-wise bound conservative.
+
+**Reading.** None of the long byte sources on disk is a running key that turns the grid into text, rune indices, hex,
+decimal or base64, by XOR, addition, subtraction or Beaufort, from any phase, in row or column order, forwards or
+backwards. The long byte material on disk is now excluded on both sides: as a key for LP2 (§16, §21) and as a running
+key for the grid. The short sources are covered for the grid only through §22's periodic result, so a base64 plaintext
+under one of the 32-byte onion cookies (period 32 > 22, and not in stage N) is still open.
+
+**What this does not cover.** A key that slips (desync), sources not on disk (OutGuess output of scans the repo does not
+hold), other 2-D readings, and high-entropy plaintexts that D cannot see: compressed or encrypted data under a running
+key. File signatures were deliberately left out. Stage N's PGP header check passes 0.02 % of random blocks, which would
+be about 570 false hits here.

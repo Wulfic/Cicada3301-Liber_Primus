@@ -22,8 +22,8 @@ A research workspace for the unsolved pages of the Liber Primus, built on logic 
 The base-60 grid spans **LP2 pages 49–51 / scans 66–68** and contains **256 cells**. The numeric transcription
 follows five prior community corrections credited to Inky; see [canonical provenance](data/canonical/PROVENANCE.md).
 Stage M/N test the complete grid under the named families in findings §§12–13. Stage X (findings §22) shows that the
-bytes look uniform and rules out a periodically keyed text, an RSA modulus and compressed streams. None of this has
-produced a plaintext.
+bytes look uniform and rules out a periodically keyed text, an RSA modulus and compressed streams. Stage Y (findings
+§23) rules out a running key from any long byte source on disk. None of this has produced a plaintext.
 
 ## Quick start
 
@@ -75,6 +75,7 @@ tools/
   run_stage_v.py           reproduces the stage-V named keyword Quagmire run (findings §20, C19)
   run_stage_w.py           reproduces the stage-W byte keys as random tabulae, in step (findings §21)
   run_stage_x.py           reproduces the stage-X key-free tests of the grid's 256 bytes (findings §22); writes two TSVs
+  run_stage_y.py           reproduces the stage-Y running-key search of the grid over on-disk bytes (findings §23); two TSVs
   legacy/                  107 pre-2026-09-29 scripts, untested and built on misaligned data; history only
 
 tests/                     ★ the proof: python -m unittest discover -s tests -t . -v
