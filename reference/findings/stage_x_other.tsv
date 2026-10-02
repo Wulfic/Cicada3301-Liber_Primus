@@ -1,0 +1,36 @@
+part	test	reading	value	reference	detail	verdict
+X1	distinct values	R+C	161.0000	null mean 161.9996	0.9165	consistent
+X1	chi2 256 bins	R+C	254.0000	null mean 254.9693	1	consistent
+X1	ones in 2048 bits	R+C	1017.0000	null mean 1023.9780	0.7753	consistent
+X1	high-nibble chi2	R+C	14.6250	null mean 14.9833	0.9649	consistent
+X1	low-nibble chi2	R+C	18.7500	null mean 14.9994	0.4547	consistent
+X1	adjacent equal R	R+C	0.0000	null mean 0.9933	0.7397	consistent
+X1	adjacent equal C	R+C	3.0000	null mean 0.9897	0.1582	consistent
+X3	R big-endian	integer	2048 bits	prime=False	even; factors < 10^6: [2, 3, 7, 13, 29, 179]	EXCLUDED as RSA modulus
+X3	R little-endian	integer	2047 bits	prime=False	2047 bits; factors < 10^6: [3, 7, 11]	EXCLUDED as RSA modulus
+X3	C big-endian	integer	2048 bits	prime=False	even; factors < 10^6: [2, 3, 7, 19]	EXCLUDED as RSA modulus
+X3	C little-endian	integer	2047 bits	prime=False	2047 bits; factors < 10^6: [3, 7, 13, 61, 109, 7727, 41543, 685907]	EXCLUDED as RSA modulus
+X4	zlib raw deflate	R	eof=False out=0	chance 0.00552	Error -3 while decompressing data: invalid distance too far back	EXCLUDED
+X4	zlib	R	eof=False out=0	chance 0.00000	Error -3 while decompressing data: incorrect header check	EXCLUDED
+X4	gzip	R	eof=False out=0	chance 0.00000	Error -3 while decompressing data: incorrect header check	EXCLUDED
+X4	bz2	R	eof=False out=0	chance 0.00000	Invalid data stream	EXCLUDED
+X4	lzma auto	R	eof=False out=0	chance 0.00000	Input format not supported by decoder	EXCLUDED
+X4	stage N signatures	R	-	-	-	EXCLUDED
+X4	zlib raw deflate	R reversed	eof=False out=0	chance 0.00552	Error -3 while decompressing data: invalid stored block lengths	EXCLUDED
+X4	zlib	R reversed	eof=False out=0	chance 0.00000	Error -3 while decompressing data: incorrect header check	EXCLUDED
+X4	gzip	R reversed	eof=False out=0	chance 0.00000	Error -3 while decompressing data: incorrect header check	EXCLUDED
+X4	bz2	R reversed	eof=False out=0	chance 0.00000	Invalid data stream	EXCLUDED
+X4	lzma auto	R reversed	eof=False out=0	chance 0.00000	Input format not supported by decoder	EXCLUDED
+X4	stage N signatures	R reversed	-	-	-	EXCLUDED
+X4	zlib raw deflate	C	eof=False out=0	chance 0.00552	Error -3 while decompressing data: invalid distance too far back	EXCLUDED
+X4	zlib	C	eof=False out=0	chance 0.00000	Error -3 while decompressing data: incorrect header check	EXCLUDED
+X4	gzip	C	eof=False out=0	chance 0.00000	Error -3 while decompressing data: incorrect header check	EXCLUDED
+X4	bz2	C	eof=False out=0	chance 0.00000	Invalid data stream	EXCLUDED
+X4	lzma auto	C	eof=False out=0	chance 0.00000	Input format not supported by decoder	EXCLUDED
+X4	stage N signatures	C	-	-	-	EXCLUDED
+X4	zlib raw deflate	C reversed	eof=False out=0	chance 0.00552	Error -3 while decompressing data: invalid stored block lengths	EXCLUDED
+X4	zlib	C reversed	eof=False out=0	chance 0.00000	Error -3 while decompressing data: incorrect header check	EXCLUDED
+X4	gzip	C reversed	eof=False out=0	chance 0.00000	Error -3 while decompressing data: incorrect header check	EXCLUDED
+X4	bz2	C reversed	eof=False out=0	chance 0.00000	Invalid data stream	EXCLUDED
+X4	lzma auto	C reversed	eof=False out=0	chance 0.00000	Input format not supported by decoder	EXCLUDED
+X4	stage N signatures	C reversed	-	-	-	EXCLUDED
