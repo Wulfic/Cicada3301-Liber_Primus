@@ -5,12 +5,14 @@ Run from the repo root:  python -m unittest tests.test_stage_z -v
 
 from __future__ import annotations
 
+import csv
 import unittest
 from collections import Counter
 
 import numpy as np
 
 from tools import run_stage_z as z
+from tools.lpcore.corpus import load_corpus
 from tools.lpcore.gematria import N
 
 PLAIN = [[(2, 18), (13, 4, 10), (2, 18), (24, 4, 18), (2, 18), (13, 4, 10), (1,)],
@@ -94,6 +96,34 @@ class TestStageZComponents(unittest.TestCase):
         self.assertEqual(z.verdict(10, 5.0, 2.0, 12, {"E": 10.0, "L": 60.0}, mins)[0], "UNTESTABLE")
         self.assertEqual(z.verdict(10, 5.0, 2.0, 12, low, {"E": 11, "L": 90})[0], "UNTESTABLE")
         self.assertEqual(z.verdict(13, 12.5, 2.0, 12, low, mins)[0], "EXCLUDED")
+
+
+class TestStageZRecorded(unittest.TestCase):
+    """The recorded run (findings §24): valid, no pass, 26 cells excluded and 46 untestable."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        with z.RESULTS_PATH.open(encoding="utf-8", newline="") as f:
+            cls.rows = {r["cell"]: r for r in csv.DictReader(f, delimiter="	")}
+
+    def test_recorded_headline(self) -> None:
+        self.assertEqual(list(self.rows), [z.cell_name(c) for c in z.cells()])
+        verdicts = Counter(r["verdict"] for r in self.rows.values())
+        self.assertEqual(verdicts, Counter({"EXCLUDED": 26, "UNTESTABLE": 46}))
+        self.assertTrue(all(r["validity"] in ("ok", "-") for r in self.rows.values()))
+        self.assertLess(max(abs(float(r["z_null"])) for r in self.rows.values()), 1.4)
+        excluded_n = {z.cell_name(c) for c in z.cells() if c[0] == "Zw" or c[1] <= 4}
+        self.assertTrue(all(self.rows[name]["verdict"] == "EXCLUDED" for name in excluded_n))
+
+    def test_lp2_counts_and_analytic_means_recompute(self) -> None:
+        sections = z.lp2_sections(load_corpus())
+        for cell in z.cells():
+            row = self.rows[z.cell_name(cell)]
+            self.assertEqual(z.statistic(cell, sections), int(row["K_LP2"]), cell)
+            self.assertAlmostEqual(z.analytic_mean(cell, sections), float(row["analytic_mean"]), delta=6e-4)
+            # every exclusion has LP2 below both sources' log-scale lower bound
+            if row["verdict"] == "EXCLUDED":
+                self.assertLess(int(row["K_LP2"]), min(float(row["E_lower"]), float(row["L_lower"])))
 
 
 if __name__ == "__main__":

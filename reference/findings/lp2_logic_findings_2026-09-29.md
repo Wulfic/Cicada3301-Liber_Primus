@@ -31,6 +31,7 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 | C17 | An iid key independent of the plaintext keeps the doublet rate in [2/29 − Σb², Σb²] under any alphabets π₁, π₂, π₃: no key with Σb² ≤ 0.05925 (V_eff ≥ 16.9) makes the deficit | 86 / 12,947 needs Σb² ≥ 0.06232; P(X ≤ 86) ≤ 10⁻⁴ below 0.05925 | `test_interval_holds_under_any_labels`, `test_lp2_needs_a_key_at_least_as_uneven_as_english` | 19 |
 | C18 | Under random Quagmire alphabets the key is still not English (runes, prime values, Latin letters), decimal digits or hex | worst P 1.7 × 10⁻¹¹ ≤ 10⁻⁴ over 20 rows; uniform A–Z untestable (power ≤ 2 / 20) | `test_recorded_verdicts`, `test_pooled_rows_recompute` | 19 |
 | C19 | Under Quagmire with named keyword alphabets (34 LP keywords, K and K⁻¹, all 314,432 triples, any mode and offset) the key is not English (runes, prime values, Latin letters) or decimal digits; hex is out for 314,001 members; uniform A–Z for 103,864 | best member ≤ −27.9 (English, digits) vs exclude ≤ −10; no lead ≥ +10 in any family | `test_lp2_exclusions_recompute`, `test_recorded_survivors` | 20 |
+| C20 | No word-deterministic cipher (cipher word = T(plaintext word): a key restarting at every word, a word codebook) and no fixed substitution of aligned n-rune blocks (Hill, polygraphic codebook) for n = 2–4 at any offset, or n = 5 in the continuous stream | repeated pairs at the flat-null level (\|z\| ≤ 1.38); words within sections 25 vs null 20.0 and English ≥ 3,433 (log-scale 5σ bound); 26 of 72 cells excluded, 46 untestable | `test_recorded_headline`, `test_lp2_counts_and_analytic_means_recompute` | 24 |
 
 **The leak** (how the 86 survivors are spread, §7):
 
@@ -932,3 +933,88 @@ under one of the 32-byte onion cookies (period 32 > 22, and not in stage N) is s
 hold), other 2-D readings, and high-entropy plaintexts that D cannot see: compressed or encrypted data under a running
 key. File signatures were deliberately left out. Stage N's PGP header check passes 0.02 % of random blocks, which would
 be about 570 false hits here.
+
+## 24. Word and block codebooks: equal plaintext units would repeat (2026-10-01, TODO stage Z)
+
+Declared in `TODO.md` (`be4a200`, with its paths unquoted in `3015705`) before the runner existed. The positive bound was
+amended before LP2 was scored, and the runner and tests were committed with that amendment (`5298559`). Run:
+`python -m tools.run_stage_z` (about 15 minutes). Rows are in [`stage_z_results.tsv`](stage_z_results.tsv) and
+[`stage_z_controls.tsv`](stage_z_controls.tsv). Tests: `tests/test_stage_z.py`.
+
+**The question.** Every earlier stage tested a key stream, a tabula keyed per position, or ciphertext feedback. A cipher
+whose output for a local plaintext unit depends only on that unit is none of these, and C1–C19 do not cover it:
+- A key that restarts at every word is not periodic in the global position, so C9 misses it.
+- A fixed block table is not a stream, so C4, C10 and C13 do not apply.
+- C15 is the n = 1 case only.
+
+Any such cipher sends equal units to equal cipher units, so it keeps the plaintext's **repeat count** K (pairs of equal
+units) whatever its table is. That gives one key-free test for every table at once.
+
+**Design.** 72 cells:
+- **Zw (word-deterministic):** cipher word = T(plaintext word), for any injective T. This covers a key restarting at
+  each word, word-length keys, per-word transposition plus substitution, and word codebooks. K counts pairs of equal
+  words of ≥ 2 runes, within each section (Zw-sec) and across LP2 (Zw-all). LP2 has 2,896 rune words.
+- **Zb (block-deterministic, ECB):** aligned n-rune blocks pass through a fixed bijection of Z₂₉ⁿ. This covers Hill
+  ciphers and polygraphic codebooks for n = 2–8. Mode "sec" aligns blocks at offset a from each section start and counts
+  pairs within each section. Mode "cont" reads segments 7–15 as one stream at offset a. Every offset a = 0…n − 1 is a
+  cell.
+
+The anti-doublet rule follows every cipher: a would-be doublet is re-drawn with probability 0.81.
+
+**Null and controls.**
+- **Null:** 1,000 flat draws in LP2's exact section and word lengths, under the same rule.
+- **Positive controls:** per cell, 200 draws from each of two sources. (E) is contiguous Emerson windows and (L) is
+  the solved LP words in random order. Each is cut to LP2's section sizes, enciphered with a fresh random injective
+  table at the cell's unit and alignment, then given the rule.
+- **Test cell:** a cell is testable if, for both sources, every draw and the bound exp(m − 5s) − 1 on ln(K + 1) exceed
+  the null's maximum.
+- **Exclusion:** a cell is excluded if LP2's K is below both bounds.
+- **PASS:** K above the null maximum and z ≥ 6 against the null.
+
+**The amendment, disclosed.** The declared bound was μ − 5σ. The `--quick` run, which scores no LP2 runes, showed that
+the positive counts are right-skewed: a few Emerson windows give several times the median. That skew drove the normal
+bound negative where every draw sat far above the null (Zw-sec, E: −280). The log-scale bound replaced it before LP2 was
+scored. Nothing else changed.
+
+**Validity: the run is valid.** For all 18 Zb cells with n ≤ 4, the null mean lies within 3 s.e. of the analytic
+E[K] = Σ C(B, 2) · P(two windows equal). The rule makes the rune stream a symmetric Markov chain with
+P(c_i = c_{i−1}) = (0.19 + 0.81/29)/29, so that probability is exact (`test_p_equal_is_uniform_without_the_rule_and_sums_like_a_chain`).
+The Zw cells agree as well (19.98 vs 19.93, and 132.47 vs 132.94). Any injective table preserves K exactly when the rule
+is off (`test_tables_preserve_K_exactly_without_the_rule`).
+
+**Result: nothing passes. LP2 repeats at the flat-null level in all 72 cells (|z| ≤ 1.38).**
+
+| Cell | K_LP2 | Null mean (max) | Positives E / L, mean | Lower bound E / L | Verdict |
+|---|---|---|---|---|---|
+| Zw-sec | 25 | 19.98 (35) | 7,861 / 8,730 | 3,433 / 5,515 | excluded |
+| Zw-all | 123 | 132.47 (176) | 49,655 / 61,084 | 20,522 / 45,223 | excluded |
+| Zb n = 2, sec, a = 0 | 3,782 | 3,837 (4,058) | 18,637 / 18,978 | 15,375 / 17,090 | excluded |
+| Zb n = 3, sec, a = 0 | 71 | 60.09 (86) | 1,362 / 1,652 | 541 / 1,265 | excluded |
+| Zb n = 4, sec, a = 0 | 0 | 1.21 (7) | 230 / 295 | 25.3 / 190 | excluded |
+| Zb n = 5, cont, a = 0 | 1 | 0.20 (3) | 382 / 646 | 5.33 / 408 | excluded |
+| Zb n = 6, cont, a = 0 | 0 | 0.008 (1) | 224 / 243 | −0.59 / 123 | untestable |
+
+The other offsets match these rows (TSV). By block length:
+- **n = 2, 3, 4:** excluded at every offset in both modes (4, 6 and 8 cells).
+- **n = 5:** excluded in the continuous stream at all five offsets, and in "sec" mode at offset 2 only. The other four
+  sec offsets are untestable: Emerson's bound falls below the null maximum.
+- **n = 6, 7, 8:** untestable.
+
+The bound is conservative at n = 6. Every Emerson draw there has K ≥ 22 against a null maximum of 1, but skewed
+draws give a log-scale sd that pushes exp(m − 5s) − 1 below zero. The verdict follows the declared rule.
+
+**Reading.** In LP2, equal plaintext words do not become equal cipher words, and equal aligned blocks of 2–4 runes do not
+become equal cipher blocks. This holds at any alignment, whether the blocks restart at each section or run on through
+LP2. Therefore:
+- **Excluded:** a key that restarts at every word, every word codebook, the digraphic ciphers the ledger excluded, and
+  Hill ciphers of size 2–4 (5 in the continuous stream).
+- **Prediction met:** LP2 is OTP-class, and every testable cell is excluded.
+- **The key changes along the text:** whatever enciphers LP2 depends on position, not only on the local plaintext.
+
+**What this does not cover.**
+- A codebook with homophones, where several cipher strings are chosen at random for one unit.
+- Blocks that restart at lines, pages or paragraphs.
+- A word- or block-deterministic layer under a stream key: that is the additive family, and C4–C19 constrain its sum.
+- Blocks of 6 or more runes.
+- Word boundaries that differ between plaintext and ciphertext. The test assumes LP2's word divisions are the
+  plaintext's, as they are in every solved section.

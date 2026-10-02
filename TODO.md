@@ -9,67 +9,7 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-### Z — deterministic local encryption: word and block codebooks (2026-10-01)
-
-**Goal.** One key-free test of every cipher in which the ciphertext of a local plaintext unit depends only on that
-unit. Any such cipher maps equal units to equal cipher units, so it keeps the plaintext's repeat count exactly,
-whatever the table. Two families:
-- **Word-deterministic (Zw):** cipher word = T(plaintext word) for a fixed injective T. This covers a key that restarts
-  at every word (c_j = p_j + k_j, j = position in the word, any k), word-length-dependent keys, any per-word
-  transposition plus substitution, and a word codebook. A key that restarts at each word is not periodic in the global
-  position, so C9 does not cover it. C7 (one shift per word) is a stream, not this.
-- **Block-deterministic (Zb, ECB):** aligned n-rune blocks map through a fixed bijection of Z₂₉ⁿ. This covers Hill
-  n ≥ 2 (catalog row 18, open), any polygraphic codebook, and digraphic n = 2 (ledger only, never run here).
-
-**Model.** Zw: c_word = T(p_word). Zb: c[a + n·t … a + n·t + n − 1] = B(p[same]), n = 2…8. Either is followed by the
-measured anti-doublet rule: a would-be doublet in the continuous stream is re-drawn uniformly with prob. 0.81 (C8, keep 0.19).
-
-**Not already excluded because:** C1–C19 test additive streams, tabulae keyed per position, or ciphertext feedback.
-A word-restart key is not a global period (C9), and a fixed block table is no stream (C4, C10, C13). C15 (homophonic)
-is n = 1 only. Catalog row 18 is open; row 17 rests on the ledger.
-
-**Statistic.** K = number of pairs of equal units (words of ≥ 2 runes for Zw; aligned n-blocks for Zb). Words come
-from the corpus's word divisions (numbers ignored). The cells are:
-- Zw-sec: pairs within each section. Zw-all: pairs across all of LP2 (2 cells).
-- Zb, mode "sec": blocks aligned at offset a from each section start, pairs within each section. Mode "cont": the 12,956
-  runes as one stream, offset a, pairs over the whole stream. n = 2…8, a = 0…n−1, both modes: 70 cells.
-- **Family 72 cells.**
-
-**Null (flat).** 1,000 seeded draws: uniform iid runes in LP2's exact section and word lengths (all of segments 7–15),
-with the same anti-doublet rule (continuous within a section). Per cell: mean μ₀, sd σ₀ (floor 1), max.
-
-**Positive controls (power), per cell.** 200 seeded draws for each of 2 sources:
-(E) contiguous Emerson-essays windows and (L) solved-LP plaintext words in random order. Each is cut to LP2's section
-rune counts, enciphered with a fresh random injective table at that cell's unit and alignment, then given the
-anti-doublet rule. Per cell and source: μ_pos, σ_pos.
-
-**Declared rule** (written before LP2 is scored):
-- **Testable** iff, for both sources, μ_pos − 5σ_pos > the null's maximum.
-- **Excluded** iff testable and K_LP2 < μ_pos − 5σ_pos for both sources.
-- **PASS (lead → `lp-claim-audit`)** iff K_LP2 > null max and (K_LP2 − μ₀)/σ₀ ≥ 6. Bonferroni: 72 cells, normal tail
-  about 1e-9 each.
-- Otherwise **inconclusive**.
-- **Run valid** iff in every cell the 1,000 nulls have mean within 3 s.e. of the analytic E[K]. For Zb that is
-  C(B, 2) · Σ P(block)² computed from the null's own marginal; it is only checked for n ≤ 4, where the mean is ≥ 1.
-  The run is void if any n ≤ 4 cell fails.
-
-**Amendment (before LP2 was scored).** `--quick` (50 nulls, 20 controls per source, LP2 not scored) showed the
-positive counts are right-skewed. A few Emerson windows give K several times the median (Zb n = 4: 122–754), so
-μ_pos − 5σ_pos went negative even where every draw sits far above the null (Zw-sec: E −280). The bound now uses the
-log scale: lower = exp(m − 5s) − 1, with m and s the mean and sd of ln(K + 1) over the 200 draws. **Testable** also
-requires every one of the 200 draws of each source to exceed the null max. Nothing else changes: cells, statistic,
-nulls, PASS rule and validity gate are as declared.
-
-**Expected if true** (English-only power check, 30 draws, no LP2): Zw ≈ 8,600–10,300 pairs against a flat ≈ 62; Zb n = 2:
-≈ 19,600 against 3,846; n = 3: ≈ 1,400 against 60; n = 4: ≈ 215 against 1.3; n = 5: ≈ 62 against 0.03. **Expected if
-false:** K_LP2 inside the null. **Prediction:** LP2 is OTP-class, so every testable cell is excluded; Zw and n = 2–4 are
-testable, and n ≥ 6 is not.
-
-**Not doing:** a codebook with homophones (several cipher strings per unit chosen at random), blocks that restart at
-lines, pages or paragraphs, word-deterministic ciphers with a stream on top (that is the additive family), and
-n > 8. Words of 1 rune are left out of Zw, since chance collisions swamp them.
-**Blast radius:** additive only (new runner tools/run_stage_z.py, two TSVs, tests/test_stage_z.py, docs; not yet written).
-**Rollback:** `git revert <commit>`.
+*(none. The next research step is MASTER_TRACKER §1. Plan it here before starting.)*
 
 ## Owner items
 
@@ -83,6 +23,7 @@ n > 8. Words of 1 rune are left out of Zw, since chance collisions swamp them.
 
 | Date | Stage | Result | Commits |
 |---|---|---|---|
+| 2026-10-01 | **Z** word and block codebooks | Declared first (`be4a200`, red on the docs test for backticked future paths, fixed in `3015705`). K = pairs of equal units, kept exactly by any word- or block-deterministic table. 72 cells: Zw within sections and across LP2; Zb n = 2–8 at every offset, per section and continuous. 1,000 flat nulls in LP2's word lengths, plus 200 Emerson and 200 shuffled solved-LP controls per cell, with the 0.81 re-draw rule. Amended before LP2 was scored (`5298559`): μ − 5σ became 5σ on ln(K + 1), because `--quick` showed right skew. Valid (null means within 3 s.e. of the exact Markov E[K]). **No pass; LP2 at the null in every cell (\|z\| ≤ 1.38). C20:** 26 excluded (Zw ×2, n = 2–4 all offsets, n = 5 continuous ×5 and sec a = 2), 46 untestable (n ≥ 6, four n = 5 sec offsets). Prediction met → findings §24 | `be4a200` `3015705` `5298559` + this |
 | 2026-10-01 | **Y** grid under long byte keys | Declared first (`edd9c53`). The 6 long byte sources on disk (3 `.bin` payloads, hint, `page_00` hex, 256-byte second-onion hex) as running keys on the grid, every cyclic phase, in step, readings R / R-rev / C / C-rev, operations ⊕, g − k, g + k, k − g: 2,865,136 trials. Statistic D = distinct bytes, with an exact null (Stirling numbers); PASS at D ≤ 120 (3.79e-17 per trial). Valid: 24 / 24 plants found at their cell (D 16–64), 0 / 18 negatives, mean D 162.002. **No pass; all 96 cells excluded**, min D 139. Erratum: the declared null minimum "131–136" is about 136–141. k − g duplicates g − k in D (bijection), disclosed → findings §23 | `edd9c53` + this |
 | 2026-10-01 | **X** grid structure, key-free | Declared first (`225ff30`). Readings R (printed) and C (column-major, 32 × 8). X1: uniform on all 7 statistics (161 distinct, p 0.92). X2: within-class coincidences C_p, which no per-column σ can change, for p = 1…128 against 100,000 uniform draws and plaintext windows (EN Emerson 9,024, RUNES 2,646, HEX and B64 10,000). No structure (min p 0.0031 vs 10⁻⁵). **Excluded:** every p ≤ 102 (R) / 112–122 (C) for EN, RUNES and HEX; ≤ 22 / 28 for B64. X3: small factors in all 4 integer readings, so not an RSA modulus or prime (R readings factored before the declaration, disclosed). X4: no zlib/gzip/bz2/lzma end-of-stream (raw deflate chance 0.55 %), no signature. Post-run: sympy swapped for a stdlib sieve and Miller–Rabin (X3 rows identical) → findings §22 | `225ff30` + this |
 | 2026-10-01 | **W** byte keys as random tabulae, in step | Declared first (`106c634`; that commit was red on `tests/test_docs.py` because it backticked future paths, fixed in `8af4b7e`). Stage S's 5 raw-byte classings (hint, reversed hint, page_17/21/43.bin) × 10 alignments, `alphabets.log_mean_lr`. Per cell, at the exact length: 5 positives and 5 flat negatives (additive, uniform key, keep 0.19), plus an LP2 shuffled-key null per key. Valid: worst negative +0.64. No pass (best +0.84). **Excluded:** continuous and section 15 for all 5, and section 11 for page_21 and page_43 (12 cells). 38 untestable. LP2 rows equal stage S's, as declared. In step only → findings §21 | `106c634` `8af4b7e` `c88b443` + this |

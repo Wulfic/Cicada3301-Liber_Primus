@@ -4,7 +4,7 @@
 and what to do next. Every claim on it is backed by a test or a linked document. If something here
 disagrees with the tests, the tests win, and this page needs fixing.
 
-**Last updated:** 2026-10-01 · **Tests:** 198, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
+**Last updated:** 2026-10-01 · **Tests:** 209, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
 
 ---
 
@@ -14,7 +14,7 @@ disagrees with the tests, the tests win, and this page needs fixing.
 match their scans, so most older "discoveries" were artifacts (see §4.3). Now one canonical transcription
 (`data/canonical/`) is read by one tested loader (`tools/lpcore`), and every solved section decrypts from it exactly.
 
-The unsolved LP2 cipher is pinned down by nineteen constraints (§3.2, C1–C19; each with its test in the
+The unsolved LP2 cipher is pinned down by twenty constraints (§3.2, C1–C20; each with its test in the
 [findings §0 register](reference/findings/lp2_logic_findings_2026-09-29.md#0-constraint-register)). In short: an additive
 stream over mod 29, plus an anti-doublet re-keying rule that leaks about 19 % of the time.
 - **The key stream** is near-flat mod 29 and aperiodic. Its values come from an alphabet of at least ~30 symbols,
@@ -59,6 +59,12 @@ Stage Y (findings §23) runs every long byte source on disk (the three OutGuess 
 trials. The run is valid (24 / 24 plants found, 0 / 18 negatives) and nothing passes. The lowest distinct-byte count is 139,
 at the null's own level, where any text, rune, hex or base64 plaintext would sit at 64 or below. The long on-disk byte
 material is now excluded both as an LP2 key and as an in-step running key for the grid. A slipping key is not covered.
+Stage Z (findings §24) tests every cipher whose output for a word, or for an aligned block of n runes, depends only on
+that unit: a key that restarts at each word, a word codebook, Hill or any polygraphic table. Any such cipher keeps the
+plaintext's repeat count, whatever the table. LP2 repeats at the flat-null level in all 72 cells (|z| ≤ 1.38): 25
+repeated word pairs within sections, against a null of 20 and at least 3,433 for an English word cipher. Word ciphers
+and blocks of n = 2–4 at any offset are excluded (C20), and so is n = 5 in the continuous stream. Blocks of 6 or more
+are untestable.
 
 **Next actions, in order** (all low prior; detail in [findings §6–§23](reference/findings/lp2_logic_findings_2026-09-29.md)):
 
@@ -130,7 +136,7 @@ Errata, each with its evidence in `solved.py`: **WIDSOM** is the book's own typo
 
 Everything else is flat: IoC, rune frequencies, and repeats at lags 2–10. The constraints derived from that
 are indexed, one row each with its test, in the [findings §0 register](reference/findings/lp2_logic_findings_2026-09-29.md#0-constraint-register).
-The evidence is in findings §2 (C1–C7), §7 (C8), §8 (C9), §9 (C10–C11), §10 (C12), §11 (C13), §14 (C14), §15 (C3's test, C15), §18 (C16), §19 (C17–C18) and §20 (C19):
+The evidence is in findings §2 (C1–C7), §7 (C8), §8 (C9), §9 (C10–C11), §10 (C12), §11 (C13), §14 (C14), §15 (C3's test, C15), §18 (C16), §19 (C17–C18), §20 (C19) and §24 (C20):
 
 - The anti-doublet rule acts on the continuous rune stream and ignores word boundaries (C1).
 - There is no plaintext-F passthrough, unlike LP1 (C2). The surviving doublets mark no single plaintext letter (C3):
@@ -162,6 +168,11 @@ The evidence is in findings §2 (C1–C7), §7 (C8), §8 (C9), §9 (C10–C11), 
 - **No random tabula with few key classes (C16):** if each key value picks an independent random alphabet, the cipher
   marginal is a mixture whose χ² excess is about 10,400 / V_eff. LP2's flatness excludes V_eff ≤ 153 (one tabula) or
   ≤ 133 (one per section), at P ≤ 10⁻⁴ and under any alignment or desync. Latin-square tabulae are not covered (findings §18); see C17–C18.
+
+- **No word or block codebook (C20):** equal plaintext words do not give equal cipher words, and equal aligned blocks
+  of 2–4 runes (any offset, restarting per section or not) do not give equal cipher blocks. This excludes a key
+  restarting at each word, every word codebook, and Hill or polygraphic tables with n ≤ 4 (n = 5 in the continuous
+  stream). Repeats are at the flat level (findings §24).
 
 **Reading:** a rule applied at the output of a non-periodic additive stream. It is not a property of the key
 text, of word structure, or of any plaintext letter.
@@ -241,6 +252,10 @@ RANDOM.ORG and RAND archives (~14.5 billion offsets). Both conclude "OTP-class" 
   the hint, the `page_00` hex and the second-onion hex, from every cyclic phase, in step, under ⊕, g − k, g + k and k − g,
   in row or column order either way. Excluded for any plaintext with at most 120 distinct bytes (text, runes, hex, decimal,
   base64). A slipping key, sources not on disk and high-entropy plaintexts remain **open**.
+- **Word- and block-deterministic ciphers** (C20, findings §24): a key restarting at every word, any word codebook,
+  and any fixed substitution of aligned 2–4-rune blocks (Hill, digraphic, polygraphic) at any offset, plus 5-rune
+  blocks in the continuous stream. Homophonic codebooks, blocks of 6 or more runes, and blocks restarting at
+  lines or pages remain **open**.
 - The "Echo446Ghq full solution" is debunked ([analysis](reference/community/echo446ghq_analysis.md)).
 
 ### 4.3 Invalid claims from before 2026-09-29
@@ -290,6 +305,7 @@ The ordered list is in §1. These questions are also open and cheap to state:
 
 | Date | What happened | Commits |
 |---|---|---|
+| 2026-10-01 | **Word and block codebooks** (TODO Z): K = pairs of equal units. Any word- or block-deterministic table keeps it exactly. 72 cells (words within sections and across LP2; n = 2–8 blocks at every offset, per section and continuous), 1,000 flat nulls, and 2 × 200 positive controls per cell. Valid (null means match the exact Markov-chain E[K]). No pass; LP2 at the null everywhere (\|z\| ≤ 1.38). 26 excluded (words; n = 2–4 at all offsets; n = 5 continuous and one sec offset), 46 untestable. C20. The positive bound was amended to log scale after `--quick` showed skew, before LP2 was scored (disclosed) | `be4a200` `3015705` `5298559` + this commit |
 | 2026-10-01 | **Grid under long byte keys** (TODO Y): the 6 long byte sources on disk as running keys on the grid, every cyclic phase, 4 readings × 4 operations, 2,865,136 trials. The statistic is distinct bytes D, with an exact null (Stirling numbers); PASS means D ≤ 120 (1.1e-10 family-wise). Valid: 24 / 24 plants found (D 16–64), 0 / 18 negatives (mean D 162.002). No pass; minimum D 139. Erratum: the declared null minimum "131–136" should have read about 136–141 | `edd9c53` + this commit |
 | 2026-10-01 | **Grid structure, key-free** (TODO X): the 256 bytes are consistent with uniform on 7 statistics. Within-class coincidences, which no per-column σ can change, exclude English, rune and hex plaintext under any repeating byte key of period ≤ 102 (row) / ≤ 112 (column), and base64 ≤ 22. Not an RSA modulus or a prime (small factors in all 4 readings; the 2 row readings were factored before the declaration, disclosed). No decompressor or signature fires (chance rates calibrated). No pass | `225ff30` + this commit |
 | 2026-10-01 | **Byte keys as random tabulae** (TODO W): stage S's five raw-byte classings re-run in step with controls at each alignment's exact length and flat negatives. Valid (worst negative +0.64; nulls ≤ −876.6); no pass (best +0.84). 12 of 50 cells excluded: continuous and section 15 for all five keys (positives ≥ +125.8, LP2 ≤ −72.7), section 11 for two payloads; 38 untestable. LP2 rows equal stage S's, as declared | `106c634` `8af4b7e` `c88b443` + this commit |
