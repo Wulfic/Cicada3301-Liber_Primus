@@ -96,15 +96,21 @@ None is the key, from any start below 1,000 (C27; best real decode −56 nats).
 1. **The grid's 256 bytes** are still undeciphered. Simple readings are exhausted (findings §12–§13, §22), and so are
    running keys from the byte material on disk (§23). What is left needs a key for a modern cipher, an RSA modulus, a
    new 2-D reading, or a new byte source, each declared as its own hypothesis.
-2. **More named sources** only with a new primary source: OutGuess output from scans the repo does not hold
-   (community `lp_outguessed/`), or a named generator (catalog row 22). The material on disk is exhausted (§16), and so
-   is the material for wide random tabulae (§21) and for running keys on the grid (§23). A new byte source can go straight
-   into `tools/run_stage_w.py`'s design for LP2 and `tools/run_stage_y.py`'s for the grid.
-3. **Wider keyless contexts (cheap).** Stage AA's log-scale 5σ bound stops at w = 2 / 1 because of Emerson's right tail,
-   but every control draw clears the null up to w = 7 (findings §25). A lower-tail bound with its own declared
-   false-exclusion rate would extend C21. It needs a new declaration and a fresh run.
-4. **Desync-tolerant tabula tests.** Stage W's detector loses all power at 1 % desync, so a byte-keyed tabula with a
+2. **More named sources** only with a new primary source or an exact generator definition. On disk, every Cicada
+   number, payload and byte source is exhausted (§16, §21, §23), and so are base-29 constants (§31, C27). New candidates
+   are OutGuess output from scans the repo does not hold (community `lp_outguessed/`) or a named generator (catalog row
+   22). `tools/run_stage_ag.py` takes any key-value list unchanged (starts < 1000, drift-tolerant, 870 decodes per
+   source).
+3. **Reused key stretches shorter than ~3,000 runes** (straight alphabets, C23) and **under mixed alphabets** (any length).
+   The difference law carries only 0.025 nats per pair, so a labelled test cannot go much below 2,500 runes. A
+   label-free windowed coincidence scan is weaker still. Expect little.
+4. **Wider keyless contexts (cheap, low value).** Stage AA's bound stops at w = 2 / 1, but every control draw clears the
+   null up to w = 7 (findings §25). Emerson's lower tail, not the bound's form, is what limits it. With C23–C26 showing a
+   key that changes everywhere, this family matters little.
+5. **Desync-tolerant tabula tests.** Stage W's detector loses all power at 1 % desync, so a byte-keyed tabula with a
    slipping key is still open. A test needs a model of the slip first. Without one it is a theme, not a hypothesis.
+6. **C22's line deviation** (z = 2.98, below the null maximum, about 1 % of a restart's effect). Leave it unless a
+   declared localisation test (by page or by line gap) is cheap. As it stands it is noise.
 
 **Before you start anything:** read §4 (ruled out) and §6 (rules of evidence). Plans go in [`TODO.md`](TODO.md).
 
