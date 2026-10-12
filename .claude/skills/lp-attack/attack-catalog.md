@@ -1,6 +1,6 @@
 # Attack catalog: cipher family → what distinguishes it → status on LP2
 
-Snapshot 2026-10-12 (C1–C23). **Tracker §3.2 / §4 win over this file.** If you add a constraint, update the
+Snapshot 2026-10-12 (C1–C24). **Tracker §3.2 / §4 win over this file.** If you add a constraint, update the
 matching rows here.
 
 **Periodicity note.** C9 excludes periods ≤ 1000 when the re-key rule keeps the key in step, and C23 extends that to
@@ -23,7 +23,7 @@ written here, with no test yet. An "arg" row needs a test before it can go in th
 | 6 | Vigenère with an F-interrupter (LP1 style) | ᚠ excess about 190 | ✗ | C2; ledger |
 | 7 | Running key from English text (letters, prime values, φ) | r = q ⊛ q is non-flat | ✗ | C10 |
 | 8 | Plaintext autokey, any lag | same as 7 | ✗ | C10 |
-| 9 | Ciphertext autokey c = p ± c_{i−L} | lag-L difference or sum histogram is English | ✗ L = 2–1000 | C11 |
+| 9 | Ciphertext autokey c = p ± c_{i−L} (or Beaufort, shifted or reflected), forwards or backwards | lag-L difference or sum histogram is English | ✗ L = 2–12,863; reused ciphertext stretches ≥ 200 runes | C11 (L ≤ 1000, label-free); C24 (§28, straight alphabets) |
 | 10 | Alphabet chosen by c_{i−L} (keyed autokey, secret tables, affine chain) | lag-L transition rows are permuted English | ✗ L ≤ 1000 | C12 |
 | 11 | Same as 10, plus a flat stream key | rows flat | ○ | not covered (findings §10) |
 | 12 | Alphabet chosen by *plaintext* runes, or a 2-rune context; any keyless c_i = F(plaintext window of width w) | sliding n-gram repeat count K_n | ◐ | C21 (§25): ✗ w ≤ 2 with context restarting per section, w ≤ 1 continuous (1-rune context, plaintext autokey with any tables at lag 1). Wider windows untestable by the declared bound; with a stream key on top, see row 3 |

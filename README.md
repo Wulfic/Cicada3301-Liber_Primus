@@ -80,6 +80,7 @@ tools/
   run_stage_aa.py          reproduces the stage-AA keyless sliding-context repeat test (findings §25, C21); three TSVs
   run_stage_ab.py          reproduces the stage-AB key-restart test at sections, lines, pages… (findings §26, C22); two TSVs
   run_stage_ac.py          reproduces the stage-AC key-reuse scan at every lag, periods to 11,781 (findings §27, C23); three TSVs
+  run_stage_ad.py          reproduces the stage-AD ciphertext-as-key scan at every lag, both directions (findings §28, C24)
   legacy/                  107 pre-2026-09-29 scripts, untested and built on misaligned data; history only
 
 tests/                     ★ the proof: python -m unittest discover -s tests -t . -v

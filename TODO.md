@@ -41,56 +41,6 @@ exactly (FFT, rounded to integers, checked against direct counts).
 and stage_ae_controls.tsv, test tests/test_stage_ae.py, findings §29, C25. **Blast radius:** additive only.
 **Rollback:** git revert.
 
-### AD — the book's own ciphertext as the key, at any lag, forwards or backwards (2026-10-12)
-
-**Goal.** C11 (ciphertext autokey) and C12 (alphabet chosen by c_{i−L}) stop at lag 1000, read forwards. They leave
-these open:
-- the ciphertext at a long lag as the key (the previous section's ciphertext as the next one's pad);
-- the ciphertext read backwards as the key;
-- one stretch of ciphertext reused as the key for one later stretch.
-Stage AC's machinery tests all three directly, with the plaintext law itself, which is 12 times stronger per pair.
-
-**Model (straight alphabets).** LP2 as one stream of 12,956 runes. For pairs i < j on a forward diagonal (j = i + L) or a
-reverse anti-diagonal (i + j = σ), j − i ≥ 11, one rune of the pair is the other's plaintext under the other's
-ciphertext as key, up to a shift a ∈ Z₂₉:
-- **diff:** x = c_j − c_i, plaintext x − a (c_j = p_j + c_i + a, or c = p − k with a reflected key);
-- **diffrev:** x = c_j − c_i, plaintext a − x (Beaufort c_j = c_i + a − p_j; also the later rune as the earlier one's key);
-- **sum:** x = c_j + c_i, plaintext x − a;
-- **sumrev:** x = c_j + c_i, plaintext a − x.
-The anti-doublet rule re-draws a would-be doublet with probability 0.81, and the re-drawn rune is what later positions
-use as key.
-
-**Score.** s = ln((1 − ε) · 29 · q(plaintext) + ε), with ε = 0.1 and q = `detect.unigram` over `keys.solved_plaintext_words`.
-That is `detect.emission_ratios`, the emission of every key test since stage I. E[e^s] = 1 under a flat cipher. Under
-the model, E[e^−s] = 1 for plaintext drawn from q_ε. KL per pair 0.312 nats.
-
-**Statistics and declared rule** (written before the runner exists and before LP2 is scored):
-- **F(L, rel, a):** Σ s over the whole forward diagonal, an autokey at lag L through the stream, L = 11…12,945.
-  4 × 29 × 12,935 = 1,500,460 hypotheses (erratum: the declaration said 1,501,620; stage AC's "750,810" and
-  "1,126,215" likewise used 12,945 lags for 12,935, so they should read 750,230 and 1,125,345; no bound changes).
-  **PASS** iff F ≥ 30 (bound ≈ 1.4 × 10⁻⁷). **Excluded** iff F ≤ −10, for
-  L ≤ P_max.
-- **S:** the best contiguous segment per (rel, a) on every forward diagonal and every reverse anti-diagonal, so one
-  reused ciphertext stretch. **PASS** iff S ≥ 30 (Ville, ≈ 1.95 × 10¹⁰ · e^−30 ≈ 1.8 × 10⁻³).
-- **Valid** iff 4 flat null streams with the rule, scanned in full, give max F < 30 and max S < 30.
-- **Model check (controls, E and L sources, 10 draws per relation, random a):**
-  - **Whole-stream autokey** at L ∈ {11, 100, 1000, 1033, 1729, 3301, 6000, 9000, 11000, 12000, 12500, 12800, 12900}.
-    P_max = the largest grid L with every draw at every grid L′ ≤ L at F > −10.
-  - **Reused stretch** M ∈ {100, 200, 300, 500, 1000}, forward and reverse, 25 draws per source and cell. M_min = the
-    smallest M with every draw ≥ 30.
-
-**Expected** (no LP2 scored): the per-pair information is 12 times stage AC's, so P_max ≈ 12,900 and M_min ≈ 200–300.
-**Prior, disclosed:** C11 and C12 found no autokey at lags ≤ 1000, and LP2 is flat, so expect no PASS and nearly every
-hypothesis excluded.
-
-**Not doing.** Mixed alphabets (C12 covers them key-free for L ≤ 1000). An autokey through a nonlinear map of c_i. Keys
-from two earlier runes. The solved sections' runes as a key: their marginal is non-flat, which C10 and C13 already
-constrain.
-
-**Outputs.** Runner tools/run_stage_ad.py (--quick scores no LP2 runes), TSVs reference/findings/stage_ad_lags.tsv,
-stage_ad_top.tsv and stage_ad_controls.tsv, test tests/test_stage_ad.py, findings §28, C24. **Blast radius:** additive
-only. **Rollback:** git revert.
-
 ## Owner items
 
 - [ ] **Tokens in `.claude/mcp.vscode-reference.json`** (GitHub PAT, mem0, context7) are plaintext. They were never
@@ -103,6 +53,7 @@ only. **Rollback:** git revert.
 
 | Date | Stage | Result | Commits |
 |---|---|---|---|
+| 2026-10-12 | **AD** ciphertext as its own key | Declared first (`03dad0b`); runner committed before LP2 was scored (`1b0007a`). Plaintext-law score (detect's emission, 0.312 nats per pair), 4 relations × 29 shifts, F per forward diagonal (autokey at lag L), S best segment forward and reverse. Controls: P_max 12,900, M_min 200. Valid. **No pass** (F 5.30, S 23.16 vs null 23.26). **C24:** all 1,490,948 hypotheses at L ≤ 12,863 excluded. Prediction met. Erratum on the declared family sizes of AC and AD (lag count), no bound changes → findings §28 | `03dad0b` `1b0007a` + this |
 | 2026-10-12 | **AC** key reuse at any lag | Declared first (`b2f22d9`); "sumrev" (Beaufort reflection of the sum law) added before LP2 was scored and committed with the runner (`a11ec86`). Labelled per-pair score, 3 relations × 29 shifts; F per forward diagonal (periodic key, L = 11–12,945), S best segment per forward and reverse diagonal (reused stretch). Controls: P_max 12,500 (all periodic draws F > −10), M_min 3,000 (300 / 300 found; 2,500 missed 2). Valid (4 null scans, F ≤ 10.15, S ≤ 20.39). **No pass** (F 7.05, S 19.86). **C23:** plain periods 11–11,781 excluded, 1033 / 1729 / 3301 under all 87 relations; 1,081,691 / 1,086,630 hypotheses excluded. Prediction met ("M_min ≈ 2,000–2,500" was one step optimistic) → findings §27 | `b2f22d9` `a11ec86` + this |
 | 2026-10-12 | **AB** key restarting at written units | Declared first (`78f7c37`); `Corpus.rune_units` and the runner committed before LP2 was scored (`a2512ca`). Label-free K_u = pairs of units agreeing at the same in-unit position, for 9 sections, 15 paragraphs, 168 clauses, 594 lines and 55 pages. 1,000 flat nulls; 200 Emerson and 200 shuffled solved-LP controls per unit, each with a fresh alphabet per in-unit position shared by all units. Valid (a 50-draw `--quick` line offset of 2.1 s.e. was checked on 400 null-only draws, 0.7 s.e.; runner unchanged). **No pass; all 5 excluded (C22)**, prediction met. Line z = 2.98, below the null maximum: recorded, not interpreted → findings §26 | `78f7c37` `a2512ca` + this |
 | 2026-10-12 | **AA** keyless sliding-context ciphers | Declared first (`5364609`); runner committed unchanged before LP2 was scored (`eacdc01`). Any c_i = F(plaintext window of width w), no key, keeps the plaintext's (n + w)-window repeats as cipher n-gram repeats. K_n = separated pairs of equal sliding n-grams, n = 3–7, sec and cont: 10 cells. 1,000 flat nulls; 200 Emerson and 200 shuffled solved-LP controls per (mode, w = 0–12), each with a fresh random permutation per context. Valid (null means within 3 s.e. of analytic for n ≤ 5). **No pass; LP2 at the null in all 10 cells (\|z\| ≤ 1.26). C21:** w ≤ 2 (sec) and w ≤ 1 (cont) excluded, 21 widths untestable. Declared expectation "excluded up to w ≈ 4–7" failed: Emerson's right tail holds the log-scale bound down, although every draw clears the null up to w = 7 (observation only). Verdicts TSV added to the outputs while writing the runner (tabulation only) → findings §25 | `5364609` `eacdc01` + this |

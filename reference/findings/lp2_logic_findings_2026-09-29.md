@@ -35,6 +35,7 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 | C21 | No keyless sliding-context cipher c_i = F(p_{i−a}, …, p_{i+b}), any fixed F, with w = a + b ≤ 2 (context restarting at each section) or w ≤ 1 (continuous stream): no plaintext-selected alphabet from a 1-rune context, no plaintext autokey with arbitrary tables at lag 1 | sliding n-gram repeats at the flat-null level (\|z\| ≤ 1.26); e.g. K_4 cont 129 vs null 126.3, controls ≥ 4,013 at w = 1; 5 of 26 (mode, w) cells excluded, 21 untestable | `test_recorded_headline`, `test_every_exclusion_follows_the_declared_rule` | 25 |
 | C22 | The key (or alphabet sequence σ_t) does not restart at every section, paragraph, clause, written line or page, under any alphabets, key in step | same-position agreements at the flat null (\|z\| ≤ 2.98, all below the null max); a restart adds ≥ 600 (sections) to ≥ 78,000 (lines) at the 5σ bound; 5 of 5 unit types excluded | `test_recorded_headline`, `test_lp2_agreements_and_analytic_means_recompute` | 26 |
 | C23 | No periodic key with period 11–11,781 in the continuous stream (plain, progressive k + a or reflected a − k per period; straight alphabets, any of c = p ± k or Beaufort), including 1033, 1729 and 3301; no reused key stretch of ≥ 3,000 runes forwards or backwards (power ≥ 0.97) | F ≤ −10 for 1,081,691 of 1,086,630 hypotheses with L ≤ 12,500; best F 7.05 and S 19.86 vs flat-null maxima 10.15 / 20.39 (pass line 30) | `test_recorded_headline`, `test_named_periods_recompute` | 27 |
+| C24 | LP2's own ciphertext is not the key at any lag 11–12,863, forwards or backwards (c = p ± f(c_i) or Beaufort, f a shift or reflection; straight alphabets), and no reused ciphertext stretch of ≥ 200 runes keys another | all 1,490,948 hypotheses at L ≤ 12,863 have F ≤ −10 (1,495,197 of 1,495,240 up to 12,900); best F 5.30 and S 23.16 vs flat-null maxima 7.18 / 23.26 (pass line 30) | `test_recorded_headline`, `test_named_lags_recompute` | 28 |
 
 **The leak** (how the 86 survivors are spread, §7):
 
@@ -1220,3 +1221,50 @@ to it. **M_min = 3,000**: every reuse draw of 3,000 runes clears 30, in both dir
 - Reused stretches shorter than ~3,000 runes.
 - A key stretch shared with text outside LP2.
 - Periods above 11,781.
+
+## 28. LP2's own ciphertext is not the key, at any lag, forwards or backwards (2026-10-12, TODO stage AD)
+
+Declared in `TODO.md` (`03dad0b`) before the runner existed. The runner was committed before LP2 was scored (`1b0007a`).
+Run: `python -m tools.run_stage_ad` (about 25 minutes on 4 cores). Rows are in [`stage_ad_lags.tsv`](stage_ad_lags.tsv),
+[`stage_ad_top.tsv`](stage_ad_top.tsv) and [`stage_ad_controls.tsv`](stage_ad_controls.tsv). Tests:
+`tests/test_stage_ad.py`.
+
+**The question.** C11 (ciphertext autokey) and C12 (alphabet chosen by c_{i−L}) stop at lag 1000, read forwards. This
+stage asks whether any rune of LP2 is another rune's plaintext under a third rune of LP2's own ciphertext as the key:
+- at any lag (the previous section's ciphertext as the next one's pad);
+- read backwards;
+- for a single reused stretch.
+
+The four relations (diff, diffrev, sum, sumrev) with 29 shifts cover c = p ± f(c_i) and Beaufort. They also cover the
+later rune keying the earlier one. Each pair is scored by `detect.emission_ratios` of the implied plaintext, so
+E[e^s] = 1 under a flat cipher. That carries 0.312 nats per pair, 12 times stage AC's.
+
+**Design.** Stage AC's, with the plaintext law in place of the difference law. F covers the whole forward diagonal,
+an autokey at lag L = 11…12,945 (12,935 lags × 116 = 1,500,460 hypotheses). S is the best segment on every forward and
+reverse diagonal.
+
+**Validity: the run is valid.** Four full null scans give max F 5.32–7.18 and max S 20.89–23.26.
+
+**Controls.**
+- **Whole-stream autokey:** every draw scores F ≥ 40.7 up to L = 12,800, and ≥ 12.1 at 12,900. So P_max = 12,900.
+- **Reused ciphertext stretches:** all 400 draws are found at 200 runes (minimum S 49.5), and 366 of 400 at 100 runes.
+  So M_min = 200.
+
+**Result: nothing passes.** LP2's best F is 5.30, at lag 12,942 over 14 pairs. Its best S is 22.49 forward and 23.16
+reverse. The reverse value sits just under the null maximum of 23.26: noise.
+
+**Exclusions.**
+- **Every hypothesis at every lag from 11 to 12,863 has F ≤ −10:** all 116 relation-shift pairs, 1,495,197 of the
+  1,495,240 with L ≤ 12,900. The 43 open cells all lie at L ≥ 12,864, with fewer than 93 pairs.
+- At the named lags the best F is −4,558 (1033), −4,281 (1729) and −3,683 (3301).
+
+**Reading.**
+- **C24:** no rune of LP2 is enciphered with LP2's own ciphertext as the key, at any lag 11–12,863, in either reading
+  direction. This holds under the shift and reflection relations and the three conventions.
+- No reused ciphertext stretch of ≥ 200 runes serves as a key (power: 400 / 400 draws found).
+- C11 and C12 extend from lag 1000 to the whole stream, for straight alphabets.
+
+**What this does not cover.**
+- Mixed alphabets past lag 1000. C12 is label-free only up to 1000.
+- An autokey through a nonlinear map of c_i, or one keyed by two earlier runes.
+- Reused stretches shorter than ~200 runes. A 100-rune stretch is found 92 % of the time.
