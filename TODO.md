@@ -9,67 +9,7 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-### AA — keyless sliding-context ciphers (2026-10-12)
-
-**Goal.** One key-free test of every cipher in which each cipher rune is a fixed function of a short window of
-plaintext runes and nothing else: no key stream, no position dependence, no ciphertext feedback. Such a cipher sends
-equal plaintext windows of n + w runes to equal cipher n-grams wherever they occur, so it keeps the plaintext's
-repeat count of long windows, whatever its table. Stage Z did this for aligned blocks and words only.
-
-**Model.** c_i = F(p_{i−a}, …, p_{i+b}) with context width w = a + b, w = 0…12, F any fixed table (not necessarily
-injective), followed by the measured anti-doublet rule (a would-be doublet re-drawn uniformly with prob. 0.81, as in
-stage Z). Mode "sec": the context restarts at each section start. Mode "cont": segments 7–15 are one stream.
-This covers:
-- an alphabet chosen by the previous plaintext rune or a 2-rune context (attack catalog row 12, open);
-- plaintext autokey with arbitrary tables (any lag ≤ 12, since F may ignore the runes in between);
-- any sliding polygraphic transform (a Hill-like map applied at every position, not just to aligned blocks);
-- w = 0 is monoalphabetic substitution, already excluded by flatness. It is the known-answer cell.
-
-**Not already excluded because:** C10 and C11 cover additive autokey only, and C18 covers Quagmire autokey only
-under random alphabets, not arbitrary tables. C12 selects the alphabet by ciphertext, not plaintext. C16 covers random
-tables only. C20 covers aligned blocks and whole words, not sliding windows. Catalog row 12 is open.
-
-**Statistic.** K_n = pairs (i, j) with j − i ≥ n of equal cipher n-grams over all sliding windows (overlapping
-windows are left out so the analytic null is exact). Mode "sec": pairs within each section. Mode "cont": pairs over
-the 12,956-rune stream. n = 3…7, so 10 statistic cells, each scored once on LP2. Words and spaces are ignored (C1).
-
-**Null (flat).** 1,000 seeded draws of uniform runes in LP2's section sizes with the same anti-doublet rule
-(stage Z's null_sections). Per statistic cell: mean μ₀, sd σ₀ (floor 1), max.
-
-**Positive controls, per (mode, w, source).** 200 seeded draws for each of 2 sources, as in stage Z: (E) contiguous
-Emerson windows and (L) solved-LP words in random order, cut to LP2's section sizes. Each is enciphered as
-c_i = σ_ctx(p_i), ctx = (p_{i−w}, …, p_{i−1}), padded with a 30th symbol before the context start (each section in
-"sec", the stream start in "cont"). σ_ctx is a fresh uniform random permutation of Z₂₉ for every distinct context in
-every draw. Then the anti-doublet rule is applied within each section. All five K_n are scored on each draw.
-A one-sided context is enough: a two-sided window of the same width w gives the same statistic.
-
-**Declared rule** (written before the runner exists and before LP2 is scored):
-- Per (n, mode, w): lower = exp(m − 5s) − 1, with m and s the mean and sd of ln(K_n + 1) over a source's draws
-  (stage Z's amended bound). **Testable** iff, for both sources, lower > the null's maximum and every draw > the null's
-  maximum. **Excluded** iff testable and K_LP2 < lower for both sources.
-- Per (mode, w): **excluded** if any n excludes it; otherwise **inconclusive** if any n is testable; otherwise
-  **untestable**.
-- Per statistic cell (n, mode): **PASS (lead → lp-claim-audit)** iff K_LP2 > null max and (K_LP2 − μ₀)/σ₀ ≥ 6.
-- **Run valid** iff every statistic cell with n ≤ 5 has a null mean within 3 s.e. of the analytic
-  E[K_n] = (pairs with j − i ≥ n) × P(two windows of n runes are equal) (stage Z's p_equal; the Markov correlation
-  between disjoint windows is O(0.03^gap) and ignored). Otherwise every row is VOID.
-
-**Family.** 10 statistic cells scored once, 130 (n, mode, w) exclusion cells, 26 (mode, w) verdicts. A false PASS
-needs 6σ above the null maximum. A false exclusion needs a 5σ log-scale miss by both sources.
-
-**Expected** (power check on controls only, 3 draws per source, no LP2): plaintext windows of 10, 12 and 14 runes repeat
-about 106–391, 36–126 and 16–51 times in 12,956 runes, against flat 5- and 6-gram nulls near 4 and 0.1. So expect
-w = 0 excluded in both modes, w excluded up to about 4–7, and the rest untestable. **Prior, disclosed:** stage Z
-found LP2's aligned block repeats at the null level (n = 2–8), so LP2 is expected at the null in all 10 statistic cells.
-That gives no PASS, and the new information is the coverage.
-
-**Not doing.** Ciphertext feedback mixed with plaintext context (C12 covers pure ciphertext selection). Keyless tables
-that also depend on position (period P). Contexts wider than 12 runes. Random (homophonic) choices. Any cipher with a
-stream key on top: a fresh key value per rune destroys repeats, and that is the open space this stage leaves.
-
-**Outputs.** A runner tools/run_stage_aa.py (--quick scores no LP2 runes and writes nothing), TSVs
-reference/findings/stage_aa_results.tsv and stage_aa_controls.tsv, a test tests/test_stage_aa.py, findings §25,
-and a new constraint C21 if anything is excluded. **Blast radius:** additive only. **Rollback:** git revert.
+*(none. The next research step is MASTER_TRACKER §1. Plan it here before starting.)*
 
 ## Owner items
 
@@ -83,6 +23,7 @@ and a new constraint C21 if anything is excluded. **Blast radius:** additive onl
 
 | Date | Stage | Result | Commits |
 |---|---|---|---|
+| 2026-10-12 | **AA** keyless sliding-context ciphers | Declared first (`5364609`); runner committed unchanged before LP2 was scored (`eacdc01`). Any c_i = F(plaintext window of width w), no key, keeps the plaintext's (n + w)-window repeats as cipher n-gram repeats. K_n = separated pairs of equal sliding n-grams, n = 3–7, sec and cont: 10 cells. 1,000 flat nulls; 200 Emerson and 200 shuffled solved-LP controls per (mode, w = 0–12), each with a fresh random permutation per context. Valid (null means within 3 s.e. of analytic for n ≤ 5). **No pass; LP2 at the null in all 10 cells (\|z\| ≤ 1.26). C21:** w ≤ 2 (sec) and w ≤ 1 (cont) excluded, 21 widths untestable. Declared expectation "excluded up to w ≈ 4–7" failed: Emerson's right tail holds the log-scale bound down, although every draw clears the null up to w = 7 (observation only). Verdicts TSV added to the outputs while writing the runner (tabulation only) → findings §25 | `5364609` `eacdc01` + this |
 | 2026-10-01 | **Z** word and block codebooks | Declared first (`be4a200`, red on the docs test for backticked future paths, fixed in `3015705`). K = pairs of equal units, kept exactly by any word- or block-deterministic table. 72 cells: Zw within sections and across LP2; Zb n = 2–8 at every offset, per section and continuous. 1,000 flat nulls in LP2's word lengths, plus 200 Emerson and 200 shuffled solved-LP controls per cell, with the 0.81 re-draw rule. Amended before LP2 was scored (`5298559`): μ − 5σ became 5σ on ln(K + 1), because `--quick` showed right skew. Valid (null means within 3 s.e. of the exact Markov E[K]). **No pass; LP2 at the null in every cell (\|z\| ≤ 1.38). C20:** 26 excluded (Zw ×2, n = 2–4 all offsets, n = 5 continuous ×5 and sec a = 2), 46 untestable (n ≥ 6, four n = 5 sec offsets). Prediction met → findings §24 | `be4a200` `3015705` `5298559` + this |
 | 2026-10-01 | **Y** grid under long byte keys | Declared first (`edd9c53`). The 6 long byte sources on disk (3 `.bin` payloads, hint, `page_00` hex, 256-byte second-onion hex) as running keys on the grid, every cyclic phase, in step, readings R / R-rev / C / C-rev, operations ⊕, g − k, g + k, k − g: 2,865,136 trials. Statistic D = distinct bytes, with an exact null (Stirling numbers); PASS at D ≤ 120 (3.79e-17 per trial). Valid: 24 / 24 plants found at their cell (D 16–64), 0 / 18 negatives, mean D 162.002. **No pass; all 96 cells excluded**, min D 139. Erratum: the declared null minimum "131–136" is about 136–141. k − g duplicates g − k in D (bijection), disclosed → findings §23 | `edd9c53` + this |
 | 2026-10-01 | **X** grid structure, key-free | Declared first (`225ff30`). Readings R (printed) and C (column-major, 32 × 8). X1: uniform on all 7 statistics (161 distinct, p 0.92). X2: within-class coincidences C_p, which no per-column σ can change, for p = 1…128 against 100,000 uniform draws and plaintext windows (EN Emerson 9,024, RUNES 2,646, HEX and B64 10,000). No structure (min p 0.0031 vs 10⁻⁵). **Excluded:** every p ≤ 102 (R) / 112–122 (C) for EN, RUNES and HEX; ≤ 22 / 28 for B64. X3: small factors in all 4 integer readings, so not an RSA modulus or prime (R readings factored before the declaration, disclosed). X4: no zlib/gzip/bz2/lzma end-of-stream (raw deflate chance 0.55 %), no signature. Post-run: sympy swapped for a stdlib sieve and Miller–Rabin (X3 rows identical) → findings §22 | `225ff30` + this |

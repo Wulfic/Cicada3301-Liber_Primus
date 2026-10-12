@@ -32,6 +32,7 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 | C18 | Under random Quagmire alphabets the key is still not English (runes, prime values, Latin letters), decimal digits or hex | worst P 1.7 × 10⁻¹¹ ≤ 10⁻⁴ over 20 rows; uniform A–Z untestable (power ≤ 2 / 20) | `test_recorded_verdicts`, `test_pooled_rows_recompute` | 19 |
 | C19 | Under Quagmire with named keyword alphabets (34 LP keywords, K and K⁻¹, all 314,432 triples, any mode and offset) the key is not English (runes, prime values, Latin letters) or decimal digits; hex is out for 314,001 members; uniform A–Z for 103,864 | best member ≤ −27.9 (English, digits) vs exclude ≤ −10; no lead ≥ +10 in any family | `test_lp2_exclusions_recompute`, `test_recorded_survivors` | 20 |
 | C20 | No word-deterministic cipher (cipher word = T(plaintext word): a key restarting at every word, a word codebook) and no fixed substitution of aligned n-rune blocks (Hill, polygraphic codebook) for n = 2–4 at any offset, or n = 5 in the continuous stream | repeated pairs at the flat-null level (\|z\| ≤ 1.38); words within sections 25 vs null 20.0 and English ≥ 3,433 (log-scale 5σ bound); 26 of 72 cells excluded, 46 untestable | `test_recorded_headline`, `test_lp2_counts_and_analytic_means_recompute` | 24 |
+| C21 | No keyless sliding-context cipher c_i = F(p_{i−a}, …, p_{i+b}), any fixed F, with w = a + b ≤ 2 (context restarting at each section) or w ≤ 1 (continuous stream): no plaintext-selected alphabet from a 1-rune context, no plaintext autokey with arbitrary tables at lag 1 | sliding n-gram repeats at the flat-null level (\|z\| ≤ 1.26); e.g. K_4 cont 129 vs null 126.3, controls ≥ 4,013 at w = 1; 5 of 26 (mode, w) cells excluded, 21 untestable | `test_recorded_headline`, `test_every_exclusion_follows_the_declared_rule` | 25 |
 
 **The leak** (how the 86 survivors are spread, §7):
 
@@ -1018,3 +1019,80 @@ LP2. Therefore:
 - Blocks of 6 or more runes.
 - Word boundaries that differ between plaintext and ciphertext. The test assumes LP2's word divisions are the
   plaintext's, as they are in every solved section.
+
+## 25. Keyless sliding-context ciphers: equal plaintext windows would repeat (2026-10-12, TODO stage AA)
+
+Declared in `TODO.md` (`5364609`) before the runner existed. The runner was committed unchanged before LP2 was scored
+(`eacdc01`). Run: `python -m tools.run_stage_aa` (about 15 minutes). Rows are in [`stage_aa_results.tsv`](stage_aa_results.tsv),
+[`stage_aa_verdicts.tsv`](stage_aa_verdicts.tsv) and [`stage_aa_controls.tsv`](stage_aa_controls.tsv). The verdicts TSV
+was added to the declared outputs while the runner was written; it only tabulates the declared rule. Tests:
+`tests/test_stage_aa.py`.
+
+**The question.** Stage Z (§24) tested ciphers that act on aligned blocks or whole words. This stage tests ciphers that
+act at *every* position from a short plaintext window: c_i = F(p_{i−a}, …, p_{i+b}), with context width w = a + b, F any
+fixed table, and no key, no position dependence and no ciphertext feedback. Examples:
+- an alphabet chosen by the previous plaintext rune or a 2-rune context (attack catalog row 12, open until now);
+- plaintext autokey with arbitrary tables at any lag up to w (C10 and C11 cover additive autokey only, and C18
+  covers Quagmire autokey only under random alphabets);
+- any sliding polygraphic transform.
+
+C16 covers such tables only when they are random. Any such cipher sends equal plaintext windows of n + w runes to
+equal cipher n-grams wherever they occur, so it keeps the plaintext's repeat count whatever F is
+(`test_equal_plaintext_windows_give_equal_cipher_ngrams`).
+
+**Design.**
+- **Statistic:** K_n is the number of pairs (i, j) with j − i ≥ n of equal cipher n-grams over all sliding windows,
+  for n = 3…7. Mode "sec" counts pairs within each section, and the context restarts at each section start. Mode
+  "cont" reads segments 7–15 as one stream. That makes 10 statistic cells, each scored once.
+- **Null:** 1,000 flat draws in LP2's section sizes, with stage Z's anti-doublet rule.
+- **Positive controls:** for each (mode, w = 0…12), 200 draws from each of stage Z's two sources, (E) contiguous
+  Emerson and (L) solved-LP words in random order. Each draw is enciphered with a fresh random permutation for every
+  distinct w-rune context, then given the rule.
+- **Verdict:** a (n, mode, w) cell excludes w if both sources' log-scale bound exp(m − 5s) − 1 and every draw exceed
+  the null maximum, and LP2 is below both bounds. A width is excluded if any n excludes it.
+
+**Validity: the run is valid.** For n ≤ 5 every null mean lies within 3 s.e. of the analytic
+E[K_n] = (separated pairs) × p_equal(n). For example, K_3 cont is 3,589.97 against 3,590.75, and K_4 cont is 126.33
+against 126.49.
+
+**Result: nothing passes. LP2 repeats at the flat-null level in all 10 statistic cells (|z| ≤ 1.26).**
+
+| n | K_LP2 sec (null mean, max) | K_LP2 cont (null mean, max) |
+|---|---|---|
+| 3 | 533 (539.29, 612) | 3,580 (3,589.97, 3,776) |
+| 4 | 24 (18.86, 35) | 129 (126.33, 164) |
+| 5 | 2 (0.74, 5) | 6 (4.55, 13) |
+| 6 | 0 (0.03, 2) | 1 (0.15, 3) |
+| 7 | 0 (0.00, 0) | 0 (0.005, 1) |
+
+| Mode | Excluded widths | Untestable widths |
+|---|---|---|
+| sec | w = 0, 1 (by every n), 2 (by n = 7) | 3–12 |
+| cont | w = 0 (by every n), 1 (by n = 4, 5, 6) | 2–12 |
+
+**A declared expectation failed.** The plan expected exclusions "up to about w = 4–7". The declared bound reaches
+w = 2 (sec) and w = 1 (cont). The cause is Emerson's right tail. A few contiguous windows hold repeated passages and
+give up to 20 times the median count. That widens the log-scale sd, so the 5σ bound falls to the null level. For
+example, at cont w = 2 and n = 5, Emerson's bound is 4.62 against a null maximum of 13, yet its smallest draw is 543.
+
+**Observation, not a verdict.** Every one of the 400 positive draws clears both LP2's count and the null maximum at
+some n for every w ≤ 7, in both modes. The smallest draws at w = 7 are 6 and 10 (sec, n = 5, bar 5), and 16 and 63
+(cont, n = 5, bar 13). No draw clears it at w ≥ 8. A bound built from the lower tail would therefore reach about
+w = 5–7, but it would be a new declared rule with its own false-exclusion bound, and it was not run here.
+
+**Reading.**
+- **C21:** LP2 is not a keyless cipher in which each cipher rune depends only on a window of at most 3 consecutive
+  plaintext runes around it (w ≤ 2, with the context restarting at sections), or at most 2 in the continuous stream
+  (w ≤ 1).
+- That closes catalog row 12 for a one-rune plaintext context (two runes per section), and plaintext autokey with
+  arbitrary tables at lag 1 (lag 2 per section).
+- Together with C20, the cipher's output is not a fixed function of local plaintext, whether aligned or sliding. Some
+  state that changes along the text (a key) is needed at every position, as the OTP-class verdict says.
+
+**What this does not cover.**
+- Contexts of 3 or more runes (2 or more in the continuous stream). This is untestable by the declared bound, though
+  the observation above suggests a lower-tail bound would reach further.
+- Any key on top of the context cipher. That is the open space.
+- Contexts that mix plaintext and ciphertext. Pure ciphertext selection is C12.
+- Tables that also depend on position.
+- Homophonic (random) choices.

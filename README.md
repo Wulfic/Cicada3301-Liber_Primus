@@ -77,6 +77,7 @@ tools/
   run_stage_x.py           reproduces the stage-X key-free tests of the grid's 256 bytes (findings §22); writes two TSVs
   run_stage_y.py           reproduces the stage-Y running-key search of the grid over on-disk bytes (findings §23); two TSVs
   run_stage_z.py           reproduces the stage-Z word and block codebook repeat test (findings §24, C20); two TSVs
+  run_stage_aa.py          reproduces the stage-AA keyless sliding-context repeat test (findings §25, C21); three TSVs
   legacy/                  107 pre-2026-09-29 scripts, untested and built on misaligned data; history only
 
 tests/                     ★ the proof: python -m unittest discover -s tests -t . -v
