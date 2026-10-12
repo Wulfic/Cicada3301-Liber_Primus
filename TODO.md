@@ -9,42 +9,7 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-### AF — a key restarting at every unit with a per-unit shift (2026-10-12)
-
-**Goal.** Close the case C22 (stage AB) left open: the same key restarts at each section, paragraph, clause, line or
-page, but each unit adds its own constant, as in key + page number. c_U[t] = p_U[t] + k[t] + a_U, or Beaufort
-c_U[t] = k[t] + a_U − p_U[t]. The shift a_U breaks AB's same-position agreement. A within-unit difference cancels it:
-δ_U(t, t′) = c_U[t′] − c_U[t] = ±(p_U[t′] − p_U[t]) + (k[t′] − k[t]). Two units then agree on δ(t, t′) exactly when
-their plaintext differences agree, at Σ_d r_d² ≈ 1/29 + 0.0017 (r = LP-English difference law), whatever k and a_U are.
-
-**Statistic.** S_u = Σ_{t < t′, 2 ≤ t′ − t ≤ 300} Σ_v C(m_{t,t′,v}, 2), where m_{t,t′,v} is the number of units of type u with
-δ_U(t, t′) = v. Adjacent positions (t′ − t = 1) are left out, because the doublet rule bends lag-1 differences and LP2's
-rate (0.66 %) differs from the simulated rule's (0.75 %). Gaps are capped at 300 for run time. Units and the rune-level
-map are stage AB's (`Corpus.rune_units`). 5 cells.
-
-**Null.** 200 seeded flat draws of LP2's 12,956 runes with stage Z's rule within sections, in LP2's units. Analytic mean:
-Σ_{t,t′} C(m_{t,t′}, 2) / 29, where m_{t,t′} is the number of units holding both positions.
-
-**Positive controls.** 100 draws per source (E contiguous Emerson, L shuffled solved-LP words). A random k[t] is shared by
-all units, a random a_U is drawn per unit, and the convention is c = p + k + a_U for half the draws and Beaufort for the
-other half. Then the rule.
-
-**Declared rule** (written before the runner exists and before LP2 is scored):
-- lower = exp(m − 5s) − 1 on ln(S + 1) per source. **Testable** iff, for both sources, lower > the null max and every
-  draw > the null max. **Excluded** iff testable and S_LP2 < lower for both sources.
-- **PASS** iff S_LP2 > the null max and (S_LP2 − μ₀)/σ₀ ≥ 6.
-- **Valid** iff every null mean lies within 3 s.e. of the analytic mean.
-
-**Expected** (arithmetic, no LP2 scored): the excess per item is ≈ 0.0017 against 0.0345. Lines give ≈ 176k unit pairs ×
-~200 position pairs, and pages ≈ 1,485 × ~38k, each tens of σ. Sections and paragraphs have few units but long ones.
-Expect all 5 testable, no PASS (AB found LP2 flat) and 5 exclusions.
-
-**Not doing.** Mixed alphabets with a per-unit shift of the key index (σ_{k[t] + a_U}): that does not cancel in a
-difference. Shifts that change within a unit. Gaps over 300.
-
-**Outputs.** Runner tools/run_stage_af.py (--quick: few nulls and controls, no LP2), TSVs reference/findings/stage_af_results.tsv
-and stage_af_controls.tsv, test tests/test_stage_af.py, findings §30, C26. **Blast radius:** additive only.
-**Rollback:** git revert.
+*(none. The next research step is MASTER_TRACKER §1. Plan it here before starting.)*
 
 ## Owner items
 
@@ -58,6 +23,7 @@ and stage_af_controls.tsv, test tests/test_stage_af.py, findings §30, C26. **Bl
 
 | Date | Stage | Result | Commits |
 |---|---|---|---|
+| 2026-10-12 | **AF** shifted restarts | Declared first (`e2e305f`); runner committed before LP2 was scored (`adea288`). Within-unit difference agreement across units, gaps 2–300, 5 unit types; 200 nulls, 100 controls per source (additive and Beaufort, random per-unit shifts). Valid. **No pass; all 5 excluded (C26)**, prediction met → findings §30 | `e2e305f` `adea288` + this |
 | 2026-10-12 | **AE** periodic keys under any alphabets | Declared first (`434060d`); runner committed before LP2 was scored (`fb202c8`, the full suite was run after that commit rather than before it: green, 244). Exact lag agreements over the continuous stream, binomial PASS and exclusion rules. Valid; controls 100 / 100 caught, 0 excluded (lowest rate 0.0520 vs p_H 0.050, disclosed). **No pass. C25:** periods 11–4,907 all excluded, 10,030 / 12,935 lags overall. Declared "exclusions for L ≲ 9,600" met in part: complete only to 4,907, because by-chance high lags leave gaps → findings §29 | `434060d` `fb202c8` + this |
 | 2026-10-12 | **AD** ciphertext as its own key | Declared first (`03dad0b`); runner committed before LP2 was scored (`1b0007a`). Plaintext-law score (detect's emission, 0.312 nats per pair), 4 relations × 29 shifts, F per forward diagonal (autokey at lag L), S best segment forward and reverse. Controls: P_max 12,900, M_min 200. Valid. **No pass** (F 5.30, S 23.16 vs null 23.26). **C24:** all 1,490,948 hypotheses at L ≤ 12,863 excluded. Prediction met. Erratum on the declared family sizes of AC and AD (lag count), no bound changes → findings §28 | `03dad0b` `1b0007a` + this |
 | 2026-10-12 | **AC** key reuse at any lag | Declared first (`b2f22d9`); "sumrev" (Beaufort reflection of the sum law) added before LP2 was scored and committed with the runner (`a11ec86`). Labelled per-pair score, 3 relations × 29 shifts; F per forward diagonal (periodic key, L = 11–12,945), S best segment per forward and reverse diagonal (reused stretch). Controls: P_max 12,500 (all periodic draws F > −10), M_min 3,000 (300 / 300 found; 2,500 missed 2). Valid (4 null scans, F ≤ 10.15, S ≤ 20.39). **No pass** (F 7.05, S 19.86). **C23:** plain periods 11–11,781 excluded, 1033 / 1729 / 3301 under all 87 relations; 1,081,691 / 1,086,630 hypotheses excluded. Prediction met ("M_min ≈ 2,000–2,500" was one step optimistic) → findings §27 | `b2f22d9` `a11ec86` + this |

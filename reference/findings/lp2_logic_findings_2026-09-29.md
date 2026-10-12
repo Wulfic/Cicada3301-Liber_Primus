@@ -37,6 +37,7 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 | C23 | No periodic key with period 11–11,781 in the continuous stream (plain, progressive k + a or reflected a − k per period; straight alphabets, any of c = p ± k or Beaufort), including 1033, 1729 and 3301; no reused key stretch of ≥ 3,000 runes forwards or backwards (power ≥ 0.97) | F ≤ −10 for 1,081,691 of 1,086,630 hypotheses with L ≤ 12,500; best F 7.05 and S 19.86 vs flat-null maxima 10.15 / 20.39 (pass line 30) | `test_recorded_headline`, `test_named_periods_recompute` | 27 |
 | C24 | LP2's own ciphertext is not the key at any lag 11–12,863, forwards or backwards (c = p ± f(c_i) or Beaufort, f a shift or reflection; straight alphabets), and no reused ciphertext stretch of ≥ 200 runes keys another | all 1,490,948 hypotheses at L ≤ 12,863 have F ≤ −10 (1,495,197 of 1,495,240 up to 12,900); best F 5.30 and S 23.16 vs flat-null maxima 7.18 / 23.26 (pass line 30) | `test_recorded_headline`, `test_named_lags_recompute` | 28 |
 | C25 | No periodic key of period 11–4,907 selecting any alphabets (Quagmire, random tabula, any table), key in step, continuous stream; 10,030 of the 12,935 lags 11–12,945 excluded, including 1033, 1729 and 3301 | lag agreement rates at the flat level (best upper p 3.1 × 10⁻⁵ vs 7.7 × 10⁻⁷); lower tail at p_H = 0.050 ≤ e^−10 | `test_recorded_headline`, `test_lp2_agreements_and_verdicts_recompute` | 29 |
+| C26 | No additive or Beaufort key restarting at every section, paragraph, clause, line or page with a constant shift per unit (c = p + k[t] + a_unit) | within-unit difference agreements at the flat null (\|z\| ≤ 1.41); a shifted restart adds ≥ 7,000 (sections) to ≥ 28,000 (lines) at the 5σ bound; 5 of 5 excluded | `test_recorded_headline`, `test_lp2_statistics_and_analytic_means_recompute` | 30 |
 
 **The leak** (how the 86 survivors are spread, §7):
 
@@ -1322,3 +1323,47 @@ In all, 10,030 of 12,935 lags are excluded. The named periods are excluded with 
 - A drifting key.
 - Reused stretches under mixed alphabets (a windowed coincidence scan).
 - Periods with too few pairs. The open lags above 4,907 are listed in the TSV.
+
+## 30. No key restarts per unit with a per-unit shift (2026-10-12, TODO stage AF)
+
+Declared in `TODO.md` (`e2e305f`) before the runner existed. The runner was committed before LP2 was scored (`adea288`).
+Run: `python -m tools.run_stage_af` (about 5 minutes). Rows are in [`stage_af_results.tsv`](stage_af_results.tsv) and
+[`stage_af_controls.tsv`](stage_af_controls.tsv). Tests: `tests/test_stage_af.py`.
+
+**The question.** C22 left one restart open: the same key at every section, paragraph, clause, line or page, plus a
+constant per unit (key + page number, say). Per unit U that is c_U[t] = p_U[t] + k[t] + a_U, or the Beaufort form.
+
+The shift breaks C22's same-position agreement, but a within-unit difference cancels it:
+δ_U(t, t′) = c_U[t′] − c_U[t] = ±(p_U[t′] − p_U[t]) + k[t′] − k[t]. So two units agree on δ(t, t′) exactly when their
+plaintext differences agree, whatever k and the shifts are (`test_shifted_restart_keeps_the_statistic_exactly`).
+
+**Design.** S_u counts pairs of units that agree on δ(t, t′), summed over all position pairs with gap 2–300. Gap 1 is
+left out because the doublet rule bends it. Stage AB's units and rune map are reused. 200 flat nulls; 100 controls per
+source, half additive and half Beaufort, each with a random key and random per-unit shifts. Stage AB's rule decides.
+
+**Validity: the run is valid.** Every null mean lies within 3 s.e. of the analytic Σ C(m_{t,t′}, 2)/29. The 20-draw
+`--quick` clause offset of 1.4 s.e. was checked first on 150 null-only draws (0.45 s.e.). The runner was not changed.
+
+**Result: nothing passes. All five unit types are excluded (prediction met).**
+
+| Unit | S_LP2 | Null mean ± sd (max) | Positive min E / L | Lower bound E / L | z |
+|---|---|---|---|---|---|
+| section | 298,131 | 298,359 ± 514 (299,968) | 309,918 / 310,733 | 305,750 / 308,078 | −0.44 |
+| paragraph | 335,050 | 335,832 ± 553 (337,519) | 348,473 / 350,681 | 344,167 / 348,415 | −1.41 |
+| clause | 701,921 | 701,311 ± 772 (703,175) | 729,493 / 734,676 | 720,561 / 730,636 | 0.79 |
+| line | 1,143,081 | 1,142,444 ± 1,037 (1,145,608) | 1,187,243 / 1,200,761 | 1,170,555 / 1,194,801 | 0.61 |
+| page | 1,207,810 | 1,208,036 ± 1,156 (1,211,033) | 1,256,661 / 1,264,526 | 1,242,113 / 1,258,596 | −0.20 |
+
+The line cell sits at z = 0.61 here. C22's line deviation (z = 2.98) was 1 % of a restart's effect. The same 1 % would
+add about 300 to S_line, well inside the noise, so this stage neither confirms nor explains that deviation.
+
+**Reading.**
+- **C26:** no additive or Beaufort key restarts at each section, paragraph, clause, line or page, even with a constant
+  shift per unit.
+- With C22, the restart family is closed for straight alphabets with any per-unit constant, and for any alphabets
+  without one.
+
+**What this does not cover.**
+- Mixed alphabets with a per-unit shift of the key index.
+- Shifts that change within a unit.
+- Gaps over 300 (only the long units have them).

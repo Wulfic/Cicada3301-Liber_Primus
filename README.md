@@ -82,6 +82,7 @@ tools/
   run_stage_ac.py          reproduces the stage-AC key-reuse scan at every lag, periods to 11,781 (findings §27, C23); three TSVs
   run_stage_ad.py          reproduces the stage-AD ciphertext-as-key scan at every lag, both directions (findings §28, C24)
   run_stage_ae.py          reproduces the stage-AE label-free periodic-key scan at every lag (findings §29, C25); two TSVs
+  run_stage_af.py          reproduces the stage-AF shifted per-unit restart test (findings §30, C26); two TSVs
   legacy/                  107 pre-2026-09-29 scripts, untested and built on misaligned data; history only
 
 tests/                     ★ the proof: python -m unittest discover -s tests -t . -v

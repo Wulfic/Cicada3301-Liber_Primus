@@ -5,13 +5,16 @@ Run from the repo root:  python -m unittest tests.test_stage_af -v
 
 from __future__ import annotations
 
+import csv
 import unittest
 from math import comb
 
 import numpy as np
 
 from tools import run_stage_af as af
+from tools.lpcore.corpus import load_corpus
 from tools.lpcore.gematria import N
+from tools.run_stage_ab import Layout
 
 
 def naive(cipher, positions, max_gap):
@@ -55,6 +58,28 @@ class TestStageAFComponents(unittest.TestCase):
             self.assertEqual(af.difference_agreements(cipher, self.positions, 14),
                              af.difference_agreements(plain, self.positions, 14))
             self.assertFalse(np.array_equal(cipher, plain))
+
+
+class TestStageAFRecorded(unittest.TestCase):
+    """The recorded run (findings §30): valid, no pass, all five unit types excluded."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        with af.RESULTS_PATH.open(encoding="utf-8", newline="") as f:
+            cls.rows = {r["unit"]: r for r in csv.DictReader(f, delimiter="\t")}
+
+    def test_recorded_headline(self) -> None:
+        self.assertEqual(list(self.rows), list(af.UNITS))
+        self.assertTrue(all(r["verdict"] == "EXCLUDED" for r in self.rows.values()))
+        self.assertLess(max(abs(float(r["z_null"])) for r in self.rows.values()), 1.5)
+
+    def test_lp2_statistics_and_analytic_means_recompute(self) -> None:
+        layout = Layout(load_corpus())
+        for u in af.UNITS:
+            row = self.rows[u]
+            self.assertEqual(af.difference_agreements(layout.runes, layout.positions[u]), int(row["S_LP2"]), u)
+            self.assertAlmostEqual(af.analytic_mean(layout.unit_lengths[u]), float(row["analytic_mean"]), delta=6e-4)
+            self.assertLess(int(row["S_LP2"]), min(float(row["E_lower"]), float(row["L_lower"])))
 
 
 if __name__ == "__main__":

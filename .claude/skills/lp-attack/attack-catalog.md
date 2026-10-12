@@ -1,6 +1,6 @@
 # Attack catalog: cipher family → what distinguishes it → status on LP2
 
-Snapshot 2026-10-12 (C1–C25). **Tracker §3.2 / §4 win over this file.** If you add a constraint, update the
+Snapshot 2026-10-12 (C1–C26). **Tracker §3.2 / §4 win over this file.** If you add a constraint, update the
 matching rows here.
 
 **Periodicity note.** C9 excludes periods ≤ 1000 when the re-key rule keeps the key in step, and C23 extends that to
@@ -35,7 +35,7 @@ written here, with no test yet. An "arg" row needs a test before it can go in th
 | 17 | Digraphic (Playfair-like; Hill n = 2), any fixed 2-block table | aligned block repeat count K | ✗ | C20 (§24), any offset; also the ledger |
 | 18 | Hill n ≥ 3, any fixed n-block table (ECB codebook) | aligned block repeat count K | ◐ | C20 (§24): ✗ n = 3, 4 at any offset, n = 5 in the continuous stream; n ≥ 6 untestable at LP2's length |
 | 18a | Word-deterministic: key restarting at each word, word codebook, any cipher word = T(plain word) | repeated cipher words | ✗ | C20 (§24): 25 within-section pairs vs flat 20, English ≥ 3,433. Homophonic codebooks ○ |
-| 18b | Key (or alphabet sequence) restarting at every section, paragraph, clause, written line or page | same-position agreement between units K_u | ✗ | C22 (§26), any alphabets, in step. Per-unit shift, end-aligned and every-k-th-unit restarts ○ |
+| 18b | Key (or alphabet sequence) restarting at every section, paragraph, clause, written line or page | same-position agreement between units K_u | ✗ | C22 (§26), any alphabets, in step; C26 (§30) with a per-unit shift, straight alphabets. End-aligned and every-k-th-unit restarts ○ |
 | 19 | Homophonic over the same 29 symbols | homophones must flatten English | ✗ | C15: 26 plaintext letters leave 3 spare runes; the flattest allocation still has χ² ≥ 4,802 (LP2 26.4). J and X alone decide it. With a flat stream on top, see row 3 |
 | 20 | Key reuse inside LP2 (two-time pad), sections or anywhere | same-position agreement; labelled diagonal segment score S | ◐ | C22 (§26): no restart at sections or other units; C23 (§27): no reused stretch ≥ 3,000 runes at any offset, either direction. Shorter stretches ○. The pre-2026 "overlaps" were duplicated text (tracker §4.3) |
 | 21 | Common PRNGs / KDFs; public random archives | — | ✗ | Dukotah ledger (~14.5 billion offsets) |
