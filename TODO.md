@@ -9,6 +9,40 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
+### AH — "THE TOTIENT FUNCTION IS SACRED": arithmetic functions mod 29 as the key (2026-10-12)
+
+**Goal.** LP1 says THE PRIMES ARE SACRED / THE TOTIENT FUNCTION IS SACRED (0.1.2.1–0.1.2.2). AN END's key is φ(p) over the
+primes, and stage I excluded that stream and the primes in every mode and shift. The totient of every integer,
+φ(1), φ(2), φ(3), … mod 29, was never tested on canonical data. The archived tracker's "φ(n) for all integers: 0 hits"
+is pre-2026-09-29, fixed-sync and on misaligned pages, so it is not evidence (tracker §4.3).
+
+**Sources (6 sequences × raw and chain = 12 keys, declared now).** Each is taken mod 29. "Chain" is the running sum
+Σ_{j ≤ i} a_j mod 29, as in the ledger's raw and chain forms.
+- φ(n), n = 1, 2, 3, … (Euler's totient);
+- σ(n), the sum of divisors;
+- Σ_{k ≤ n} φ(k) (the totient summatory function; its chain is a double sum);
+- the prime gaps p_{n+1} − p_n;
+- φ(φ(n));
+- n · φ(n).
+The prime-counting function π(n) and d(n) are left out: their values barely change from one n to the next, which C13
+and C14 already constrain.
+
+**Model, rule, controls and alignments:** exactly stage AG's. Unknown start s ∈ [0, 1000) under a uniform prior,
+drift-tolerant `detect.log_lr` via `fastdetect`, 3 modes × 29 shifts × 10 alignments, so 12 × 870 = 10,440 decodes.
+- **PASS** iff ≥ 30 (bound 10,440 · e^−30 ≈ 10⁻⁹).
+- **Excluded** (source, alignment, mode) iff all 29 shifts are ≤ −10 and the source's controls pass. Controls are at
+  729 and 3,316 runes, rekey fresh and next; positives must be ≥ 30 and negatives < 30.
+- A source whose controls fail is untestable. That is likely for any sequence that is far from flat, such as prime
+  gaps, which are always even.
+
+**Expected.** No PASS. The decodes fall at about −0.13 nats per rune, so most cells are excluded.
+
+**Not doing.** Other arithmetic functions. Indices other than n = 1, 2, 3, …. Starts past 1,000.
+
+**Code.** Runner tools/run_stage_ah.py, reusing stage AG's scorer and controls. Sieved sequences are checked against
+direct definitions in tests/test_stage_ah.py. TSVs reference/findings/stage_ah_candidates.tsv and stage_ah_controls.tsv,
+findings §32. **Blast radius:** additive only. **Rollback:** git revert.
+
 ### AG — constants and number streams written in base 29 as the key (2026-10-12)
 
 **Goal.** Test one named-generator family (tracker next action 2, catalog row 22). It fits every constraint on the key
