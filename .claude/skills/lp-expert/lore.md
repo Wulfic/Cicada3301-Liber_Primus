@@ -1,6 +1,6 @@
 # Cicada motifs and key-source leads, with status
 
-Snapshot as of 2026-10-12 (C1–C26, stage AF). **Status comes from tracker §4 and the findings doc. If they disagree with
+Snapshot as of 2026-10-12 (C1–C27, stage AG). **Status comes from tracker §4 and the findings doc. If they disagree with
 this file, they win, so update this file.** "Open" means no test in this repo has scored it, not that it is
 promising.
 
@@ -22,6 +22,7 @@ Status legend: **✗ excluded** (by a test or a cited ledger) · **◐ partly** 
 | Instar / emergence / circumference / "within" | 0.1.0.7, PARABLE | thematic only: no falsifiable key proposed |
 | "EITHER THE WORDS OR THEIR NUMBERS" | 0.0.0.8 | word sums ✗ (K-C); other word→number maps ○ |
 | Section sizes 729, 1729, 1021, 3316 | tracker §5 | curiosities; no prediction stated |
+| Constants in base 29 (π, e, φ, √2, √3, ln 2, √3301; primes / integers / φ(p) digit streams) | natural mod-29 OTP | ✗ from any start < 1000 (C27, §31) |
 
 ## Leads from Cicada's other material (from `reference/community/community_research.md` §2, *unverified there*)
 

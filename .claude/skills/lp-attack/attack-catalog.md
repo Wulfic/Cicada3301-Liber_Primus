@@ -1,6 +1,6 @@
 # Attack catalog: cipher family → what distinguishes it → status on LP2
 
-Snapshot 2026-10-12 (C1–C26). **Tracker §3.2 / §4 win over this file.** If you add a constraint, update the
+Snapshot 2026-10-12 (C1–C27). **Tracker §3.2 / §4 win over this file.** If you add a constraint, update the
 matching rows here.
 
 **Periodicity note.** C9 excludes periods ≤ 1000 when the re-key rule keeps the key in step, and C23 extends that to
@@ -39,7 +39,7 @@ written here, with no test yet. An "arg" row needs a test before it can go in th
 | 19 | Homophonic over the same 29 symbols | homophones must flatten English | ✗ | C15: 26 plaintext letters leave 3 spare runes; the flattest allocation still has χ² ≥ 4,802 (LP2 26.4). J and X alone decide it. With a flat stream on top, see row 3 |
 | 20 | Key reuse inside LP2 (two-time pad), sections or anywhere | same-position agreement; labelled diagonal segment score S | ◐ | C22 (§26): no restart at sections or other units; C23 (§27): no reused stretch ≥ 3,000 runes at any offset, either direction. Shorter stretches ○. The pre-2026 "overlaps" were duplicated text (tracker §4.3) |
 | 21 | Common PRNGs / KDFs; public random archives | — | ✗ | Dukotah ledger (~14.5 billion offsets) |
-| 22 | *Named* custom generator (LFSR with stated taps and seed, hash chain of a stated phrase) | — | ○ | needs exact definition + mod-29 mapping + `detect.log_lr` |
+| 22 | *Named* custom generator (LFSR with stated taps and seed, hash chain of a stated phrase, base-29 constants) | — | ◐ | ✗ base-29 π, e, φ, √2, √3, ln 2, √3301, Copeland–Erdős, Champernowne, φ(p) concatenated, starts < 1000 (C27, §31). Others need an exact definition + mod-29 mapping + `detect.log_lr` |
 | 23 | Two or more additive layers | only the sum is visible | constraints apply to the sum | test the composed stream, not one layer |
 | 24 | Per-position alphabet c = σ_{k_i}(p), non-additive | label-free emissions (`alphabets.log_mean_lr`); uneven marginal | ◐ | ✗ any key of period ≤ 1000 in step (C9, §17), ≤ 4,907 in the continuous stream (C25, §29). ✗ any random tabula keyed by ≤ 153 effective classes, any alignment (C16, §18): primes, letters, corpora, payloads mod 29. Open: > 150-class keys (raw bytes), testable in step only, with flat synthetic negatives |
 | 24a | Latin-square tabula (Quagmire I–IV, keyed mixed alphabets) c = π₂(π₁(p) + κ) | none key-free: it is the additive cipher renamed (`quagmire.py`) | ◐ | ✗ English, digit, hex keys under random alphabets (C18, §19); ✗ iid key with V_eff ≥ 17 as sole deficit cause (C17); ✗ English and digit keys under all 314,432 triples of 34 named LP keyword alphabets, hex under all but 431, uniform A–Z under 103,864 (C19, §20). Open: other keywords and keyed-alphabet constructions; uniform-letter keys under the remaining triples (mostly untestable at LP2's length) |

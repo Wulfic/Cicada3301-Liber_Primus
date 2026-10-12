@@ -38,6 +38,7 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 | C24 | LP2's own ciphertext is not the key at any lag 11–12,863, forwards or backwards (c = p ± f(c_i) or Beaufort, f a shift or reflection; straight alphabets), and no reused ciphertext stretch of ≥ 200 runes keys another | all 1,490,948 hypotheses at L ≤ 12,863 have F ≤ −10 (1,495,197 of 1,495,240 up to 12,900); best F 5.30 and S 23.16 vs flat-null maxima 7.18 / 23.26 (pass line 30) | `test_recorded_headline`, `test_named_lags_recompute` | 28 |
 | C25 | No periodic key of period 11–4,907 selecting any alphabets (Quagmire, random tabula, any table), key in step, continuous stream; 10,030 of the 12,935 lags 11–12,945 excluded, including 1033, 1729 and 3301 | lag agreement rates at the flat level (best upper p 3.1 × 10⁻⁵ vs 7.7 × 10⁻⁷); lower tail at p_H = 0.050 ≤ e^−10 | `test_recorded_headline`, `test_lp2_agreements_and_verdicts_recompute` | 29 |
 | C26 | No additive or Beaufort key restarting at every section, paragraph, clause, line or page with a constant shift per unit (c = p + k[t] + a_unit) | within-unit difference agreements at the flat null (\|z\| ≤ 1.41); a shifted restart adds ≥ 7,000 (sections) to ≥ 28,000 (lines) at the 5σ bound; 5 of 5 excluded | `test_recorded_headline`, `test_lp2_statistics_and_analytic_means_recompute` | 30 |
+| C27 | The key is not the base-29 expansion of π, e, φ, √2, √3, ln 2 or √3301, nor the base-29 concatenation of the primes, the integers or φ(p), from any start < 1000, any mode and shift, per section or continuous, drift-tolerant | best real decode −56.0 (π) vs pass +30; all 270 testable cells ≤ −10; controls ≥ +194.9 | `test_recorded_headline`, `test_best_real_decode_recomputes` | 31 |
 
 **The leak** (how the 86 survivors are spread, §7):
 
@@ -1367,3 +1368,44 @@ add about 300 to S_line, well inside the noise, so this stage neither confirms n
 - Mixed alphabets with a per-unit shift of the key index.
 - Shifts that change within a unit.
 - Gaps over 300 (only the long units have them).
+
+## 31. Constants and number streams in base 29 are not the key (2026-10-12, TODO stage AG)
+
+Declared in `TODO.md` (`7c83e52`) before the runner existed. The runner and the digit generators were committed before
+the full run (`5e8c507`). Run: `python -m tools.run_stage_ag` (about 25 minutes on 4 cores). Rows are in
+[`stage_ag_candidates.tsv`](stage_ag_candidates.tsv) and [`stage_ag_controls.tsv`](stage_ag_controls.tsv). Tests:
+`tests/test_stage_ag.py`.
+
+**Disclosed:** the `--quick` mode, like stage R's, scored 120 of the 8,700 declared decodes (sections 7 and 10, shifts
+0–1) before the runner was committed. Nothing in the family or the rule changed afterwards.
+
+**The question.** This tests one named-generator family (catalog row 22). Base-29 digits are key values 0–28 with no
+mapping, near-flat and aperiodic, so they meet every key constraint C9–C25. The family has ten sources, each computed
+exactly with integer arithmetic:
+- seven constants with the integer part first: π, e, φ, √2, √3, ln 2 and √3301;
+- three concatenations of base-29 digits: the primes (Copeland–Erdős), 1, 2, 3, … (Champernowne), and φ(p) = p − 1.
+
+The digits are verified in tests. π and e match their known expansions to 60 decimal places, the other constants agree
+with floats, and the digits are stable when the precision is raised (`test_pi_and_e_match_their_known_expansions`,
+`test_digits_are_stable_under_more_precision`).
+
+**Design.** Stage R's decode: drift-tolerant `detect.log_lr` via `fastdetect`, with a uniform prior over the start offset
+s ∈ [0, 1000). It covers 3 modes, 29 shifts, and 10 alignments (each section from its own start, plus the continuous
+stream), for 8,700 decodes. **PASS** iff ≥ 30. A (source, alignment, mode) is **excluded** iff all 29 shifts are
+≤ −10 and the source's controls pass.
+
+**Controls.** Each source's own encryption of solved plaintext, from a random start below 1,000, at 729 and 3,316 runes,
+re-keying fresh and next, scores ≥ 194.9. Random keys score ≤ −68.2. All 10 sources are testable.
+
+**Result: nothing passes.** The best decode on a real section is −56.0 (π, section 7, add, shift 13). Per source, the
+best real decode runs from −56.0 to −81.2. The continuous stream's best is −1,496.3. The only cells left unexcluded are
+segment 10's 30 (9 runes, best +0.67), which no detector can test.
+
+**Reading.**
+- **C27:** no base-29 expansion of π, e, φ, √2, √3, ln 2 or √3301, and no base-29 concatenation of the primes, the
+  integers or φ(p), is the key. This holds read from any start below 1,000, in any mode and shift, per section or
+  continuous, drift-tolerant. 270 of 270 testable cells are excluded.
+
+**What this does not cover.**
+- Other bases, other constants, digits read backwards.
+- Starts past 1,000: a later start is a different hypothesis with a different prior.

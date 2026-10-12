@@ -5,11 +5,14 @@ Run from the repo root:  python -m unittest tests.test_stage_ag -v
 
 from __future__ import annotations
 
+import csv
 import unittest
 from itertools import count, islice
 
 from tools import run_stage_ag as ag
-from tools.lpcore import keys
+from tools.lpcore import detect, keys
+from tools.lpcore.corpus import load_corpus
+from tools.lpcore.verify import load_translation
 from tools.lpcore.ciphers import primes
 from tools.lpcore.gematria import N
 
@@ -68,6 +71,37 @@ class TestStageAGFamily(unittest.TestCase):
         self.assertEqual(len(fam), 10)
         self.assertTrue(all(len(v) == 2_000 and min(v) >= 0 and max(v) < N for v in fam.values()))
         self.assertEqual(ag.digit_count(12_956), 1_000 + 2 * 12_956 + 2)
+
+
+class TestStageAGRecorded(unittest.TestCase):
+    """The recorded run (findings §31): no pass; every testable cell excluded; the best real decode recomputes."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        with ag.CANDIDATES_PATH.open(encoding="utf-8", newline="") as f:
+            cls.rows = list(csv.DictReader(f, delimiter="\t"))
+        with ag.CONTROLS_PATH.open(encoding="utf-8", newline="") as f:
+            cls.controls = list(csv.DictReader(f, delimiter="\t"))
+
+    def test_recorded_headline(self) -> None:
+        self.assertEqual(len(self.rows), 8_700)
+        self.assertLess(max(float(r["log_lr"]) for r in self.rows), detect.THRESHOLD)
+        real = [r for r in self.rows if r["segment"] != "10"]
+        self.assertAlmostEqual(max(float(r["log_lr"]) for r in real), -56.0, places=2)
+        cells = {}
+        for r in real:
+            cells.setdefault((r["source"], r["segment"], r["mode"]), []).append(float(r["log_lr"]))
+        self.assertEqual(len(cells), 270)
+        self.assertTrue(all(max(v) <= ag.EXCLUDE for v in cells.values()))
+        self.assertGreaterEqual(min(float(r["positive_log_lr"]) for r in self.controls), detect.THRESHOLD)
+        self.assertLess(max(float(r["negative_log_lr"]) for r in self.controls), detect.THRESHOLD)
+
+    def test_best_real_decode_recomputes(self) -> None:
+        corpus = load_corpus()
+        words = keys.solved_plaintext_words(corpus, load_translation())
+        q = detect.unigram([r for w in words for r in w])
+        key = keys.constant_digits("pi", ag.digit_count(12_956))
+        self.assertAlmostEqual(ag.score(corpus.segment_runes(7), key, q, "add", 13), -56.0, delta=0.006)
 
 
 if __name__ == "__main__":
