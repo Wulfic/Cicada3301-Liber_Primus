@@ -9,7 +9,53 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-*(none. The next research step is MASTER_TRACKER §1. Plan it here before starting.)*
+### AD — the book's own ciphertext as the key, at any lag, forwards or backwards (2026-10-12)
+
+**Goal.** C11 (ciphertext autokey) and C12 (alphabet chosen by c_{i−L}) stop at lag 1000, read forwards. They leave
+these open:
+- the ciphertext at a long lag as the key (the previous section's ciphertext as the next one's pad);
+- the ciphertext read backwards as the key;
+- one stretch of ciphertext reused as the key for one later stretch.
+Stage AC's machinery tests all three directly, with the plaintext law itself, which is 12 times stronger per pair.
+
+**Model (straight alphabets).** LP2 as one stream of 12,956 runes. For pairs i < j on a forward diagonal (j = i + L) or a
+reverse anti-diagonal (i + j = σ), j − i ≥ 11, one rune of the pair is the other's plaintext under the other's
+ciphertext as key, up to a shift a ∈ Z₂₉:
+- **diff:** x = c_j − c_i, plaintext x − a (c_j = p_j + c_i + a, or c = p − k with a reflected key);
+- **diffrev:** x = c_j − c_i, plaintext a − x (Beaufort c_j = c_i + a − p_j; also the later rune as the earlier one's key);
+- **sum:** x = c_j + c_i, plaintext x − a;
+- **sumrev:** x = c_j + c_i, plaintext a − x.
+The anti-doublet rule re-draws a would-be doublet with probability 0.81, and the re-drawn rune is what later positions
+use as key.
+
+**Score.** s = ln((1 − ε) · 29 · q(plaintext) + ε), with ε = 0.1 and q = `detect.unigram` over `keys.solved_plaintext_words`.
+That is `detect.emission_ratios`, the emission of every key test since stage I. E[e^s] = 1 under a flat cipher. Under
+the model, E[e^−s] = 1 for plaintext drawn from q_ε. KL per pair 0.312 nats.
+
+**Statistics and declared rule** (written before the runner exists and before LP2 is scored):
+- **F(L, rel, a):** Σ s over the whole forward diagonal, an autokey at lag L through the stream, L = 11…12,945.
+  4 × 29 × 12,935 = 1,501,620 hypotheses. **PASS** iff F ≥ 30 (bound ≈ 1.4 × 10⁻⁷). **Excluded** iff F ≤ −10, for
+  L ≤ P_max.
+- **S:** the best contiguous segment per (rel, a) on every forward diagonal and every reverse anti-diagonal, so one
+  reused ciphertext stretch. **PASS** iff S ≥ 30 (Ville, ≈ 1.95 × 10¹⁰ · e^−30 ≈ 1.8 × 10⁻³).
+- **Valid** iff 4 flat null streams with the rule, scanned in full, give max F < 30 and max S < 30.
+- **Model check (controls, E and L sources, 10 draws per relation, random a):**
+  - **Whole-stream autokey** at L ∈ {11, 100, 1000, 1033, 1729, 3301, 6000, 9000, 11000, 12000, 12500, 12800, 12900}.
+    P_max = the largest grid L with every draw at every grid L′ ≤ L at F > −10.
+  - **Reused stretch** M ∈ {100, 200, 300, 500, 1000}, forward and reverse, 25 draws per source and cell. M_min = the
+    smallest M with every draw ≥ 30.
+
+**Expected** (no LP2 scored): the per-pair information is 12 times stage AC's, so P_max ≈ 12,900 and M_min ≈ 200–300.
+**Prior, disclosed:** C11 and C12 found no autokey at lags ≤ 1000, and LP2 is flat, so expect no PASS and nearly every
+hypothesis excluded.
+
+**Not doing.** Mixed alphabets (C12 covers them key-free for L ≤ 1000). An autokey through a nonlinear map of c_i. Keys
+from two earlier runes. The solved sections' runes as a key: their marginal is non-flat, which C10 and C13 already
+constrain.
+
+**Outputs.** Runner tools/run_stage_ad.py (--quick scores no LP2 runes), TSVs reference/findings/stage_ad_lags.tsv,
+stage_ad_top.tsv and stage_ad_controls.tsv, test tests/test_stage_ad.py, findings §28, C24. **Blast radius:** additive
+only. **Rollback:** git revert.
 
 ## Owner items
 
