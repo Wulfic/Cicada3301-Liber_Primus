@@ -19,6 +19,10 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 i < j that share a key value up to a fixed relation:
 - **diff:** k_j = k_i + a, so c_j − c_i = p_j − p_i + a;
 - **sum:** k_j = a − k_i, so c_j + c_i = p_j + p_i + a;
+- **sumrev** (amendment, added before the runner was committed and before LP2 was scored): k_j = a − k_i under
+  Beaufort c = k − p, so c_j + c_i = a − (p_j + p_i). The sum law is reflected there, and no shift reproduces it. The
+  difference law is symmetric, so diff needs no twin. The family becomes 3 relations × 29 shifts: F 1,126,215
+  hypotheses (bound ≈ 1.1 × 10⁻⁷), S bound ≈ 1.4 × 10⁻³.
 - a ∈ Z₂₉ (a = 0 under diff is plain reuse).
 The pairs lie on a **forward** diagonal j = i + L (a key read the same way) or a **reverse** anti-diagonal i + j = σ (a
 key read backwards), with j − i ≥ 11 (C5 covers lags 2–10). The anti-doublet rule re-draws 81 % of would-be doublets
