@@ -9,7 +9,54 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-*(none. The next research step is MASTER_TRACKER §1. Plan it here before starting.)*
+### AC — key reuse at any lag: periods over 1,000 and reused key stretches (2026-10-12)
+
+**Goal.** Close the gap C9 leaves. C9 scans lags 11–1000 within sections only, so a periodic key with period 1033,
+1729 or 3301 is untested, and so is one stretch of key used twice anywhere in LP2 (a two-time pad inside the book).
+`lore.md` wrongly listed 3301 / 1033 as excluded periods; ec148a6 corrected it.
+
+**Model (straight alphabets, key in step).** LP2 as one continuous stream c of 12,956 runes (segments 7–15). For positions
+i < j that share a key value up to a fixed relation:
+- **diff:** k_j = k_i + a, so c_j − c_i = p_j − p_i + a;
+- **sum:** k_j = a − k_i, so c_j + c_i = p_j + p_i + a;
+- a ∈ Z₂₉ (a = 0 under diff is plain reuse).
+The pairs lie on a **forward** diagonal j = i + L (a key read the same way) or a **reverse** anti-diagonal i + j = σ (a
+key read backwards), with j − i ≥ 11 (C5 covers lags 2–10). The anti-doublet rule re-draws 81 % of would-be doublets
+independently of the key (C14), so the key stays in step.
+
+**Score.** Per pair, s = ln(29 · r(x − a)), where x is the observed difference or sum and r is its law under the
+plaintext model: the difference or sum of two independent runes from `detect.unigram` over `keys.solved_plaintext_words`.
+Under a flat cipher E[e^s] = 1 exactly. Under the model E[e^{−s}] = 1. Per pair: KL 0.025 nats (diff), 0.027 (sum).
+
+**Statistics and declared rule** (written before the runner exists and before LP2 is scored):
+- **F(L, rel, a)** = Σ s over the whole forward diagonal: the periodic key with period L, for L = 11…12,945.
+  750,810 hypotheses. **PASS** iff F ≥ 30 (family bound 750,810 · e^−30 ≈ 7 × 10⁻⁸). **Excluded** iff F ≤ −10
+  (P ≤ e^−10 for the true hypothesis if the model holds; the controls check that).
+- **S** = the maximum segment sum (Kadane) on every forward diagonal and every reverse anti-diagonal, for each
+  (rel, a). That covers one reused key stretch at any place, any offset, either reading direction. **PASS** iff S ≥ 30
+  (family bound ≈ 2 · 8.4 × 10⁷ pairs · 58 · e^−30 ≈ 9 × 10⁻⁴, by Ville's inequality per start point).
+- **Run valid** iff 4 flat null streams with the rule, scanned in full, give max F < 30 and max S < 30, and the model
+  check below holds.
+- **Model check (controls):** solved-LP-word streams (L) and contiguous Emerson (E) at 12,956 runes, enciphered with
+  `keys.encrypt_dodging(rekey="fresh")`:
+  - **Periodic:** P ∈ {1033, 1729, 3301, 5000, 7000, 9000, 10000, 11000, 11500, 12000, 12500}, 10 draws per source and
+    relation, with a random a. The exclusion rule is trusted up to P_max, the largest grid P such that every draw at
+    every grid P′ ≤ P has F > −10. Lags L > P_max are reported, not excluded.
+  - **Reused stretch:** M ∈ {500, 1000, 1500, 2000, 2500, 3000}, forward and reverse, diff and sum, random positions
+    and a, 25 draws per source and cell. M_min is the smallest M at which every draw in every cell has S ≥ 30 at
+    the planted (anti-)diagonal. Then "no reused stretch of ≥ M_min runes" holds at power ≥ 0.97 per cell
+    (0 misses in 50; that is weaker than a 5σ bound, and is reported as such).
+
+**Expected** (prototype on controls only, no LP2): periodic F at P = 1033 ≈ 191–279 nats, 3301 ≈ 155–226, 9000 ≈ 62–94,
+11,500 ≈ 14–34. A flat stream at a fixed lag gives F ≈ −282 (1033) to −36 (11,500). A flat null's S over 500 lags is
+18.7. So expect: no PASS, plain periodic keys excluded for nearly every L up to about 11,500, and M_min ≈ 2,000–2,500.
+
+**Not doing.** Quagmire or other mixed alphabets: a label-free version needs coincidences, a weaker test. A drifting key.
+Reuse of a key stretch from outside LP2. Partial reuse with internal gaps.
+
+**Outputs.** Runner tools/run_stage_ac.py (--quick scores no LP2 runes), TSVs reference/findings/stage_ac_lags.tsv
+(per lag: best F, F at diff a = 0, excluded count), stage_ac_top.tsv (the 20 best F and S cells), stage_ac_controls.tsv,
+test tests/test_stage_ac.py, findings §27, C23. **Blast radius:** additive only. **Rollback:** git revert.
 
 ## Owner items
 
