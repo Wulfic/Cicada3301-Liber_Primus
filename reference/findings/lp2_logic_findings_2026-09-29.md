@@ -1176,7 +1176,7 @@ If positions i < j share a key value up to a relation, the cipher pair carries t
 
 **Design.** LP2 is read as one 12,956-rune stream. The score is s = ln(29 r(x)) per pair, with r the law under the
 LP-English unigram, so E[e^s] = 1 under a flat cipher.
-- **F(L, rel, a)** sums s over the whole diagonal j = i + L: a periodic key, for L = 11…12,945 (1,126,215 hypotheses).
+- **F(L, rel, a)** sums s over the whole diagonal j = i + L: a periodic key, for L = 11…12,945 (12,935 lags, 1,125,345 hypotheses; the declaration's 1,126,215 miscounted the lags, erratum noted in stage AD).
 - **S** is the best contiguous segment on every forward diagonal and every reverse anti-diagonal i + j = σ: one reused
   stretch, read either way.
 - **PASS** iff F ≥ 30 or S ≥ 30. **Excluded** iff F ≤ −10, on lags the controls trust.

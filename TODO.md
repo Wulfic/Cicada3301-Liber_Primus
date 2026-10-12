@@ -34,7 +34,9 @@ the model, E[e^−s] = 1 for plaintext drawn from q_ε. KL per pair 0.312 nats.
 
 **Statistics and declared rule** (written before the runner exists and before LP2 is scored):
 - **F(L, rel, a):** Σ s over the whole forward diagonal, an autokey at lag L through the stream, L = 11…12,945.
-  4 × 29 × 12,935 = 1,501,620 hypotheses. **PASS** iff F ≥ 30 (bound ≈ 1.4 × 10⁻⁷). **Excluded** iff F ≤ −10, for
+  4 × 29 × 12,935 = 1,500,460 hypotheses (erratum: the declaration said 1,501,620; stage AC's "750,810" and
+  "1,126,215" likewise used 12,945 lags for 12,935, so they should read 750,230 and 1,125,345; no bound changes).
+  **PASS** iff F ≥ 30 (bound ≈ 1.4 × 10⁻⁷). **Excluded** iff F ≤ −10, for
   L ≤ P_max.
 - **S:** the best contiguous segment per (rel, a) on every forward diagonal and every reverse anti-diagonal, so one
   reused ciphertext stretch. **PASS** iff S ≥ 30 (Ville, ≈ 1.95 × 10¹⁰ · e^−30 ≈ 1.8 × 10⁻³).
