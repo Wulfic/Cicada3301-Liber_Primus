@@ -9,7 +9,59 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-*(none. The next research step is MASTER_TRACKER §1. Plan it here before starting.)*
+### AB — a key that restarts at every section, paragraph, clause, line or page (2026-10-12)
+
+**Goal.** One label-free test of every cipher whose key restarts at the start of each written unit: the same key value
+(or the same alphabet) at in-unit position t in every unit. This is a natural hand scheme, the same pad sheet for every
+page or line. It is also the "keys shared between sections" claim that tracker §4.1 takes from the ledger without a
+test here. Stage Z left "blocks restarting at lines or pages" open.
+
+**Model.** c = σ_{t}(p) at in-unit position t, where t counts runes from the unit's first rune, σ_t is any alphabet
+(additive c = p + k_t, Quagmire, any tabula), and the same σ_t is used in every unit. The anti-doublet rule follows (a
+would-be doublet re-drawn with prob. 0.81, independent of the key, so the key stays in step). Units, each read from
+`data/canonical/` through `tools/lpcore` at rune level (rune words wrap across lines and pages):
+- section (`$`): 9 units, median 1,524 runes;
+- paragraph (`&`): 15 units, median 693;
+- clause (`.`, `&` or `$`): 168 units, median 56;
+- line (`/`): 594 units, median 22;
+- page (`%`, the scan): 55 units, median 263.
+
+**Not already excluded because:** C9 tests a global period. Unit lengths vary (lines 22–26, pages 263–277), so a key
+restarting per unit is not periodic. C20 covers restarts at every word only. The section version rests on the ledger
+alone.
+
+**Statistic (label-free).** K_u = Σ_t Σ_v C(m_{t,v}, 2), where m_{t,v} is the number of units of type u whose rune at
+in-unit position t is v. That is the number of pairs of units that agree at the same in-unit position. Under the model,
+equal plaintext at the same t gives equal cipher under any σ_t, so each pair agrees with probability Σq² ≈ 0.0617
+(LP-English) instead of 1/29 ≈ 0.0345. Same-position pairs: sections 33,241, paragraphs 44,235, clauses 576,280,
+lines 3,638,562, pages 311,132. That gives 5 cells.
+
+**Null.** 1,000 seeded flat draws of LP2's 12,956 runes with stage Z's anti-doublet rule within each section, cut into
+the same units. Per cell: μ₀, σ₀ (floor 1), max. Analytic mean: Σ_t C(m_t, 2)/29.
+
+**Positive controls, per unit type.** 200 draws for each of stage Z's two sources: (E) contiguous Emerson and (L) solved-LP
+words in random order, as one 12,956-rune stream cut into LP2's units. Each is enciphered with a fresh random alphabet
+σ_t per in-unit position, shared by every unit, then given the rule within each section.
+
+**Declared rule** (written before the unit map is coded and before LP2 is scored):
+- lower = exp(m − 5s) − 1 on ln(K + 1) over a source's draws (stage Z's bound). **Testable** iff, for both sources,
+  lower > the null max and every draw > the null max. **Excluded** iff testable and K_LP2 < lower for both sources.
+- **PASS (lead → lp-claim-audit)** iff K_LP2 > the null max and (K_LP2 − μ₀)/σ₀ ≥ 6.
+- **Run valid** iff each null mean lies within 3 s.e. of the analytic mean. Otherwise every row is VOID.
+
+**Expected.** Excess ≈ 0.027 per same-position pair, so about 900 (sections) to 99,000 (lines) agreements over the null,
+at z ≈ 27–280. All 5 cells testable. LP2 is expected at the null (the ledger claims so for sections), so no PASS and 5
+exclusions.
+
+**Not doing.** A key restarting with a per-unit shift (c = σ_t(p) + a_unit, which breaks agreement but not the shape of
+differences). Restarts aligned to the unit's end. Restarts every k-th unit. Key reuse at a free offset and periods over
+1,000 (the next stage).
+
+**Code.** New `Corpus.rune_units()` in `tools/lpcore/corpus.py` (per-rune segment, paragraph, clause, line and page ids,
+tested to reproduce `all_runes` and the word fields). Runner tools/run_stage_ab.py (--quick scores no LP2 runes),
+TSVs reference/findings/stage_ab_results.tsv and stage_ab_controls.tsv, test tests/test_stage_ab.py, findings §26,
+C22 if anything is excluded. **Blast radius:** one new read-only method in lpcore, plus additive files.
+**Rollback:** git revert.
 
 ## Owner items
 
