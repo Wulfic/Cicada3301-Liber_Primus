@@ -34,6 +34,7 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 | C20 | No word-deterministic cipher (cipher word = T(plaintext word): a key restarting at every word, a word codebook) and no fixed substitution of aligned n-rune blocks (Hill, polygraphic codebook) for n = 2–4 at any offset, or n = 5 in the continuous stream | repeated pairs at the flat-null level (\|z\| ≤ 1.38); words within sections 25 vs null 20.0 and English ≥ 3,433 (log-scale 5σ bound); 26 of 72 cells excluded, 46 untestable | `test_recorded_headline`, `test_lp2_counts_and_analytic_means_recompute` | 24 |
 | C21 | No keyless sliding-context cipher c_i = F(p_{i−a}, …, p_{i+b}), any fixed F, with w = a + b ≤ 2 (context restarting at each section) or w ≤ 1 (continuous stream): no plaintext-selected alphabet from a 1-rune context, no plaintext autokey with arbitrary tables at lag 1 | sliding n-gram repeats at the flat-null level (\|z\| ≤ 1.26); e.g. K_4 cont 129 vs null 126.3, controls ≥ 4,013 at w = 1; 5 of 26 (mode, w) cells excluded, 21 untestable | `test_recorded_headline`, `test_every_exclusion_follows_the_declared_rule` | 25 |
 | C22 | The key (or alphabet sequence σ_t) does not restart at every section, paragraph, clause, written line or page, under any alphabets, key in step | same-position agreements at the flat null (\|z\| ≤ 2.98, all below the null max); a restart adds ≥ 600 (sections) to ≥ 78,000 (lines) at the 5σ bound; 5 of 5 unit types excluded | `test_recorded_headline`, `test_lp2_agreements_and_analytic_means_recompute` | 26 |
+| C23 | No periodic key with period 11–11,781 in the continuous stream (plain, progressive k + a or reflected a − k per period; straight alphabets, any of c = p ± k or Beaufort), including 1033, 1729 and 3301; no reused key stretch of ≥ 3,000 runes forwards or backwards (power ≥ 0.97) | F ≤ −10 for 1,081,691 of 1,086,630 hypotheses with L ≤ 12,500; best F 7.05 and S 19.86 vs flat-null maxima 10.15 / 20.39 (pass line 30) | `test_recorded_headline`, `test_named_periods_recompute` | 27 |
 
 **The leak** (how the 86 survivors are spread, §7):
 
@@ -1155,3 +1156,67 @@ own declared test.
 - Restarts every k-th unit only.
 - A drifting key (C14 already excludes the one drifting rule proposed so far).
 - Key reuse at a free offset, and periods over 1,000 (open, findings §8 covers lags ≤ 1000).
+
+## 27. No reused key at any lag: periods 11–11,781, including 1033, 1729 and 3301 (2026-10-12, TODO stage AC)
+
+Declared in `TODO.md` (`b2f22d9`) before the runner existed. One relation, "sumrev", was added before LP2 was scored,
+and the runner was committed with it (`a11ec86`). Run: `python -m tools.run_stage_ac` (about 20 minutes on 4 cores).
+Rows are in [`stage_ac_lags.tsv`](stage_ac_lags.tsv) (one per lag), [`stage_ac_top.tsv`](stage_ac_top.tsv) (the 20 best
+cells per statistic) and [`stage_ac_controls.tsv`](stage_ac_controls.tsv). Tests: `tests/test_stage_ac.py`.
+
+**The question.** C9 scans lags 11–1000 within sections only. That left three things open:
+- a periodic key with a longer period, such as 1033, 1729 or 3301 (`lore.md` had listed 3301 / 1033 as excluded, wrongly);
+- a key used continuously across section boundaries at a long lag;
+- one stretch of key used twice anywhere in LP2, forwards or backwards: a two-time pad inside the book.
+
+If positions i < j share a key value up to a relation, the cipher pair carries the plaintext pair's law:
+- **diff:** k_j = k_i + a, so c_j − c_i = p_j − p_i + a.
+- **sum:** k_j = a − k_i, so c_j + c_i = p_j + p_i + a.
+- **sumrev:** the same under Beaufort, which reflects the sum law. This was the amendment.
+
+**Design.** LP2 is read as one 12,956-rune stream. The score is s = ln(29 r(x)) per pair, with r the law under the
+LP-English unigram, so E[e^s] = 1 under a flat cipher.
+- **F(L, rel, a)** sums s over the whole diagonal j = i + L: a periodic key, for L = 11…12,945 (1,126,215 hypotheses).
+- **S** is the best contiguous segment on every forward diagonal and every reverse anti-diagonal i + j = σ: one reused
+  stretch, read either way.
+- **PASS** iff F ≥ 30 or S ≥ 30. **Excluded** iff F ≤ −10, on lags the controls trust.
+
+**Validity: the run is valid.** Four flat null streams with the anti-doublet rule, scanned in full, give max F 6.91–10.15
+and max S 18.33–20.39. That is the ln(number of tests) level the Ville bound predicts.
+
+**Controls.** Ten draws per source and relation at each period, and 25 per cell for reused stretches.
+
+| Period P | min F | draws ≥ 30 | | Reused stretch M | min S | draws ≥ 30 |
+|---|---|---|---|---|---|---|
+| 1033 | 198.2 | 60 / 60 | | 500 | 4.2 | 0 / 300 |
+| 3301 | 161.6 | 60 / 60 | | 1000 | 9.4 | 71 / 300 |
+| 7000 | 72.7 | 60 / 60 | | 1500 | 14.2 | 240 / 300 |
+| 10000 | 33.9 | 60 / 60 | | 2000 | 18.4 | 281 / 300 |
+| 11500 | 14.3 | 41 / 60 | | 2500 | 22.5 | 298 / 300 |
+| 12500 | −0.5 | 0 / 60 | | 3000 | 34.2 | 300 / 300 |
+
+So **P_max = 12,500**: every periodic draw up to there scores F > −10, and the exclusion rule is trusted on every lag up
+to it. **M_min = 3,000**: every reuse draw of 3,000 runes clears 30, in both directions and all relations.
+
+**Result: nothing passes.** LP2's best F is 7.05, at lag 12,800 over just 156 pairs. Its best S is 19.86 forward and
+18.23 reverse. All three sit inside the nulls' range.
+
+**Exclusions.**
+- 1,081,691 of the 1,086,630 hypotheses with L ≤ 12,500 score F ≤ −10.
+- **Plain periodic keys (diff, a = 0) are excluded for every period from 11 to 11,781.** Above that, 78 of the 719
+  periods up to 12,500 stay open, because they have too few pairs.
+- **The named periods are excluded under every relation and shift:** 1033 (F ≤ −238), 1729 (≤ −219) and 3301 (≤ −193).
+
+**Reading.**
+- **C23:** the key is not periodic at any period from 11 to 11,781 in the continuous stream. This includes keys that
+  shift or reflect by a constant each period (progressive or alternating), under all three conventions.
+- No stretch of ≥ 3,000 runes is reused, forwards or backwards, at power ≥ 0.97 per cell (300 of 300 draws found). That
+  is weaker than a 5σ bound and stated as such. Shorter stretches are not covered: half of the 1,000-rune reuses go unseen.
+- C9 extends from period 1000 to 11,781, now across section boundaries too. The 3301 / 1033 motif is closed as a period.
+
+**What this does not cover.**
+- Mixed alphabets (Quagmire or tabulae). The scores use labels, and a label-free version needs coincidences, a weaker test.
+- A drifting key.
+- Reused stretches shorter than ~3,000 runes.
+- A key stretch shared with text outside LP2.
+- Periods above 11,781.

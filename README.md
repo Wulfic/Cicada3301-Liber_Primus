@@ -79,6 +79,7 @@ tools/
   run_stage_z.py           reproduces the stage-Z word and block codebook repeat test (findings §24, C20); two TSVs
   run_stage_aa.py          reproduces the stage-AA keyless sliding-context repeat test (findings §25, C21); three TSVs
   run_stage_ab.py          reproduces the stage-AB key-restart test at sections, lines, pages… (findings §26, C22); two TSVs
+  run_stage_ac.py          reproduces the stage-AC key-reuse scan at every lag, periods to 11,781 (findings §27, C23); three TSVs
   legacy/                  107 pre-2026-09-29 scripts, untested and built on misaligned data; history only
 
 tests/                     ★ the proof: python -m unittest discover -s tests -t . -v

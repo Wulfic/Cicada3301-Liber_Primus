@@ -1,10 +1,11 @@
 # Attack catalog: cipher family → what distinguishes it → status on LP2
 
-Snapshot 2026-10-12 (C1–C22). **Tracker §3.2 / §4 win over this file.** If you add a constraint, update the
+Snapshot 2026-10-12 (C1–C23). **Tracker §3.2 / §4 win over this file.** If you add a constraint, update the
 matching rows here.
 
-**Periodicity note.** C9 excludes periods ≤ 1000 when the re-key rule keeps the key in step, but only periods
-≤ 25 when it drifts. The one drifting rule proposed so far (skip to the next key value) is itself excluded by C14.
+**Periodicity note.** C9 excludes periods ≤ 1000 when the re-key rule keeps the key in step, and C23 extends that to
+≤ 11,781 in the continuous stream (straight alphabets; C9's lag test is label-free). It covers only periods ≤ 25 when
+the key drifts. The one drifting rule proposed so far (skip to the next key value) is itself excluded by C14.
 So a *new* drifting mechanism would reopen periods 26–1000. Say so when you propose one.
 
 Status: **✗** excluded (test or cited ledger) · **◐** partly · **○** open · **arg** excluded by an argument
@@ -17,7 +18,7 @@ written here, with no test yet. An "arg" row needs a test before it can go in th
 | 1 | Monoalphabetic: Caesar, atbash, affine, keyed alphabet | unigram IoC stays at the plaintext's | ✗ | LP2 IoC and unigrams are flat (C2's χ² = 26.4 on 28 df) |
 | 2 | Transposition only | English unigram survives | ✗ | same |
 | 3 | Transposition, then an additive stream | none from transposition; the stream decides | reduces to the stream's row | `detect.log_lr` ignores plaintext order |
-| 4 | Periodic Vigenère, Beaufort or variant | lag-L repeat rate | ✗ period ≤ 1000 in step; ≤ 25 drifting | C5, C9; ledger. See the periodicity note |
+| 4 | Periodic Vigenère, Beaufort or variant | lag-L repeat rate; labelled diagonal score F | ✗ period ≤ 11,781 in step (also progressive / reflected per period); ≤ 25 drifting | C5, C9, C23 (§27); ledger. See the periodicity note |
 | 5 | Progressive (Trithemius) or any integer polynomial in i, mod 29 | periodic: f(i + 29) ≡ f(i) | ✗ in step | C9. See the periodicity note |
 | 6 | Vigenère with an F-interrupter (LP1 style) | ᚠ excess about 190 | ✗ | C2; ledger |
 | 7 | Running key from English text (letters, prime values, φ) | r = q ⊛ q is non-flat | ✗ | C10 |
@@ -35,7 +36,7 @@ written here, with no test yet. An "arg" row needs a test before it can go in th
 | 18a | Word-deterministic: key restarting at each word, word codebook, any cipher word = T(plain word) | repeated cipher words | ✗ | C20 (§24): 25 within-section pairs vs flat 20, English ≥ 3,433. Homophonic codebooks ○ |
 | 18b | Key (or alphabet sequence) restarting at every section, paragraph, clause, written line or page | same-position agreement between units K_u | ✗ | C22 (§26), any alphabets, in step. Per-unit shift, end-aligned and every-k-th-unit restarts ○ |
 | 19 | Homophonic over the same 29 symbols | homophones must flatten English | ✗ | C15: 26 plaintext letters leave 3 spare runes; the flattest allocation still has χ² ≥ 4,802 (LP2 26.4). J and X alone decide it. With a flat stream on top, see row 3 |
-| 20 | Section key reuse (two-time pad across sections) | cross-section difference statistics | ✗ | ledger. The pre-2026 "overlaps" were duplicated text (tracker §4.3) |
+| 20 | Key reuse inside LP2 (two-time pad), sections or anywhere | same-position agreement; labelled diagonal segment score S | ◐ | C22 (§26): no restart at sections or other units; C23 (§27): no reused stretch ≥ 3,000 runes at any offset, either direction. Shorter stretches ○. The pre-2026 "overlaps" were duplicated text (tracker §4.3) |
 | 21 | Common PRNGs / KDFs; public random archives | — | ✗ | Dukotah ledger (~14.5 billion offsets) |
 | 22 | *Named* custom generator (LFSR with stated taps and seed, hash chain of a stated phrase) | — | ○ | needs exact definition + mod-29 mapping + `detect.log_lr` |
 | 23 | Two or more additive layers | only the sum is visible | constraints apply to the sum | test the composed stream, not one layer |

@@ -5,6 +5,7 @@ Run from the repo root:  python -m unittest tests.test_stage_ac -v
 
 from __future__ import annotations
 
+import csv
 import unittest
 
 import numpy as np
@@ -85,6 +86,51 @@ class TestStageACComponents(unittest.TestCase):
             self.assertGreater(ac.planted_S(c, TABLES, orientation, i, j, 2000, "diff", 11), ac.PASS)
             c0 = ac.encipher(plain, rng.integers(0, N, 8000), rng, "diff")
             self.assertLess(ac.planted_S(c0, TABLES, orientation, i, j, 2000, "diff", 11), ac.PASS)
+
+
+def read_tsv(path):
+    with path.open(encoding="utf-8", newline="") as f:
+        return list(csv.DictReader(f, delimiter="\t"))
+
+
+class TestStageACRecorded(unittest.TestCase):
+    """The recorded run (findings §27): valid, no pass, every plain period 11–11,781 excluded, and 1033, 1729, 3301."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.lags = {int(r["lag"]): r for r in read_tsv(ac.LAGS_PATH)}
+        cls.top = read_tsv(ac.TOP_PATH)
+        cls.controls = read_tsv(ac.CONTROLS_PATH)
+        cls.c = ac.lp2_stream(ac.load_corpus())
+
+    def test_recorded_headline(self) -> None:
+        self.assertEqual(sorted(self.lags), list(range(11, 12_946)))
+        self.assertLess(max(float(r["nats"]) for r in self.top), ac.PASS)            # no pass in F or S
+        self.assertLess(max(float(r["nats"]) for r in self.top if r["statistic"] == "F"), 7.1)
+        plain_open = [lag for lag, r in self.lags.items() if lag <= 12_500 and float(r["F_diff0"]) > ac.EXCLUDE]
+        self.assertEqual(len(plain_open), 78)
+        self.assertEqual(min(plain_open), 11_782)
+        trusted = [r for lag, r in self.lags.items() if lag <= 12_500]
+        self.assertEqual(sum(int(r["excluded_of_87"]) for r in trusted), 1_081_691)
+
+    def test_named_periods_recompute(self) -> None:
+        for period in (1033, 1729, 3301):
+            row = self.lags[period]
+            self.assertEqual(int(row["excluded_of_87"]), 87)
+            self.assertAlmostEqual(ac.planted_F(self.c, TABLES, period, "diff", 0), float(row["F_diff0"]), delta=0.006)
+            best = max(ac.planted_F(self.c, TABLES, period, rel, a) for rel in ac.RELATIONS for a in range(N))
+            self.assertAlmostEqual(best, float(row["F_best"]), delta=0.006)
+            self.assertLess(best, -190)
+
+    def test_model_check_reaches_12500_and_3000(self) -> None:
+        periodic = [r for r in self.controls if r["kind"] == "periodic"]
+        self.assertTrue(all(float(r["min"]) > ac.EXCLUDE for r in periodic))       # P_max = 12,500
+        reuse = {}
+        for r in self.controls:
+            if r["kind"] == "reuse":
+                reuse.setdefault(int(r["P_or_M"]), []).append(int(r["at_least_30"]) == int(r["draws"]))
+        self.assertEqual(min(m for m, ok in reuse.items() if all(ok)), 3000)        # M_min
+        self.assertFalse(all(reuse[2500]))
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 # Cicada motifs and key-source leads, with status
 
-Snapshot as of 2026-10-12 (C1–C22, stage AB). **Status comes from tracker §4 and the findings doc. If they disagree with
+Snapshot as of 2026-10-12 (C1–C23, stage AC). **Status comes from tracker §4 and the findings doc. If they disagree with
 this file, they win, so update this file.** "Open" means no test in this repo has scored it, not that it is
 promising.
 
@@ -14,7 +14,7 @@ Status legend: **✗ excluded** (by a test or a cited ledger) · **◐ partly** 
 | Primes p(n), φ(p(n)), p ± c, 3301 − p | AN END's key; "THE PRIMES ARE SACRED" 0.1.2.1 | ✗ every mode and constant shift, drift-tolerant (stage I K-A, findings §8) |
 | Solved text as a running key (rune values, word sums) | all LP1 | ✗ K-C, K-D (§8); any English running key is ✗ by C10 |
 | DIVINITY, FIRFUMFERENFE, CIRCUMFERENCE, other single key words | segs 1, 5 | ✗ every period ≤ 1000 (C9, C5); ledger: ~200 key texts; as Quagmire keyword alphabets, ✗ with English, digit or hex keys and ◐ with uniform A–Z (C19, §20) |
-| 3301 / 1033 (reversal; LP1 magic sums) | scans 05, 16 | ✗ as a short key; **○ as a period: 1033 and 3301 exceed C9's reach (periods ≤ 1000)**; not tested as a seed of a generator |
+| 3301 / 1033 (reversal; LP1 magic sums) | scans 05, 16 | ✗ as a short key; ✗ as a period under every shift and reflection (C23, findings §27; C9 alone stopped at 1000); not tested as a seed of a generator |
 | Fibonacci and spiral reading | scan 32 square = \|3301 − p(F+1)\| | ✗ the square as a key (period 16, C9); Pisano period mod 29 = 14 ✗ |
 | 4×4 square numbers on the segment 10 title | scan 32 | ✗ 0 of 30 decodes give English (§8) |
 | Base-60 grid, 256 bytes | scans 66–68, inside seg 15 | ✗ as a key (§12); ✗ as LP ciphertext or XOR/Vigenère under LP-native keys (§13); uniform bytes; ✗ English/rune/hex text under any repeating byte key, period ≤ 102; ✗ RSA modulus, prime, compressed stream (§22); ✗ text, runes, hex or base64 under a running key from any long byte source on disk, any phase (§23); **○ what it encodes (OTP-class)** |
