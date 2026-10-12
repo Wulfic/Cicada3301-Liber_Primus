@@ -5,6 +5,7 @@ Run from the repo root:  python -m unittest tests.test_stage_ab -v
 
 from __future__ import annotations
 
+import csv
 import unittest
 from math import comb
 
@@ -67,6 +68,31 @@ class TestStageABComponents(unittest.TestCase):
         self.assertEqual(ab.verdict(10, 5.0, 2.0, 12, low, mins)[0], "EXCLUDED")
         self.assertEqual(ab.verdict(55, 5.0, 2.0, 12, low, mins)[0], "PASS")
         self.assertEqual(ab.verdict(10, 5.0, 2.0, 12, {"E": 10.0, "L": 60.0}, mins)[0], "UNTESTABLE")
+
+
+class TestStageABRecorded(unittest.TestCase):
+    """The recorded run (findings §26): valid, no pass, all five unit types excluded."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        with ab.RESULTS_PATH.open(encoding="utf-8", newline="") as f:
+            cls.rows = {r["unit"]: r for r in csv.DictReader(f, delimiter="\t")}
+
+    def test_recorded_headline(self) -> None:
+        self.assertEqual(list(self.rows), list(ab.UNITS))
+        self.assertTrue(all(r["verdict"] == "EXCLUDED" for r in self.rows.values()))
+        self.assertLess(max(abs(float(r["z_null"])) for r in self.rows.values()), 3.0)
+        for r in self.rows.values():                     # LP2 sits below the null maximum and both bounds
+            self.assertLess(int(r["K_LP2"]), int(r["null_max"]))
+            self.assertLess(int(r["K_LP2"]), min(float(r["E_lower"]), float(r["L_lower"])))
+
+    def test_lp2_agreements_and_analytic_means_recompute(self) -> None:
+        for u in ab.UNITS:
+            row = self.rows[u]
+            self.assertEqual(ab.agreements(LAYOUT.runes, LAYOUT.positions[u]), int(row["K_LP2"]), u)
+            self.assertAlmostEqual(ab.analytic_mean(LAYOUT.unit_lengths[u]), float(row["analytic_mean"]), delta=6e-4)
+            se = float(row["null_sd"]) / np.sqrt(ab.NULL_DRAWS)
+            self.assertLessEqual(abs(float(row["null_mean"]) - float(row["analytic_mean"])), 3 * se, u)
 
 
 if __name__ == "__main__":

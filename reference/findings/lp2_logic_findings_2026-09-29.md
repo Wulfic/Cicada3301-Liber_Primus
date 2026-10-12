@@ -33,6 +33,7 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 | C19 | Under Quagmire with named keyword alphabets (34 LP keywords, K and K⁻¹, all 314,432 triples, any mode and offset) the key is not English (runes, prime values, Latin letters) or decimal digits; hex is out for 314,001 members; uniform A–Z for 103,864 | best member ≤ −27.9 (English, digits) vs exclude ≤ −10; no lead ≥ +10 in any family | `test_lp2_exclusions_recompute`, `test_recorded_survivors` | 20 |
 | C20 | No word-deterministic cipher (cipher word = T(plaintext word): a key restarting at every word, a word codebook) and no fixed substitution of aligned n-rune blocks (Hill, polygraphic codebook) for n = 2–4 at any offset, or n = 5 in the continuous stream | repeated pairs at the flat-null level (\|z\| ≤ 1.38); words within sections 25 vs null 20.0 and English ≥ 3,433 (log-scale 5σ bound); 26 of 72 cells excluded, 46 untestable | `test_recorded_headline`, `test_lp2_counts_and_analytic_means_recompute` | 24 |
 | C21 | No keyless sliding-context cipher c_i = F(p_{i−a}, …, p_{i+b}), any fixed F, with w = a + b ≤ 2 (context restarting at each section) or w ≤ 1 (continuous stream): no plaintext-selected alphabet from a 1-rune context, no plaintext autokey with arbitrary tables at lag 1 | sliding n-gram repeats at the flat-null level (\|z\| ≤ 1.26); e.g. K_4 cont 129 vs null 126.3, controls ≥ 4,013 at w = 1; 5 of 26 (mode, w) cells excluded, 21 untestable | `test_recorded_headline`, `test_every_exclusion_follows_the_declared_rule` | 25 |
+| C22 | The key (or alphabet sequence σ_t) does not restart at every section, paragraph, clause, written line or page, under any alphabets, key in step | same-position agreements at the flat null (\|z\| ≤ 2.98, all below the null max); a restart adds ≥ 600 (sections) to ≥ 78,000 (lines) at the 5σ bound; 5 of 5 unit types excluded | `test_recorded_headline`, `test_lp2_agreements_and_analytic_means_recompute` | 26 |
 
 **The leak** (how the 86 survivors are spread, §7):
 
@@ -1096,3 +1097,61 @@ w = 5–7, but it would be a new declared rule with its own false-exclusion boun
 - Contexts that mix plaintext and ciphertext. Pure ciphertext selection is C12.
 - Tables that also depend on position.
 - Homophonic (random) choices.
+
+## 26. No key restarts at a section, paragraph, clause, line or page (2026-10-12, TODO stage AB)
+
+Declared in `TODO.md` (`78f7c37`) before any code existed. The unit map (`Corpus.rune_units`) and the runner were committed
+before LP2 was scored (`a2512ca`). Run: `python -m tools.run_stage_ab` (about 15 seconds). Rows are in
+[`stage_ab_results.tsv`](stage_ab_results.tsv) and [`stage_ab_controls.tsv`](stage_ab_controls.tsv). Tests:
+`tests/test_stage_ab.py`, and `test_rune_units_reproduce_the_runes_and_word_fields` for the unit map.
+
+**The question.** Does the key, or the alphabet σ_t, start again at the first rune of every section, paragraph, clause,
+written line or page? This is the hand scheme of one pad sheet reused for every page or line. It also covers "keys shared
+between sections", which tracker §4.1 had only from the community ledger. C9 cannot see it, because unit lengths vary
+(lines 22–26 runes, pages 263–277). C20 covers restarts at every word only.
+
+Under such a key, two units agree at in-unit position t exactly when their plaintexts do, whatever the alphabets are.
+The test is therefore label-free: additive, Quagmire and any tabula alike.
+
+**Design.**
+- **Statistic:** K_u = Σ_t Σ_v C(m_{t,v}, 2), the pairs of units of type u that carry the same rune at the same in-unit
+  position.
+- **Units,** read at rune level because rune words wrap across lines and pages: 9 sections, 15 paragraphs, 168 clauses,
+  594 lines and 55 pages.
+- **Null:** 1,000 flat draws with stage Z's anti-doublet rule. Analytic mean Σ_t C(m_t, 2)/29.
+- **Positive controls:** 200 Emerson and 200 shuffled solved-LP streams per unit type, each enciphered with a fresh
+  random alphabet per in-unit position, shared by every unit, then given the rule.
+- **Rule:** stage Z's log-scale 5σ bound.
+
+**Validity: the run is valid.** Every null mean lies within 3 s.e. of the analytic mean. For example, lines give
+125,456.66 against 125,467.66 (s.e. 11.1). A 50-draw `--quick` run had shown lines 2.1 s.e. off. A 400-draw check of the
+null alone, without LP2, gave 0.7 s.e. with the rule, so it was chance. The runner was not changed.
+
+**Result: nothing passes. All five unit types are excluded (prediction met).**
+
+| Unit | Units | K_LP2 | Null mean ± sd (max) | Positives E / L, mean (min) | Lower bound E / L | z |
+|---|---|---|---|---|---|---|
+| section | 9 | 1,125 | 1,145.5 ± 33.9 (1,278) | 2,013 / 2,016 (1,874 / 1,889) | 1,755 / 1,804 | −0.60 |
+| paragraph | 15 | 1,484 | 1,525.3 ± 38.3 (1,642) | 2,676 / 2,691 (2,482 / 2,522) | 2,365 / 2,435 | −1.08 |
+| clause | 168 | 20,028 | 19,873.7 ± 140.7 (20,430) | 34,903 / 35,036 (33,892 / 34,233) | 32,271 / 33,743 | 1.10 |
+| line | 594 | 126,508 | 125,456.7 ± 352.5 (126,575) | 220,263 / 221,020 (214,699 / 217,972) | 203,912 / 216,067 | 2.98 |
+| page | 55 | 10,751 | 10,726.0 ± 100.5 (11,028) | 18,830 / 18,920 (18,249 / 18,509) | 17,307 / 18,159 | 0.25 |
+
+**The line cell, disclosed.** LP2's line count is the largest deviation: z = 2.98, one-sided normal p ≈ 0.0014, or about
+0.007 over the 5 cells. It is below the null's own maximum of 1,000 draws and far below the PASS line. The excess is
+about 1,050 agreements, roughly 1 % of what a line-restart key adds (≈ 95,000). So it is not a restarting key. It is
+recorded and not interpreted. Any reading of it, such as localising it by page or by gap between lines, would need its
+own declared test.
+
+**Reading.**
+- **C22:** the key, or the alphabet sequence, does not restart at sections, paragraphs, clauses, written lines or pages.
+  This holds under any alphabets, with the key in step.
+- Together with C20 (words) and C9 (global periods), no written unit of the book resets the key.
+- The ledger's "keys shared between sections" is now test-backed, for straight and mixed alphabets alike.
+
+**What this does not cover.**
+- A restart with a per-unit shift (c = σ_t(p) + a_unit). That breaks agreement but keeps the shape of the differences.
+- Restarts counted from a unit's end.
+- Restarts every k-th unit only.
+- A drifting key (C14 already excludes the one drifting rule proposed so far).
+- Key reuse at a free offset, and periods over 1,000 (open, findings §8 covers lags ≤ 1000).

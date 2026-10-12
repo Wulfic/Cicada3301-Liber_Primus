@@ -9,59 +9,7 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-### AB — a key that restarts at every section, paragraph, clause, line or page (2026-10-12)
-
-**Goal.** One label-free test of every cipher whose key restarts at the start of each written unit: the same key value
-(or the same alphabet) at in-unit position t in every unit. This is a natural hand scheme, the same pad sheet for every
-page or line. It is also the "keys shared between sections" claim that tracker §4.1 takes from the ledger without a
-test here. Stage Z left "blocks restarting at lines or pages" open.
-
-**Model.** c = σ_{t}(p) at in-unit position t, where t counts runes from the unit's first rune, σ_t is any alphabet
-(additive c = p + k_t, Quagmire, any tabula), and the same σ_t is used in every unit. The anti-doublet rule follows (a
-would-be doublet re-drawn with prob. 0.81, independent of the key, so the key stays in step). Units, each read from
-`data/canonical/` through `tools/lpcore` at rune level (rune words wrap across lines and pages):
-- section (`$`): 9 units, median 1,524 runes;
-- paragraph (`&`): 15 units, median 693;
-- clause (`.`, `&` or `$`): 168 units, median 56;
-- line (`/`): 594 units, median 22;
-- page (`%`, the scan): 55 units, median 263.
-
-**Not already excluded because:** C9 tests a global period. Unit lengths vary (lines 22–26, pages 263–277), so a key
-restarting per unit is not periodic. C20 covers restarts at every word only. The section version rests on the ledger
-alone.
-
-**Statistic (label-free).** K_u = Σ_t Σ_v C(m_{t,v}, 2), where m_{t,v} is the number of units of type u whose rune at
-in-unit position t is v. That is the number of pairs of units that agree at the same in-unit position. Under the model,
-equal plaintext at the same t gives equal cipher under any σ_t, so each pair agrees with probability Σq² ≈ 0.0617
-(LP-English) instead of 1/29 ≈ 0.0345. Same-position pairs: sections 33,241, paragraphs 44,235, clauses 576,280,
-lines 3,638,562, pages 311,132. That gives 5 cells.
-
-**Null.** 1,000 seeded flat draws of LP2's 12,956 runes with stage Z's anti-doublet rule within each section, cut into
-the same units. Per cell: μ₀, σ₀ (floor 1), max. Analytic mean: Σ_t C(m_t, 2)/29.
-
-**Positive controls, per unit type.** 200 draws for each of stage Z's two sources: (E) contiguous Emerson and (L) solved-LP
-words in random order, as one 12,956-rune stream cut into LP2's units. Each is enciphered with a fresh random alphabet
-σ_t per in-unit position, shared by every unit, then given the rule within each section.
-
-**Declared rule** (written before the unit map is coded and before LP2 is scored):
-- lower = exp(m − 5s) − 1 on ln(K + 1) over a source's draws (stage Z's bound). **Testable** iff, for both sources,
-  lower > the null max and every draw > the null max. **Excluded** iff testable and K_LP2 < lower for both sources.
-- **PASS (lead → lp-claim-audit)** iff K_LP2 > the null max and (K_LP2 − μ₀)/σ₀ ≥ 6.
-- **Run valid** iff each null mean lies within 3 s.e. of the analytic mean. Otherwise every row is VOID.
-
-**Expected.** Excess ≈ 0.027 per same-position pair, so about 900 (sections) to 99,000 (lines) agreements over the null,
-at z ≈ 27–280. All 5 cells testable. LP2 is expected at the null (the ledger claims so for sections), so no PASS and 5
-exclusions.
-
-**Not doing.** A key restarting with a per-unit shift (c = σ_t(p) + a_unit, which breaks agreement but not the shape of
-differences). Restarts aligned to the unit's end. Restarts every k-th unit. Key reuse at a free offset and periods over
-1,000 (the next stage).
-
-**Code.** New `Corpus.rune_units()` in `tools/lpcore/corpus.py` (per-rune segment, paragraph, clause, line and page ids,
-tested to reproduce `all_runes` and the word fields). Runner tools/run_stage_ab.py (--quick scores no LP2 runes),
-TSVs reference/findings/stage_ab_results.tsv and stage_ab_controls.tsv, test tests/test_stage_ab.py, findings §26,
-C22 if anything is excluded. **Blast radius:** one new read-only method in lpcore, plus additive files.
-**Rollback:** git revert.
+*(none. The next research step is MASTER_TRACKER §1. Plan it here before starting.)*
 
 ## Owner items
 
@@ -75,6 +23,7 @@ C22 if anything is excluded. **Blast radius:** one new read-only method in lpcor
 
 | Date | Stage | Result | Commits |
 |---|---|---|---|
+| 2026-10-12 | **AB** key restarting at written units | Declared first (`78f7c37`); `Corpus.rune_units` and the runner committed before LP2 was scored (`a2512ca`). Label-free K_u = pairs of units agreeing at the same in-unit position, for 9 sections, 15 paragraphs, 168 clauses, 594 lines and 55 pages. 1,000 flat nulls; 200 Emerson and 200 shuffled solved-LP controls per unit, each with a fresh alphabet per in-unit position shared by all units. Valid (a 50-draw `--quick` line offset of 2.1 s.e. was checked on 400 null-only draws, 0.7 s.e.; runner unchanged). **No pass; all 5 excluded (C22)**, prediction met. Line z = 2.98, below the null maximum: recorded, not interpreted → findings §26 | `78f7c37` `a2512ca` + this |
 | 2026-10-12 | **AA** keyless sliding-context ciphers | Declared first (`5364609`); runner committed unchanged before LP2 was scored (`eacdc01`). Any c_i = F(plaintext window of width w), no key, keeps the plaintext's (n + w)-window repeats as cipher n-gram repeats. K_n = separated pairs of equal sliding n-grams, n = 3–7, sec and cont: 10 cells. 1,000 flat nulls; 200 Emerson and 200 shuffled solved-LP controls per (mode, w = 0–12), each with a fresh random permutation per context. Valid (null means within 3 s.e. of analytic for n ≤ 5). **No pass; LP2 at the null in all 10 cells (\|z\| ≤ 1.26). C21:** w ≤ 2 (sec) and w ≤ 1 (cont) excluded, 21 widths untestable. Declared expectation "excluded up to w ≈ 4–7" failed: Emerson's right tail holds the log-scale bound down, although every draw clears the null up to w = 7 (observation only). Verdicts TSV added to the outputs while writing the runner (tabulation only) → findings §25 | `5364609` `eacdc01` + this |
 | 2026-10-01 | **Z** word and block codebooks | Declared first (`be4a200`, red on the docs test for backticked future paths, fixed in `3015705`). K = pairs of equal units, kept exactly by any word- or block-deterministic table. 72 cells: Zw within sections and across LP2; Zb n = 2–8 at every offset, per section and continuous. 1,000 flat nulls in LP2's word lengths, plus 200 Emerson and 200 shuffled solved-LP controls per cell, with the 0.81 re-draw rule. Amended before LP2 was scored (`5298559`): μ − 5σ became 5σ on ln(K + 1), because `--quick` showed right skew. Valid (null means within 3 s.e. of the exact Markov E[K]). **No pass; LP2 at the null in every cell (\|z\| ≤ 1.38). C20:** 26 excluded (Zw ×2, n = 2–4 all offsets, n = 5 continuous ×5 and sec a = 2), 46 untestable (n ≥ 6, four n = 5 sec offsets). Prediction met → findings §24 | `be4a200` `3015705` `5298559` + this |
 | 2026-10-01 | **Y** grid under long byte keys | Declared first (`edd9c53`). The 6 long byte sources on disk (3 `.bin` payloads, hint, `page_00` hex, 256-byte second-onion hex) as running keys on the grid, every cyclic phase, in step, readings R / R-rev / C / C-rev, operations ⊕, g − k, g + k, k − g: 2,865,136 trials. Statistic D = distinct bytes, with an exact null (Stirling numbers); PASS at D ≤ 120 (3.79e-17 per trial). Valid: 24 / 24 plants found at their cell (D 16–64), 0 / 18 negatives, mean D 162.002. **No pass; all 96 cells excluded**, min D 139. Erratum: the declared null minimum "131–136" is about 136–141. k − g duplicates g − k in D (bijection), disclosed → findings §23 | `edd9c53` + this |
