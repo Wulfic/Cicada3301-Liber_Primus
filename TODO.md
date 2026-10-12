@@ -9,7 +9,44 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-*(none. The next research step is MASTER_TRACKER §1. Plan it here before starting.)*
+### AG — constants and number streams written in base 29 as the key (2026-10-12)
+
+**Goal.** Test one named-generator family (tracker next action 2, catalog row 22). It fits every constraint on the key
+without a mapping: base-29 digits are key values 0–28 directly, near-flat (C10, C13, C16) and aperiodic (C9, C23, C25).
+Cicada's own keys came from the book's mathematics: primes, φ(p), and "the primes are sacred".
+
+**Sources (10, declared now, each computed exactly with integer arithmetic, first digit = the integer part):**
+- **Constants:** π, e, φ = (1 + √5)/2, √2, √3, ln 2, √3301.
+- **Copeland–Erdős in base 29:** the base-29 digits of 2, 3, 5, 7, 11, … concatenated.
+- **Champernowne in base 29:** the base-29 digits of 1, 2, 3, … concatenated.
+- **Totient stream:** the base-29 digits of φ(p) = p − 1 for p = 2, 3, 5, … concatenated.
+
+**Model.** Stage R's: c = p ± k or Beaufort, with the key read from the source starting at an unknown offset
+s ∈ [0, 1000) (uniform prior, `detect.log_lr(starts=)`, computed by `fastdetect`), plus a shift in Z₂₉. It is
+drift-tolerant, so the anti-doublet rule may consume key values or not. Alignments: each of the 9 sections from its own
+first rune (the key restarts per section) and segments 7–15 continuous. Family: 10 sources × 3 modes × 29 shifts × 10
+alignments = 8,700 decodes.
+
+**Declared rule** (written before the runner exists and before LP2 is scored):
+- **PASS (lead → lp-claim-audit)** iff log LR ≥ 30 (detect.THRESHOLD; family bound 8,700 · e^−30 ≈ 8 × 10⁻¹⁰).
+- **Excluded** for a source, alignment and mode iff every shift's decode is ≤ −10 and the positive controls pass.
+- **Controls** (stage R's): solved plaintext at 729 and 3,316 runes, enciphered with each source from a random start in
+  [0, 1000), `encrypt_dodging` keep 0.19, rekey "fresh" and "next". Positives must be ≥ 30 and negatives (random keys)
+  < 30. A source failing its controls is untestable.
+- **Digit checks (tests):** π and e to 60 decimal places against their known expansions, the base-29 digits
+  reconstructing the same integer, and Copeland–Erdős reconstructing the primes.
+
+**Expected.** No PASS: these are guesses with a low prior, and the ledger's 46 integer sequences covered some of this
+ground in other bases. Controls pass at hundreds of nats, and real sections decode at about −0.13 nats per rune, so
+nearly all cells are excluded.
+
+**Not doing.** Other bases. Reading digits backwards. Offsets past 1,000 (a later start is a different hypothesis with
+a different prior). γ and ζ(3), which need a series library.
+
+**Code.** New functions keys.base_digits and keys.constant_digits (exact, tested) in `tools/lpcore/keys.py`. Runner
+tools/run_stage_ag.py, TSVs reference/findings/stage_ag_candidates.tsv and stage_ag_controls.tsv, test
+tests/test_stage_ag.py, findings §31, C27 if anything is excluded. **Blast radius:** two new functions in lpcore, plus
+additive files. **Rollback:** git revert.
 
 ## Owner items
 
