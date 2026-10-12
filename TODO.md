@@ -9,37 +9,7 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-### AE — periodic keys under any alphabets, every lag of the continuous stream (2026-10-12)
-
-**Goal.** The label-free twin of C23. C23 (stage AC) excludes periods 11–11,781 for straight alphabets only. C9 is
-label-free but stops at lag 1000, within sections. A periodic key that selects any alphabet, c_i = σ_{k_i}(p_i) with
-k_{i+L} = k_i (Quagmire, a random tabula, any table), makes c_i = c_{i+L} exactly when p_i = p_{i+L}. That happens at the
-plaintext's agreement rate Σq² ≈ 0.062, against 1/29 for a flat cipher, whatever the alphabets.
-
-**Model.** c_i = σ_{k_i}(p_i), with k periodic of period L through segments 7–15 read as one stream, in step. The
-anti-doublet rule re-draws independently of the key (C14).
-
-**Statistic.** k(L) = #{t : c_t = c_{t+L}} over n(L) = 12,956 − L pairs, for L = 11…12,945 (12,935 lags), computed
-exactly (FFT, rounded to integers, checked against direct counts).
-
-**Declared rule** (written before the runner exists and before LP2 is scored):
-- **PASS (lead → lp-claim-audit)** iff the binomial upper tail P(X ≥ k | n, p₀) ≤ 0.01 / 12,935, where
-  p₀ = `stats.repeat_probability` of the LP2 stream itself (C9's null).
-- **Excluded** iff the binomial lower tail P(X ≤ k | n, p_H) ≤ e^−10, with p_H = 0.050. That is below both sources' Σq²
-  (0.0622 solved LP, 0.0619 Emerson) and below the lowest of 200 Emerson windows at lag 5000 (0.0544, measured on
-  controls only).
-- **Valid** iff 20 flat null streams with the rule give no PASS at any lag. Controls: a random tabula keyed by a random
-  period-P key, P ∈ {1033, 1729, 3301, 6000, 9000}, 10 draws each from E and L, must give 0 exclusions at their own
-  period (otherwise every exclusion is VOID). They must also PASS at P ≤ 6000 (power).
-
-**Expected** (arithmetic, no LP2): at a flat rate of 0.0345, the exclusion needs n ≳ 3,300 pairs, so periods up to about
-9,600. Expect no PASS (C9 is flat to 1000, and C23 found nothing to 11,781) and exclusions for L ≲ 9,600.
-
-**Not doing.** A drifting key. Reused stretches under mixed alphabets: a windowed coincidence scan, weaker per pair.
-
-**Outputs.** Runner tools/run_stage_ae.py (--quick: nulls and controls only), TSVs reference/findings/stage_ae_lags.tsv
-and stage_ae_controls.tsv, test tests/test_stage_ae.py, findings §29, C25. **Blast radius:** additive only.
-**Rollback:** git revert.
+*(none. The next research step is MASTER_TRACKER §1. Plan it here before starting.)*
 
 ## Owner items
 
@@ -53,6 +23,7 @@ and stage_ae_controls.tsv, test tests/test_stage_ae.py, findings §29, C25. **Bl
 
 | Date | Stage | Result | Commits |
 |---|---|---|---|
+| 2026-10-12 | **AE** periodic keys under any alphabets | Declared first (`434060d`); runner committed before LP2 was scored (`fb202c8`, the full suite was run after that commit rather than before it: green, 244). Exact lag agreements over the continuous stream, binomial PASS and exclusion rules. Valid; controls 100 / 100 caught, 0 excluded (lowest rate 0.0520 vs p_H 0.050, disclosed). **No pass. C25:** periods 11–4,907 all excluded, 10,030 / 12,935 lags overall. Declared "exclusions for L ≲ 9,600" met in part: complete only to 4,907, because by-chance high lags leave gaps → findings §29 | `434060d` `fb202c8` + this |
 | 2026-10-12 | **AD** ciphertext as its own key | Declared first (`03dad0b`); runner committed before LP2 was scored (`1b0007a`). Plaintext-law score (detect's emission, 0.312 nats per pair), 4 relations × 29 shifts, F per forward diagonal (autokey at lag L), S best segment forward and reverse. Controls: P_max 12,900, M_min 200. Valid. **No pass** (F 5.30, S 23.16 vs null 23.26). **C24:** all 1,490,948 hypotheses at L ≤ 12,863 excluded. Prediction met. Erratum on the declared family sizes of AC and AD (lag count), no bound changes → findings §28 | `03dad0b` `1b0007a` + this |
 | 2026-10-12 | **AC** key reuse at any lag | Declared first (`b2f22d9`); "sumrev" (Beaufort reflection of the sum law) added before LP2 was scored and committed with the runner (`a11ec86`). Labelled per-pair score, 3 relations × 29 shifts; F per forward diagonal (periodic key, L = 11–12,945), S best segment per forward and reverse diagonal (reused stretch). Controls: P_max 12,500 (all periodic draws F > −10), M_min 3,000 (300 / 300 found; 2,500 missed 2). Valid (4 null scans, F ≤ 10.15, S ≤ 20.39). **No pass** (F 7.05, S 19.86). **C23:** plain periods 11–11,781 excluded, 1033 / 1729 / 3301 under all 87 relations; 1,081,691 / 1,086,630 hypotheses excluded. Prediction met ("M_min ≈ 2,000–2,500" was one step optimistic) → findings §27 | `b2f22d9` `a11ec86` + this |
 | 2026-10-12 | **AB** key restarting at written units | Declared first (`78f7c37`); `Corpus.rune_units` and the runner committed before LP2 was scored (`a2512ca`). Label-free K_u = pairs of units agreeing at the same in-unit position, for 9 sections, 15 paragraphs, 168 clauses, 594 lines and 55 pages. 1,000 flat nulls; 200 Emerson and 200 shuffled solved-LP controls per unit, each with a fresh alphabet per in-unit position shared by all units. Valid (a 50-draw `--quick` line offset of 2.1 s.e. was checked on 400 null-only draws, 0.7 s.e.; runner unchanged). **No pass; all 5 excluded (C22)**, prediction met. Line z = 2.98, below the null maximum: recorded, not interpreted → findings §26 | `78f7c37` `a2512ca` + this |

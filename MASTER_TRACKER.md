@@ -4,7 +4,7 @@
 and what to do next. Every claim on it is backed by a test or a linked document. If something here
 disagrees with the tests, the tests win, and this page needs fixing.
 
-**Last updated:** 2026-10-12 · **Tests:** 247, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
+**Last updated:** 2026-10-12 · **Tests:** 250, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
 
 ---
 
@@ -14,7 +14,7 @@ disagrees with the tests, the tests win, and this page needs fixing.
 match their scans, so most older "discoveries" were artifacts (see §4.3). Now one canonical transcription
 (`data/canonical/`) is read by one tested loader (`tools/lpcore`), and every solved section decrypts from it exactly.
 
-The unsolved LP2 cipher is pinned down by twenty-four constraints (§3.2, C1–C24; each with its test in the
+The unsolved LP2 cipher is pinned down by twenty-five constraints (§3.2, C1–C25; each with its test in the
 [findings §0 register](reference/findings/lp2_logic_findings_2026-09-29.md#0-constraint-register)). In short: an additive
 stream over mod 29, plus an anti-doublet re-keying rule that leaks about 19 % of the time.
 - **The key stream** is near-flat mod 29 and aperiodic. Its values come from an alphabet of at least ~30 symbols,
@@ -82,8 +82,11 @@ lag 11–12,945 is scored for a key shared up to a constant shift or reflection,
 Stage AD (findings §28) asks whether LP2's own ciphertext is the key at a long lag or read backwards. That is an
 autokey, which C11 and C12 covered only to lag 1000. Every autokey hypothesis at lags 11–12,863 is excluded, under all
 116 shift and reflection variants. No reused ciphertext stretch of ≥ 200 runes keys another (C24).
+Stage AE (findings §29) is the label-free twin of C23. A periodic key choosing any alphabets makes runes one period apart
+agree as often as the plaintext does. LP2's agreement rate is flat at every lag. Every period 11–4,907 is excluded under
+any alphabets, along with 10,030 of the 12,935 lags up to 12,945, including 1033, 1729 and 3301 (C25).
 
-**Next actions, in order** (all low prior; detail in [findings §6–§28](reference/findings/lp2_logic_findings_2026-09-29.md)):
+**Next actions, in order** (all low prior; detail in [findings §6–§29](reference/findings/lp2_logic_findings_2026-09-29.md)):
 
 1. **The grid's 256 bytes** are still undeciphered. Simple readings are exhausted (findings §12–§13, §22), and so are
    running keys from the byte material on disk (§23). What is left needs a key for a modern cipher, an RSA modulus, a
@@ -156,7 +159,7 @@ Errata, each with its evidence in `solved.py`: **WIDSOM** is the book's own typo
 
 Everything else is flat: IoC, rune frequencies, and repeats at lags 2–10. The constraints derived from that
 are indexed, one row each with its test, in the [findings §0 register](reference/findings/lp2_logic_findings_2026-09-29.md#0-constraint-register).
-The evidence is in findings §2 (C1–C7), §7 (C8), §8 (C9), §9 (C10–C11), §10 (C12), §11 (C13), §14 (C14), §15 (C3's test, C15), §18 (C16), §19 (C17–C18), §20 (C19), §24 (C20), §25 (C21), §26 (C22), §27 (C23) and §28 (C24):
+The evidence is in findings §2 (C1–C7), §7 (C8), §8 (C9), §9 (C10–C11), §10 (C12), §11 (C13), §14 (C14), §15 (C3's test, C15), §18 (C16), §19 (C17–C18), §20 (C19), §24 (C20), §25 (C21), §26 (C22), §27 (C23), §28 (C24) and §29 (C25):
 
 - The anti-doublet rule acts on the continuous rune stream and ignores word boundaries (C1).
 - There is no plaintext-F passthrough, unlike LP1 (C2). The surviving doublets mark no single plaintext letter (C3):
@@ -205,6 +208,9 @@ The evidence is in findings §2 (C1–C7), §7 (C8), §8 (C9), §9 (C10–C11), 
 - **The ciphertext is not its own key (C24):** no autokey c_j = p_j ± f(c_i) or Beaufort, with f a shift or reflection,
   at any lag 11–12,863 in either reading direction, and no reused ciphertext stretch of ≥ 200 runes (findings §28).
   This extends C11 past lag 1000 for straight alphabets.
+- **No periodic key under any alphabets (C25):** a periodic key selecting any alphabets (Quagmire, any tabula) is excluded
+  for every period 11–4,907 and for 10,030 of the 12,935 lags up to 12,945 in the continuous stream, label-free
+  (findings §29). This extends C9 from 1000 to 4,907 and across section boundaries.
 
 **Reading:** a rule applied at the output of a non-periodic additive stream. It is not a property of the key
 text, of word structure, or of any plaintext letter.
@@ -300,6 +306,8 @@ RANDOM.ORG and RAND archives (~14.5 billion offsets). Both conclude "OTP-class" 
 - **LP2's own ciphertext as the key** (C24, findings §28): every autokey at lags 11–12,863 forwards or backwards, under any
   shift or reflection, and every reused ciphertext stretch of ≥ 200 runes. Mixed alphabets past lag 1000 and nonlinear
   autokeys remain **open**.
+- **Periodic keys selecting any alphabets** (C25, findings §29): every period 11–4,907, most up to 10,000, and 1033 / 1729 /
+  3301, label-free. The scattered open lags above 4,907 and a drifting key remain **open**.
 - The "Echo446Ghq full solution" is debunked ([analysis](reference/community/echo446ghq_analysis.md)).
 
 ### 4.3 Invalid claims from before 2026-09-29
@@ -349,6 +357,7 @@ The ordered list is in §1. These questions are also open and cheap to state:
 
 | Date | What happened | Commits |
 |---|---|---|
+| 2026-10-12 | **Periodic keys, any alphabets** (TODO AE): exact lag agreement counts k(L) on the continuous stream, L = 11–12,945; PASS by binomial upper tail ≤ 0.01 / 12,935 under LP2's Σf², exclusion by lower tail at p_H = 0.050 ≤ e^−10. Valid (20 nulls no PASS; 100 periodic-tabula controls all PASS, none excluded; lowest control rate 0.0520, a thin margin, disclosed). No pass (best lag 6002, p 3.1e-5). **C25:** every period 11–4,907 excluded, 10,030 of 12,935 lags overall | `434060d` `fb202c8` + this commit |
 | 2026-10-12 | **Ciphertext as its own key** (TODO AD): stage AC's scan with the plaintext law (detect's emission) in place of the difference law, 4 relations × 29 shifts, forward and reverse. Valid (null F ≤ 7.18, S ≤ 23.26). No pass (F 5.30, S 23.16). **C24:** every autokey hypothesis at lags 11–12,863 excluded (1,490,948 of them); reused ciphertext stretches ≥ 200 runes found 400 / 400. Erratum: stage AC's and AD's declared family sizes miscounted the lags (12,945 for 12,935); bounds unchanged | `03dad0b` `1b0007a` + this commit |
 | 2026-10-12 | **Key reuse at any lag** (TODO AC): LP2 as one stream, a labelled score per pair (difference or sum law of LP-English), 3 relations × 29 shifts. F = whole forward diagonal (periodic key, L = 11–12,945, 1,126,215 hypotheses), S = best segment on every forward and reverse diagonal (a reused stretch). "sumrev" (Beaufort reflection) added before LP2 was scored. Valid (4 full null scans: F ≤ 10.15, S ≤ 20.39). No pass (best F 7.05, S 19.86). **C23:** plain periods 11–11,781 all excluded, 1033 / 1729 / 3301 under every relation; 1,081,691 of 1,086,630 trusted hypotheses at F ≤ −10; reuse ≥ 3,000 runes found 300 / 300. lore.md's "3301 / 1033 ✗ as a period" was wrong before this stage and is now true | `b2f22d9` `a11ec86` + this commit |
 | 2026-10-12 | **Key restarts at written units** (TODO AB): K_u = pairs of units agreeing at the same in-unit position, label-free. New `Corpus.rune_units` (rune-level ids, since rune words wrap across lines and pages). 5 cells (9 sections, 15 paragraphs, 168 clauses, 594 lines, 55 pages); 1,000 flat nulls, 200 Emerson and 200 shuffled solved-LP controls each. Valid. No pass; **all five excluded (C22)**, prediction met. Line z = 2.98 is the largest deviation, below the null maximum; recorded, not interpreted | `78f7c37` `a2512ca` + this commit |

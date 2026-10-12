@@ -36,6 +36,7 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 | C22 | The key (or alphabet sequence σ_t) does not restart at every section, paragraph, clause, written line or page, under any alphabets, key in step | same-position agreements at the flat null (\|z\| ≤ 2.98, all below the null max); a restart adds ≥ 600 (sections) to ≥ 78,000 (lines) at the 5σ bound; 5 of 5 unit types excluded | `test_recorded_headline`, `test_lp2_agreements_and_analytic_means_recompute` | 26 |
 | C23 | No periodic key with period 11–11,781 in the continuous stream (plain, progressive k + a or reflected a − k per period; straight alphabets, any of c = p ± k or Beaufort), including 1033, 1729 and 3301; no reused key stretch of ≥ 3,000 runes forwards or backwards (power ≥ 0.97) | F ≤ −10 for 1,081,691 of 1,086,630 hypotheses with L ≤ 12,500; best F 7.05 and S 19.86 vs flat-null maxima 10.15 / 20.39 (pass line 30) | `test_recorded_headline`, `test_named_periods_recompute` | 27 |
 | C24 | LP2's own ciphertext is not the key at any lag 11–12,863, forwards or backwards (c = p ± f(c_i) or Beaufort, f a shift or reflection; straight alphabets), and no reused ciphertext stretch of ≥ 200 runes keys another | all 1,490,948 hypotheses at L ≤ 12,863 have F ≤ −10 (1,495,197 of 1,495,240 up to 12,900); best F 5.30 and S 23.16 vs flat-null maxima 7.18 / 23.26 (pass line 30) | `test_recorded_headline`, `test_named_lags_recompute` | 28 |
+| C25 | No periodic key of period 11–4,907 selecting any alphabets (Quagmire, random tabula, any table), key in step, continuous stream; 10,030 of the 12,935 lags 11–12,945 excluded, including 1033, 1729 and 3301 | lag agreement rates at the flat level (best upper p 3.1 × 10⁻⁵ vs 7.7 × 10⁻⁷); lower tail at p_H = 0.050 ≤ e^−10 | `test_recorded_headline`, `test_lp2_agreements_and_verdicts_recompute` | 29 |
 
 **The leak** (how the 86 survivors are spread, §7):
 
@@ -1268,3 +1269,56 @@ reverse. The reverse value sits just under the null maximum of 23.26: noise.
 - Mixed alphabets past lag 1000. C12 is label-free only up to 1000.
 - An autokey through a nonlinear map of c_i, or one keyed by two earlier runes.
 - Reused stretches shorter than ~200 runes. A 100-rune stretch is found 92 % of the time.
+
+## 29. Periodic keys under any alphabets: no period from 11 to 4,907 (2026-10-12, TODO stage AE)
+
+Declared in `TODO.md` (`434060d`) before the runner existed. The runner was committed before LP2 was scored (`fb202c8`).
+Run: `python -m tools.run_stage_ae` (about a minute). Rows are in [`stage_ae_lags.tsv`](stage_ae_lags.tsv) and
+[`stage_ae_controls.tsv`](stage_ae_controls.tsv). Tests: `tests/test_stage_ae.py`.
+
+**The question.** This is the label-free twin of C23. C23 holds for straight alphabets, and C9 is label-free but
+stops at lag 1000 within sections.
+
+A periodic key that picks *any* alphabet, c_i = σ_{k_i}(p_i) with k_{i+L} = k_i, gives c_i = c_{i+L} exactly when
+p_i = p_{i+L}. That covers Quagmire, a random tabula and any table. Two runes one period apart then agree at the
+plaintext's rate (Σq² ≈ 0.062) instead of 1/29.
+
+**Design.**
+- **Statistic:** k(L) = #{t : c_t = c_{t+L}} on the continuous stream, for every L = 11…12,945. The counts are exact (FFT,
+  checked against direct counts by `test_lag_agreements_match_direct_counts`).
+- **PASS:** the binomial upper tail under LP2's own Σf² is ≤ 0.01 / 12,935.
+- **Excluded:** the binomial lower tail at p_H = 0.050 is ≤ e^−10.
+
+**Validity: the run is valid.**
+- **Nulls:** 20 flat streams with the rule give no PASS (smallest p 2.8 × 10⁻⁶ against 7.7 × 10⁻⁷).
+- **Controls:** periodic random tabulae at P = 1033, 1729, 3301, 6000 and 9000 (10 draws from each source). All 100 PASS
+  and none is excluded. Their lowest agreement rate is 0.0520, 0.002 above p_H. That margin is thin and is disclosed:
+  a plaintext less repetitive than any control would weaken the exclusions at the longest lags first.
+
+**Result: nothing passes.** LP2's agreement rate p₀ is 0.03455. The most extreme lag is 6002, with upper p 3.1 × 10⁻⁵,
+which is normal for 12,935 lags.
+
+**Exclusions.**
+
+| Lags | Excluded |
+|---|---|
+| 11–4,907 | 4,897 / 4,897 (all) |
+| 4,908–6,000 | 1,087 / 1,093 |
+| 6,001–8,000 | 1,938 / 2,000 |
+| 8,001–10,000 | 1,570 / 2,000 |
+| 10,001–12,945 | 538 / 2,945 |
+
+In all, 10,030 of 12,935 lags are excluded. The named periods are excluded with large margins: 1033 (lower p 8 × 10⁻¹⁵),
+1729 (1 × 10⁻¹²) and 3301 (6 × 10⁻¹⁵).
+
+**Reading.**
+- **C25:** no periodic key of any period from 11 to 4,907 selects the alphabets, whatever the alphabets are (Quagmire,
+  random tabula, any table), with the key in step in the continuous stream. Most periods up to 10,000 are excluded too.
+  This includes 1033, 1729 and 3301.
+- C9's label-free reach grows from 1000 to 4,907 and now crosses section boundaries.
+- Together with C23 (straight alphabets, to 11,781), the periodic family is closed for every practical period.
+
+**What this does not cover.**
+- A drifting key.
+- Reused stretches under mixed alphabets (a windowed coincidence scan).
+- Periods with too few pairs. The open lags above 4,907 are listed in the TSV.

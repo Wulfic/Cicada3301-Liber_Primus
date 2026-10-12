@@ -1,10 +1,11 @@
 # Attack catalog: cipher family → what distinguishes it → status on LP2
 
-Snapshot 2026-10-12 (C1–C24). **Tracker §3.2 / §4 win over this file.** If you add a constraint, update the
+Snapshot 2026-10-12 (C1–C25). **Tracker §3.2 / §4 win over this file.** If you add a constraint, update the
 matching rows here.
 
 **Periodicity note.** C9 excludes periods ≤ 1000 when the re-key rule keeps the key in step, and C23 extends that to
-≤ 11,781 in the continuous stream (straight alphabets; C9's lag test is label-free). It covers only periods ≤ 25 when
+≤ 11,781 in the continuous stream (straight alphabets; C9's lag test is label-free), and C25 to ≤ 4,907 under any
+alphabets. It covers only periods ≤ 25 when
 the key drifts. The one drifting rule proposed so far (skip to the next key value) is itself excluded by C14.
 So a *new* drifting mechanism would reopen periods 26–1000. Say so when you propose one.
 
@@ -40,7 +41,7 @@ written here, with no test yet. An "arg" row needs a test before it can go in th
 | 21 | Common PRNGs / KDFs; public random archives | — | ✗ | Dukotah ledger (~14.5 billion offsets) |
 | 22 | *Named* custom generator (LFSR with stated taps and seed, hash chain of a stated phrase) | — | ○ | needs exact definition + mod-29 mapping + `detect.log_lr` |
 | 23 | Two or more additive layers | only the sum is visible | constraints apply to the sum | test the composed stream, not one layer |
-| 24 | Per-position alphabet c = σ_{k_i}(p), non-additive | label-free emissions (`alphabets.log_mean_lr`); uneven marginal | ◐ | ✗ any key of period ≤ 1000 in step (C9, §17). ✗ any random tabula keyed by ≤ 153 effective classes, any alignment (C16, §18): primes, letters, corpora, payloads mod 29. Open: > 150-class keys (raw bytes), testable in step only, with flat synthetic negatives |
+| 24 | Per-position alphabet c = σ_{k_i}(p), non-additive | label-free emissions (`alphabets.log_mean_lr`); uneven marginal | ◐ | ✗ any key of period ≤ 1000 in step (C9, §17), ≤ 4,907 in the continuous stream (C25, §29). ✗ any random tabula keyed by ≤ 153 effective classes, any alignment (C16, §18): primes, letters, corpora, payloads mod 29. Open: > 150-class keys (raw bytes), testable in step only, with flat synthetic negatives |
 | 24a | Latin-square tabula (Quagmire I–IV, keyed mixed alphabets) c = π₂(π₁(p) + κ) | none key-free: it is the additive cipher renamed (`quagmire.py`) | ◐ | ✗ English, digit, hex keys under random alphabets (C18, §19); ✗ iid key with V_eff ≥ 17 as sole deficit cause (C17); ✗ English and digit keys under all 314,432 triples of 34 named LP keyword alphabets, hex under all but 431, uniform A–Z under 103,864 (C19, §20). Open: other keywords and keyed-alphabet constructions; uniform-letter keys under the remaining triples (mostly untestable at LP2's length) |
 | 25a | Chain-multiplicative c = c₋₁ + (p − x)·k (doublets mark plaintext x) | doublet count and word positions are x's | ✗ | C3, all 29 letters (findings §15) |
 | 25 | Bitwise ops on 5-bit rune codes (XOR) | produces values 29–31 | arg | needs a stated reduction to 29 values, or it emits impossible runes |
