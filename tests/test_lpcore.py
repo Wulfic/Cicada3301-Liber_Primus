@@ -75,6 +75,27 @@ class TestCorpusStructure(unittest.TestCase):
         # LP2 p0 ends mid-word; the word continues on p1 (…ᚹ% ᚪᛁᛗᛋᚾ-).
         self.assertIn("ᚹᚪᛁᛗᛋᚾ", [x.text for x in CORPUS.rune_words(7)])
 
+    def test_rune_units_reproduce_the_runes_and_word_fields(self) -> None:
+        units = CORPUS.rune_units()
+        self.assertEqual(units["rune"], CORPUS.all_runes())
+        self.assertTrue(all(len(v) == 15933 for v in units.values()))
+        self.assertEqual([r for p in CORPUS.pages for r in p.runes], units["rune"])
+        # The parser's line counter also counts `/` on rune-less lines (number squares), so the ids differ, but each
+        # word's first rune must sit on the parser's line for that word: a one-to-one map between the two numberings.
+        pairs = {(units["line"][w.rune_offset], w.line) for w in CORPUS.rune_words()}
+        self.assertEqual(len({a for a, _ in pairs}), len(pairs))
+        self.assertEqual(len({b for _, b in pairs}), len(pairs))
+        for w in CORPUS.rune_words():
+            self.assertEqual(units["segment"][w.rune_offset], w.segment)
+            self.assertEqual(units["page"][w.rune_offset], w.scan)
+        lp2 = [i for i, s in enumerate(units["segment"]) if 7 <= s <= 15]
+        counts = {k: len({units[k][i] for i in lp2}) for k in ("segment", "paragraph", "clause", "line", "page")}
+        self.assertEqual(counts, {"segment": 9, "paragraph": 15, "clause": 168, "line": 594, "page": 55})
+        for k in ("segment", "paragraph", "clause", "line", "page"):   # every unit is one contiguous run
+            ids = [units[k][i] for i in lp2]
+            runs = sum(1 for i in range(len(ids)) if i == 0 or ids[i] != ids[i - 1])
+            self.assertEqual(runs, counts[k], k)
+
     def test_parser_rejects_malformed_input(self) -> None:
         with self.assertRaises(CorpusError):
             parse_master("no runes at all")
