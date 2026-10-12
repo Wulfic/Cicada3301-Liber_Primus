@@ -9,7 +9,67 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-*(none. The next research step is MASTER_TRACKER §1. Plan it here before starting.)*
+### AA — keyless sliding-context ciphers (2026-10-12)
+
+**Goal.** One key-free test of every cipher in which each cipher rune is a fixed function of a short window of
+plaintext runes and nothing else: no key stream, no position dependence, no ciphertext feedback. Such a cipher sends
+equal plaintext windows of n + w runes to equal cipher n-grams wherever they occur, so it keeps the plaintext's
+repeat count of long windows, whatever its table. Stage Z did this for aligned blocks and words only.
+
+**Model.** c_i = F(p_{i−a}, …, p_{i+b}) with context width w = a + b, w = 0…12, F any fixed table (not necessarily
+injective), followed by the measured anti-doublet rule (a would-be doublet re-drawn uniformly with prob. 0.81, as in
+stage Z). Mode "sec": the context restarts at each section start. Mode "cont": segments 7–15 are one stream.
+This covers:
+- an alphabet chosen by the previous plaintext rune or a 2-rune context (attack catalog row 12, open);
+- plaintext autokey with arbitrary tables (any lag ≤ 12, since F may ignore the runes in between);
+- any sliding polygraphic transform (a Hill-like map applied at every position, not just to aligned blocks);
+- w = 0 is monoalphabetic substitution, already excluded by flatness. It is the known-answer cell.
+
+**Not already excluded because:** C10 and C11 cover additive autokey only, and C18 covers Quagmire autokey only
+under random alphabets, not arbitrary tables. C12 selects the alphabet by ciphertext, not plaintext. C16 covers random
+tables only. C20 covers aligned blocks and whole words, not sliding windows. Catalog row 12 is open.
+
+**Statistic.** K_n = pairs (i, j) with j − i ≥ n of equal cipher n-grams over all sliding windows (overlapping
+windows are left out so the analytic null is exact). Mode "sec": pairs within each section. Mode "cont": pairs over
+the 12,956-rune stream. n = 3…7, so 10 statistic cells, each scored once on LP2. Words and spaces are ignored (C1).
+
+**Null (flat).** 1,000 seeded draws of uniform runes in LP2's section sizes with the same anti-doublet rule
+(stage Z's null_sections). Per statistic cell: mean μ₀, sd σ₀ (floor 1), max.
+
+**Positive controls, per (mode, w, source).** 200 seeded draws for each of 2 sources, as in stage Z: (E) contiguous
+Emerson windows and (L) solved-LP words in random order, cut to LP2's section sizes. Each is enciphered as
+c_i = σ_ctx(p_i), ctx = (p_{i−w}, …, p_{i−1}), padded with a 30th symbol before the context start (each section in
+"sec", the stream start in "cont"). σ_ctx is a fresh uniform random permutation of Z₂₉ for every distinct context in
+every draw. Then the anti-doublet rule is applied within each section. All five K_n are scored on each draw.
+A one-sided context is enough: a two-sided window of the same width w gives the same statistic.
+
+**Declared rule** (written before the runner exists and before LP2 is scored):
+- Per (n, mode, w): lower = exp(m − 5s) − 1, with m and s the mean and sd of ln(K_n + 1) over a source's draws
+  (stage Z's amended bound). **Testable** iff, for both sources, lower > the null's maximum and every draw > the null's
+  maximum. **Excluded** iff testable and K_LP2 < lower for both sources.
+- Per (mode, w): **excluded** if any n excludes it; otherwise **inconclusive** if any n is testable; otherwise
+  **untestable**.
+- Per statistic cell (n, mode): **PASS (lead → lp-claim-audit)** iff K_LP2 > null max and (K_LP2 − μ₀)/σ₀ ≥ 6.
+- **Run valid** iff every statistic cell with n ≤ 5 has a null mean within 3 s.e. of the analytic
+  E[K_n] = (pairs with j − i ≥ n) × P(two windows of n runes are equal) (stage Z's p_equal; the Markov correlation
+  between disjoint windows is O(0.03^gap) and ignored). Otherwise every row is VOID.
+
+**Family.** 10 statistic cells scored once, 130 (n, mode, w) exclusion cells, 26 (mode, w) verdicts. A false PASS
+needs 6σ above the null maximum. A false exclusion needs a 5σ log-scale miss by both sources.
+
+**Expected** (power check on controls only, 3 draws per source, no LP2): plaintext windows of 10, 12 and 14 runes repeat
+about 106–391, 36–126 and 16–51 times in 12,956 runes, against flat 5- and 6-gram nulls near 4 and 0.1. So expect
+w = 0 excluded in both modes, w excluded up to about 4–7, and the rest untestable. **Prior, disclosed:** stage Z
+found LP2's aligned block repeats at the null level (n = 2–8), so LP2 is expected at the null in all 10 statistic cells.
+That gives no PASS, and the new information is the coverage.
+
+**Not doing.** Ciphertext feedback mixed with plaintext context (C12 covers pure ciphertext selection). Keyless tables
+that also depend on position (period P). Contexts wider than 12 runes. Random (homophonic) choices. Any cipher with a
+stream key on top: a fresh key value per rune destroys repeats, and that is the open space this stage leaves.
+
+**Outputs.** A runner tools/run_stage_aa.py (--quick scores no LP2 runes and writes nothing), TSVs
+reference/findings/stage_aa_results.tsv and stage_aa_controls.tsv, a test tests/test_stage_aa.py, findings §25,
+and a new constraint C21 if anything is excluded. **Blast radius:** additive only. **Rollback:** git revert.
 
 ## Owner items
 
