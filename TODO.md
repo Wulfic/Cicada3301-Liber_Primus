@@ -9,7 +9,42 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-*(none. The next research step is MASTER_TRACKER §1. Plan it here before starting.)*
+### AF — a key restarting at every unit with a per-unit shift (2026-10-12)
+
+**Goal.** Close the case C22 (stage AB) left open: the same key restarts at each section, paragraph, clause, line or
+page, but each unit adds its own constant, as in key + page number. c_U[t] = p_U[t] + k[t] + a_U, or Beaufort
+c_U[t] = k[t] + a_U − p_U[t]. The shift a_U breaks AB's same-position agreement. A within-unit difference cancels it:
+δ_U(t, t′) = c_U[t′] − c_U[t] = ±(p_U[t′] − p_U[t]) + (k[t′] − k[t]). Two units then agree on δ(t, t′) exactly when
+their plaintext differences agree, at Σ_d r_d² ≈ 1/29 + 0.0017 (r = LP-English difference law), whatever k and a_U are.
+
+**Statistic.** S_u = Σ_{t < t′, 2 ≤ t′ − t ≤ 300} Σ_v C(m_{t,t′,v}, 2), where m_{t,t′,v} is the number of units of type u with
+δ_U(t, t′) = v. Adjacent positions (t′ − t = 1) are left out, because the doublet rule bends lag-1 differences and LP2's
+rate (0.66 %) differs from the simulated rule's (0.75 %). Gaps are capped at 300 for run time. Units and the rune-level
+map are stage AB's (`Corpus.rune_units`). 5 cells.
+
+**Null.** 200 seeded flat draws of LP2's 12,956 runes with stage Z's rule within sections, in LP2's units. Analytic mean:
+Σ_{t,t′} C(m_{t,t′}, 2) / 29, where m_{t,t′} is the number of units holding both positions.
+
+**Positive controls.** 100 draws per source (E contiguous Emerson, L shuffled solved-LP words). A random k[t] is shared by
+all units, a random a_U is drawn per unit, and the convention is c = p + k + a_U for half the draws and Beaufort for the
+other half. Then the rule.
+
+**Declared rule** (written before the runner exists and before LP2 is scored):
+- lower = exp(m − 5s) − 1 on ln(S + 1) per source. **Testable** iff, for both sources, lower > the null max and every
+  draw > the null max. **Excluded** iff testable and S_LP2 < lower for both sources.
+- **PASS** iff S_LP2 > the null max and (S_LP2 − μ₀)/σ₀ ≥ 6.
+- **Valid** iff every null mean lies within 3 s.e. of the analytic mean.
+
+**Expected** (arithmetic, no LP2 scored): the excess per item is ≈ 0.0017 against 0.0345. Lines give ≈ 176k unit pairs ×
+~200 position pairs, and pages ≈ 1,485 × ~38k, each tens of σ. Sections and paragraphs have few units but long ones.
+Expect all 5 testable, no PASS (AB found LP2 flat) and 5 exclusions.
+
+**Not doing.** Mixed alphabets with a per-unit shift of the key index (σ_{k[t] + a_U}): that does not cancel in a
+difference. Shifts that change within a unit. Gaps over 300.
+
+**Outputs.** Runner tools/run_stage_af.py (--quick: few nulls and controls, no LP2), TSVs reference/findings/stage_af_results.tsv
+and stage_af_controls.tsv, test tests/test_stage_af.py, findings §30, C26. **Blast radius:** additive only.
+**Rollback:** git revert.
 
 ## Owner items
 
