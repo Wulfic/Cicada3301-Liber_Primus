@@ -9,6 +9,38 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
+### AE — periodic keys under any alphabets, every lag of the continuous stream (2026-10-12)
+
+**Goal.** The label-free twin of C23. C23 (stage AC) excludes periods 11–11,781 for straight alphabets only. C9 is
+label-free but stops at lag 1000, within sections. A periodic key that selects any alphabet, c_i = σ_{k_i}(p_i) with
+k_{i+L} = k_i (Quagmire, a random tabula, any table), makes c_i = c_{i+L} exactly when p_i = p_{i+L}. That happens at the
+plaintext's agreement rate Σq² ≈ 0.062, against 1/29 for a flat cipher, whatever the alphabets.
+
+**Model.** c_i = σ_{k_i}(p_i), with k periodic of period L through segments 7–15 read as one stream, in step. The
+anti-doublet rule re-draws independently of the key (C14).
+
+**Statistic.** k(L) = #{t : c_t = c_{t+L}} over n(L) = 12,956 − L pairs, for L = 11…12,945 (12,935 lags), computed
+exactly (FFT, rounded to integers, checked against direct counts).
+
+**Declared rule** (written before the runner exists and before LP2 is scored):
+- **PASS (lead → lp-claim-audit)** iff the binomial upper tail P(X ≥ k | n, p₀) ≤ 0.01 / 12,935, where
+  p₀ = `stats.repeat_probability` of the LP2 stream itself (C9's null).
+- **Excluded** iff the binomial lower tail P(X ≤ k | n, p_H) ≤ e^−10, with p_H = 0.050. That is below both sources' Σq²
+  (0.0622 solved LP, 0.0619 Emerson) and below the lowest of 200 Emerson windows at lag 5000 (0.0544, measured on
+  controls only).
+- **Valid** iff 20 flat null streams with the rule give no PASS at any lag. Controls: a random tabula keyed by a random
+  period-P key, P ∈ {1033, 1729, 3301, 6000, 9000}, 10 draws each from E and L, must give 0 exclusions at their own
+  period (otherwise every exclusion is VOID). They must also PASS at P ≤ 6000 (power).
+
+**Expected** (arithmetic, no LP2): at a flat rate of 0.0345, the exclusion needs n ≳ 3,300 pairs, so periods up to about
+9,600. Expect no PASS (C9 is flat to 1000, and C23 found nothing to 11,781) and exclusions for L ≲ 9,600.
+
+**Not doing.** A drifting key. Reused stretches under mixed alphabets: a windowed coincidence scan, weaker per pair.
+
+**Outputs.** Runner tools/run_stage_ae.py (--quick: nulls and controls only), TSVs reference/findings/stage_ae_lags.tsv
+and stage_ae_controls.tsv, test tests/test_stage_ae.py, findings §29, C25. **Blast radius:** additive only.
+**Rollback:** git revert.
+
 ### AD — the book's own ciphertext as the key, at any lag, forwards or backwards (2026-10-12)
 
 **Goal.** C11 (ciphertext autokey) and C12 (alphabet chosen by c_{i−L}) stop at lag 1000, read forwards. They leave
