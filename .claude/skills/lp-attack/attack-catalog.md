@@ -1,6 +1,6 @@
 # Attack catalog: cipher family → what distinguishes it → status on LP2
 
-Snapshot 2026-10-12 (C1–C27). **Tracker §3.2 / §4 win over this file.** If you add a constraint, update the
+Snapshot 2026-10-12 (C1–C28). **Tracker §3.2 / §4 win over this file.** If you add a constraint, update the
 matching rows here.
 
 **Periodicity note.** C9 excludes periods ≤ 1000 when the re-key rule keeps the key in step, and C23 extends that to
@@ -31,7 +31,7 @@ written here, with no test yet. An "arg" row needs a test before it can go in th
 | 13 | Key from a small alphabet: digits, hex, letters | r = q ⊛ k is uneven | ✗ | C13 |
 | 14 | Key from a wide alphabet: bytes, 00–99, base 60, 000–999 | no marginal power | ◐ | every named source on disk ✗ (stage R §16, grid §12); others need a *named* source + `detect.log_lr(starts=)` |
 | 15 | Integer sequences (46 OEIS-style, raw and chained) | — | ✗ | ledger |
-| 16 | Primes, φ(p), p ± c, 3301 − p; solved text's sums and values | — | ✗ | stage I (§8) |
+| 16 | Primes, φ(p), p ± c, 3301 − p; solved text's sums and values; φ(n), σ(n), Σφ, prime gaps, φ(φ(n)), n·φ(n) | — | ✗ | stage I (§8); C28 (§32) |
 | 17 | Digraphic (Playfair-like; Hill n = 2), any fixed 2-block table | aligned block repeat count K | ✗ | C20 (§24), any offset; also the ledger |
 | 18 | Hill n ≥ 3, any fixed n-block table (ECB codebook) | aligned block repeat count K | ◐ | C20 (§24): ✗ n = 3, 4 at any offset, n = 5 in the continuous stream; n ≥ 6 untestable at LP2's length |
 | 18a | Word-deterministic: key restarting at each word, word codebook, any cipher word = T(plain word) | repeated cipher words | ✗ | C20 (§24): 25 within-section pairs vs flat 20, English ≥ 3,433. Homophonic codebooks ○ |

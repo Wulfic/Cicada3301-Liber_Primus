@@ -9,39 +9,7 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 
 ## Active
 
-### AH — "THE TOTIENT FUNCTION IS SACRED": arithmetic functions mod 29 as the key (2026-10-12)
-
-**Goal.** LP1 says THE PRIMES ARE SACRED / THE TOTIENT FUNCTION IS SACRED (0.1.2.1–0.1.2.2). AN END's key is φ(p) over the
-primes, and stage I excluded that stream and the primes in every mode and shift. The totient of every integer,
-φ(1), φ(2), φ(3), … mod 29, was never tested on canonical data. The archived tracker's "φ(n) for all integers: 0 hits"
-is pre-2026-09-29, fixed-sync and on misaligned pages, so it is not evidence (tracker §4.3).
-
-**Sources (6 sequences × raw and chain = 12 keys, declared now).** Each is taken mod 29. "Chain" is the running sum
-Σ_{j ≤ i} a_j mod 29, as in the ledger's raw and chain forms.
-- φ(n), n = 1, 2, 3, … (Euler's totient);
-- σ(n), the sum of divisors;
-- Σ_{k ≤ n} φ(k) (the totient summatory function; its chain is a double sum);
-- the prime gaps p_{n+1} − p_n;
-- φ(φ(n));
-- n · φ(n).
-The prime-counting function π(n) and d(n) are left out: their values barely change from one n to the next, which C13
-and C14 already constrain.
-
-**Model, rule, controls and alignments:** exactly stage AG's. Unknown start s ∈ [0, 1000) under a uniform prior,
-drift-tolerant `detect.log_lr` via `fastdetect`, 3 modes × 29 shifts × 10 alignments, so 12 × 870 = 10,440 decodes.
-- **PASS** iff ≥ 30 (bound 10,440 · e^−30 ≈ 10⁻⁹).
-- **Excluded** (source, alignment, mode) iff all 29 shifts are ≤ −10 and the source's controls pass. Controls are at
-  729 and 3,316 runes, rekey fresh and next; positives must be ≥ 30 and negatives < 30.
-- A source whose controls fail is untestable. That is likely for any sequence that is far from flat, such as prime
-  gaps, which are always even.
-
-**Expected.** No PASS. The decodes fall at about −0.13 nats per rune, so most cells are excluded.
-
-**Not doing.** Other arithmetic functions. Indices other than n = 1, 2, 3, …. Starts past 1,000.
-
-**Code.** Runner tools/run_stage_ah.py, reusing stage AG's scorer and controls. Sieved sequences are checked against
-direct definitions in tests/test_stage_ah.py. TSVs reference/findings/stage_ah_candidates.tsv and stage_ah_controls.tsv,
-findings §32. **Blast radius:** additive only. **Rollback:** git revert.
+*(none. The next research step is MASTER_TRACKER §1. Plan it here before starting.)*
 
 ## Owner items
 
@@ -55,6 +23,7 @@ findings §32. **Blast radius:** additive only. **Rollback:** git revert.
 
 | Date | Stage | Result | Commits |
 |---|---|---|---|
+| 2026-10-12 | **AH** totient and arithmetic-function keys | Declared first (`17cba27`); runner committed before LP2 was scored (`ce81da6`). 12 keys (φ(n), σ(n), Σφ, prime gaps, φ(φ(n)), n·φ(n); raw and chain), stage AG's family, 10,440 decodes. Controls pass for all 12. **No pass** (best real −47.9). **C28:** all 324 testable cells excluded. Prediction met → findings §32 | `17cba27` `ce81da6` + this |
 | 2026-10-12 | **AG** base-29 constants as the key | Declared first (`7c83e52`); digit generators and runner committed before the full run (`5e8c507`; its `--quick` had scored 120 declared decodes, disclosed). 10 sources × 3 modes × 29 shifts × 10 alignments, starts < 1000. Controls pass for all 10. **No pass** (best real −56.0). **C27:** all 270 testable cells excluded; only segment 10 (9 runes) untestable. Prediction met → findings §31 | `7c83e52` `5e8c507` + this |
 | 2026-10-12 | **AF** shifted restarts | Declared first (`e2e305f`); runner committed before LP2 was scored (`adea288`). Within-unit difference agreement across units, gaps 2–300, 5 unit types; 200 nulls, 100 controls per source (additive and Beaufort, random per-unit shifts). Valid. **No pass; all 5 excluded (C26)**, prediction met → findings §30 | `e2e305f` `adea288` + this |
 | 2026-10-12 | **AE** periodic keys under any alphabets | Declared first (`434060d`); runner committed before LP2 was scored (`fb202c8`, the full suite was run after that commit rather than before it: green, 244). Exact lag agreements over the continuous stream, binomial PASS and exclusion rules. Valid; controls 100 / 100 caught, 0 excluded (lowest rate 0.0520 vs p_H 0.050, disclosed). **No pass. C25:** periods 11–4,907 all excluded, 10,030 / 12,935 lags overall. Declared "exclusions for L ≲ 9,600" met in part: complete only to 4,907, because by-chance high lags leave gaps → findings §29 | `434060d` `fb202c8` + this |

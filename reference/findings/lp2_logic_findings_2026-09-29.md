@@ -39,6 +39,7 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 | C25 | No periodic key of period 11–4,907 selecting any alphabets (Quagmire, random tabula, any table), key in step, continuous stream; 10,030 of the 12,935 lags 11–12,945 excluded, including 1033, 1729 and 3301 | lag agreement rates at the flat level (best upper p 3.1 × 10⁻⁵ vs 7.7 × 10⁻⁷); lower tail at p_H = 0.050 ≤ e^−10 | `test_recorded_headline`, `test_lp2_agreements_and_verdicts_recompute` | 29 |
 | C26 | No additive or Beaufort key restarting at every section, paragraph, clause, line or page with a constant shift per unit (c = p + k[t] + a_unit) | within-unit difference agreements at the flat null (\|z\| ≤ 1.41); a shifted restart adds ≥ 7,000 (sections) to ≥ 28,000 (lines) at the 5σ bound; 5 of 5 excluded | `test_recorded_headline`, `test_lp2_statistics_and_analytic_means_recompute` | 30 |
 | C27 | The key is not the base-29 expansion of π, e, φ, √2, √3, ln 2 or √3301, nor the base-29 concatenation of the primes, the integers or φ(p), from any start < 1000, any mode and shift, per section or continuous, drift-tolerant | best real decode −56.0 (π) vs pass +30; all 270 testable cells ≤ −10; controls ≥ +194.9 | `test_recorded_headline`, `test_best_real_decode_recomputes` | 31 |
+| C28 | The key is not φ(n), σ(n), Σφ(k), the prime gaps, φ(φ(n)) or n·φ(n) mod 29, raw or chained, from any start < 1000, any mode and shift, per section or continuous, drift-tolerant | best real decode −47.9 vs pass +30; all 324 testable cells ≤ −10; controls ≥ +189.7 | `test_recorded_headline`, `test_best_real_decode_recomputes` | 32 |
 
 **The leak** (how the 86 survivors are spread, §7):
 
@@ -1409,3 +1410,43 @@ segment 10's 30 (9 runes, best +0.67), which no detector can test.
 **What this does not cover.**
 - Other bases, other constants, digits read backwards.
 - Starts past 1,000: a later start is a different hypothesis with a different prior.
+
+## 32. "The totient function is sacred": φ(n) and its relatives are not the key (2026-10-12, TODO stage AH)
+
+Declared in `TODO.md` (`17cba27`) before the runner existed. The runner was committed before LP2 was scored (`ce81da6`;
+its `--quick` runs the controls only). Run: `python -m tools.run_stage_ah` (about 30 minutes on 4 cores). Rows are in
+[`stage_ah_candidates.tsv`](stage_ah_candidates.tsv) and [`stage_ah_controls.tsv`](stage_ah_controls.tsv). Tests:
+`tests/test_stage_ah.py`.
+
+**The question.** LP1 says THE PRIMES ARE SACRED / THE TOTIENT FUNCTION IS SACRED. AN END's key is φ over the primes,
+and stage I excluded that stream. The totient of every integer was never tested on canonical data. The archived
+tracker's "φ(n) for all integers: 0 hits" is fixed-sync, on misaligned pages, and not evidence.
+
+**Design.** Six sequences over n = 1, 2, 3, … mod 29, each raw and as a running sum (chain), so 12 keys:
+- φ(n);
+- σ(n);
+- Σ φ(k);
+- the prime gaps;
+- φ(φ(n));
+- n · φ(n).
+
+The sieves are checked against the direct definitions (`test_totient_and_derived_sequences_match_definitions`). The rest
+is stage AG's design: starts < 1000 under a uniform prior, drift-tolerant, 3 modes × 29 shifts × 10 alignments, so
+10,440 decodes.
+
+**Controls.** Each source's own encryption scores ≥ 189.7, random keys ≤ −67.3. All 12 are testable, including the raw
+prime gaps, which put 18.6 % of their values on one residue.
+
+**Result: nothing passes.** The best real decode is −47.9 (φ(φ(n)) chain, section 7). Each source's best real decode lies
+between −47.9 and −67.0, and the continuous stream's best is −1,449.5. Only segment 10's 36 cells (9 runes) are left
+unexcluded.
+
+**Reading.**
+- **C28:** the key is not φ(n), σ(n), Σφ(k), the prime gaps, φ(φ(n)) or n·φ(n) mod 29, raw or chained, read from any start
+  below 1,000, in any mode and shift, per section or continuous, drift-tolerant. 324 of 324 testable cells are
+  excluded.
+- With stage I (primes, φ(p), p ± c), the "sacred" number-theory streams are exhausted as running keys mod 29.
+
+**What this does not cover.**
+- Other arithmetic functions, other indexings (n from another origin past 1,000, or n over the primes beyond φ(p)), and
+  maps other than mod 29.

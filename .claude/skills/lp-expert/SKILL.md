@@ -16,7 +16,7 @@ TEST THE KNOWLEDGE."* (canonical translation, 0.0.0.1–0.0.0.3).
 The snapshot below goes stale. These files do not:
 
 1. `MASTER_TRACKER.md` §1 (where things stand, next actions), §3.2 (the constraints C1…Cn), §4 (ruled out).
-   **If the tracker lists a constraint number higher than C27, this skill is out of date: trust the tracker.**
+   **If the tracker lists a constraint number higher than C28, this skill is out of date: trust the tracker.**
 2. `reference/findings/lp2_logic_findings_2026-09-29.md`. **Its §0 register is the fastest lookup:** one row per
    C- and L-number with the observed value, the declared line, and the test that pins it. The numbered sections
    below it hold the evidence. `tests/test_docs.py` keeps the register complete, so a row you cite exists.
@@ -83,7 +83,7 @@ From `tools/lpcore/solved.py` (tracker §3.1). These are style priors, **not** c
   needs perfect sync is broken by design (AGENTS.md: "key tests must handle skips").
 - Keys run continuously across word, quote and paragraph breaks (FIRFUMFERENFE never resets).
 
-## The unsolved cipher in one paragraph (snapshot: C1–C27, 2026-10-12)
+## The unsolved cipher in one paragraph (snapshot: C1–C28, 2026-10-12)
 
 LP2 segments 7–15 total 12,956 runes. They are flat at every order except one: **86 adjacent doublets where 447
 are expected** (z = −17.4). One system runs throughout (C6), acting on the continuous stream regardless of words,
@@ -106,7 +106,7 @@ equal cipher units, so the key restarts at no word and no Hill or polygraphic ta
 Nor is it a keyless function of a sliding plaintext window of width ≤ 2 (≤ 1 in the continuous stream): sliding
 n-gram repeats are flat (C21, §25). The key restarts at no section, paragraph, clause, line or page, with or without a per-unit shift (C22, C26), and has no period from 11 to
 11,781, 1033 / 1729 / 3301 included (C23, §27). LP2's own ciphertext is not its key at any lag (C24, §28). Under any alphabets, no period 11–4,907 (C25, §29). It is not a
-base-29 constant such as π or e (C27, §31).
+base-29 constant such as π or e (C27, §31), and not φ(n) or another arithmetic function mod 29 (C28, §32).
 
 ## Cicada motifs and leads
 
