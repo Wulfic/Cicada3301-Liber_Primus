@@ -77,6 +77,14 @@ tools/
   run_stage_x.py           reproduces the stage-X key-free tests of the grid's 256 bytes (findings §22); writes two TSVs
   run_stage_y.py           reproduces the stage-Y running-key search of the grid over on-disk bytes (findings §23); two TSVs
   run_stage_z.py           reproduces the stage-Z word and block codebook repeat test (findings §24, C20); two TSVs
+  run_stage_aa.py          reproduces the stage-AA keyless sliding-context repeat test (findings §25, C21); three TSVs
+  run_stage_ab.py          reproduces the stage-AB key-restart test at sections, lines, pages… (findings §26, C22); two TSVs
+  run_stage_ac.py          reproduces the stage-AC key-reuse scan at every lag, periods to 11,781 (findings §27, C23); three TSVs
+  run_stage_ad.py          reproduces the stage-AD ciphertext-as-key scan at every lag, both directions (findings §28, C24)
+  run_stage_ae.py          reproduces the stage-AE label-free periodic-key scan at every lag (findings §29, C25); two TSVs
+  run_stage_af.py          reproduces the stage-AF shifted per-unit restart test (findings §30, C26); two TSVs
+  run_stage_ag.py          reproduces the stage-AG base-29 constant and digit-stream keys (findings §31, C27); two TSVs
+  run_stage_ah.py          reproduces the stage-AH totient and arithmetic-function keys (findings §32, C28); two TSVs
   legacy/                  107 pre-2026-09-29 scripts, untested and built on misaligned data; history only
 
 tests/                     ★ the proof: python -m unittest discover -s tests -t . -v

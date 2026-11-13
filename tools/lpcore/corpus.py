@@ -102,6 +102,33 @@ class Corpus:
     def all_runes(self) -> list[int]:
         return [r for w in self.rune_words() for r in w.runes]
 
+    def rune_units(self) -> dict[str, list[int]]:
+        """Per-rune unit ids, in `all_runes` order: "rune", "segment", "paragraph", "clause", "line", "page" (the scan).
+
+        Segment, paragraph and clause come from the words (no rune word crosses those marks). Line and page come from
+        each page's raw text split at `/`, because rune words wrap across lines and pages. Lines are numbered in
+        reading order and a page break always ends a line.
+        """
+        units: dict[str, list[int]] = {k: [] for k in ("rune", "segment", "paragraph", "clause", "line", "page")}
+        for w in self.rune_words():
+            for r in w.runes:
+                units["rune"].append(r)
+                units["segment"].append(w.segment)
+                units["paragraph"].append(w.paragraph)
+                units["clause"].append(w.clause)
+        line = 0
+        for p in self.pages:
+            for piece in p.raw.split("/"):
+                n = sum(1 for ch in piece if ch in RUNE_INDEX)
+                if n:
+                    units["line"] += [line] * n
+                    units["page"] += [p.scan] * n
+                    line += 1
+        if len(units["line"]) != len(units["rune"]):
+            log.error("pages hold %d runes but words hold %d", len(units["line"]), len(units["rune"]))
+            raise CorpusError("page and word rune counts disagree")
+        return units
+
     def segment_paragraphs(self, segment: int) -> list[list[Word]]:
         """Words of a segment grouped by `&` paragraph, in reading order (numbers included)."""
         groups: dict[int, list[Word]] = {}

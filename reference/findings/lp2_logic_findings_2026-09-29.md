@@ -32,6 +32,14 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 | C18 | Under random Quagmire alphabets the key is still not English (runes, prime values, Latin letters), decimal digits or hex | worst P 1.7 × 10⁻¹¹ ≤ 10⁻⁴ over 20 rows; uniform A–Z untestable (power ≤ 2 / 20) | `test_recorded_verdicts`, `test_pooled_rows_recompute` | 19 |
 | C19 | Under Quagmire with named keyword alphabets (34 LP keywords, K and K⁻¹, all 314,432 triples, any mode and offset) the key is not English (runes, prime values, Latin letters) or decimal digits; hex is out for 314,001 members; uniform A–Z for 103,864 | best member ≤ −27.9 (English, digits) vs exclude ≤ −10; no lead ≥ +10 in any family | `test_lp2_exclusions_recompute`, `test_recorded_survivors` | 20 |
 | C20 | No word-deterministic cipher (cipher word = T(plaintext word): a key restarting at every word, a word codebook) and no fixed substitution of aligned n-rune blocks (Hill, polygraphic codebook) for n = 2–4 at any offset, or n = 5 in the continuous stream | repeated pairs at the flat-null level (\|z\| ≤ 1.38); words within sections 25 vs null 20.0 and English ≥ 3,433 (log-scale 5σ bound); 26 of 72 cells excluded, 46 untestable | `test_recorded_headline`, `test_lp2_counts_and_analytic_means_recompute` | 24 |
+| C21 | No keyless sliding-context cipher c_i = F(p_{i−a}, …, p_{i+b}), any fixed F, with w = a + b ≤ 2 (context restarting at each section) or w ≤ 1 (continuous stream): no plaintext-selected alphabet from a 1-rune context, no plaintext autokey with arbitrary tables at lag 1 | sliding n-gram repeats at the flat-null level (\|z\| ≤ 1.26); e.g. K_4 cont 129 vs null 126.3, controls ≥ 4,013 at w = 1; 5 of 26 (mode, w) cells excluded, 21 untestable | `test_recorded_headline`, `test_every_exclusion_follows_the_declared_rule` | 25 |
+| C22 | The key (or alphabet sequence σ_t) does not restart at every section, paragraph, clause, written line or page, under any alphabets, key in step | same-position agreements at the flat null (\|z\| ≤ 2.98, all below the null max); a restart adds ≥ 600 (sections) to ≥ 78,000 (lines) at the 5σ bound; 5 of 5 unit types excluded | `test_recorded_headline`, `test_lp2_agreements_and_analytic_means_recompute` | 26 |
+| C23 | No periodic key with period 11–11,781 in the continuous stream (plain, progressive k + a or reflected a − k per period; straight alphabets, any of c = p ± k or Beaufort), including 1033, 1729 and 3301; no reused key stretch of ≥ 3,000 runes forwards or backwards (power ≥ 0.97) | F ≤ −10 for 1,081,691 of 1,086,630 hypotheses with L ≤ 12,500; best F 7.05 and S 19.86 vs flat-null maxima 10.15 / 20.39 (pass line 30) | `test_recorded_headline`, `test_named_periods_recompute` | 27 |
+| C24 | LP2's own ciphertext is not the key at any lag 11–12,863, forwards or backwards (c = p ± f(c_i) or Beaufort, f a shift or reflection; straight alphabets), and no reused ciphertext stretch of ≥ 200 runes keys another | all 1,490,948 hypotheses at L ≤ 12,863 have F ≤ −10 (1,495,197 of 1,495,240 up to 12,900); best F 5.30 and S 23.16 vs flat-null maxima 7.18 / 23.26 (pass line 30) | `test_recorded_headline`, `test_named_lags_recompute` | 28 |
+| C25 | No periodic key of period 11–4,907 selecting any alphabets (Quagmire, random tabula, any table), key in step, continuous stream; 10,030 of the 12,935 lags 11–12,945 excluded, including 1033, 1729 and 3301 | lag agreement rates at the flat level (best upper p 3.1 × 10⁻⁵ vs 7.7 × 10⁻⁷); lower tail at p_H = 0.050 ≤ e^−10 | `test_recorded_headline`, `test_lp2_agreements_and_verdicts_recompute` | 29 |
+| C26 | No additive or Beaufort key restarting at every section, paragraph, clause, line or page with a constant shift per unit (c = p + k[t] + a_unit) | within-unit difference agreements at the flat null (\|z\| ≤ 1.41); a shifted restart adds ≥ 7,000 (sections) to ≥ 28,000 (lines) at the 5σ bound; 5 of 5 excluded | `test_recorded_headline`, `test_lp2_statistics_and_analytic_means_recompute` | 30 |
+| C27 | The key is not the base-29 expansion of π, e, φ, √2, √3, ln 2 or √3301, nor the base-29 concatenation of the primes, the integers or φ(p), from any start < 1000, any mode and shift, per section or continuous, drift-tolerant | best real decode −56.0 (π) vs pass +30; all 270 testable cells ≤ −10; controls ≥ +194.9 | `test_recorded_headline`, `test_best_real_decode_recomputes` | 31 |
+| C28 | The key is not φ(n), σ(n), Σφ(k), the prime gaps, φ(φ(n)) or n·φ(n) mod 29, raw or chained, from any start < 1000, any mode and shift, per section or continuous, drift-tolerant | best real decode −47.9 vs pass +30; all 324 testable cells ≤ −10; controls ≥ +189.7 | `test_recorded_headline`, `test_best_real_decode_recomputes` | 32 |
 
 **The leak** (how the 86 survivors are spread, §7):
 
@@ -1018,3 +1026,427 @@ LP2. Therefore:
 - Blocks of 6 or more runes.
 - Word boundaries that differ between plaintext and ciphertext. The test assumes LP2's word divisions are the
   plaintext's, as they are in every solved section.
+
+## 25. Keyless sliding-context ciphers: equal plaintext windows would repeat (2026-10-12, TODO stage AA)
+
+Declared in `TODO.md` (`5364609`) before the runner existed. The runner was committed unchanged before LP2 was scored
+(`eacdc01`). Run: `python -m tools.run_stage_aa` (about 15 minutes). Rows are in [`stage_aa_results.tsv`](stage_aa_results.tsv),
+[`stage_aa_verdicts.tsv`](stage_aa_verdicts.tsv) and [`stage_aa_controls.tsv`](stage_aa_controls.tsv). The verdicts TSV
+was added to the declared outputs while the runner was written; it only tabulates the declared rule. Tests:
+`tests/test_stage_aa.py`.
+
+**The question.** Stage Z (§24) tested ciphers that act on aligned blocks or whole words. This stage tests ciphers that
+act at *every* position from a short plaintext window: c_i = F(p_{i−a}, …, p_{i+b}), with context width w = a + b, F any
+fixed table, and no key, no position dependence and no ciphertext feedback. Examples:
+- an alphabet chosen by the previous plaintext rune or a 2-rune context (attack catalog row 12, open until now);
+- plaintext autokey with arbitrary tables at any lag up to w (C10 and C11 cover additive autokey only, and C18
+  covers Quagmire autokey only under random alphabets);
+- any sliding polygraphic transform.
+
+C16 covers such tables only when they are random. Any such cipher sends equal plaintext windows of n + w runes to
+equal cipher n-grams wherever they occur, so it keeps the plaintext's repeat count whatever F is
+(`test_equal_plaintext_windows_give_equal_cipher_ngrams`).
+
+**Design.**
+- **Statistic:** K_n is the number of pairs (i, j) with j − i ≥ n of equal cipher n-grams over all sliding windows,
+  for n = 3…7. Mode "sec" counts pairs within each section, and the context restarts at each section start. Mode
+  "cont" reads segments 7–15 as one stream. That makes 10 statistic cells, each scored once.
+- **Null:** 1,000 flat draws in LP2's section sizes, with stage Z's anti-doublet rule.
+- **Positive controls:** for each (mode, w = 0…12), 200 draws from each of stage Z's two sources, (E) contiguous
+  Emerson and (L) solved-LP words in random order. Each draw is enciphered with a fresh random permutation for every
+  distinct w-rune context, then given the rule.
+- **Verdict:** a (n, mode, w) cell excludes w if both sources' log-scale bound exp(m − 5s) − 1 and every draw exceed
+  the null maximum, and LP2 is below both bounds. A width is excluded if any n excludes it.
+
+**Validity: the run is valid.** For n ≤ 5 every null mean lies within 3 s.e. of the analytic
+E[K_n] = (separated pairs) × p_equal(n). For example, K_3 cont is 3,589.97 against 3,590.75, and K_4 cont is 126.33
+against 126.49.
+
+**Result: nothing passes. LP2 repeats at the flat-null level in all 10 statistic cells (|z| ≤ 1.26).**
+
+| n | K_LP2 sec (null mean, max) | K_LP2 cont (null mean, max) |
+|---|---|---|
+| 3 | 533 (539.29, 612) | 3,580 (3,589.97, 3,776) |
+| 4 | 24 (18.86, 35) | 129 (126.33, 164) |
+| 5 | 2 (0.74, 5) | 6 (4.55, 13) |
+| 6 | 0 (0.03, 2) | 1 (0.15, 3) |
+| 7 | 0 (0.00, 0) | 0 (0.005, 1) |
+
+| Mode | Excluded widths | Untestable widths |
+|---|---|---|
+| sec | w = 0, 1 (by every n), 2 (by n = 7) | 3–12 |
+| cont | w = 0 (by every n), 1 (by n = 4, 5, 6) | 2–12 |
+
+**A declared expectation failed.** The plan expected exclusions "up to about w = 4–7". The declared bound reaches
+w = 2 (sec) and w = 1 (cont). The cause is Emerson's right tail. A few contiguous windows hold repeated passages and
+give up to 20 times the median count. That widens the log-scale sd, so the 5σ bound falls to the null level. For
+example, at cont w = 2 and n = 5, Emerson's bound is 4.62 against a null maximum of 13, yet its smallest draw is 543.
+
+**Observation, not a verdict.** Every one of the 400 positive draws clears both LP2's count and the null maximum at
+some n for every w ≤ 7, in both modes. The smallest draws at w = 7 are 6 and 10 (sec, n = 5, bar 5), and 16 and 63
+(cont, n = 5, bar 13). No draw clears it at w ≥ 8. A bound built from the lower tail would therefore reach about
+w = 5–7, but it would be a new declared rule with its own false-exclusion bound, and it was not run here.
+
+**Reading.**
+- **C21:** LP2 is not a keyless cipher in which each cipher rune depends only on a window of at most 3 consecutive
+  plaintext runes around it (w ≤ 2, with the context restarting at sections), or at most 2 in the continuous stream
+  (w ≤ 1).
+- That closes catalog row 12 for a one-rune plaintext context (two runes per section), and plaintext autokey with
+  arbitrary tables at lag 1 (lag 2 per section).
+- Together with C20, the cipher's output is not a fixed function of local plaintext, whether aligned or sliding. Some
+  state that changes along the text (a key) is needed at every position, as the OTP-class verdict says.
+
+**What this does not cover.**
+- Contexts of 3 or more runes (2 or more in the continuous stream). This is untestable by the declared bound, though
+  the observation above suggests a lower-tail bound would reach further.
+- Any key on top of the context cipher. That is the open space.
+- Contexts that mix plaintext and ciphertext. Pure ciphertext selection is C12.
+- Tables that also depend on position.
+- Homophonic (random) choices.
+
+## 26. No key restarts at a section, paragraph, clause, line or page (2026-10-12, TODO stage AB)
+
+Declared in `TODO.md` (`78f7c37`) before any code existed. The unit map (`Corpus.rune_units`) and the runner were committed
+before LP2 was scored (`a2512ca`). Run: `python -m tools.run_stage_ab` (about 15 seconds). Rows are in
+[`stage_ab_results.tsv`](stage_ab_results.tsv) and [`stage_ab_controls.tsv`](stage_ab_controls.tsv). Tests:
+`tests/test_stage_ab.py`, and `test_rune_units_reproduce_the_runes_and_word_fields` for the unit map.
+
+**The question.** Does the key, or the alphabet σ_t, start again at the first rune of every section, paragraph, clause,
+written line or page? This is the hand scheme of one pad sheet reused for every page or line. It also covers "keys shared
+between sections", which tracker §4.1 had only from the community ledger. C9 cannot see it, because unit lengths vary
+(lines 22–26 runes, pages 263–277). C20 covers restarts at every word only.
+
+Under such a key, two units agree at in-unit position t exactly when their plaintexts do, whatever the alphabets are.
+The test is therefore label-free: additive, Quagmire and any tabula alike.
+
+**Design.**
+- **Statistic:** K_u = Σ_t Σ_v C(m_{t,v}, 2), the pairs of units of type u that carry the same rune at the same in-unit
+  position.
+- **Units,** read at rune level because rune words wrap across lines and pages: 9 sections, 15 paragraphs, 168 clauses,
+  594 lines and 55 pages.
+- **Null:** 1,000 flat draws with stage Z's anti-doublet rule. Analytic mean Σ_t C(m_t, 2)/29.
+- **Positive controls:** 200 Emerson and 200 shuffled solved-LP streams per unit type, each enciphered with a fresh
+  random alphabet per in-unit position, shared by every unit, then given the rule.
+- **Rule:** stage Z's log-scale 5σ bound.
+
+**Validity: the run is valid.** Every null mean lies within 3 s.e. of the analytic mean. For example, lines give
+125,456.66 against 125,467.66 (s.e. 11.1). A 50-draw `--quick` run had shown lines 2.1 s.e. off. A 400-draw check of the
+null alone, without LP2, gave 0.7 s.e. with the rule, so it was chance. The runner was not changed.
+
+**Result: nothing passes. All five unit types are excluded (prediction met).**
+
+| Unit | Units | K_LP2 | Null mean ± sd (max) | Positives E / L, mean (min) | Lower bound E / L | z |
+|---|---|---|---|---|---|---|
+| section | 9 | 1,125 | 1,145.5 ± 33.9 (1,278) | 2,013 / 2,016 (1,874 / 1,889) | 1,755 / 1,804 | −0.60 |
+| paragraph | 15 | 1,484 | 1,525.3 ± 38.3 (1,642) | 2,676 / 2,691 (2,482 / 2,522) | 2,365 / 2,435 | −1.08 |
+| clause | 168 | 20,028 | 19,873.7 ± 140.7 (20,430) | 34,903 / 35,036 (33,892 / 34,233) | 32,271 / 33,743 | 1.10 |
+| line | 594 | 126,508 | 125,456.7 ± 352.5 (126,575) | 220,263 / 221,020 (214,699 / 217,972) | 203,912 / 216,067 | 2.98 |
+| page | 55 | 10,751 | 10,726.0 ± 100.5 (11,028) | 18,830 / 18,920 (18,249 / 18,509) | 17,307 / 18,159 | 0.25 |
+
+**The line cell, disclosed.** LP2's line count is the largest deviation: z = 2.98, one-sided normal p ≈ 0.0014, or about
+0.007 over the 5 cells. It is below the null's own maximum of 1,000 draws and far below the PASS line. The excess is
+about 1,050 agreements, roughly 1 % of what a line-restart key adds (≈ 95,000). So it is not a restarting key. It is
+recorded and not interpreted. Any reading of it, such as localising it by page or by gap between lines, would need its
+own declared test.
+
+**Reading.**
+- **C22:** the key, or the alphabet sequence, does not restart at sections, paragraphs, clauses, written lines or pages.
+  This holds under any alphabets, with the key in step.
+- Together with C20 (words) and C9 (global periods), no written unit of the book resets the key.
+- The ledger's "keys shared between sections" is now test-backed, for straight and mixed alphabets alike.
+
+**What this does not cover.**
+- A restart with a per-unit shift (c = σ_t(p) + a_unit). That breaks agreement but keeps the shape of the differences.
+- Restarts counted from a unit's end.
+- Restarts every k-th unit only.
+- A drifting key (C14 already excludes the one drifting rule proposed so far).
+- Key reuse at a free offset, and periods over 1,000 (open, findings §8 covers lags ≤ 1000).
+
+## 27. No reused key at any lag: periods 11–11,781, including 1033, 1729 and 3301 (2026-10-12, TODO stage AC)
+
+Declared in `TODO.md` (`b2f22d9`) before the runner existed. One relation, "sumrev", was added before LP2 was scored,
+and the runner was committed with it (`a11ec86`). Run: `python -m tools.run_stage_ac` (about 20 minutes on 4 cores).
+Rows are in [`stage_ac_lags.tsv`](stage_ac_lags.tsv) (one per lag), [`stage_ac_top.tsv`](stage_ac_top.tsv) (the 20 best
+cells per statistic) and [`stage_ac_controls.tsv`](stage_ac_controls.tsv). Tests: `tests/test_stage_ac.py`.
+
+**The question.** C9 scans lags 11–1000 within sections only. That left three things open:
+- a periodic key with a longer period, such as 1033, 1729 or 3301 (`lore.md` had listed 3301 / 1033 as excluded, wrongly);
+- a key used continuously across section boundaries at a long lag;
+- one stretch of key used twice anywhere in LP2, forwards or backwards: a two-time pad inside the book.
+
+If positions i < j share a key value up to a relation, the cipher pair carries the plaintext pair's law:
+- **diff:** k_j = k_i + a, so c_j − c_i = p_j − p_i + a.
+- **sum:** k_j = a − k_i, so c_j + c_i = p_j + p_i + a.
+- **sumrev:** the same under Beaufort, which reflects the sum law. This was the amendment.
+
+**Design.** LP2 is read as one 12,956-rune stream. The score is s = ln(29 r(x)) per pair, with r the law under the
+LP-English unigram, so E[e^s] = 1 under a flat cipher.
+- **F(L, rel, a)** sums s over the whole diagonal j = i + L: a periodic key, for L = 11…12,945 (12,935 lags, 1,125,345 hypotheses; the declaration's 1,126,215 miscounted the lags, erratum noted in stage AD).
+- **S** is the best contiguous segment on every forward diagonal and every reverse anti-diagonal i + j = σ: one reused
+  stretch, read either way.
+- **PASS** iff F ≥ 30 or S ≥ 30. **Excluded** iff F ≤ −10, on lags the controls trust.
+
+**Validity: the run is valid.** Four flat null streams with the anti-doublet rule, scanned in full, give max F 6.91–10.15
+and max S 18.33–20.39. That is the ln(number of tests) level the Ville bound predicts.
+
+**Controls.** Ten draws per source and relation at each period, and 25 per cell for reused stretches.
+
+| Period P | min F | draws ≥ 30 | | Reused stretch M | min S | draws ≥ 30 |
+|---|---|---|---|---|---|---|
+| 1033 | 198.2 | 60 / 60 | | 500 | 4.2 | 0 / 300 |
+| 3301 | 161.6 | 60 / 60 | | 1000 | 9.4 | 71 / 300 |
+| 7000 | 72.7 | 60 / 60 | | 1500 | 14.2 | 240 / 300 |
+| 10000 | 33.9 | 60 / 60 | | 2000 | 18.4 | 281 / 300 |
+| 11500 | 14.3 | 41 / 60 | | 2500 | 22.5 | 298 / 300 |
+| 12500 | −0.5 | 0 / 60 | | 3000 | 34.2 | 300 / 300 |
+
+So **P_max = 12,500**: every periodic draw up to there scores F > −10, and the exclusion rule is trusted on every lag up
+to it. **M_min = 3,000**: every reuse draw of 3,000 runes clears 30, in both directions and all relations.
+
+**Result: nothing passes.** LP2's best F is 7.05, at lag 12,800 over just 156 pairs. Its best S is 19.86 forward and
+18.23 reverse. All three sit inside the nulls' range.
+
+**Exclusions.**
+- 1,081,691 of the 1,086,630 hypotheses with L ≤ 12,500 score F ≤ −10.
+- **Plain periodic keys (diff, a = 0) are excluded for every period from 11 to 11,781.** Above that, 78 of the 719
+  periods up to 12,500 stay open, because they have too few pairs.
+- **The named periods are excluded under every relation and shift:** 1033 (F ≤ −238), 1729 (≤ −219) and 3301 (≤ −193).
+
+**Reading.**
+- **C23:** the key is not periodic at any period from 11 to 11,781 in the continuous stream. This includes keys that
+  shift or reflect by a constant each period (progressive or alternating), under all three conventions.
+- No stretch of ≥ 3,000 runes is reused, forwards or backwards, at power ≥ 0.97 per cell (300 of 300 draws found). That
+  is weaker than a 5σ bound and stated as such. Shorter stretches are not covered: half of the 1,000-rune reuses go unseen.
+- C9 extends from period 1000 to 11,781, now across section boundaries too. The 3301 / 1033 motif is closed as a period.
+
+**What this does not cover.**
+- Mixed alphabets (Quagmire or tabulae). The scores use labels, and a label-free version needs coincidences, a weaker test.
+- A drifting key.
+- Reused stretches shorter than ~3,000 runes.
+- A key stretch shared with text outside LP2.
+- Periods above 11,781.
+
+## 28. LP2's own ciphertext is not the key, at any lag, forwards or backwards (2026-10-12, TODO stage AD)
+
+Declared in `TODO.md` (`03dad0b`) before the runner existed. The runner was committed before LP2 was scored (`1b0007a`).
+Run: `python -m tools.run_stage_ad` (about 25 minutes on 4 cores). Rows are in [`stage_ad_lags.tsv`](stage_ad_lags.tsv),
+[`stage_ad_top.tsv`](stage_ad_top.tsv) and [`stage_ad_controls.tsv`](stage_ad_controls.tsv). Tests:
+`tests/test_stage_ad.py`.
+
+**The question.** C11 (ciphertext autokey) and C12 (alphabet chosen by c_{i−L}) stop at lag 1000, read forwards. This
+stage asks whether any rune of LP2 is another rune's plaintext under a third rune of LP2's own ciphertext as the key:
+- at any lag (the previous section's ciphertext as the next one's pad);
+- read backwards;
+- for a single reused stretch.
+
+The four relations (diff, diffrev, sum, sumrev) with 29 shifts cover c = p ± f(c_i) and Beaufort. They also cover the
+later rune keying the earlier one. Each pair is scored by `detect.emission_ratios` of the implied plaintext, so
+E[e^s] = 1 under a flat cipher. That carries 0.312 nats per pair, 12 times stage AC's.
+
+**Design.** Stage AC's, with the plaintext law in place of the difference law. F covers the whole forward diagonal,
+an autokey at lag L = 11…12,945 (12,935 lags × 116 = 1,500,460 hypotheses). S is the best segment on every forward and
+reverse diagonal.
+
+**Validity: the run is valid.** Four full null scans give max F 5.32–7.18 and max S 20.89–23.26.
+
+**Controls.**
+- **Whole-stream autokey:** every draw scores F ≥ 40.7 up to L = 12,800, and ≥ 12.1 at 12,900. So P_max = 12,900.
+- **Reused ciphertext stretches:** all 400 draws are found at 200 runes (minimum S 49.5), and 366 of 400 at 100 runes.
+  So M_min = 200.
+
+**Result: nothing passes.** LP2's best F is 5.30, at lag 12,942 over 14 pairs. Its best S is 22.49 forward and 23.16
+reverse. The reverse value sits just under the null maximum of 23.26: noise.
+
+**Exclusions.**
+- **Every hypothesis at every lag from 11 to 12,863 has F ≤ −10:** all 116 relation-shift pairs, 1,495,197 of the
+  1,495,240 with L ≤ 12,900. The 43 open cells all lie at L ≥ 12,864, with fewer than 93 pairs.
+- At the named lags the best F is −4,558 (1033), −4,281 (1729) and −3,683 (3301).
+
+**Reading.**
+- **C24:** no rune of LP2 is enciphered with LP2's own ciphertext as the key, at any lag 11–12,863, in either reading
+  direction. This holds under the shift and reflection relations and the three conventions.
+- No reused ciphertext stretch of ≥ 200 runes serves as a key (power: 400 / 400 draws found).
+- C11 and C12 extend from lag 1000 to the whole stream, for straight alphabets.
+
+**What this does not cover.**
+- Mixed alphabets past lag 1000. C12 is label-free only up to 1000.
+- An autokey through a nonlinear map of c_i, or one keyed by two earlier runes.
+- Reused stretches shorter than ~200 runes. A 100-rune stretch is found 92 % of the time.
+
+## 29. Periodic keys under any alphabets: no period from 11 to 4,907 (2026-10-12, TODO stage AE)
+
+Declared in `TODO.md` (`434060d`) before the runner existed. The runner was committed before LP2 was scored (`fb202c8`).
+Run: `python -m tools.run_stage_ae` (about a minute). Rows are in [`stage_ae_lags.tsv`](stage_ae_lags.tsv) and
+[`stage_ae_controls.tsv`](stage_ae_controls.tsv). Tests: `tests/test_stage_ae.py`.
+
+**The question.** This is the label-free twin of C23. C23 holds for straight alphabets, and C9 is label-free but
+stops at lag 1000 within sections.
+
+A periodic key that picks *any* alphabet, c_i = σ_{k_i}(p_i) with k_{i+L} = k_i, gives c_i = c_{i+L} exactly when
+p_i = p_{i+L}. That covers Quagmire, a random tabula and any table. Two runes one period apart then agree at the
+plaintext's rate (Σq² ≈ 0.062) instead of 1/29.
+
+**Design.**
+- **Statistic:** k(L) = #{t : c_t = c_{t+L}} on the continuous stream, for every L = 11…12,945. The counts are exact (FFT,
+  checked against direct counts by `test_lag_agreements_match_direct_counts`).
+- **PASS:** the binomial upper tail under LP2's own Σf² is ≤ 0.01 / 12,935.
+- **Excluded:** the binomial lower tail at p_H = 0.050 is ≤ e^−10.
+
+**Validity: the run is valid.**
+- **Nulls:** 20 flat streams with the rule give no PASS (smallest p 2.8 × 10⁻⁶ against 7.7 × 10⁻⁷).
+- **Controls:** periodic random tabulae at P = 1033, 1729, 3301, 6000 and 9000 (10 draws from each source). All 100 PASS
+  and none is excluded. Their lowest agreement rate is 0.0520, 0.002 above p_H. That margin is thin and is disclosed:
+  a plaintext less repetitive than any control would weaken the exclusions at the longest lags first.
+
+**Result: nothing passes.** LP2's agreement rate p₀ is 0.03455. The most extreme lag is 6002, with upper p 3.1 × 10⁻⁵,
+which is normal for 12,935 lags.
+
+**Exclusions.**
+
+| Lags | Excluded |
+|---|---|
+| 11–4,907 | 4,897 / 4,897 (all) |
+| 4,908–6,000 | 1,087 / 1,093 |
+| 6,001–8,000 | 1,938 / 2,000 |
+| 8,001–10,000 | 1,570 / 2,000 |
+| 10,001–12,945 | 538 / 2,945 |
+
+In all, 10,030 of 12,935 lags are excluded. The named periods are excluded with large margins: 1033 (lower p 8 × 10⁻¹⁵),
+1729 (1 × 10⁻¹²) and 3301 (6 × 10⁻¹⁵).
+
+**Reading.**
+- **C25:** no periodic key of any period from 11 to 4,907 selects the alphabets, whatever the alphabets are (Quagmire,
+  random tabula, any table), with the key in step in the continuous stream. Most periods up to 10,000 are excluded too.
+  This includes 1033, 1729 and 3301.
+- C9's label-free reach grows from 1000 to 4,907 and now crosses section boundaries.
+- Together with C23 (straight alphabets, to 11,781), the periodic family is closed for every practical period.
+
+**What this does not cover.**
+- A drifting key.
+- Reused stretches under mixed alphabets (a windowed coincidence scan).
+- Periods with too few pairs. The open lags above 4,907 are listed in the TSV.
+
+## 30. No key restarts per unit with a per-unit shift (2026-10-12, TODO stage AF)
+
+Declared in `TODO.md` (`e2e305f`) before the runner existed. The runner was committed before LP2 was scored (`adea288`).
+Run: `python -m tools.run_stage_af` (about 5 minutes). Rows are in [`stage_af_results.tsv`](stage_af_results.tsv) and
+[`stage_af_controls.tsv`](stage_af_controls.tsv). Tests: `tests/test_stage_af.py`.
+
+**The question.** C22 left one restart open: the same key at every section, paragraph, clause, line or page, plus a
+constant per unit (key + page number, say). Per unit U that is c_U[t] = p_U[t] + k[t] + a_U, or the Beaufort form.
+
+The shift breaks C22's same-position agreement, but a within-unit difference cancels it:
+δ_U(t, t′) = c_U[t′] − c_U[t] = ±(p_U[t′] − p_U[t]) + k[t′] − k[t]. So two units agree on δ(t, t′) exactly when their
+plaintext differences agree, whatever k and the shifts are (`test_shifted_restart_keeps_the_statistic_exactly`).
+
+**Design.** S_u counts pairs of units that agree on δ(t, t′), summed over all position pairs with gap 2–300. Gap 1 is
+left out because the doublet rule bends it. Stage AB's units and rune map are reused. 200 flat nulls; 100 controls per
+source, half additive and half Beaufort, each with a random key and random per-unit shifts. Stage AB's rule decides.
+
+**Validity: the run is valid.** Every null mean lies within 3 s.e. of the analytic Σ C(m_{t,t′}, 2)/29. The 20-draw
+`--quick` clause offset of 1.4 s.e. was checked first on 150 null-only draws (0.45 s.e.). The runner was not changed.
+
+**Result: nothing passes. All five unit types are excluded (prediction met).**
+
+| Unit | S_LP2 | Null mean ± sd (max) | Positive min E / L | Lower bound E / L | z |
+|---|---|---|---|---|---|
+| section | 298,131 | 298,359 ± 514 (299,968) | 309,918 / 310,733 | 305,750 / 308,078 | −0.44 |
+| paragraph | 335,050 | 335,832 ± 553 (337,519) | 348,473 / 350,681 | 344,167 / 348,415 | −1.41 |
+| clause | 701,921 | 701,311 ± 772 (703,175) | 729,493 / 734,676 | 720,561 / 730,636 | 0.79 |
+| line | 1,143,081 | 1,142,444 ± 1,037 (1,145,608) | 1,187,243 / 1,200,761 | 1,170,555 / 1,194,801 | 0.61 |
+| page | 1,207,810 | 1,208,036 ± 1,156 (1,211,033) | 1,256,661 / 1,264,526 | 1,242,113 / 1,258,596 | −0.20 |
+
+The line cell sits at z = 0.61 here. C22's line deviation (z = 2.98) was 1 % of a restart's effect. The same 1 % would
+add about 300 to S_line, well inside the noise, so this stage neither confirms nor explains that deviation.
+
+**Reading.**
+- **C26:** no additive or Beaufort key restarts at each section, paragraph, clause, line or page, even with a constant
+  shift per unit.
+- With C22, the restart family is closed for straight alphabets with any per-unit constant, and for any alphabets
+  without one.
+
+**What this does not cover.**
+- Mixed alphabets with a per-unit shift of the key index.
+- Shifts that change within a unit.
+- Gaps over 300 (only the long units have them).
+
+## 31. Constants and number streams in base 29 are not the key (2026-10-12, TODO stage AG)
+
+Declared in `TODO.md` (`7c83e52`) before the runner existed. The runner and the digit generators were committed before
+the full run (`5e8c507`). Run: `python -m tools.run_stage_ag` (about 25 minutes on 4 cores). Rows are in
+[`stage_ag_candidates.tsv`](stage_ag_candidates.tsv) and [`stage_ag_controls.tsv`](stage_ag_controls.tsv). Tests:
+`tests/test_stage_ag.py`.
+
+**Disclosed:** the `--quick` mode, like stage R's, scored 120 of the 8,700 declared decodes (sections 7 and 10, shifts
+0–1) before the runner was committed. Nothing in the family or the rule changed afterwards.
+
+**The question.** This tests one named-generator family (catalog row 22). Base-29 digits are key values 0–28 with no
+mapping, near-flat and aperiodic, so they meet every key constraint C9–C25. The family has ten sources, each computed
+exactly with integer arithmetic:
+- seven constants with the integer part first: π, e, φ, √2, √3, ln 2 and √3301;
+- three concatenations of base-29 digits: the primes (Copeland–Erdős), 1, 2, 3, … (Champernowne), and φ(p) = p − 1.
+
+The digits are verified in tests. π and e match their known expansions to 60 decimal places, the other constants agree
+with floats, and the digits are stable when the precision is raised (`test_pi_and_e_match_their_known_expansions`,
+`test_digits_are_stable_under_more_precision`).
+
+**Design.** Stage R's decode: drift-tolerant `detect.log_lr` via `fastdetect`, with a uniform prior over the start offset
+s ∈ [0, 1000). It covers 3 modes, 29 shifts, and 10 alignments (each section from its own start, plus the continuous
+stream), for 8,700 decodes. **PASS** iff ≥ 30. A (source, alignment, mode) is **excluded** iff all 29 shifts are
+≤ −10 and the source's controls pass.
+
+**Controls.** Each source's own encryption of solved plaintext, from a random start below 1,000, at 729 and 3,316 runes,
+re-keying fresh and next, scores ≥ 194.9. Random keys score ≤ −68.2. All 10 sources are testable.
+
+**Result: nothing passes.** The best decode on a real section is −56.0 (π, section 7, add, shift 13). Per source, the
+best real decode runs from −56.0 to −81.2. The continuous stream's best is −1,496.3. The only cells left unexcluded are
+segment 10's 30 (9 runes, best +0.67), which no detector can test.
+
+**Reading.**
+- **C27:** no base-29 expansion of π, e, φ, √2, √3, ln 2 or √3301, and no base-29 concatenation of the primes, the
+  integers or φ(p), is the key. This holds read from any start below 1,000, in any mode and shift, per section or
+  continuous, drift-tolerant. 270 of 270 testable cells are excluded.
+
+**What this does not cover.**
+- Other bases, other constants, digits read backwards.
+- Starts past 1,000: a later start is a different hypothesis with a different prior.
+
+## 32. "The totient function is sacred": φ(n) and its relatives are not the key (2026-10-12, TODO stage AH)
+
+Declared in `TODO.md` (`17cba27`) before the runner existed. The runner was committed before LP2 was scored (`ce81da6`;
+its `--quick` runs the controls only). Run: `python -m tools.run_stage_ah` (about 30 minutes on 4 cores). Rows are in
+[`stage_ah_candidates.tsv`](stage_ah_candidates.tsv) and [`stage_ah_controls.tsv`](stage_ah_controls.tsv). Tests:
+`tests/test_stage_ah.py`.
+
+**The question.** LP1 says THE PRIMES ARE SACRED / THE TOTIENT FUNCTION IS SACRED. AN END's key is φ over the primes,
+and stage I excluded that stream. The totient of every integer was never tested on canonical data. The archived
+tracker's "φ(n) for all integers: 0 hits" is fixed-sync, on misaligned pages, and not evidence.
+
+**Design.** Six sequences over n = 1, 2, 3, … mod 29, each raw and as a running sum (chain), so 12 keys:
+- φ(n);
+- σ(n);
+- Σ φ(k);
+- the prime gaps;
+- φ(φ(n));
+- n · φ(n).
+
+The sieves are checked against the direct definitions (`test_totient_and_derived_sequences_match_definitions`). The rest
+is stage AG's design: starts < 1000 under a uniform prior, drift-tolerant, 3 modes × 29 shifts × 10 alignments, so
+10,440 decodes.
+
+**Controls.** Each source's own encryption scores ≥ 189.7, random keys ≤ −67.3. All 12 are testable, including the raw
+prime gaps, which put 18.6 % of their values on one residue.
+
+**Result: nothing passes.** The best real decode is −47.9 (φ(φ(n)) chain, section 7). Each source's best real decode lies
+between −47.9 and −67.0, and the continuous stream's best is −1,449.5. Only segment 10's 36 cells (9 runes) are left
+unexcluded.
+
+**Reading.**
+- **C28:** the key is not φ(n), σ(n), Σφ(k), the prime gaps, φ(φ(n)) or n·φ(n) mod 29, raw or chained, read from any start
+  below 1,000, in any mode and shift, per section or continuous, drift-tolerant. 324 of 324 testable cells are
+  excluded.
+- With stage I (primes, φ(p), p ± c), the "sacred" number-theory streams are exhausted as running keys mod 29.
+
+**What this does not cover.**
+- Other arithmetic functions, other indexings (n from another origin past 1,000, or n over the primes beyond φ(p)), and
+  maps other than mod 29.

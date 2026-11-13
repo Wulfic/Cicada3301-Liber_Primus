@@ -1,10 +1,12 @@
 # Attack catalog: cipher family → what distinguishes it → status on LP2
 
-Snapshot 2026-10-01 (C1–C20). **Tracker §3.2 / §4 win over this file.** If you add a constraint, update the
+Snapshot 2026-10-12 (C1–C28). **Tracker §3.2 / §4 win over this file.** If you add a constraint, update the
 matching rows here.
 
-**Periodicity note.** C9 excludes periods ≤ 1000 when the re-key rule keeps the key in step, but only periods
-≤ 25 when it drifts. The one drifting rule proposed so far (skip to the next key value) is itself excluded by C14.
+**Periodicity note.** C9 excludes periods ≤ 1000 when the re-key rule keeps the key in step, and C23 extends that to
+≤ 11,781 in the continuous stream (straight alphabets; C9's lag test is label-free), and C25 to ≤ 4,907 under any
+alphabets. It covers only periods ≤ 25 when
+the key drifts. The one drifting rule proposed so far (skip to the next key value) is itself excluded by C14.
 So a *new* drifting mechanism would reopen periods 26–1000. Say so when you propose one.
 
 Status: **✗** excluded (test or cited ledger) · **◐** partly · **○** open · **arg** excluded by an argument
@@ -17,28 +19,29 @@ written here, with no test yet. An "arg" row needs a test before it can go in th
 | 1 | Monoalphabetic: Caesar, atbash, affine, keyed alphabet | unigram IoC stays at the plaintext's | ✗ | LP2 IoC and unigrams are flat (C2's χ² = 26.4 on 28 df) |
 | 2 | Transposition only | English unigram survives | ✗ | same |
 | 3 | Transposition, then an additive stream | none from transposition; the stream decides | reduces to the stream's row | `detect.log_lr` ignores plaintext order |
-| 4 | Periodic Vigenère, Beaufort or variant | lag-L repeat rate | ✗ period ≤ 1000 in step; ≤ 25 drifting | C5, C9; ledger. See the periodicity note |
+| 4 | Periodic Vigenère, Beaufort or variant | lag-L repeat rate; labelled diagonal score F | ✗ period ≤ 11,781 in step (also progressive / reflected per period); ≤ 25 drifting | C5, C9, C23 (§27); ledger. See the periodicity note |
 | 5 | Progressive (Trithemius) or any integer polynomial in i, mod 29 | periodic: f(i + 29) ≡ f(i) | ✗ in step | C9. See the periodicity note |
 | 6 | Vigenère with an F-interrupter (LP1 style) | ᚠ excess about 190 | ✗ | C2; ledger |
 | 7 | Running key from English text (letters, prime values, φ) | r = q ⊛ q is non-flat | ✗ | C10 |
 | 8 | Plaintext autokey, any lag | same as 7 | ✗ | C10 |
-| 9 | Ciphertext autokey c = p ± c_{i−L} | lag-L difference or sum histogram is English | ✗ L = 2–1000 | C11 |
+| 9 | Ciphertext autokey c = p ± c_{i−L} (or Beaufort, shifted or reflected), forwards or backwards | lag-L difference or sum histogram is English | ✗ L = 2–12,863; reused ciphertext stretches ≥ 200 runes | C11 (L ≤ 1000, label-free); C24 (§28, straight alphabets) |
 | 10 | Alphabet chosen by c_{i−L} (keyed autokey, secret tables, affine chain) | lag-L transition rows are permuted English | ✗ L ≤ 1000 | C12 |
 | 11 | Same as 10, plus a flat stream key | rows flat | ○ | not covered (findings §10) |
-| 12 | Alphabet chosen by *plaintext* runes, or a 2-rune context | 841-row tables, too sparse for χ² | ○ | not covered |
+| 12 | Alphabet chosen by *plaintext* runes, or a 2-rune context; any keyless c_i = F(plaintext window of width w) | sliding n-gram repeat count K_n | ◐ | C21 (§25): ✗ w ≤ 2 with context restarting per section, w ≤ 1 continuous (1-rune context, plaintext autokey with any tables at lag 1). Wider windows untestable by the declared bound; with a stream key on top, see row 3 |
 | 13 | Key from a small alphabet: digits, hex, letters | r = q ⊛ k is uneven | ✗ | C13 |
 | 14 | Key from a wide alphabet: bytes, 00–99, base 60, 000–999 | no marginal power | ◐ | every named source on disk ✗ (stage R §16, grid §12); others need a *named* source + `detect.log_lr(starts=)` |
 | 15 | Integer sequences (46 OEIS-style, raw and chained) | — | ✗ | ledger |
-| 16 | Primes, φ(p), p ± c, 3301 − p; solved text's sums and values | — | ✗ | stage I (§8) |
+| 16 | Primes, φ(p), p ± c, 3301 − p; solved text's sums and values; φ(n), σ(n), Σφ, prime gaps, φ(φ(n)), n·φ(n) | — | ✗ | stage I (§8); C28 (§32) |
 | 17 | Digraphic (Playfair-like; Hill n = 2), any fixed 2-block table | aligned block repeat count K | ✗ | C20 (§24), any offset; also the ledger |
 | 18 | Hill n ≥ 3, any fixed n-block table (ECB codebook) | aligned block repeat count K | ◐ | C20 (§24): ✗ n = 3, 4 at any offset, n = 5 in the continuous stream; n ≥ 6 untestable at LP2's length |
 | 18a | Word-deterministic: key restarting at each word, word codebook, any cipher word = T(plain word) | repeated cipher words | ✗ | C20 (§24): 25 within-section pairs vs flat 20, English ≥ 3,433. Homophonic codebooks ○ |
+| 18b | Key (or alphabet sequence) restarting at every section, paragraph, clause, written line or page | same-position agreement between units K_u | ✗ | C22 (§26), any alphabets, in step; C26 (§30) with a per-unit shift, straight alphabets. End-aligned and every-k-th-unit restarts ○ |
 | 19 | Homophonic over the same 29 symbols | homophones must flatten English | ✗ | C15: 26 plaintext letters leave 3 spare runes; the flattest allocation still has χ² ≥ 4,802 (LP2 26.4). J and X alone decide it. With a flat stream on top, see row 3 |
-| 20 | Section key reuse (two-time pad across sections) | cross-section difference statistics | ✗ | ledger. The pre-2026 "overlaps" were duplicated text (tracker §4.3) |
+| 20 | Key reuse inside LP2 (two-time pad), sections or anywhere | same-position agreement; labelled diagonal segment score S | ◐ | C22 (§26): no restart at sections or other units; C23 (§27): no reused stretch ≥ 3,000 runes at any offset, either direction. Shorter stretches ○. The pre-2026 "overlaps" were duplicated text (tracker §4.3) |
 | 21 | Common PRNGs / KDFs; public random archives | — | ✗ | Dukotah ledger (~14.5 billion offsets) |
-| 22 | *Named* custom generator (LFSR with stated taps and seed, hash chain of a stated phrase) | — | ○ | needs exact definition + mod-29 mapping + `detect.log_lr` |
+| 22 | *Named* custom generator (LFSR with stated taps and seed, hash chain of a stated phrase, base-29 constants) | — | ◐ | ✗ base-29 π, e, φ, √2, √3, ln 2, √3301, Copeland–Erdős, Champernowne, φ(p) concatenated, starts < 1000 (C27, §31). Others need an exact definition + mod-29 mapping + `detect.log_lr` |
 | 23 | Two or more additive layers | only the sum is visible | constraints apply to the sum | test the composed stream, not one layer |
-| 24 | Per-position alphabet c = σ_{k_i}(p), non-additive | label-free emissions (`alphabets.log_mean_lr`); uneven marginal | ◐ | ✗ any key of period ≤ 1000 in step (C9, §17). ✗ any random tabula keyed by ≤ 153 effective classes, any alignment (C16, §18): primes, letters, corpora, payloads mod 29. Open: > 150-class keys (raw bytes), testable in step only, with flat synthetic negatives |
+| 24 | Per-position alphabet c = σ_{k_i}(p), non-additive | label-free emissions (`alphabets.log_mean_lr`); uneven marginal | ◐ | ✗ any key of period ≤ 1000 in step (C9, §17), ≤ 4,907 in the continuous stream (C25, §29). ✗ any random tabula keyed by ≤ 153 effective classes, any alignment (C16, §18): primes, letters, corpora, payloads mod 29. Open: > 150-class keys (raw bytes), testable in step only, with flat synthetic negatives |
 | 24a | Latin-square tabula (Quagmire I–IV, keyed mixed alphabets) c = π₂(π₁(p) + κ) | none key-free: it is the additive cipher renamed (`quagmire.py`) | ◐ | ✗ English, digit, hex keys under random alphabets (C18, §19); ✗ iid key with V_eff ≥ 17 as sole deficit cause (C17); ✗ English and digit keys under all 314,432 triples of 34 named LP keyword alphabets, hex under all but 431, uniform A–Z under 103,864 (C19, §20). Open: other keywords and keyed-alphabet constructions; uniform-letter keys under the remaining triples (mostly untestable at LP2's length) |
 | 25a | Chain-multiplicative c = c₋₁ + (p − x)·k (doublets mark plaintext x) | doublet count and word positions are x's | ✗ | C3, all 29 letters (findings §15) |
 | 25 | Bitwise ops on 5-bit rune codes (XOR) | produces values 29–31 | arg | needs a stated reduction to 29 values, or it emits impossible runes |
