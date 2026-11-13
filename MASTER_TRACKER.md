@@ -4,7 +4,7 @@
 and what to do next. Every claim on it is backed by a test or a linked document. If something here
 disagrees with the tests, the tests win, and this page needs fixing.
 
-**Last updated:** 2026-10-12 · **Tests:** 268, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
+**Last updated:** 2026-11-13 · **Tests:** 278, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
 
 ---
 
@@ -92,6 +92,10 @@ written in base 29 (π, e, φ, √2, √3, ln 2, √3301) and base-29 concatenat
 None is the key, from any start below 1,000 (C27; best real decode −56 nats).
 Stage AH (findings §32) takes LP1's "THE TOTIENT FUNCTION IS SACRED" literally. φ(n) over all integers, σ(n), Σφ, the prime
 gaps, φ(φ(n)) and n·φ(n), raw and chained, are not the key (C28; best real decode −48 nats).
+Stage AI (findings §33) looks at the three OutGuess payloads, which share a head and a tail byte for byte. Their
+differing middles are related (bits agree 51.5 % of the time, z ≥ 20), but the agreement is the same at every bit
+position. So they are not a depth of text, hex, base64 or any byte-oriented messages. That is the signature of a
+default-key extraction from same-size scans, and there is nothing to crib.
 
 **Next actions, in order** (all low prior; detail in [findings §6–§32](reference/findings/lp2_logic_findings_2026-09-29.md)):
 
@@ -101,7 +105,8 @@ gaps, φ(φ(n)) and n·φ(n), raw and chained, are not the key (C28; best real d
 2. **More named sources** only with a new primary source or an exact generator definition. On disk, every Cicada
    number, payload and byte source is exhausted (§16, §21, §23), and so are base-29 constants (§31, C27). New candidates
    are OutGuess output from scans the repo does not hold (community `lp_outguessed/`) or a named generator (catalog row
-   22). `tools/run_stage_ag.py` takes any key-value list unchanged (starts < 1000, drift-tolerant, 870 decodes per
+   22). Stage AI (§33) makes the OutGuess files look like extraction artefacts, so check that first (TODO stage AP).
+   `tools/run_stage_ag.py` takes any key-value list unchanged (starts < 1000, drift-tolerant, 870 decodes per
    source).
 3. **Reused key stretches shorter than ~3,000 runes** (straight alphabets, C23) and **under mixed alphabets** (any length).
    The difference law carries only 0.025 nats per pair, so a labelled test cannot go much below 2,500 runes. A
@@ -312,6 +317,9 @@ RANDOM.ORG and RAND archives (~14.5 billion offsets). Both conclude "OTP-class" 
   the hint, the `page_00` hex and the second-onion hex, from every cyclic phase, in step, under ⊕, g − k, g + k and k − g,
   in row or column order either way. Excluded for any plaintext with at most 120 distinct bytes (text, runes, hex, decimal,
   base64). A slipping key, sources not on disk and high-entropy plaintexts remain **open**.
+- **The three OutGuess payloads as a depth of byte-oriented messages** (findings §33): their XORs are related but flat
+  in bit phase (S1 p ≥ 0.37), so no text, hex, base64 or byte-field messages lie in depth. Messages with no byte phase,
+  and the files' provenance, remain **open**.
 - **Word- and block-deterministic ciphers** (C20, findings §24): a key restarting at every word, any word codebook,
   and any fixed substitution of aligned 2–4-rune blocks (Hill, digraphic, polygraphic) at any offset, plus 5-rune
   blocks in the continuous stream. Homophonic codebooks, blocks of 6 or more runes, and blocks restarting at
@@ -385,6 +393,7 @@ The ordered list is in §1. These questions are also open and cheap to state:
 
 | Date | What happened | Commits |
 |---|---|---|
+| 2026-11-13 | **OutGuess payload depth** (TODO AI): backlog renumbered AI–AT, with its C21–C28 overlaps marked (`2680879`). The draft uniformity test was replaced before the run, because a default-key extraction from same-size scans also fails uniformity. Declared discriminator: bit-phase homogeneity of P_a ⊕ P_b. 248 controls classed as declared. **RELATED**: S2/S3 fire (z ≥ 20), S1 silent (p ≥ 0.37). No byte-oriented depth, consistent with an extraction artefact | `9d79642` `2cfaa6d` + this commit |
 | 2026-10-12 | **Totient streams** (TODO AH): 6 arithmetic functions × raw / chain = 12 keys, sieves checked against definitions, stage AG's family (10,440 decodes). Controls ≥ +189.7 / ≤ −67.3. **No pass** (best real −47.9). **C28:** all 324 testable cells excluded | `17cba27` `ce81da6` + this commit |
 | 2026-10-12 | **Base-29 constants** (TODO AG): exact base-29 digits (`keys.constant_digits`, `keys.concatenated_digits`, verified to 60 decimals) of 7 constants and 3 concatenated streams as running keys, uniform prior over starts < 1000, stage R's drift-tolerant family (8,700 decodes). Controls ≥ +194.9 / ≤ −68.2. **No pass** (best real −56.0). **C27:** all 270 testable cells excluded. `--quick` scored 120 declared decodes before the runner commit (disclosed) | `7c83e52` `5e8c507` + this commit |
 | 2026-10-12 | **Shifted restarts** (TODO AF): S_u = pairs of units agreeing on within-unit differences c[t′] − c[t] (gaps 2–300), which cancel any per-unit constant. 5 unit types, 200 nulls, 100 controls per source (additive and Beaufort). Valid (a 20-draw clause offset checked on 150 null-only draws first). No pass; **all five excluded (C26)**, prediction met. C22's line z = 2.98 is not echoed (z 0.61) but this stage cannot resolve a 1 % effect | `e2e305f` `adea288` + this commit |

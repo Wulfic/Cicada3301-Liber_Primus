@@ -5,6 +5,7 @@ Run from the repo root:  python -m unittest tests.test_stage_ai -v
 
 from __future__ import annotations
 
+import csv
 import unittest
 
 import numpy as np
@@ -69,6 +70,39 @@ class TestStageAIMachinery(unittest.TestCase):
         self.assertEqual(ai.verdict(["-", "S1", "-"]), "DEPTH")
         self.assertEqual(ai.verdict(["-", "S3", "S2+S3"]), "RELATED")
         self.assertEqual(ai.verdict(["-", "-", "-"]), "INDEPENDENT")
+
+
+class TestStageAIRecorded(unittest.TestCase):
+    """The recorded run (findings §33): valid controls, verdict RELATED, flat bit phase; recomputed from the payloads."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        with ai.RESULTS_PATH.open(encoding="utf-8", newline="") as f:
+            cls.rows = {r["name"]: r for r in csv.DictReader(f, delimiter="\t")}
+        with ai.CONTROLS_PATH.open(encoding="utf-8", newline="") as f:
+            cls.controls = [tuple(r.values()) for r in csv.DictReader(f, delimiter="\t")]
+
+    def test_recorded_controls_are_valid(self) -> None:
+        self.assertEqual(len(self.controls), 248)
+        self.assertEqual(ai.controls_pass(self.controls), [])
+
+    def test_recorded_verdict(self) -> None:
+        self.assertEqual(set(self.rows), {"17x21", "17x43", "21x43"})
+        self.assertEqual({r["verdict"] for r in self.rows.values()}, {"RELATED"})
+        self.assertEqual({r["fires"] for r in self.rows.values()}, {"S2+S3"})
+        self.assertGreaterEqual(min(float(r["p_phase"]) for r in self.rows.values()), 0.3)
+        self.assertGreaterEqual(min(float(r["z_agree"]) for r in self.rows.values()), 20.0)
+
+    def test_statistics_recompute_from_the_payloads(self) -> None:
+        p = ai.load_payloads()
+        for name, (zero_bytes, run, z) in {"17x21": (737, 48, 20.018), "17x43": (1_060, 48, 24.616),
+                                          "21x43": (738, 34, 20.153)}.items():
+            a, b = name.split("x")
+            lo, hi = ai.differing_span(p[a], p[b])
+            s = ai.statistics(p[a][lo:hi] ^ p[b][lo:hi])
+            self.assertEqual((s["zero_bytes"], s["longest_zero_run"]), (zero_bytes, run), name)
+            self.assertAlmostEqual(s["z_agree"], z, places=3)
+            self.assertAlmostEqual(s["chi2_phase"], float(self.rows[name]["chi2_phase"]), places=3)
 
 
 if __name__ == "__main__":

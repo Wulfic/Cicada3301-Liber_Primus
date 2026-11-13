@@ -54,89 +54,17 @@ has checked.
 
 | Stage | What | New sources? | Cost | Why this rank |
 |---|---|---|---|---|
-| AI | The three OutGuess payloads are aligned byte for byte: XOR them | no | 1 hour | The only unexplained exact structure on disk. Key-free. Could give a three-message depth |
 | AJ | Anatomy of the 86 survivors: which runes, where in the word and line | no | 1 session | Separates M3 and M4 from M1 and M2 |
 | AK | Label coincidences: alphabets fixed by two or three earlier runes, by offset in a line, page or clause, or by unit | no | 1 session | Key-free, and closes catalog row 12 and every key restart except per word |
 | AL | Linear filters: keystreams that obey a recurrence mod 29 | no | 1 session | Key-free and immune to drift. Closes the community's LFSR lead up to order 3 |
 | AM | Is any cipher rune tied to one plaintext letter (multiplicative or affine streams) | no | half a session | Key-free, for every multiplier key at once |
 | AN | Word shapes: is LP2's segmentation that of its plaintext | no | half a session | Every word-based result assumes it. Tests M4 with nulls |
 | AO | Scan overlay: red titles, initials, dots, cuneiform | scans on disk | 1–2 sessions | Data the master drops. Feeds AK and AQ |
-| AP | Provenance, missing OutGuess output, signed messages, the ledgers' own lists | network, owner's OK | 1 session | Stops AQ and AT repeating the ledgers. Worth more if AI finds depth |
+| AP | Provenance, missing OutGuess output, signed messages, the ledgers' own lists | network (pre-approved) | 1 session | Stops AQ and AT repeating the ledgers. AI found no depth, so item 2a (reproduce the extraction) comes before item 2 |
 | AQ | Named streams on the lag-1 difference, then consumed backwards, then φ(n)-type functions | no | 1 hour of compute each | Catalog row 11 at the one lag that is anomalous |
 | AR | The square as a generator: Fibonacci mod M as a prime index | no | 1 hour | The only recipe printed inside LP2. Low prior |
 | AS | Grid as an RC4 key on the payloads' shared head; digest census against the AN END hash | no | half a session | Exact tests, so no false positives. Low prior |
 | AT | Seeded hash chains and PRNGs (catalog row 22) | after AP | — | Cannot say what it adds until the ledgers' seed lists are read |
-
-#### AI: the three OutGuess payloads are aligned byte for byte
-
-**Fact** (re-derived today; AI's first commit pins it with a test). `data/outguess/page_17.bin`, `page_21.bin` and
-`page_43.bin` are 58,152 bytes each. 17↔21 and 17↔43 agree on the first 1,417 and the last 1,953 bytes. 21↔43 agree on
-the first 2,004 and the last 2,228. (`cmp` reports the first difference at bytes 1,418 and 2,005.) The archived tracker
-recorded this in its §9.1. No current doc does, and stages R, W and Y treated the files as three unrelated keys.
-
-**What that already implies.** The agreement starts and stops inside 8- and 16-byte blocks: 2,004 ≡ 4 mod 8 and mod 16,
-and the 21↔43 difference ends at offset 55,923 ≡ 3 mod 8. Under ECB a changed block changes each byte with probability
-255/256, so four agreeing bytes inside a changed block have chance 256⁻⁴ ≈ 2 × 10⁻¹⁰, at each end. CBC cannot
-re-converge at all. So the files are related position by position. Two readings are left:
-
-- **H-stream:** one keystream was XORed onto three messages that share a head and a tail (a stream cipher, counter
-  mode, or a reused pad).
-- **H-raw:** three high-entropy objects that share bytes, for example an extraction artefact of images built on one
-  template.
-
-**Draft test, superseded by the declaration below.** The draft scored the XOR's uniformity and its zero runs, plus
-the three-way XOR. Two flaws. (1) H-raw also makes the XOR non-uniform. All 75 scans are 2400 × 3600 baseline JPEGs, so
-a default-key `outguess -r` picks the same coefficient positions in every scan, and the ARC4 keystream it applies
-cancels in P_a ⊕ P_b. Blank regions that every page shares then show up as zero bytes and biased bits. Uniformity
-cannot tell a depth from an extraction artefact. (2) Under H-stream, P₁₇ ⊕ P₂₁ ⊕ P₄₃ = M₁₇ ⊕ M₂₁ ⊕ M₄₃ ⊕ K still holds
-one copy of the key, so it is uniform under both readings. It is dropped.
-
-### AI — OutGuess payload depth (declared 2026-11-13, before any XOR statistic was computed)
-
-**Model.** H-stream: P_x = M_x ⊕ K for x ∈ {17, 21, 43}, one keystream K, messages M_x. Then X_ab = P_a ⊕ P_b = M_a ⊕ M_b
-has no key in it. H-raw: P_x = L_x ⊕ K, where L_x is the LSB stream of scan x's coefficients at key-chosen positions.
-Then X_ab = L_a ⊕ L_b, whose bits agree wherever the images do.
-
-**Discriminator.** Under H-raw the 8 bits of one byte come from 8 coefficient positions that know nothing of byte
-boundaries. So bit j of X agrees (is 0) at the same rate for every j = 0…7, however clustered the agreement is.
-Byte-oriented plaintexts in depth (ASCII text, hex, base64, any format with byte fields) give phase-dependent rates.
-ASCII ⊕ ASCII has bit 7 = 0 always, for example.
-
-**Data.** Bytes [h, n − t) of each pair, where the pair differs: 17↔21 and 17↔43 at [1,417, 56,199), 54,782 bytes;
-21↔43 at [2,004, 55,924), 53,920 bytes. Pinned by `tests/test_stage_ai.py` in this commit.
-
-**Statistics, per pair** (3 pairs × 3 statistics = 9 tests, each at p ≤ 10⁻⁵, family ≤ 9 × 10⁻⁵):
-- **S1, bit phase:** the 8 × 2 table (bit j of X is 0 or 1) against homogeneity, χ² on 7 df.
-- **S2, bit agreement:** the total count of zero bits in X against Binomial(8n, ½), z-score, two-sided.
-- **S3, byte uniformity:** χ² of X's 256 byte values against uniform, 255 df.
-p-values from `stats.chi2_sf_wilson_hilferty` and the normal tail. Reported, not tested: the zero-byte count, the
-longest zero run, and the eight bit rates.
-
-**Verdict, declared now:**
-- **DEPTH:** S1 fires for at least one pair. The messages are byte-structured and lie in depth. The next stage
-  declares cribs. Payload work moves up the list.
-- **RELATED, NOT BYTE-STRUCTURED:** S1 silent for all pairs, S2 or S3 fires for at least one. This is H-raw, or a
-  plaintext with no byte phase (a 1-bit bitmap, compressed data with shared stretches). No crib attack follows. AP
-  gets a new item: reproduce `outguess -r` on the scans to settle it.
-- **INDEPENDENT:** nothing fires. Each file is head + independent noise + tail. Payload work drops down the list, and
-  tracker next-action 2 loses most of its value.
-
-**Controls**, at the real middle lengths, seeded, run before the real pairs (`--quick` runs only these):
-- negative: 100 pairs of independent uniform bytes. Nothing may fire in any of them;
-- positive DEPTH: two English texts (`data/corpora/`, disjoint stretches), two hex strings, two base64 strings,
-  each pair under one shared random pad. Each must be classed DEPTH;
-- positive RELATED: 20 simulated H-raw pairs. Runs of geometric length (mean 64 bytes), 30 % of them "shared", where
-  each XOR bit is 0 with probability 0.97, the rest uniform. Each must be classed RELATED, with S1 silent. This shows
-  the classifier separates the two readings as built. It does not prove that real OutGuess output is exchangeable
-  by bit phase. That rests on the argument above.
-
-If any control fails, the stage is void, recorded as such, and no LP verdict is drawn.
-
-**Not doing:** the three-way XOR (see above), crib dragging, re-implementing OutGuess (that is an AP item if the
-verdict is RELATED), and any change to the declared family after the run. **Blast radius:** additive only. New
-runner tools/run_stage_ai.py (next commit, before the real run), `tests/test_stage_ai.py` and TSVs under
-`reference/findings/`, then doc updates.
-**Rollback:** `git revert` the stage's commits.
 
 #### AJ: anatomy of the 86 survivors
 
@@ -230,13 +158,18 @@ dot and cuneiform numbers as named values for AQ; a check on M5 (do the marks li
 #### AP: primary sources
 
 1. `data/outguess/` has no README. Record which image, tool and key produced each file.
-2. Fetch the OutGuess output of the other scans (the community lists 65 and 68–71; rtkd/iddqd `lp_outguessed/`). This
-   is worth doing only if AI finds depth, where each further payload is a further message.
+2. ~~Fetch the OutGuess output of the other scans~~ **Demoted by stage AI (findings §33).** The payloads are not a
+   byte-oriented depth, and look like default-key extraction artefacts. More of them would add extraction runs, not
+   messages. Fetch them only if item 2a fails.
+2a. **Reproduce the extraction.** Run `outguess -r` with no key on scans 17, 21 and 43 (and check whether those are
+   the right images, see item 1). Byte-identical output proves H-raw and closes the payloads as key material. Any
+   difference is the first real evidence of an embedded message. Needs an OutGuess build, or a JPEG coefficient reader
+   plus OutGuess's iterator in Python, checked against a known stego file.
 3. Put Cicada's signed messages in `reference/sources/` with their `gpg --verify` results, so that hints such as "its
    words are the map, their meaning is the road, and their numbers are the direction" stop being memory-tier.
 4. Read both ledgers' own lists: the 46 sequences and what "chain form" means, and Dukotah's generators and seeds.
 
-Needs network access and the owner's OK.
+Network access is pre-approved by the owner (2026-11-13).
 
 #### AQ: named streams on the lag-1 difference
 
@@ -308,6 +241,7 @@ the power of `detect.log_lr` per rune. Worth doing before AQ and AR.
 
 | Date | Stage | Result | Commits |
 |---|---|---|---|
+| 2026-11-13 | **AI** OutGuess payload depth | Backlog renumbered AI–AT, C21–C28 overlaps marked (`2680879`). Declared first (`9d79642`), replacing the draft's uniformity test, which an extraction artefact also fails. Runner committed before the payloads were scored (`2cfaa6d`). 248 controls valid. **RELATED**: bits agree 51.5 % (z ≥ 20) but flat by bit phase (S1 p ≥ 0.37). No byte-oriented depth, so nothing to crib; AP item 2 demoted, 2a added → findings §33 | `9d79642` `2cfaa6d` + this |
 | 2026-10-12 | **AH** totient and arithmetic-function keys | Declared first (`17cba27`); runner committed before LP2 was scored (`ce81da6`). 12 keys (φ(n), σ(n), Σφ, prime gaps, φ(φ(n)), n·φ(n); raw and chain), stage AG's family, 10,440 decodes. Controls pass for all 12. **No pass** (best real −47.9). **C28:** all 324 testable cells excluded. Prediction met → findings §32 | `17cba27` `ce81da6` + this |
 | 2026-10-12 | **AG** base-29 constants as the key | Declared first (`7c83e52`); digit generators and runner committed before the full run (`5e8c507`; its `--quick` had scored 120 declared decodes, disclosed). 10 sources × 3 modes × 29 shifts × 10 alignments, starts < 1000. Controls pass for all 10. **No pass** (best real −56.0). **C27:** all 270 testable cells excluded; only segment 10 (9 runes) untestable. Prediction met → findings §31 | `7c83e52` `5e8c507` + this |
 | 2026-10-12 | **AF** shifted restarts | Declared first (`e2e305f`); runner committed before LP2 was scored (`adea288`). Within-unit difference agreement across units, gaps 2–300, 5 unit types; 200 nulls, 100 controls per source (additive and Beaufort, random per-unit shifts). Valid. **No pass; all 5 excluded (C26)**, prediction met → findings §30 | `e2e305f` `adea288` + this |

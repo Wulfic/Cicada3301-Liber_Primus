@@ -60,6 +60,7 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 | The complete base-60 grid as a key in the tested alignments (stage M) | 3,132 | −13.75 excluding the short title vs +30 | `test_recorded_family_fails` |
 | The complete grid under the named byte/rune readings (stage N) | 456 | 42.6 % printable vs 90 %; +4.63 vs +30 | `test_recorded_verdict` |
 | Cicada's numbers and OutGuess payloads, any phase (stage R) | 43,500 | −50.8 vs +30 | `test_recorded_family_is_complete_and_fails` |
+| The three OutGuess payloads as a depth, by bit phase (stage AI, §33) | 3 pairs | S1 p ≥ 0.37 vs 10⁻⁵: no byte-structured depth; related bit-wise (S2 z ≥ 20), verdict RELATED | `test_recorded_verdict` |
 | Long named keys as per-position alphabets, label-free (stage S) | 200 | **void**: excludes nothing (§17) | `test_run_2_is_void` |
 | The same 20 classings as random tabulae, by flatness (stage T) | 20 | 15 excluded (≤ 29 classes, P ≤ 2.4 × 10⁻¹²); 5 raw-byte keys not (P ≈ 10⁻³) | `test_named_classings` |
 | Key families under random Quagmire alphabets (stage U) | 24 | 20 excluded (P ≤ 1.7 × 10⁻¹¹); 4 letters A–Z rows untestable | `test_recorded_verdicts` |
@@ -1450,3 +1451,52 @@ unexcluded.
 **What this does not cover.**
 - Other arithmetic functions, other indexings (n from another origin past 1,000, or n over the primes beyond φ(p)), and
   maps other than mod 29.
+
+## 33. The OutGuess payloads are related, but not a byte-structured depth (2026-11-13, TODO stage AI)
+
+Declared in `TODO.md` (`9d79642`) before any XOR statistic was computed. The runner was committed before the payloads
+were scored (`2cfaa6d`; its `--quick` runs the controls only). Run: `python -m tools.run_stage_ai` (seconds). Rows are
+in [`stage_ai_pairs.tsv`](stage_ai_pairs.tsv) and [`stage_ai_controls.tsv`](stage_ai_controls.tsv). Tests:
+`tests/test_stage_ai.py`.
+
+**The fact.** `page_17.bin`, `page_21.bin` and `page_43.bin` are 58,152 bytes each and agree byte for byte outside
+one span per pair: 17↔21 and 17↔43 differ only in [1,417, 56,199), and 21↔43 only in [2,004, 55,924). Stages R, W and Y
+treated them as three unrelated keys.
+
+**The question.** Is this one keystream on three messages that share a head and a tail (H-stream, a depth), or an
+extraction artefact (H-raw)? H-raw is a concrete mechanism. All 75 scans are 2400 × 3600 baseline JPEGs, so a
+default-key `outguess -r` picks the same coefficient positions in each, and the ARC4 stream it applies cancels in the
+XOR. Both readings make P_a ⊕ P_b non-uniform. They differ in bit phase. Under H-raw the 8 bits of a byte come from
+coefficients that know nothing of byte boundaries, so every bit position agrees at the same rate. Byte-oriented
+messages in depth (text, hex, base64, fixed fields) agree at rates that depend on the bit position.
+
+**Design.** Per pair, on the differing span: S1, bit phase (8 × 2 homogeneity χ², 7 df); S2, zero bits against
+Binomial(8n, ½); S3, byte values against uniform (χ², 255 df). Each test fires at p ≤ 10⁻⁵. DEPTH if S1 fires for any
+pair, RELATED if only S2 or S3 fire, INDEPENDENT if nothing fires.
+
+**Controls**, at both span lengths: 248 rows, all classed as declared. 200 pairs of independent random bytes fire
+nothing. English (two pairs), hex and base64 under a shared pad are DEPTH, with S1 at p below double precision. 40
+simulated H-raw pairs are RELATED, with S1 p ≥ 0.086.
+
+**Result: RELATED.**
+
+| Pair | n | S1 χ² (p) | S2 z | S3 χ² (p) | Zero bytes (uniform ≈ 214) | Longest zero run | Zero rate, bits 7…0 |
+|---|---|---|---|---|---|---|---|
+| 17 × 21 | 54,782 | 7.61 (0.37) | 20.0 | 1,784 (10⁻²¹⁰) | 737 | 48 | 0.510–0.517 |
+| 17 × 43 | 54,782 | 5.41 (0.61) | 24.6 | 3,837 (< 10⁻³⁰⁰) | 1,060 | 48 | 0.516–0.521 |
+| 21 × 43 | 53,920 | 6.00 (0.54) | 20.2 | 1,760 (10⁻²⁰⁶) | 738 | 34 | 0.512–0.518 |
+
+**Reading.**
+- The middles are not independent. Bits agree about 51.5 % of the time against 50 %, and zero bytes come in runs of
+  up to 48. Something is shared at the same offsets throughout the files.
+- The agreement is flat across the eight bit positions. **The three payloads are not a depth of byte-oriented
+  messages** (ASCII or UTF-8 text, hex, base64, or anything with byte fields). There is nothing to crib.
+- That is the H-raw signature: same-size images read at the same key-chosen positions, agreeing where the pictures
+  agree. A plaintext with no byte phase (a 1-bit bitmap, say) would also fit, so this is not proof of H-raw. Proof is
+  to reproduce the files with `outguess -r` on the scans, which is now an item of TODO stage AP.
+- If the files are default-key extraction output, every payload from a scan of this size carries the same artefact.
+  Fetching more of them (community `lp_outguessed/`) then adds no messages, only more extraction runs.
+
+**What this does not cover.** Messages in depth with no byte phase. A different key per file (that is not a depth at
+all). Whether these files came from scans 17, 21 and 43, or from LP pages with those numbers. `data/outguess/` has no
+provenance record (TODO stage AP, item 1).
