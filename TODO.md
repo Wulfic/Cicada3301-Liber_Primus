@@ -84,17 +84,59 @@ re-converge at all. So the files are related position by position. Two readings 
 - **H-raw:** three high-entropy objects that share bytes, for example an extraction artefact of images built on one
   template.
 
-**Test.** Under H-stream, P_a ⊕ P_b = M_a ⊕ M_b with no key. Over the bytes where a pair differs:
-1. distinct values and χ² of the XOR against uniform (stage Y's distinct-byte statistic has an exact null);
-2. the count and length of zero runs inside the middle, against Binomial(n, 1/256);
-3. the same for the three-way XOR.
+**Draft test, superseded by the declaration below.** The draft scored the XOR's uniformity and its zero runs, plus
+the three-way XOR. Two flaws. (1) H-raw also makes the XOR non-uniform. All 75 scans are 2400 × 3600 baseline JPEGs, so
+a default-key `outguess -r` picks the same coefficient positions in every scan, and the ARC4 keystream it applies
+cancels in P_a ⊕ P_b. Blank regions that every page shares then show up as zero bytes and biased bits. Uniformity
+cannot tell a depth from an extraction artefact. (2) Under H-stream, P₁₇ ⊕ P₂₁ ⊕ P₄₃ = M₁₇ ⊕ M₂₁ ⊕ M₄₃ ⊕ K still holds
+one copy of the key, so it is uniform under both readings. It is dropped.
 
-Text, hex, base64, bitmaps and any format with fixed fields fail uniformity by a wide margin. Controls: two texts under
-one random pad must be flagged, and two independent random strings must not.
+### AI — OutGuess payload depth (declared 2026-11-13, before any XOR statistic was computed)
 
-**If structured:** a three-message depth on about 54,000 bytes, and the next stage declares cribs. **If uniform:** each
-file is head + independent noise + tail, payload work drops down this list, and tracker next-action 2 loses most of
-its value.
+**Model.** H-stream: P_x = M_x ⊕ K for x ∈ {17, 21, 43}, one keystream K, messages M_x. Then X_ab = P_a ⊕ P_b = M_a ⊕ M_b
+has no key in it. H-raw: P_x = L_x ⊕ K, where L_x is the LSB stream of scan x's coefficients at key-chosen positions.
+Then X_ab = L_a ⊕ L_b, whose bits agree wherever the images do.
+
+**Discriminator.** Under H-raw the 8 bits of one byte come from 8 coefficient positions that know nothing of byte
+boundaries. So bit j of X agrees (is 0) at the same rate for every j = 0…7, however clustered the agreement is.
+Byte-oriented plaintexts in depth (ASCII text, hex, base64, any format with byte fields) give phase-dependent rates.
+ASCII ⊕ ASCII has bit 7 = 0 always, for example.
+
+**Data.** Bytes [h, n − t) of each pair, where the pair differs: 17↔21 and 17↔43 at [1,417, 56,199), 54,782 bytes;
+21↔43 at [2,004, 55,924), 53,920 bytes. Pinned by `tests/test_stage_ai.py` in this commit.
+
+**Statistics, per pair** (3 pairs × 3 statistics = 9 tests, each at p ≤ 10⁻⁵, family ≤ 9 × 10⁻⁵):
+- **S1, bit phase:** the 8 × 2 table (bit j of X is 0 or 1) against homogeneity, χ² on 7 df.
+- **S2, bit agreement:** the total count of zero bits in X against Binomial(8n, ½), z-score, two-sided.
+- **S3, byte uniformity:** χ² of X's 256 byte values against uniform, 255 df.
+p-values from `stats.chi2_sf_wilson_hilferty` and the normal tail. Reported, not tested: the zero-byte count, the
+longest zero run, and the eight bit rates.
+
+**Verdict, declared now:**
+- **DEPTH:** S1 fires for at least one pair. The messages are byte-structured and lie in depth. The next stage
+  declares cribs. Payload work moves up the list.
+- **RELATED, NOT BYTE-STRUCTURED:** S1 silent for all pairs, S2 or S3 fires for at least one. This is H-raw, or a
+  plaintext with no byte phase (a 1-bit bitmap, compressed data with shared stretches). No crib attack follows. AP
+  gets a new item: reproduce `outguess -r` on the scans to settle it.
+- **INDEPENDENT:** nothing fires. Each file is head + independent noise + tail. Payload work drops down the list, and
+  tracker next-action 2 loses most of its value.
+
+**Controls**, at the real middle lengths, seeded, run before the real pairs (`--quick` runs only these):
+- negative: 100 pairs of independent uniform bytes. Nothing may fire in any of them;
+- positive DEPTH: two English texts (`data/corpora/`, disjoint stretches), two hex strings, two base64 strings,
+  each pair under one shared random pad. Each must be classed DEPTH;
+- positive RELATED: 20 simulated H-raw pairs. Runs of geometric length (mean 64 bytes), 30 % of them "shared", where
+  each XOR bit is 0 with probability 0.97, the rest uniform. Each must be classed RELATED, with S1 silent. This shows
+  the classifier separates the two readings as built. It does not prove that real OutGuess output is exchangeable
+  by bit phase. That rests on the argument above.
+
+If any control fails, the stage is void, recorded as such, and no LP verdict is drawn.
+
+**Not doing:** the three-way XOR (see above), crib dragging, re-implementing OutGuess (that is an AP item if the
+verdict is RELATED), and any change to the declared family after the run. **Blast radius:** additive only. New
+runner tools/run_stage_ai.py (next commit, before the real run), `tests/test_stage_ai.py` and TSVs under
+`reference/findings/`, then doc updates.
+**Rollback:** `git revert` the stage's commits.
 
 #### AJ: anatomy of the 86 survivors
 
