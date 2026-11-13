@@ -15,10 +15,14 @@ under "Done" with its commits. The full text stays in git history. Status and ne
 thresholds, controls) committed before its first run. Figures marked "estimate" are for ranking and get replaced by
 control measurements then.
 
-- **Goal.** An ordered list of attacks that no constraint (C1–C20, L1–L5), ledger or stage has covered, each concrete
+- **Goal.** An ordered list of attacks that no constraint (C1–C28, L1–L5), ledger or stage has covered, each concrete
   enough to declare.
+- **Revised 2026-11-13 (same day).** The draft named its stages AA–AL, which collided with the finished stages AA–AH
+  (findings §25–§32, C21–C28). They are renumbered AI–AT in the same order. The draft was also written against
+  C1–C20. Where C21–C28 already cover part of a stage, that stage now says so: AK (offset labels are C22),
+  AL (C23 covers in-step periods), AQ (C27 and C28 add sources) and AR (C22 and C23 shrink the moduli).
 - **Approach.** Read the tracker, the findings register and the attack catalog. Re-derive one archived claim (the
-  payload overlap, stage AA). Look at scans 32, 40 and 50.
+  payload overlap, stage AI). Look at scans 32, 40 and 50.
 - **Not done in this pass.** No LP2 statistic was computed, no code was written, nothing was fetched, nothing is committed.
 - **Blast radius.** This file and one pointer line in the tracker. **Rollback:** `git restore TODO.md MASTER_TRACKER.md`.
 
@@ -31,7 +35,7 @@ control measurements then.
    start cell is printed in red.
 3. Outside the book, each stage from 2012 to 2014 hid the next step in an artefact (OutGuess in a JPEG, two files to
    XOR, trailing whitespace), not in harder mathematics. Tier: memory and community. The repo holds no primary source
-   for this yet (stage AH).
+   for this yet (stage AP).
 4. The authors make mistakes (WIDSOM), so nothing may depend on perfect sync.
 
 **What the one anomaly could be.** 86 doublets survive where 447 are expected. Five mechanisms fit L1–L4. M1 and M2 are
@@ -42,30 +46,30 @@ has checked.
 |---|---|---|---|
 | M1 | A re-key whose replacement equals the original 19 % of the time (C8) | nothing further | — |
 | M2 | A hand check that is 81 % reliable | nothing further | — |
-| M3 | The rule cannot see some runes. 447 / 29 = 15.4 would-be doublets per rune, so 86 survivors is 5.6 runes' worth | The survivors sit on 5 or 6 rune identities, not 29. Named instance: a script that compared Latin spellings would miss the five runes with two spellings (U/V, C/K, S/Z, NG/ING, IA/IO), which gives 77 | AB |
-| M4 | A perfect rule, then seams. The stream had no doublets at all, and a later step put unrelated runes side by side at 19 % of positions: inserted nulls, a second key layer that changes value there, or a transposition that keeps 81 % of neighbours | The seams are not at word ends (C1), line ends (L2) or a fixed period ≤ 32 (L3). Nulls at the needed rate would also stretch the words (stage AF) | AB, AF |
-| M5 | The doublets are deliberate marks, such as key changes, and every accidental one was removed | The text between two marks has structure of its own | AC |
+| M3 | The rule cannot see some runes. 447 / 29 = 15.4 would-be doublets per rune, so 86 survivors is 5.6 runes' worth | The survivors sit on 5 or 6 rune identities, not 29. Named instance: a script that compared Latin spellings would miss the five runes with two spellings (U/V, C/K, S/Z, NG/ING, IA/IO), which gives 77 | AJ |
+| M4 | A perfect rule, then seams. The stream had no doublets at all, and a later step put unrelated runes side by side at 19 % of positions: inserted nulls, a second key layer that changes value there, or a transposition that keeps 81 % of neighbours | The seams are not at word ends (C1), line ends (L2) or a fixed period ≤ 32 (L3). Nulls at the needed rate would also stretch the words (stage AN) | AJ, AN |
+| M5 | The doublets are deliberate marks, such as key changes, and every accidental one was removed | The text between two marks has structure of its own | AK |
 
 **The backlog, in the order I would run it.**
 
 | Stage | What | New sources? | Cost | Why this rank |
 |---|---|---|---|---|
-| AA | The three OutGuess payloads are aligned byte for byte: XOR them | no | 1 hour | The only unexplained exact structure on disk. Key-free. Could give a three-message depth |
-| AB | Anatomy of the 86 survivors: which runes, where in the word and line | no | 1 session | Separates M3 and M4 from M1 and M2 |
-| AC | Label coincidences: alphabets fixed by two or three earlier runes, by offset in a line, page or clause, or by unit | no | 1 session | Key-free, and closes catalog row 12 and every key restart except per word |
-| AD | Linear filters: keystreams that obey a recurrence mod 29 | no | 1 session | Key-free and immune to drift. Closes the community's LFSR lead up to order 3 |
-| AE | Is any cipher rune tied to one plaintext letter (multiplicative or affine streams) | no | half a session | Key-free, for every multiplier key at once |
-| AF | Word shapes: is LP2's segmentation that of its plaintext | no | half a session | Every word-based result assumes it. Tests M4 with nulls |
-| AG | Scan overlay: red titles, initials, dots, cuneiform | scans on disk | 1–2 sessions | Data the master drops. Feeds AC and AI |
-| AH | Provenance, missing OutGuess output, signed messages, the ledgers' own lists | network, owner's OK | 1 session | Stops AI and AL repeating the ledgers. Worth more if AA finds depth |
-| AI | Named streams on the lag-1 difference, then consumed backwards, then φ(n)-type functions | no | 1 hour of compute each | Catalog row 11 at the one lag that is anomalous |
-| AJ | The square as a generator: Fibonacci mod M as a prime index | no | 1 hour | The only recipe printed inside LP2. Low prior |
-| AK | Grid as an RC4 key on the payloads' shared head; digest census against the AN END hash | no | half a session | Exact tests, so no false positives. Low prior |
-| AL | Seeded hash chains and PRNGs (catalog row 22) | after AH | — | Cannot say what it adds until the ledgers' seed lists are read |
+| AI | The three OutGuess payloads are aligned byte for byte: XOR them | no | 1 hour | The only unexplained exact structure on disk. Key-free. Could give a three-message depth |
+| AJ | Anatomy of the 86 survivors: which runes, where in the word and line | no | 1 session | Separates M3 and M4 from M1 and M2 |
+| AK | Label coincidences: alphabets fixed by two or three earlier runes, by offset in a line, page or clause, or by unit | no | 1 session | Key-free, and closes catalog row 12 and every key restart except per word |
+| AL | Linear filters: keystreams that obey a recurrence mod 29 | no | 1 session | Key-free and immune to drift. Closes the community's LFSR lead up to order 3 |
+| AM | Is any cipher rune tied to one plaintext letter (multiplicative or affine streams) | no | half a session | Key-free, for every multiplier key at once |
+| AN | Word shapes: is LP2's segmentation that of its plaintext | no | half a session | Every word-based result assumes it. Tests M4 with nulls |
+| AO | Scan overlay: red titles, initials, dots, cuneiform | scans on disk | 1–2 sessions | Data the master drops. Feeds AK and AQ |
+| AP | Provenance, missing OutGuess output, signed messages, the ledgers' own lists | network, owner's OK | 1 session | Stops AQ and AT repeating the ledgers. Worth more if AI finds depth |
+| AQ | Named streams on the lag-1 difference, then consumed backwards, then φ(n)-type functions | no | 1 hour of compute each | Catalog row 11 at the one lag that is anomalous |
+| AR | The square as a generator: Fibonacci mod M as a prime index | no | 1 hour | The only recipe printed inside LP2. Low prior |
+| AS | Grid as an RC4 key on the payloads' shared head; digest census against the AN END hash | no | half a session | Exact tests, so no false positives. Low prior |
+| AT | Seeded hash chains and PRNGs (catalog row 22) | after AP | — | Cannot say what it adds until the ledgers' seed lists are read |
 
-#### AA: the three OutGuess payloads are aligned byte for byte
+#### AI: the three OutGuess payloads are aligned byte for byte
 
-**Fact** (re-derived today; AA's first commit pins it with a test). `data/outguess/page_17.bin`, `page_21.bin` and
+**Fact** (re-derived today; AI's first commit pins it with a test). `data/outguess/page_17.bin`, `page_21.bin` and
 `page_43.bin` are 58,152 bytes each. 17↔21 and 17↔43 agree on the first 1,417 and the last 1,953 bytes. 21↔43 agree on
 the first 2,004 and the last 2,228. (`cmp` reports the first difference at bytes 1,418 and 2,005.) The archived tracker
 recorded this in its §9.1. No current doc does, and stages R, W and Y treated the files as three unrelated keys.
@@ -92,7 +96,7 @@ one random pad must be flagged, and two independent random strings must not.
 file is head + independent noise + tail, payload work drops down this list, and tracker next-action 2 loses most of
 its value.
 
-#### AB: anatomy of the 86 survivors
+#### AJ: anatomy of the 86 survivors
 
 Stage H asked where and when the survivors fall. Nobody has asked which runes they are. Tests on `leak.adjacent_pairs`:
 
@@ -104,7 +108,7 @@ Stage H asked where and when the survivors fall. Nobody has asked which runes th
 
 About 10 tests, Bonferroni. A hit names the mechanism. A clean miss removes M3 and narrows M4 to seams that ignore layout.
 
-#### AC: label coincidences
+#### AK: label coincidences
 
 **Statistic.** K_u = the number of pairs of positions that share a label u and hold the same rune. If the alphabet at
 position i is any function of u(i), each label class is a monoalphabetic sample, and K_u sits near 1.79 × flat (C12's
@@ -115,17 +119,20 @@ figure) whatever the function or the tables. Stage Z used this for words and blo
   Findings §10 left these open as "too sparse for χ²", but pair counts are not sparse: 841 contexts give about 88,000
   pairs (estimate: 40 σ for two runes, 9 σ for three). This covers c_i = p_i + f(c_{i−1}, c_{i−2}) for any f, including
   a Fibonacci-lag autokey.
-- **Offset from the start or end of a line, page, clause or paragraph.** This covers a key that restarts there (C20
-  covers words only, the ledger covers sections) and any alphabet chosen by column.
+- ~~Offset from the start of a line, page, clause or paragraph.~~ **Already covered.** C22 excludes a key or alphabet
+  sequence that restarts at every section, paragraph, clause, line or page, under any alphabets with the key in step.
+  C26 adds a constant shift per unit. Offsets counted from the *end* of a unit are still open, but they matter only
+  if the key is laid down backwards, so they are not worth a stage of their own.
 - **Unit membership:** the same clause, paragraph or page, or the same stretch between two survivors (M5), alone and
-  crossed with i mod L for L = 2…40. This covers units that each have their own short key, which smears across lags
-  and escapes C9.
+  crossed with i mod L for L = 2…40. This covers units that each have their own short key. If every unit shares one
+  period L, C25 already excludes it, because runes L apart within a unit agree. The open case is a period or key that
+  varies by unit, which smears across lags.
 
 **Null:** flat, with exact mean and variance. **Positive controls:** `keys.encrypt_dodging` variants at LP2's sizes.
 **Limits:** a flat stream on top hides everything, and offset labels lose power when a re-key consumes key, so they
 are good for short units only.
 
-#### AD: linear filters
+#### AL: linear filters
 
 If k_i = a_1·k_{i−1} + … + a_m·k_{i−m} (mod 29), then y_i = c_i − Σ a_j·c_{i−j} is the same filter applied to the
 plaintext. It has no key in it, and it is local, so drift does not matter. Scan all 841 filters of order 2 and all
@@ -133,11 +140,12 @@ plaintext. It has no key in it, and it is local, so drift does not matter. Scan 
 before the run, and filters with too little power are declared untestable.
 
 Covers: LFSRs mod 29 up to order 3 (the lead in `reference/community/community_research.md` §7a; an order-3 register
-can have period 24,388, beyond C9's reach), tribonacci-type streams, and polynomial keys of degree below m under a
-drifting rule, where the catalog's periodicity note leaves periods 26–1000 open. Not covered: binary LFSRs mapped to
-runes, which are not linear mod 29.
+can have period 24,388, beyond C23's 11,781), tribonacci-type streams, and polynomial keys of degree below m under a
+drifting rule. Not covered: binary LFSRs mapped to runes, which are not linear mod 29. **Overlap:** an order-2
+register has period ≤ 840, so C23 already excludes it in step. What this stage adds there is immunity to drift. For
+order 3 it adds the periods above 11,781 as well.
 
-#### AE: is any cipher rune tied to one plaintext letter?
+#### AM: is any cipher rune tied to one plaintext letter?
 
 **Model.** c_i = a_i·(p_i − x) + y for any multiplier stream a_i ≠ 0: a multiplicative or affine Vigenère. Rune y then
 appears exactly where plaintext x does, so y's profile over word positions copies x's.
@@ -147,7 +155,7 @@ against independence, with each letter's expected profile taken from the solved 
 letters near 1/29. An additive stream with a flat key predicts exact independence, so this also catches any key that
 follows word structure.
 
-#### AF: word shapes
+#### AN: word shapes
 
 Every word-based result (C1, C7, C20, every crib) assumes one cipher rune per plaintext rune with the word breaks kept.
 Pinned numbers: LP2 has 12,956 runes in 2,896 words (4.47 per word), and the solved text has 2,901 in 726 (4.00).
@@ -160,7 +168,7 @@ key, and the solved koan is the positive control.
 That match is a curiosity until this test says whether 4.47 is ordinary for English in runes. Nulls also predict about
 3.1 % repeats at lag 2, against 3.38–3.69 % over lags 2–10 (`test_only_lag_one_is_depleted`).
 
-#### AG: scan overlay
+#### AO: scan overlay
 
 Seen on scans 32, 40 and 50 today, and absent from `data/canonical/liber_primus_master.txt`:
 - Section and sub-section titles are in red and end at a red dotted mark. The first rune is a large red initial.
@@ -174,21 +182,21 @@ Seen on scans 32, 40 and 50 today, and absent from `data/canonical/liber_primus_
 numerals and drawings. A script builds it from the JPGs where it can; the rest is entered by eye. Canonical stays
 untouched.
 
-**Uses.** Exact title spans (titles are the only cribs with known boundaries); sub-section starts as labels for AC;
-dot and cuneiform numbers as named values for AI; a check on M5 (do the marks line up with survivors?).
+**Uses.** Exact title spans (titles are the only cribs with known boundaries); sub-section starts as labels for AK;
+dot and cuneiform numbers as named values for AQ; a check on M5 (do the marks line up with survivors?).
 
-#### AH: primary sources
+#### AP: primary sources
 
 1. `data/outguess/` has no README. Record which image, tool and key produced each file.
 2. Fetch the OutGuess output of the other scans (the community lists 65 and 68–71; rtkd/iddqd `lp_outguessed/`). This
-   is worth doing only if AA finds depth, where each further payload is a further message.
+   is worth doing only if AI finds depth, where each further payload is a further message.
 3. Put Cicada's signed messages in `reference/sources/` with their `gpg --verify` results, so that hints such as "its
    words are the map, their meaning is the road, and their numbers are the direction" stop being memory-tier.
 4. Read both ledgers' own lists: the 46 sequences and what "chain form" means, and Dukotah's generators and seeds.
 
 Needs network access and the owner's OK.
 
-#### AI: named streams on the lag-1 difference
+#### AQ: named streams on the lag-1 difference
 
 Every named-key test so far decoded c itself. Catalog row 11 (an earlier cipher rune plus a stream) is open, and lag 1
 is the only lag with an anomaly.
@@ -196,22 +204,25 @@ is the only lag with an anomaly.
 **Model.** c_i − c_{i−1} = p_i ± k_i, and the same for the sum. The "rule" then reads "the keyed value is never 0".
 
 **Families**, each its own declaration, through `detect.log_lr` on the differenced text:
-1. stage I's three streams and stage R's 25 sources;
+1. stage I's three streams, stage R's 25 sources, and the 22 streams of C27 and C28 (stages AG and AH tested those on
+   c itself, not on the difference). `tools/run_stage_ag.py` takes any key-value list unchanged;
 2. the same streams consumed backwards from each section's end;
-3. arithmetic functions of the index (φ(n) and relatives) from any start, minus whatever AH item 4 shows the ledgers ran.
+3. further arithmetic functions of the index beyond C28's six, minus whatever AP item 4 shows the ledgers ran.
 
 Do not include the multiplicative chain c_i = c_{i−1} + (p_i − x)·k_i: C3 excludes it.
 
-#### AJ: the square as a generator
+#### AR: the square as a generator
 
 The square is the only recipe printed inside LP2, and it sits directly above section 11. Its 16 cells stop at F = 987
 only because the square is full.
 
-**Model.** k_n = (3301 − p((F_n mod M) + 1)) mod 29, for a short declared list of moduli M whose Pisano period exceeds
-1,000 (C9 covers the rest), signed and unsigned, per section and continuous, from any start. A few hundred decodes
-through `detect.log_lr`.
+**Model.** k_n = (3301 − p((F_n mod M) + 1)) mod 29, for a short declared list of moduli M, signed and unsigned,
+continuous, from any start. A few hundred decodes through `detect.log_lr`. **Overlap:** the key is periodic with the
+Pisano period π(M). C23 excludes every in-step period from 11 to 11,781, so only moduli with π(M) > 11,781 are new in
+step (π(M) ≤ 6M, so M > 1,963). A key that restarts per section is C22. Smaller moduli and per-section restarts
+add only drift tolerance, so declare them as such or drop them.
 
-#### AK: the grid, the payloads' head and the hash
+#### AS: the grid, the payloads' head and the hash
 
 1. The grid is 256 bytes, which is the longest key RC4 accepts. XOR RC4's output (grid in 4 readings, declared drop
    counts) onto the 1,417-byte shared head. Pass if the result has few distinct bytes, by stage Y's statistic.
@@ -220,10 +231,10 @@ through `detect.log_lr`.
    serialisations) against the AN END hash. SHA-256, SHA-1 and MD5 against windows of the grid. A pass is an exact
    match, so the family's size costs nothing.
 
-#### AL: seeded generators (catalog row 22)
+#### AT: seeded generators (catalog row 22)
 
 Hash chains and counters (SHA-512, Whirlpool, SHA-256, MD5), RC4, and Python 2's Mersenne Twister, seeded with the
-book's words and numbers, mapped to runes by mod and by rejection. Blocked on AH item 4: Dukotah's ledger already ran
+book's words and numbers, mapped to runes by mod and by rejection. Blocked on AP item 4: Dukotah's ledger already ran
 "common KDFs and PRNGs", and without its seed list this stage cannot say what it adds.
 
 **Considered and dropped.**
@@ -235,13 +246,13 @@ book's words and numbers, mapped to runes by mod and by rejection. Blocked on AH
 | Runes written along a spiral or by columns, then read by rows | Line-end pairs would be at chance, 20 expected. L2 has 4 of 585 |
 | A multiplicative chain where a doublet is one plaintext letter | C3, all 29 letters |
 | A key built from shuffled decks, so the key never repeats a value | The cipher's doublet rate does not depend on equal key neighbours. C4's formula gives about 3.5 % |
-| A running sum of plaintext or ciphertext as the key, or any key updated linearly from the previous rune | c_i − a·c_{i−1} is then a function of two plaintext runes, which C12 sees at lag 1. This is an argument, not a test; AC's two-rune label makes it one |
+| A running sum of plaintext or ciphertext as the key, or any key updated linearly from the previous rune | c_i − a·c_{i−1} is then a function of two plaintext runes, which C12 sees at lag 1. This is an argument, not a test; AK's two-rune label makes it one |
 | The grid as an RSA signature by 7A35090F | Wrong size (findings §22, X3) |
 | LP2 as base-29 or base-28 data, a file and not text | Parked. No test proposed, and the word and clause marks would be decoration |
-| Section illustrations as method hints (roots, the loop, cuneiform) | Themes until AG turns them into values |
+| Section illustrations as method hints (roots, the loop, cuneiform) | Themes until AO turns them into values |
 
 **Detector upgrade, not a hypothesis.** Emissions by position in the word (a single-rune word is A or I) would raise
-the power of `detect.log_lr` per rune. Worth doing before AI and AJ.
+the power of `detect.log_lr` per rune. Worth doing before AQ and AR.
 
 ## Owner items
 

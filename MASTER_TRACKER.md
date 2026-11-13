@@ -114,8 +114,9 @@ gaps, φ(φ(n)) and n·φ(n), raw and chained, are not the key (C28; best real d
 6. **C22's line deviation** (z = 2.98, below the null maximum, about 1 % of a restart's effect). Leave it unless a
    declared localisation test (by page or by line gap) is cheap. As it stands it is noise.
 
-**Backlog (2026-11-13).** Twelve untried attacks, in running order, are in [`TODO.md`](TODO.md) under "Active". They are
-ideas only: nothing there is declared or run, and no result on this page has changed.
+**Backlog (2026-11-13).** Twelve untried attacks, stages AI–AT in running order, are in [`TODO.md`](TODO.md) under
+"Active". They are ideas only: nothing there is declared or run, and no result on this page has changed. Where
+C21–C28 already cover part of a stage, the stage says so.
 
 **Before you start anything:** read §4 (ruled out) and §6 (rules of evidence). Plans go in [`TODO.md`](TODO.md).
 
