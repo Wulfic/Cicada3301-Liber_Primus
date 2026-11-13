@@ -78,6 +78,9 @@ are untestable.
 3. **Desync-tolerant tabula tests.** Stage W's detector loses all power at 1 % desync, so a byte-keyed tabula with a
    slipping key is still open. A test needs a model of the slip first. Without one it is a theme, not a hypothesis.
 
+**Backlog (2026-11-13).** Twelve untried attacks, in running order, are in [`TODO.md`](TODO.md) under "Active". They are
+ideas only: nothing there is declared or run, and no result on this page has changed.
+
 **Before you start anything:** read §4 (ruled out) and §6 (rules of evidence). Plans go in [`TODO.md`](TODO.md).
 
 ---
