@@ -71,6 +71,36 @@ plaintext. It has no key in it, and it is local, so drift does not matter. Scan 
 24,389 of order 3. The statistic is χ² of y against flat. Each filter's expected value comes from the solved plaintext
 before the run, and filters with too little power are declared untestable.
 
+**Design check (2026-11-14, session ended before the declaration; no LP2 statistic computed).** Figures are from
+scratch scripts on Emerson and synthetic streams. The runner's controls must reproduce them before they are cited.
+- **The draft's χ² is too weak at order 3.** Noncentrality of y = A(D)p against flat at LP2's length (4-gram DFT of
+  Emerson): order 1 433–1,510; order 2 68–1,128, median 175; order 3 12.6–816, median 47. About 80 % of order-3
+  filters would be untestable.
+- **Replacement statistic.** An exact forward algorithm over the last m key values (29^m states, uniform prior on the
+  initial state). At each step the key is the recurrence's next value, or with probability ε a free value that the
+  state keeps. That one term absorbs feedback re-keys, glitches and slips. The emission is 29·q(c − k), with q from
+  `detect.unigram` over the solved text. At ε = 0 it equals brute-force enumeration of the initial states (checked to
+  10 decimals, orders 1–3).
+- **ε = 0.03**, the re-key rate C8 implies (0.81 × 3.45 % ≈ 2.8 %). At ε = 0.10 the order-3 null log LR in short
+  sections does not reach −10.
+- **Anytime thresholds (Ville).** Check the running log LR every 8 runes per section. It fires at +30 and is
+  excluded at −10, with the same e^−30 / e^−10 bounds as final-value rules. Design controls, 8 section lengths,
+  10 random taps per order:
+  - positives fire 240 / 240 per order (feedback re-key; glitch + 1 % slips; feedback + 1 % slips);
+  - nulls (Emerson, flat key, anti-doublet) are excluded 160 / 160;
+  - the lowest positive dip is −7.7 (order 3, feedback + slips), and the highest null peak is +5.2.
+  - Under the null a pass uses 5 / 10 / 16 % of the runes (orders 1 / 2 / 3).
+- **Cost.** A full order-3 pass is 1.04 s in numpy (`alpha[src]` gather, row-sum trick, renormalise every 8).
+  Throughput tops out at about 5 passes/s on 8 workers because of cache pressure. With sequential exits, the
+  47,096 order-3 filter-mode runs take about 30 min. Beaufort is the subtract mode on −c, and add ≡ subtract.
+- **Family.** 24,388 tap vectors (28 / 812 / 23,548) × 2 modes × 8 sections (segment 10 untestable). Of the order-3
+  vectors, 4,752 have period 12,194 (1,584) or 24,388 (3,168), beyond C23; the next largest period is 6,097. A
+  feedback re-key or a slip makes every order aperiodic, so C9 and C23 do not cover those cases.
+- **Archived claim.** The 2026-03 "LFSR(2)/(3), 0 candidates" runs used misaligned pages, an exact I/A singleton
+  constraint and fixed sync. They are not evidence.
+- **Next.** Write the declaration from these figures, then add a new lpcore recurrence module, runner and tests.
+  Commit those before LP2 is scored.
+
 Covers: LFSRs mod 29 up to order 3 (the lead in `reference/community/community_research.md` §7a; an order-3 register
 can have period 24,388, beyond C23's 11,781), tribonacci-type streams, and polynomial keys of degree below m under a
 drifting rule. Not covered: binary LFSRs mapped to runes, which are not linear mod 29. **Overlap:** an order-2
