@@ -1,0 +1,308 @@
+family	label	K	null_mean	null_sd	null_max	z	pos_mean	pos_sd	pos_fires_of_20	status
+context	c[i-1],c[i-2]	3569	3600.53	64.507	3850	-0.489	6751.6	178.38	20	excluded
+context	c[i-1],c[i-3]	3496	3518.68	61.834	3697	-0.367	6146.2	117.09	20	excluded
+context	c[i-1],c[i-4]	3530	3513.13	56.683	3684	0.298	6204.1	92.5	20	excluded
+context	c[i-1],c[i-5]	3524	3506.94	61.167	3717	0.279	6095.4	95.11	20	excluded
+context	c[i-1],c[i-6]	3445	3504.19	59.299	3691	-0.998	6182.9	110.19	20	excluded
+context	c[i-1],c[i-7]	3403	3499.12	60.719	3733	-1.583	6152.6	145.07	20	excluded
+context	c[i-1],c[i-8]	3391	3492.59	61.717	3667	-1.646	6102.8	128.48	20	excluded
+context	c[i-1],c[i-9]	3488	3490.36	60.743	3664	-0.039	6120.2	111.78	20	excluded
+context	c[i-1],c[i-10]	3519	3485.78	60.839	3682	0.546	6086.4	94.62	20	excluded
+context	c[i-1],c[i-11]	3418	3479.66	58.469	3672	-1.055	6099.5	121.82	20	excluded
+context	c[i-1],c[i-12]	3603	3480.12	58.459	3660	2.102	6076.4	87.24	20	excluded
+context	c[i-2],c[i-3]	3432	3521.36	64.165	3747	-1.393	6168.6	122.35	20	excluded
+context	c[i-2],c[i-4]	3441	3442.41	61.645	3652	-0.023	6217.5	173.41	20	excluded
+context	c[i-2],c[i-5]	3462	3436.71	61.143	3629	0.414	6004.1	123.38	20	excluded
+context	c[i-2],c[i-6]	3455	3433.87	57.742	3573	0.366	5988.8	108.75	20	excluded
+context	c[i-2],c[i-7]	3450	3423.92	61.498	3621	0.424	5991.0	111.85	20	excluded
+context	c[i-2],c[i-8]	3389	3417.79	59.933	3603	-0.48	5932.1	77.31	20	excluded
+context	c[i-2],c[i-9]	3465	3417.7	57.12	3619	0.828	5966.0	116.27	20	excluded
+context	c[i-2],c[i-10]	3302	3413.68	60.2	3589	-1.855	5946.7	114.08	20	excluded
+context	c[i-2],c[i-11]	3431	3407.41	59.789	3589	0.394	5949.9	113.65	20	excluded
+context	c[i-2],c[i-12]	3395	3403.64	56.89	3608	-0.152	5928.9	125.68	20	excluded
+context	c[i-3],c[i-4]	3572	3514.7	58.304	3698	0.983	6205.9	135.67	20	excluded
+context	c[i-3],c[i-5]	3447	3437.64	59.583	3622	0.157	6045.1	127.44	20	excluded
+context	c[i-3],c[i-6]	3367	3432.72	58.8	3603	-1.118	6210.4	144.54	20	excluded
+context	c[i-3],c[i-7]	3349	3421.36	58.696	3581	-1.233	6017.2	126.39	20	excluded
+context	c[i-3],c[i-8]	3392	3421.27	57.43	3643	-0.51	5967.6	117.97	20	excluded
+context	c[i-3],c[i-9]	3421	3415.64	58.875	3619	0.091	5936.5	95.31	20	excluded
+context	c[i-3],c[i-10]	3294	3411.52	59.556	3641	-1.973	5994.4	141.37	20	excluded
+context	c[i-3],c[i-11]	3395	3406.39	59.646	3590	-0.191	5989.9	125.25	20	excluded
+context	c[i-3],c[i-12]	3385	3402.19	59.381	3593	-0.289	5941.4	113.02	20	excluded
+context	c[i-4],c[i-5]	3504	3510.96	60.114	3721	-0.116	6167.4	105.89	20	excluded
+context	c[i-4],c[i-6]	3348	3433.42	56.815	3620	-1.503	5996.1	103.4	20	excluded
+context	c[i-4],c[i-7]	3408	3426.48	61.299	3623	-0.302	5968.5	100.92	20	excluded
+context	c[i-4],c[i-8]	3421	3419.49	62.296	3611	0.024	6185.2	139.2	20	excluded
+context	c[i-4],c[i-9]	3336	3415.37	60.736	3608	-1.307	5938.9	94.04	20	excluded
+context	c[i-4],c[i-10]	3473	3411.36	60.6	3621	1.017	5956.8	96.52	20	excluded
+context	c[i-4],c[i-11]	3388	3406.46	59.79	3639	-0.309	5958.9	126.2	20	excluded
+context	c[i-4],c[i-12]	3286	3402.9	58.162	3619	-2.01	5946.6	95.35	20	excluded
+context	c[i-5],c[i-6]	3520	3506.84	60.717	3704	0.217	6098.9	116.72	20	excluded
+context	c[i-5],c[i-7]	3503	3424.77	56.881	3606	1.375	6004.1	117.7	20	excluded
+context	c[i-5],c[i-8]	3402	3423.96	57.915	3618	-0.379	5931.4	133.6	20	excluded
+context	c[i-5],c[i-9]	3395	3415.21	61.165	3614	-0.33	5999.1	101.41	20	excluded
+context	c[i-5],c[i-10]	3397	3410.02	61.587	3623	-0.211	6124.4	139.26	20	excluded
+context	c[i-5],c[i-11]	3401	3407.46	61.323	3608	-0.105	5959.0	119.76	20	excluded
+context	c[i-5],c[i-12]	3360	3404.91	57.661	3606	-0.779	5944.4	106.11	20	excluded
+context	c[i-6],c[i-7]	3429	3502.17	59.558	3718	-1.229	6138.9	146.07	20	excluded
+context	c[i-6],c[i-8]	3487	3420.95	57.399	3583	1.151	5954.2	69.58	20	excluded
+context	c[i-6],c[i-9]	3295	3416.65	59.408	3609	-2.048	5960.9	146.72	20	excluded
+context	c[i-6],c[i-10]	3365	3412.86	58.404	3590	-0.82	5991.2	123.36	20	excluded
+context	c[i-6],c[i-11]	3287	3407.47	58.382	3603	-2.063	5968.9	134.36	20	excluded
+context	c[i-6],c[i-12]	3384	3404.0	61.806	3649	-0.324	6107.9	132.47	20	excluded
+context	c[i-7],c[i-8]	3561	3492.89	58.374	3668	1.167	6089.9	92.47	20	excluded
+context	c[i-7],c[i-9]	3358	3415.57	60.663	3594	-0.949	5961.2	106.79	20	excluded
+context	c[i-7],c[i-10]	3480	3411.53	57.399	3595	1.193	5941.1	121.03	20	excluded
+context	c[i-7],c[i-11]	3475	3407.11	58.623	3583	1.158	5947.1	136.49	20	excluded
+context	c[i-7],c[i-12]	3417	3402.01	59.089	3566	0.254	5953.5	107.94	20	excluded
+context	c[i-8],c[i-9]	3496	3490.63	59.327	3688	0.09	6098.1	107.63	20	excluded
+context	c[i-8],c[i-10]	3377	3411.87	59.658	3588	-0.585	6010.3	160.39	20	excluded
+context	c[i-8],c[i-11]	3299	3406.8	61.328	3614	-1.758	5924.6	133.06	20	excluded
+context	c[i-8],c[i-12]	3433	3399.55	59.913	3613	0.558	5932.0	108.3	20	excluded
+context	c[i-9],c[i-10]	3521	3485.14	59.672	3725	0.601	6096.3	117.66	20	excluded
+context	c[i-9],c[i-11]	3385	3409.21	56.85	3582	-0.426	5903.6	98.27	20	excluded
+context	c[i-9],c[i-12]	3331	3403.91	60.334	3586	-1.208	5966.2	114.84	20	excluded
+context	c[i-10],c[i-11]	3515	3481.97	59.777	3674	0.553	6155.1	125.36	20	excluded
+context	c[i-10],c[i-12]	3345	3399.87	56.863	3573	-0.965	5988.1	85.16	20	excluded
+context	c[i-11],c[i-12]	3498	3476.37	60.37	3718	0.358	6042.2	114.59	20	excluded
+context	c[i-1],c[i-2],c[i-3]	127	127.15	11.97	164	-0.013	236.7	13.05	20	excluded
+section	section x i mod 1	435356	436521.04	694.101	438539	-1.678	763241.6	8153.99	20	excluded
+section	section x i mod 2	217604	218321.43	474.437	219875	-1.512	384799.3	5802.83	20	excluded
+section	section x i mod 3	145424	145477.09	380.442	146688	-0.14	255168.3	4455.3	20	excluded
+section	section x i mod 4	109157	109035.11	325.519	109955	0.374	192139.5	2978.15	20	excluded
+section	section x i mod 5	87066	87209.63	296.748	88165	-0.484	153267.2	2445.84	20	excluded
+section	section x i mod 6	72393	72623.64	267.044	73458	-0.864	127061.9	1264.71	20	excluded
+section	section x i mod 7	61978	62220.99	247.836	63021	-0.98	109127.4	1492.85	20	excluded
+section	section x i mod 8	54646	54407.65	235.45	55179	1.012	95649.9	1529.14	20	excluded
+section	section x i mod 9	48115	48334.86	214.832	48983	-1.023	84678.1	885.04	20	excluded
+section	section x i mod 10	43746	43487.82	210.453	44118	1.227	76410.0	1348.2	20	excluded
+section	section x i mod 11	39451	39512.76	196.375	40226	-0.314	69548.3	983.22	20	excluded
+section	section x i mod 12	36187	36202.2	188.289	36710	-0.081	63650.4	924.45	20	excluded
+section	section x i mod 13	33344	33398.45	181.613	34113	-0.3	58766.7	969.36	20	excluded
+section	section x i mod 14	30737	31004.55	170.621	31578	-1.568	54582.2	858.88	20	excluded
+section	section x i mod 15	29250	28924.2	167.873	29434	1.941	50629.0	594.98	20	excluded
+section	section x i mod 16	27283	27098.64	164.315	27560	1.122	47726.4	629.36	20	excluded
+section	section x i mod 17	25486	25484.75	154.168	25912	0.008	44835.0	755.63	20	excluded
+section	section x i mod 18	23901	24053.31	157.991	24555	-0.964	42432.4	638.06	20	excluded
+section	section x i mod 19	22674	22781.36	148.044	23293	-0.725	39765.4	553.44	20	excluded
+section	section x i mod 20	21797	21631.11	144.221	22093	1.15	38024.9	564.1	20	excluded
+section	section x i mod 21	20516	20592.84	145.465	21019	-0.528	36226.4	668.33	20	excluded
+section	section x i mod 22	19548	19644.27	142.237	20275	-0.677	34580.4	523.19	20	excluded
+section	section x i mod 23	18766	18777.89	135.967	19228	-0.087	33142.2	647.33	20	excluded
+section	section x i mod 24	18091	17989.52	135.35	18365	0.75	31917.0	527.56	20	excluded
+section	section x i mod 25	17252	17265.73	128.351	17668	-0.107	30424.9	458.32	20	excluded
+section	section x i mod 26	16605	16586.4	126.352	17103	0.147	29068.5	482.42	20	excluded
+section	section x i mod 27	15708	15963.8	126.338	16455	-2.025	28122.7	397.74	20	excluded
+section	section x i mod 28	15249	15391.52	121.225	15789	-1.176	27001.0	502.49	20	excluded
+section	section x i mod 29	14920	14853.27	123.086	15299	0.542	25960.5	268.19	20	excluded
+section	section x i mod 30	14727	14349.67	114.787	14729	3.287	25336.7	503.44	20	excluded
+section	section x i mod 31	13832	13874.49	116.738	14320	-0.364	24445.2	331.55	20	excluded
+section	section x i mod 32	13616	13438.35	112.136	13845	1.584	23498.1	391.04	20	excluded
+section	section x i mod 33	13050	13028.53	109.295	13420	0.196	22914.5	347.64	20	excluded
+section	section x i mod 34	12526	12628.83	110.819	13009	-0.928	22156.0	489.24	20	excluded
+section	section x i mod 35	12129	12268.02	108.518	12632	-1.281	21677.4	361.78	20	excluded
+section	section x i mod 36	11888	11918.19	107.437	12247	-0.281	20941.8	329.17	20	excluded
+section	section x i mod 37	11535	11590.55	102.944	11899	-0.54	20426.0	364.21	20	excluded
+section	section x i mod 38	11132	11281.16	103.89	11573	-1.436	19856.5	369.86	20	excluded
+section	section x i mod 39	11007	10985.16	104.376	11355	0.209	19325.8	338.68	20	excluded
+section	section x i mod 40	10865	10705.02	99.672	10991	1.605	18906.6	359.72	20	excluded
+paragraph	paragraph x i mod 1	335352	336044.16	601.477	337767	-1.151	589187.5	5444.22	20	excluded
+paragraph	paragraph x i mod 2	167397	168083.05	415.844	169423	-1.65	297816.2	5572.51	20	excluded
+paragraph	paragraph x i mod 3	112179	111980.01	329.818	113097	0.603	196510.9	2998.86	20	excluded
+paragraph	paragraph x i mod 4	83943	83917.54	285.916	84753	0.089	147023.9	2510.95	20	excluded
+paragraph	paragraph x i mod 5	66844	67112.66	261.843	67977	-1.026	118753.1	2153.42	20	excluded
+paragraph	paragraph x i mod 6	55734	55875.81	231.079	56727	-0.614	98383.4	1496.59	20	excluded
+paragraph	paragraph x i mod 7	47877	47866.4	218.779	48571	0.048	84892.3	1703.5	20	excluded
+paragraph	paragraph x i mod 8	41980	41852.04	207.255	42543	0.617	73148.9	875.23	20	excluded
+paragraph	paragraph x i mod 9	37096	37171.97	186.8	37727	-0.407	65478.7	1033.47	20	excluded
+paragraph	paragraph x i mod 10	33518	33438.9	188.749	34072	0.419	58651.2	822.77	20	excluded
+paragraph	paragraph x i mod 11	30540	30376.52	170.69	30971	0.958	53325.7	720.62	20	excluded
+paragraph	paragraph x i mod 12	27880	27827.66	163.433	28272	0.32	49205.8	956.45	20	excluded
+paragraph	paragraph x i mod 13	25729	25668.25	161.855	26206	0.375	45229.9	862.64	20	excluded
+paragraph	paragraph x i mod 14	23668	23828.39	150.832	24322	-1.063	42102.5	726.76	20	excluded
+paragraph	paragraph x i mod 15	22440	22220.57	146.634	22713	1.496	39178.8	567.7	20	excluded
+paragraph	paragraph x i mod 16	20932	20821.06	143.231	21226	0.775	36476.3	606.97	20	excluded
+paragraph	paragraph x i mod 17	19546	19574.72	136.36	20004	-0.211	34291.4	469.3	20	excluded
+paragraph	paragraph x i mod 18	18388	18472.03	135.932	18960	-0.618	32576.9	434.82	20	excluded
+paragraph	paragraph x i mod 19	17471	17493.68	130.248	17906	-0.174	30721.2	415.4	20	excluded
+paragraph	paragraph x i mod 20	16711	16608.93	128.194	17010	0.796	29108.0	325.48	20	excluded
+paragraph	paragraph x i mod 21	15783	15806.09	128.492	16179	-0.18	27819.5	419.42	20	excluded
+paragraph	paragraph x i mod 22	15112	15076.97	121.436	15532	0.288	26695.4	516.18	20	excluded
+paragraph	paragraph x i mod 23	14416	14407.42	118.994	14816	0.072	25427.2	478.54	20	excluded
+paragraph	paragraph x i mod 24	13897	13803.11	116.107	14258	0.809	24209.3	304.71	20	excluded
+paragraph	paragraph x i mod 25	13235	13245.08	109.683	13564	-0.092	23353.2	412.99	20	excluded
+paragraph	paragraph x i mod 26	12730	12721.56	113.043	13168	0.075	22323.7	305.74	20	excluded
+paragraph	paragraph x i mod 27	12076	12242.28	109.34	12581	-1.521	21387.2	344.77	20	excluded
+paragraph	paragraph x i mod 28	11682	11803.13	105.255	12133	-1.151	20741.5	185.17	20	excluded
+paragraph	paragraph x i mod 29	11445	11385.4	108.912	11756	0.547	19930.6	300.11	20	excluded
+paragraph	paragraph x i mod 30	11232	10998.16	101.914	11353	2.294	19501.2	480.81	20	excluded
+paragraph	paragraph x i mod 31	10614	10634.12	102.56	11036	-0.196	18720.3	266.81	20	excluded
+paragraph	paragraph x i mod 32	10427	10300.77	98.649	10610	1.28	18200.8	304.12	20	excluded
+paragraph	paragraph x i mod 33	10120	9981.15	97.265	10292	1.428	17558.0	312.33	20	excluded
+paragraph	paragraph x i mod 34	9565	9675.23	98.171	9999	-1.123	17069.8	287.06	20	excluded
+paragraph	paragraph x i mod 35	9294	9397.35	96.739	9717	-1.068	16525.0	341.79	20	excluded
+paragraph	paragraph x i mod 36	9120	9127.32	93.415	9442	-0.078	16081.5	272.0	20	excluded
+paragraph	paragraph x i mod 37	8871	8874.24	89.864	9159	-0.036	15645.2	255.05	20	excluded
+paragraph	paragraph x i mod 38	8520	8638.02	90.996	8908	-1.297	15141.6	285.57	20	excluded
+paragraph	paragraph x i mod 39	8447	8406.09	89.788	8702	0.456	14799.9	221.24	20	excluded
+paragraph	paragraph x i mod 40	8276	8194.23	88.963	8495	0.919	14415.1	206.9	20	excluded
+clause	clause x i mod 1	32269	32375.91	163.948	32938	-0.652	56801.8	537.9	20	excluded
+clause	clause x i mod 2	16172	16256.49	121.098	16768	-0.698	28563.4	564.43	20	excluded
+clause	clause x i mod 3	10736	10757.62	104.281	11129	-0.207	18949.6	344.95	20	excluded
+clause	clause x i mod 4	7949	8010.12	87.13	8291	-0.701	14199.9	228.22	20	excluded
+clause	clause x i mod 5	6428	6367.76	80.598	6626	0.747	11359.1	215.12	20	excluded
+clause	clause x i mod 6	5286	5270.92	68.344	5470	0.221	9403.2	200.28	20	excluded
+clause	clause x i mod 7	4356	4484.1	63.635	4689	-2.013	7911.0	151.13	20	excluded
+clause	clause x i mod 8	3890	3899.3	61.663	4146	-0.151	6897.1	137.13	20	excluded
+clause	clause x i mod 9	3461	3439.04	58.506	3617	0.375	6138.5	117.4	20	excluded
+clause	clause x i mod 10	3146	3072.91	55.475	3267	1.318	5437.4	79.11	20	excluded
+clause	clause x i mod 11	2779	2771.79	51.263	2938	0.141	4883.8	88.34	20	excluded
+clause	clause x i mod 12	2562	2529.1	51.04	2711	0.645	4538.8	92.5	20	excluded
+clause	clause x i mod 13	2325	2314.82	46.73	2461	0.218	4159.0	95.47	20	excluded
+clause	clause x i mod 14	2082	2135.47	44.275	2287	-1.208	3772.4	94.31	20	excluded
+clause	clause x i mod 15	2014	1981.11	43.526	2123	0.756	3501.1	82.73	20	excluded
+clause	clause x i mod 16	1861	1843.98	42.933	1999	0.396	3279.1	48.52	20	excluded
+clause	clause x i mod 17	1723	1721.26	39.55	1851	0.044	3085.3	59.13	20	excluded
+clause	clause x i mod 18	1614	1613.82	39.3	1766	0.005	2871.6	77.23	20	excluded
+clause	clause x i mod 19	1463	1520.13	39.387	1664	-1.45	2684.2	62.31	20	excluded
+clause	clause x i mod 20	1459	1431.01	37.106	1597	0.754	2534.1	48.14	20	excluded
+clause	clause x i mod 21	1293	1354.44	35.966	1472	-1.708	2403.3	61.43	20	excluded
+clause	clause x i mod 22	1275	1282.17	35.771	1419	-0.201	2275.8	61.38	20	excluded
+clause	clause x i mod 23	1207	1219.44	33.804	1345	-0.368	2153.4	52.05	20	excluded
+clause	clause x i mod 24	1200	1163.21	34.56	1293	1.064	2039.8	53.57	20	excluded
+clause	clause x i mod 25	1098	1105.98	33.29	1205	-0.24	1963.3	51.73	20	excluded
+clause	clause x i mod 26	1051	1056.09	32.386	1157	-0.157	1880.2	63.73	20	excluded
+clause	clause x i mod 27	1008	1009.66	30.968	1103	-0.054	1819.2	47.82	20	excluded
+clause	clause x i mod 28	922	966.35	30.005	1060	-1.478	1725.8	36.35	20	excluded
+clause	clause x i mod 29	930	926.49	29.854	1020	0.118	1651.0	36.81	20	excluded
+clause	clause x i mod 30	938	889.73	28.361	975	1.702	1557.2	47.24	20	excluded
+clause	clause x i mod 31	900	853.54	28.929	958	1.606	1517.8	37.76	20	excluded
+clause	clause x i mod 32	805	822.88	27.573	910	-0.649	1471.7	43.23	20	excluded
+clause	clause x i mod 33	834	789.59	26.723	871	1.662	1401.9	43.19	20	excluded
+clause	clause x i mod 34	747	762.29	25.671	865	-0.596	1349.9	34.19	20	excluded
+clause	clause x i mod 35	762	734.85	26.749	829	1.015	1306.8	44.73	20	excluded
+clause	clause x i mod 36	704	709.06	26.297	810	-0.192	1247.9	35.47	20	excluded
+clause	clause x i mod 37	651	684.5	25.379	777	-1.32	1214.0	43.41	20	excluded
+clause	clause x i mod 38	637	663.12	24.921	734	-1.048	1177.6	38.07	20	excluded
+clause	clause x i mod 39	626	640.54	25.459	738	-0.571	1136.6	38.25	20	excluded
+clause	clause x i mod 40	621	619.26	25.225	706	0.069	1118.5	45.1	20	excluded
+line	line x i mod 1	4358	4403.71	64.27	4582	-0.711	7415.3	114.1	20	excluded
+line	line x i mod 2	2264	2264.39	48.202	2422	-0.008	3764.2	112.3	20	excluded
+line	line x i mod 3	1419	1432.52	38.767	1592	-0.349	2513.4	78.69	20	excluded
+line	line x i mod 4	1030	1020.59	32.646	1130	0.288	1770.1	56.52	20	excluded
+line	line x i mod 5	796	776.75	27.798	881	0.692	1349.1	39.35	20	excluded
+line	line x i mod 6	619	612.48	24.795	694	0.263	1081.8	38.77	20	excluded
+line	line x i mod 7	487	494.34	22.122	592	-0.332	854.0	25.04	20	excluded
+line	line x i mod 8	404	406.87	20.362	460	-0.141	725.2	28.35	20	excluded
+line	line x i mod 9	362	345.63	18.958	409	0.864	614.5	27.72	20	excluded
+line	line x i mod 10	293	288.04	16.864	345	0.294	505.9	23.11	20	excluded
+line	line x i mod 11	210	237.17	15.334	302	-1.772	409.0	19.9	20	excluded
+line	line x i mod 12	210	204.47	14.523	247	0.381	366.9	23.91	20	excluded
+line	line x i mod 13	180	182.48	13.349	224	-0.186	320.1	16.9	20	excluded
+line	line x i mod 14	158	162.44	12.688	203	-0.35	287.6	14.24	20	excluded
+line	line x i mod 15	142	143.3	11.677	179	-0.111	252.9	14.11	20	excluded
+line	line x i mod 16	121	121.62	11.025	160	-0.056	222.4	17.7	20	excluded
+line	line x i mod 17	99	102.67	10.006	134	-0.367	185.8	12.6	20	excluded
+line	line x i mod 18	86	82.44	9.104	113	0.39	148.8	12.71	19	not excluded
+line	line x i mod 19	60	63.38	7.986	92	-0.423	114.6	8.25	18	excluded
+line	line x i mod 20	41	44.48	6.628	65	-0.525	78.2	6.95	12	untestable
+line	line x i mod 21	19	27.44	5.175	44	-1.631	49.2	8.55	7	untestable
+line	line x i mod 22	16	13.76	3.649	27	0.615	25.9	4.51	3	untestable
+line	line x i mod 23	8	4.94	2.211	17	1.385	9.1	3.06	0	untestable
+line	line x i mod 24	1	0.96	0.944	6	0.042	1.6	1.04	0	untestable
+line	line x i mod 25	0	0.14	0.376	2	-0.383	0.1	0.49	0	untestable
+line	line x i mod 26	0	0.0	0.0	0	nan	0.0	0.0	0	no pairs
+line	line x i mod 27	0	0.0	0.0	0	nan	0.0	0.0	0	no pairs
+line	line x i mod 28	0	0.0	0.0	0	nan	0.0	0.0	0	no pairs
+line	line x i mod 29	0	0.0	0.0	0	nan	0.0	0.0	0	no pairs
+line	line x i mod 30	0	0.0	0.0	0	nan	0.0	0.0	0	no pairs
+line	line x i mod 31	0	0.0	0.0	0	nan	0.0	0.0	0	no pairs
+line	line x i mod 32	0	0.0	0.0	0	nan	0.0	0.0	0	no pairs
+line	line x i mod 33	0	0.0	0.0	0	nan	0.0	0.0	0	no pairs
+line	line x i mod 34	0	0.0	0.0	0	nan	0.0	0.0	0	no pairs
+line	line x i mod 35	0	0.0	0.0	0	nan	0.0	0.0	0	no pairs
+line	line x i mod 36	0	0.0	0.0	0	nan	0.0	0.0	0	no pairs
+line	line x i mod 37	0	0.0	0.0	0	nan	0.0	0.0	0	no pairs
+line	line x i mod 38	0	0.0	0.0	0	nan	0.0	0.0	0	no pairs
+line	line x i mod 39	0	0.0	0.0	0	nan	0.0	0.0	0	no pairs
+line	line x i mod 40	0	0.0	0.0	0	nan	0.0	0.0	0	no pairs
+page	page x i mod 1	53996	54485.16	213.882	55090	-2.287	95958.4	1012.23	20	excluded
+page	page x i mod 2	26970	27309.74	156.41	27786	-2.172	48239.2	889.05	20	excluded
+page	page x i mod 3	18080	18127.86	129.117	18500	-0.371	31931.5	498.46	20	excluded
+page	page x i mod 4	13400	13537.17	111.647	13941	-1.229	23925.2	267.65	20	excluded
+page	page x i mod 5	10781	10791.96	102.308	11084	-0.107	19159.2	255.41	20	excluded
+page	page x i mod 6	8828	8953.77	88.069	9273	-1.428	15744.9	338.53	20	excluded
+page	page x i mod 7	7525	7640.4	86.214	7924	-1.339	13549.5	222.95	20	excluded
+page	page x i mod 8	6635	6657.08	78.88	6918	-0.28	11863.8	176.79	20	excluded
+page	page x i mod 9	5805	5893.89	72.332	6149	-1.229	10450.3	227.62	20	excluded
+page	page x i mod 10	5266	5282.82	72.491	5529	-0.232	9357.0	167.95	20	excluded
+page	page x i mod 11	4711	4780.15	66.992	5021	-1.032	8433.1	140.84	20	excluded
+page	page x i mod 12	4363	4366.17	62.834	4559	-0.05	7737.1	151.74	20	excluded
+page	page x i mod 13	4023	4009.77	60.838	4229	0.218	7089.3	133.84	20	excluded
+page	page x i mod 14	3615	3709.67	58.821	3919	-1.61	6546.9	131.23	20	excluded
+page	page x i mod 15	3495	3450.68	57.036	3635	0.777	6132.9	136.76	20	excluded
+page	page x i mod 16	3176	3218.8	56.698	3380	-0.755	5721.6	87.32	20	excluded
+page	page x i mod 17	3055	3017.01	53.498	3201	0.71	5345.9	89.55	20	excluded
+page	page x i mod 18	2734	2837.0	48.899	2986	-2.106	5014.4	102.26	20	excluded
+page	page x i mod 19	2585	2677.24	52.58	2815	-1.754	4733.4	100.46	20	excluded
+page	page x i mod 20	2566	2531.7	50.999	2679	0.673	4539.1	85.14	20	excluded
+page	page x i mod 21	2316	2400.87	50.042	2585	-1.696	4265.4	68.33	20	excluded
+page	page x i mod 22	2194	2280.91	47.216	2425	-1.841	4043.8	94.26	20	excluded
+page	page x i mod 23	2131	2174.7	46.877	2330	-0.932	3882.3	65.45	20	excluded
+page	page x i mod 24	2134	2072.94	44.796	2215	1.363	3693.7	77.88	20	excluded
+page	page x i mod 25	2002	1985.16	44.581	2140	0.378	3493.0	71.66	20	excluded
+page	page x i mod 26	1942	1897.42	42.881	2056	1.04	3325.8	80.36	20	excluded
+page	page x i mod 27	1751	1818.53	41.773	1968	-1.616	3219.7	94.46	20	excluded
+page	page x i mod 28	1721	1746.34	42.09	1886	-0.602	3060.6	69.71	20	excluded
+page	page x i mod 29	1682	1680.41	41.346	1822	0.038	2979.5	56.62	20	excluded
+page	page x i mod 30	1638	1615.89	39.01	1755	0.567	2845.6	72.69	20	excluded
+page	page x i mod 31	1578	1558.14	37.94	1687	0.523	2746.8	46.12	20	excluded
+page	page x i mod 32	1470	1503.0	38.534	1641	-0.856	2685.2	73.25	20	excluded
+page	page x i mod 33	1456	1447.35	36.756	1591	0.235	2549.2	56.27	20	excluded
+page	page x i mod 34	1401	1399.15	36.163	1542	0.051	2472.7	66.37	20	excluded
+page	page x i mod 35	1328	1357.4	35.879	1475	-0.819	2384.3	59.64	20	excluded
+page	page x i mod 36	1260	1312.55	34.044	1430	-1.544	2302.2	47.93	20	excluded
+page	page x i mod 37	1254	1270.3	34.642	1392	-0.471	2236.9	66.06	20	excluded
+page	page x i mod 38	1158	1230.78	34.117	1320	-2.133	2163.3	54.95	20	excluded
+page	page x i mod 39	1167	1192.1	33.422	1309	-0.751	2113.3	82.49	20	excluded
+page	page x i mod 40	1161	1157.49	33.717	1274	0.104	2077.9	74.31	20	excluded
+stretch	stretch x i mod 1	56345	56772.88	223.227	57480	-1.917	99924.4	1069.97	20	excluded
+stretch	stretch x i mod 2	28170	28457.19	165.408	29104	-1.736	50162.7	860.83	20	excluded
+stretch	stretch x i mod 3	18875	18894.72	137.814	19403	-0.143	33629.3	732.28	20	excluded
+stretch	stretch x i mod 4	13949	14109.35	117.372	14481	-1.366	24953.2	340.61	20	excluded
+stretch	stretch x i mod 5	11242	11247.24	106.974	11615	-0.049	20002.5	319.86	20	excluded
+stretch	stretch x i mod 6	9261	9339.09	94.019	9705	-0.831	16499.8	296.83	20	excluded
+stretch	stretch x i mod 7	7834	7967.18	89.885	8276	-1.482	14031.0	217.42	20	excluded
+stretch	stretch x i mod 8	6931	6946.1	82.288	7204	-0.184	12188.5	161.82	20	excluded
+stretch	stretch x i mod 9	6120	6148.63	79.31	6388	-0.361	10835.2	198.08	20	excluded
+stretch	stretch x i mod 10	5524	5512.41	74.623	5748	0.155	9724.1	214.47	20	excluded
+stretch	stretch x i mod 11	4882	4987.93	70.88	5200	-1.495	8878.1	180.19	20	excluded
+stretch	stretch x i mod 12	4458	4558.81	67.815	4745	-1.486	8079.0	142.56	20	excluded
+stretch	stretch x i mod 13	4212	4191.3	62.39	4403	0.332	7407.7	103.93	20	excluded
+stretch	stretch x i mod 14	3725	3874.96	60.493	4083	-2.479	6865.1	126.82	20	excluded
+stretch	stretch x i mod 15	3665	3605.11	61.112	3794	0.98	6391.6	130.3	20	excluded
+stretch	stretch x i mod 16	3337	3363.8	57.009	3553	-0.47	5962.8	132.55	20	excluded
+stretch	stretch x i mod 17	3149	3154.5	55.516	3314	-0.099	5611.1	97.35	20	excluded
+stretch	stretch x i mod 18	2895	2967.76	54.15	3179	-1.344	5249.4	100.81	20	excluded
+stretch	stretch x i mod 19	2692	2798.96	52.992	2942	-2.018	4961.1	135.46	20	excluded
+stretch	stretch x i mod 20	2695	2647.98	52.411	2846	0.897	4684.5	109.28	20	excluded
+stretch	stretch x i mod 21	2408	2510.75	49.911	2693	-2.059	4446.1	116.04	20	excluded
+stretch	stretch x i mod 22	2287	2386.99	48.842	2537	-2.047	4269.4	99.71	20	excluded
+stretch	stretch x i mod 23	2280	2275.39	46.255	2426	0.1	4049.9	82.95	20	excluded
+stretch	stretch x i mod 24	2180	2172.69	47.109	2355	0.155	3832.8	107.86	20	excluded
+stretch	stretch x i mod 25	2091	2078.28	44.562	2221	0.285	3666.4	66.91	20	excluded
+stretch	stretch x i mod 26	2022	1989.29	43.539	2129	0.751	3516.1	84.5	20	excluded
+stretch	stretch x i mod 27	1869	1905.26	43.919	2075	-0.826	3351.4	70.51	20	excluded
+stretch	stretch x i mod 28	1752	1830.88	43.088	1954	-1.831	3243.4	80.87	20	excluded
+stretch	stretch x i mod 29	1755	1762.63	42.124	1914	-0.181	3120.2	98.64	20	excluded
+stretch	stretch x i mod 30	1708	1697.1	40.318	1813	0.27	3010.9	85.98	20	excluded
+stretch	stretch x i mod 31	1655	1634.8	38.074	1764	0.531	2889.8	59.01	20	excluded
+stretch	stretch x i mod 32	1545	1576.72	39.886	1716	-0.795	2785.8	68.51	20	excluded
+stretch	stretch x i mod 33	1552	1521.93	37.006	1642	0.813	2684.2	59.69	20	excluded
+stretch	stretch x i mod 34	1445	1471.39	37.282	1595	-0.708	2616.3	40.73	20	excluded
+stretch	stretch x i mod 35	1386	1426.02	36.897	1581	-1.085	2512.5	76.19	20	excluded
+stretch	stretch x i mod 36	1315	1379.11	35.832	1493	-1.789	2451.3	59.34	20	excluded
+stretch	stretch x i mod 37	1366	1335.74	36.523	1458	0.829	2338.8	55.32	20	excluded
+stretch	stretch x i mod 38	1212	1296.28	35.54	1407	-2.371	2287.5	60.11	20	excluded
+stretch	stretch x i mod 39	1269	1259.49	33.311	1361	0.285	2233.4	48.18	20	excluded
+stretch	stretch x i mod 40	1253	1220.75	34.984	1327	0.922	2178.3	57.45	20	excluded

@@ -83,7 +83,7 @@ From `tools/lpcore/solved.py` (tracker §3.1). These are style priors, **not** c
   needs perfect sync is broken by design (AGENTS.md: "key tests must handle skips").
 - Keys run continuously across word, quote and paragraph breaks (FIRFUMFERENFE never resets).
 
-## The unsolved cipher in one paragraph (snapshot: C1–C28, 2026-10-12)
+## The unsolved cipher in one paragraph (snapshot: C1–C29, 2026-11-14)
 
 LP2 segments 7–15 total 12,956 runes. They are flat at every order except one: **86 adjacent doublets where 447
 are expected** (z = −17.4). One system runs throughout (C6), acting on the continuous stream regardless of words,
@@ -91,7 +91,8 @@ lines or pages (C1, L2). The survivors mark no plaintext letter (C3). It is not 
 additive stream alone cannot make the deficit (C4), so a rule acts at the output and re-keys about 81 % of
 would-be doublets. The replacement is not "skip to the next key value" (C14). The key is
 near-flat mod 29 and aperiodic (C9). It is not English text in any mapping (C10), and not single digits, hex or
-letters (C13). Its values cannot be chosen by earlier ciphertext alone (C11, C12). It is not primes, φ(primes),
+letters (C13). Its values cannot be chosen by earlier ciphertext alone (C11, C12), nor by a two- or three-rune ciphertext context, nor
+by a short key of each section, paragraph, clause, page or survivor stretch (C29). It is not primes, φ(primes),
 the solved text's word sums or its rune values (stage I). It is not the base-60 grid (§12). It is not any Cicada
 number or OutGuess payload in the repo, read as pairs, triples or bytes from any phase (§16). **The open space:**
 a wide-alphabet key from an *unnamed* source scored with `detect.log_lr`, or a per-position alphabet that is

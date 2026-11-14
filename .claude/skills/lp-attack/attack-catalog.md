@@ -1,6 +1,6 @@
 # Attack catalog: cipher family → what distinguishes it → status on LP2
 
-Snapshot 2026-10-12 (C1–C28). **Tracker §3.2 / §4 win over this file.** If you add a constraint, update the
+Snapshot 2026-11-14 (C1–C29, L1–L6). **Tracker §3.2 / §4 win over this file.** If you add a constraint, update the
 matching rows here.
 
 **Periodicity note.** C9 excludes periods ≤ 1000 when the re-key rule keeps the key in step, and C23 extends that to
@@ -26,8 +26,10 @@ written here, with no test yet. An "arg" row needs a test before it can go in th
 | 8 | Plaintext autokey, any lag | same as 7 | ✗ | C10 |
 | 9 | Ciphertext autokey c = p ± c_{i−L} (or Beaufort, shifted or reflected), forwards or backwards | lag-L difference or sum histogram is English | ✗ L = 2–12,863; reused ciphertext stretches ≥ 200 runes | C11 (L ≤ 1000, label-free); C24 (§28, straight alphabets) |
 | 10 | Alphabet chosen by c_{i−L} (keyed autokey, secret tables, affine chain) | lag-L transition rows are permuted English | ✗ L ≤ 1000 | C12 |
+| 10b | Alphabet chosen by two or three earlier cipher runes (c_{i−a}, c_{i−b}); Fibonacci-lag autokey; c = p + f(context) | same-context same-rune pair count K | ✗ 1 ≤ a < b ≤ 12, and (1, 2, 3) | C29 (§35) |
+| 10c | Each unit (section, paragraph, clause, line, page, survivor stretch) has its own period-L key | same-unit, same-phase pair count K | ✗ L ≤ 40 (lines: L ≤ 17, 19) | C29 (§35) |
 | 11 | Same as 10, plus a flat stream key | rows flat | ○ | not covered (findings §10) |
-| 12 | Alphabet chosen by *plaintext* runes, or a 2-rune context; any keyless c_i = F(plaintext window of width w) | sliding n-gram repeat count K_n | ◐ | C21 (§25): ✗ w ≤ 2 with context restarting per section, w ≤ 1 continuous (1-rune context, plaintext autokey with any tables at lag 1). Wider windows untestable by the declared bound; with a stream key on top, see row 3 |
+| 12 | Alphabet chosen by *plaintext* runes, or a 2-rune context; any keyless c_i = F(plaintext window of width w) | sliding n-gram repeat count K_n | ◐ | C29 (§35): ✗ any 2- or 3-rune *ciphertext* context (row 10b). C21 (§25): ✗ w ≤ 2 with context restarting per section, w ≤ 1 continuous (1-rune context, plaintext autokey with any tables at lag 1). Wider windows untestable by the declared bound; with a stream key on top, see row 3 |
 | 13 | Key from a small alphabet: digits, hex, letters | r = q ⊛ k is uneven | ✗ | C13 |
 | 14 | Key from a wide alphabet: bytes, 00–99, base 60, 000–999 | no marginal power | ◐ | every named source on disk ✗ (stage R §16, grid §12); others need a *named* source + `detect.log_lr(starts=)` |
 | 15 | Integer sequences (46 OEIS-style, raw and chained) | — | ✗ | ledger |
@@ -58,6 +60,8 @@ written here, with no test yet. An "arg" row needs a test before it can go in th
 | Skip to the next key value | key repeats ≈ 19 %, so Δc carries English bigram shape | ✗ | C14 |
 | Re-draw independent of the key stream | flat Δc, constant 19 % survival | ○ consistent | C8 requires replacement = original ≈ 19 % of the time |
 | Hand check missing ≈ 1 in 5 | random survivors at a constant rate | ○ consistent | can't be told apart from the previous row (§7) |
+| Rule blind to some runes (M3), e.g. a Latin-spelling check missing ᚢ ᚳ ᛋ ᛝ ᛡ | survivors on 5–6 runes | ✗ φ ≥ 0.5 | L6 (§34) |
+| Perfect rule, then seams at layout features (M4) | survivors tied to word, line, page or clause position | ✗ | L6 (§34); seams that ignore layout open |
 
 ## Unworked data that could carry a key
 

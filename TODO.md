@@ -48,105 +48,21 @@ had checked. Stage AJ (findings §34) has since excluded M3 and confined M4 to s
 | M2 | A hand check that is 81 % reliable | nothing further | — |
 | M3 | The rule cannot see some runes. 447 / 29 = 15.4 would-be doublets per rune, so 86 survivors is 5.6 runes' worth | The survivors sit on 5 or 6 rune identities, not 29. Named instance: a script that compared Latin spellings would miss the five runes with two spellings (U/V, C/K, S/Z, NG/ING, IA/IO), which gives 77 | **Excluded by AJ** (L6, findings §34): 32 on the top six, 10 on the five |
 | M4 | A perfect rule, then seams. The stream had no doublets at all, and a later step put unrelated runes side by side at 19 % of positions: inserted nulls, a second key layer that changes value there, or a transposition that keeps 81 % of neighbours | The seams are not at word ends (C1), line ends (L2) or a fixed period ≤ 32 (L3). Nulls at the needed rate would also stretch the words (stage AN) | AN. AJ (§34): the survivors ignore word, line, page and clause position |
-| M5 | The doublets are deliberate marks, such as key changes, and every accidental one was removed | The text between two marks has structure of its own | AK |
+| M5 | The doublets are deliberate marks, such as key changes, and every accidental one was removed | The text between two marks has structure of its own | AK (§35): no stretch between survivors has its own key of period ≤ 40. Longer or slipping keys open |
 
 **The backlog, in the order I would run it.**
 
 | Stage | What | New sources? | Cost | Why this rank |
 |---|---|---|---|---|
-| AK | Label coincidences: alphabets fixed by two or three earlier runes, by offset in a line, page or clause, or by unit | no | 1 session | Key-free, and closes catalog row 12 and every key restart except per word |
 | AL | Linear filters: keystreams that obey a recurrence mod 29 | no | 1 session | Key-free and immune to drift. Closes the community's LFSR lead up to order 3 |
 | AM | Is any cipher rune tied to one plaintext letter (multiplicative or affine streams) | no | half a session | Key-free, for every multiplier key at once |
 | AN | Word shapes: is LP2's segmentation that of its plaintext | no | half a session | Every word-based result assumes it. Tests M4 with nulls |
-| AO | Scan overlay: red titles, initials, dots, cuneiform | scans on disk | 1–2 sessions | Data the master drops. Feeds AK and AQ |
+| AO | Scan overlay: red titles, initials, dots, cuneiform | scans on disk | 1–2 sessions | Data the master drops. Feeds AQ; sub-sections would be new unit labels for AK's test |
 | AP | Provenance, missing OutGuess output, signed messages, the ledgers' own lists | network (pre-approved) | 1 session | Stops AQ and AT repeating the ledgers. AI found no depth, so item 2a (reproduce the extraction) comes before item 2 |
 | AQ | Named streams on the lag-1 difference, then consumed backwards, then φ(n)-type functions | no | 1 hour of compute each | Catalog row 11 at the one lag that is anomalous |
 | AR | The square as a generator: Fibonacci mod M as a prime index | no | 1 hour | The only recipe printed inside LP2. Low prior |
 | AS | Grid as an RC4 key on the payloads' shared head; digest census against the AN END hash | no | half a session | Exact tests, so no false positives. Low prior |
 | AT | Seeded hash chains and PRNGs (catalog row 22) | after AP | — | Cannot say what it adds until the ledgers' seed lists are read |
-
-#### AK: label coincidences
-
-**Statistic.** K_u = the number of pairs of positions that share a label u and hold the same rune. If the alphabet at
-position i is any function of u(i), each label class is a monoalphabetic sample, and K_u sits near 1.79 × flat (C12's
-figure) whatever the function or the tables. Stage Z used this for words and blocks. C12 is the case u = one earlier rune.
-
-**Labels not yet tried:**
-- **Two or three earlier cipher runes:** (c_{i−a}, c_{i−b}) for 1 ≤ a < b ≤ 12, and (c_{i−1}, c_{i−2}, c_{i−3}).
-  Findings §10 left these open as "too sparse for χ²", but pair counts are not sparse: 841 contexts give about 88,000
-  pairs (estimate: 40 σ for two runes, 9 σ for three). This covers c_i = p_i + f(c_{i−1}, c_{i−2}) for any f, including
-  a Fibonacci-lag autokey.
-- ~~Offset from the start of a line, page, clause or paragraph.~~ **Already covered.** C22 excludes a key or alphabet
-  sequence that restarts at every section, paragraph, clause, line or page, under any alphabets with the key in step.
-  C26 adds a constant shift per unit. Offsets counted from the *end* of a unit are still open, but they matter only
-  if the key is laid down backwards, so they are not worth a stage of their own.
-- **Unit membership:** the same clause, paragraph or page, or the same stretch between two survivors (M5), alone and
-  crossed with i mod L for L = 2…40. This covers units that each have their own short key. If every unit shares one
-  period L, C25 already excludes it, because runes L apart within a unit agree. The open case is a period or key that
-  varies by unit, which smears across lags.
-
-**Null:** flat, with exact mean and variance. **Positive controls:** `keys.encrypt_dodging` variants at LP2's sizes.
-**Limits:** a flat stream on top hides everything, and offset labels lose power when a re-key consumes key, so they
-are good for short units only.
-
-### AK — label coincidences (declared 2026-11-14, before any K was computed on LP2)
-
-**Draft changes.** (1) The draft's "flat null, exact mean and variance" is biased. Two positions that share the
-context c_{i−1} both avoid that rune (the doublet rule), so they agree at about 1/28, not 1/29. That is +3.5 % of K,
-about 2σ at 90,000 pairs. The null is simulated instead (below). (2) Lines and sections are added to the unit list:
-C22 and C26 cover a key *shared* by every unit, but not a key of each unit's own.
-
-**Models.** u(i) is a label and σ_u any family of alphabets (additive shifts, Quagmire, random tables).
-- **Context:** c_i = σ_{u(i)}(p_i) with u(i) = (c_{i−a}, c_{i−b}) for 1 ≤ a < b ≤ 12 (66 labels), or
-  (c_{i−1}, c_{i−2}, c_{i−3}) (1 label). This covers c_i = p_i + f(c_{i−a}, c_{i−b}) for any f, including a
-  Fibonacci-lag autokey and any secret two-rune table. A position whose context reaches back past its segment's
-  start gets no label.
-- **Unit × period:** c_i = p_i + k_U[t mod L] (or any σ), where U is the unit holding i, t its offset in U, and
-  each unit has its **own** key of period L. The units are section, paragraph, clause, written line, page (scan),
-  and the stretch between two survivors (M5: each doublet's second rune starts a new stretch). Every unit is cut
-  at segment ends. L = 1 … 40, where L = 1 is one alphabet per unit. That gives 6 × 40 = 240 labels. Within a unit,
-  t mod L and i mod L define the same classes, so restart and no-restart are one test.
-- **Family size:** 66 + 1 + 240 = **307 labels**.
-
-**Not already excluded because:** C12 covers a single earlier rune only, and §10 left contexts of two or more runes
-open. C11 and C24 are single-lag autokeys. C21 is plaintext context. C22 and C26 cover a key or shift *shared* by
-every unit. C25 covers one global period. A per-unit key whose period or values vary by unit spreads its agreement
-over lags and units, and C25's lag count sees only a diluted share of it.
-
-**Statistic.** K_u = Σ over classes and runes of C(n, 2): the number of position pairs with the same label and the
-same rune. Under any of the models each class is a monoalphabetic sample of the plaintext, so pairs agree at about
-1.79 / 29 instead of 1 / 29.
-
-**Null.** 1,000 seeded streams at LP2's segment sizes: iid runes from LP2's own unigram, then stage Z's
-`anti_doublet` at keep = 0.19 within each segment. Context labels are recomputed from each simulated stream. Unit
-labels are LP2's own layout. μ₀, σ₀ and the null maximum are taken per label. z = (K − μ₀) / σ₀.
-
-**Rules, declared now:**
-- **Fires:** z ≥ 5 and K above all 1,000 null values. A fire is a lead, and the next stage declares a decode. It is
-  not a solution.
-- **Testable:** the label's positive control fires in ≥ 18 of 20 draws. Otherwise the label is **untestable**: its
-  value is reported but not read.
-- **Excluded:** testable, does not fire, and K ≤ K̄₊ − 5·s₊, where K̄₊ and s₊ are the mean and sd of the 20 positive
-  draws.
-
-**Controls** (seeded; `--quick` runs them with 200 null streams and does not score LP2):
-- **Positive, per label, 20 draws.** Emerson in runes (stage Z's `emerson_words`, a contiguous window cut to LP2's
-  segment sizes). Context labels: c_i = p_i + f(context) with a fresh random table f each draw, computed left to
-  right. A would-be doublet is re-keyed with probability 0.81 by adding a random nonzero shift, and the chain
-  continues from the new rune. Unit labels: a fresh random period-L key for each unit, then `anti_doublet`.
-- **Negative:** 20 draws of Emerson under an iid flat key, then `anti_doublet` (the OTP-class reading of LP2). At most
-  1 fire is allowed across all 20 × 307 results.
-- If the negative control fails, or fewer than half the labels are testable, the stage is **void** and LP2 is not read.
-
-**Expected.** If true, the positive controls predict z in the tens for the two-rune contexts and short units. The
-draft estimated 40σ for two runes and 9σ for three. If false, which is the prediction (OTP-class), every label
-has |z| < 5 and most are excluded.
-
-**Not doing:** contexts with more than three runes, plaintext contexts (C21), lags above 12, offsets from the end of
-a unit, and any label added after the run. A flat stream on top of a context or unit key makes the classes flat
-again, and this stage cannot see that. **Blast radius:** additive only. New runner tools/run_stage_ak.py, test
-tests/test_stage_ak.py, TSVs under `reference/findings/`, then the doc updates. **Rollback:** `git revert` the stage's
-commits.
 
 #### AL: linear filters
 
@@ -198,7 +114,7 @@ Seen on scans 32, 40 and 50 today, and absent from `data/canonical/liber_primus_
 numerals and drawings. A script builds it from the JPGs where it can; the rest is entered by eye. Canonical stays
 untouched.
 
-**Uses.** Exact title spans (titles are the only cribs with known boundaries); sub-section starts as labels for AK;
+**Uses.** Exact title spans (titles are the only cribs with known boundaries); sub-section starts as new unit labels for AK's test (C29 used only the master's units);
 dot and cuneiform numbers as named values for AQ; a check on M5 (do the marks line up with survivors?).
 
 #### AP: primary sources
@@ -267,7 +183,7 @@ book's words and numbers, mapped to runes by mod and by rejection. Blocked on AP
 | Runes written along a spiral or by columns, then read by rows | Line-end pairs would be at chance, 20 expected. L2 has 4 of 585 |
 | A multiplicative chain where a doublet is one plaintext letter | C3, all 29 letters |
 | A key built from shuffled decks, so the key never repeats a value | The cipher's doublet rate does not depend on equal key neighbours. C4's formula gives about 3.5 % |
-| A running sum of plaintext or ciphertext as the key, or any key updated linearly from the previous rune | c_i − a·c_{i−1} is then a function of two plaintext runes, which C12 sees at lag 1. This is an argument, not a test; AK's two-rune label makes it one |
+| A running sum of plaintext or ciphertext as the key, or any key updated linearly from the previous rune | c_i − a·c_{i−1} is then a function of two plaintext runes, which C12 sees at lag 1. Now a test: C29 (stage AK, §35) excludes any alphabet chosen by two or three earlier cipher runes |
 | The grid as an RSA signature by 7A35090F | Wrong size (findings §22, X3) |
 | LP2 as base-29 or base-28 data, a file and not text | Parked. No test proposed, and the word and clause marks would be decoration |
 | Section illustrations as method hints (roots, the loop, cuneiform) | Themes until AO turns them into values |
@@ -287,6 +203,7 @@ the power of `detect.log_lr` per rune. Worth doing before AQ and AR.
 
 | Date | Stage | Result | Commits |
 |---|---|---|---|
+| 2026-11-14 | **AK** label coincidences | Declared first (`59c5b56`), replacing the draft's flat null (biased +3.5 % by a shared c_{i−1}) with a simulated one; runner committed before LP2 was scored (`729d34f`). 307 labels: 66 two-rune contexts (lags ≤ 12), the three-rune context, 6 units × own period-L key (L = 1–40). Controls valid (negative max z 3.60; positive z 9.2–471). **Nothing fires** (max z 3.29). 285 excluded, line × 18 not excluded, 21 untestable or empty → **C29**, findings §35 | `59c5b56` `729d34f` + this |
 | 2026-11-14 | **AJ** anatomy of the 86 survivors | Declared first (`45bc943`); runner committed before LP2 was scored (`8e31dc6`). 17 statistics against 10⁶ uniform draws of 86 pairs, family α = 10⁻³. Controls valid; T4 (word class, not blind) untestable by its planted control. **Nothing fires** (min p = 0.011). M3 excluded (power 100 / 100 at φ ≥ 0.5), survivors ignore layout, no neighbour or triple signature → **L6**, findings §34 | `45bc943` `8e31dc6` + this |
 | 2026-11-13 | **AI** OutGuess payload depth | Backlog renumbered AI–AT, C21–C28 overlaps marked (`2680879`). Declared first (`9d79642`), replacing the draft's uniformity test, which an extraction artefact also fails. Runner committed before the payloads were scored (`2cfaa6d`). 248 controls valid. **RELATED**: bits agree 51.5 % (z ≥ 20) but flat by bit phase (S1 p ≥ 0.37). No byte-oriented depth, so nothing to crib; AP item 2 demoted, 2a added → findings §33 | `9d79642` `2cfaa6d` + this |
 | 2026-10-12 | **AH** totient and arithmetic-function keys | Declared first (`17cba27`); runner committed before LP2 was scored (`ce81da6`). 12 keys (φ(n), σ(n), Σφ, prime gaps, φ(φ(n)), n·φ(n); raw and chain), stage AG's family, 10,440 decodes. Controls pass for all 12. **No pass** (best real −47.9). **C28:** all 324 testable cells excluded. Prediction met → findings §32 | `17cba27` `ce81da6` + this |

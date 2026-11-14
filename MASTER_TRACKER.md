@@ -4,7 +4,7 @@
 and what to do next. Every claim on it is backed by a test or a linked document. If something here
 disagrees with the tests, the tests win, and this page needs fixing.
 
-**Last updated:** 2026-11-14 · **Tests:** 289, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
+**Last updated:** 2026-11-14 · **Tests:** 300, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
 
 ---
 
@@ -14,7 +14,7 @@ disagrees with the tests, the tests win, and this page needs fixing.
 match their scans, so most older "discoveries" were artifacts (see §4.3). Now one canonical transcription
 (`data/canonical/`) is read by one tested loader (`tools/lpcore`), and every solved section decrypts from it exactly.
 
-The unsolved LP2 cipher is pinned down by twenty-eight constraints (§3.2, C1–C28; each with its test in the
+The unsolved LP2 cipher is pinned down by twenty-nine constraints (§3.2, C1–C29; each with its test in the
 [findings §0 register](reference/findings/lp2_logic_findings_2026-09-29.md#0-constraint-register)). In short: an additive
 stream over mod 29, plus an anti-doublet re-keying rule that leaks about 19 % of the time.
 - **The key stream** is near-flat mod 29 and aperiodic. Its values come from an alphabet of at least ~30 symbols,
@@ -99,6 +99,9 @@ default-key extraction from same-size scans, and there is nothing to crib.
 Stage AJ (findings §34) asks what the 86 surviving doublets are. They are a uniform sample of the pairs: no rune is
 favoured, and word, line, page and clause position, neighbours and triples all match chance (16 statistics silent,
 min p = 0.011). A rule blind to 5 or 6 runes (M3, including the five two-spelling runes) is excluded (L6).
+Stage AK (findings §35) counts same-label, same-rune pairs. No two or three earlier cipher runes choose the alphabet
+(any lags ≤ 12, any tables), and no section, paragraph, clause, page or survivor stretch has a short key of its own
+(period ≤ 40; lines ≤ 19). 285 of 307 labels are excluded and none fires (max z 3.29) (C29).
 
 **Next actions, in order** (all low prior; detail in [findings §6–§32](reference/findings/lp2_logic_findings_2026-09-29.md)):
 
@@ -241,6 +244,9 @@ The evidence is in findings §2 (C1–C7), §7 (C8), §8 (C9), §9 (C10–C11), 
 - **Not a base-29 constant (C27):** π, e, φ, √2, √3, ln 2, √3301 in base 29, and the base-29 digit streams of the primes,
   the integers and φ(p), from any start < 1000, drift-tolerant (findings §31).
 - **Not a totient stream (C28):** φ(n), σ(n), Σφ(k), prime gaps, φ(φ(n)), n·φ(n) mod 29, raw or chained (findings §32).
+- **No context or per-unit alphabet (C29):** no alphabet chosen by (c_{i−a}, c_{i−b}), a < b ≤ 12, or by the last three
+  cipher runes; no key of each unit's own with period ≤ 40 for sections, paragraphs, clauses, pages and survivor
+  stretches, ≤ 17 or 19 for lines (findings §35).
 
 **Reading:** a rule applied at the output of a non-periodic additive stream. It is not a property of the key
 text, of word structure, or of any plaintext letter.
@@ -323,6 +329,9 @@ RANDOM.ORG and RAND archives (~14.5 billion offsets). Both conclude "OTP-class" 
   the hint, the `page_00` hex and the second-onion hex, from every cyclic phase, in step, under ⊕, g − k, g + k and k − g,
   in row or column order either way. Excluded for any plaintext with at most 120 distinct bytes (text, runes, hex, decimal,
   base64). A slipping key, sources not on disk and high-entropy plaintexts remain **open**.
+- **Two- and three-rune ciphertext contexts and per-unit short keys** (C29, findings §35): c = σ_{u(i)}(p) for u = any
+  pair of earlier cipher runes at lags ≤ 12, the last three runes, or unit × (i mod L) with L ≤ 40. A flat stream on top,
+  longer contexts, and per-unit periods above 40 (19 for lines) remain **open**.
 - **The three OutGuess payloads as a depth of byte-oriented messages** (findings §33): their XORs are related but flat
   in bit phase (S1 p ≥ 0.37), so no text, hex, base64 or byte-field messages lie in depth. Messages with no byte phase,
   and the files' provenance, remain **open**.
@@ -399,6 +408,7 @@ The ordered list is in §1. These questions are also open and cheap to state:
 
 | Date | What happened | Commits |
 |---|---|---|
+| 2026-11-14 | **Label coincidences** (TODO AK): K = same-label same-rune pairs for 307 labels (66 two-rune contexts, the three-rune context, 6 units × L = 1–40). Simulated null (LP2 unigram + anti-doublet rule) replaces the draft's flat one, which a shared c_{i−1} biases by +3.5 %. Controls valid (negative max z 3.60; positive z ≥ 9.2). **Nothing fires** (max z 3.29); 285 excluded, 1 open (line × 18), 21 untestable. **C29** | `59c5b56` `729d34f` + this commit |
 | 2026-11-14 | **Anatomy of the 86 survivors** (TODO AJ): 17 statistics (identity, M3 concentration, the two-spelling runes, word / line / page / clause position, neighbours) against 10⁶ uniform draws of 86 pairs, family α = 10⁻³. Controls valid; T4 (word class) untestable by its planted control. **Nothing fires** (min p = 0.011). M3 excluded; survivors ignore layout; no local signature. **L6** | `45bc943` `8e31dc6` + this commit |
 | 2026-11-13 | **OutGuess payload depth** (TODO AI): backlog renumbered AI–AT, with its C21–C28 overlaps marked (`2680879`). The draft uniformity test was replaced before the run, because a default-key extraction from same-size scans also fails uniformity. Declared discriminator: bit-phase homogeneity of P_a ⊕ P_b. 248 controls classed as declared. **RELATED**: S2/S3 fire (z ≥ 20), S1 silent (p ≥ 0.37). No byte-oriented depth, consistent with an extraction artefact | `9d79642` `2cfaa6d` + this commit |
 | 2026-10-12 | **Totient streams** (TODO AH): 6 arithmetic functions × raw / chain = 12 keys, sieves checked against definitions, stage AG's family (10,440 decodes). Controls ≥ +189.7 / ≤ −67.3. **No pass** (best real −47.9). **C28:** all 324 testable cells excluded | `17cba27` `ce81da6` + this commit |

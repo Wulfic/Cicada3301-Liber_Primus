@@ -5,7 +5,9 @@ Run from the repo root:  python -m unittest tests.test_stage_ak -v
 
 from __future__ import annotations
 
+import csv
 import unittest
+from collections import Counter
 
 import numpy as np
 
@@ -68,6 +70,54 @@ class TestStageAKMachinery(unittest.TestCase):
         mu, sd, mx = np.array([0.0, 5.0]), np.array([0.0, 1.0]), np.array([0.0, 6.0])
         self.assertEqual(ak.fires(np.array([0.0, 20.0]), mu, sd, mx).tolist(), [False, True])
         self.assertTrue(np.isnan(ak.zscore(np.array([0.0, 1.0]), mu, sd)[0]))
+
+
+class TestStageAKRecorded(unittest.TestCase):
+    """The recorded run (findings §35): valid controls, nothing fires, 285 of 307 labels excluded."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        with ak.RESULTS_PATH.open(encoding="utf-8", newline="") as f:
+            cls.rows = {r["label"]: r for r in csv.DictReader(f, delimiter="\t")}
+        with ak.CONTROLS_PATH.open(encoding="utf-8", newline="") as f:
+            cls.negative = list(csv.DictReader(f, delimiter="\t"))
+
+    def test_negative_control_never_fires(self) -> None:
+        self.assertEqual(len(self.negative), ak.N_NEG)
+        zs = [float(v) for r in self.negative for k, v in r.items() if k != "draw" and v != "nan"]
+        self.assertLess(max(zs), ak.Z_FIRE)
+
+    def test_recorded_verdicts(self) -> None:
+        self.assertEqual(len(self.rows), 307)
+        self.assertEqual(Counter(r["status"] for r in self.rows.values()),
+                         {"excluded": 285, "no pairs": 15, "untestable": 6, "not excluded": 1})
+        self.assertEqual(self.rows["line x i mod 18"]["status"], "not excluded")
+        self.assertLess(max(float(r["z"]) for r in self.rows.values() if r["z"] != "nan"), 3.3)
+        for r in self.rows.values():
+            if r["family"] != "line":
+                self.assertEqual(r["status"], "excluded", r["label"])
+
+    def test_cited_positive_control_strength(self) -> None:
+        """§35's positive mean z by family: contexts 9.2 (three runes) and 41.1–48.8 (two), units ≥ 19.5 except lines."""
+        def pos_z(r: dict[str, str]) -> float:
+            return (float(r["pos_mean"]) - float(r["null_mean"])) / float(r["null_sd"])
+        rows = [r for r in self.rows.values() if float(r["null_sd"]) > 0]
+        two = [pos_z(r) for r in rows if r["family"] == "context" and r["label"].count(",") == 1]
+        self.assertAlmostEqual(min(two), 41.1, delta=0.05)
+        self.assertAlmostEqual(max(two), 48.8, delta=0.05)
+        self.assertAlmostEqual(pos_z(self.rows["c[i-1],c[i-2],c[i-3]"]), 9.2, delta=0.05)
+        units = [pos_z(r) for r in rows if r["family"] not in ("context", "line")]
+        self.assertAlmostEqual(min(units), 19.5, delta=0.05)
+        self.assertAlmostEqual(max(units), 470.7, delta=0.05)
+        self.assertEqual(len(rows), 292)
+
+    def test_headline_k_recomputes_from_the_corpus(self) -> None:
+        layout = ak.build_layout(load_corpus())
+        for lags, k in (((1, 2), 3569), ((1, 2, 3), 127)):
+            codes = ak.context_codes(layout.runes, layout.seg_pos, lags)
+            self.assertEqual(ak.coincidences(codes, layout.runes), k)
+            name = ",".join(f"c[i-{a}]" for a in lags)
+            self.assertEqual(int(self.rows[name]["K"]), k)
 
 
 if __name__ == "__main__":

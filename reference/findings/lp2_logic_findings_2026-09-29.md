@@ -40,6 +40,7 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 | C26 | No additive or Beaufort key restarting at every section, paragraph, clause, line or page with a constant shift per unit (c = p + k[t] + a_unit) | within-unit difference agreements at the flat null (\|z\| ≤ 1.41); a shifted restart adds ≥ 7,000 (sections) to ≥ 28,000 (lines) at the 5σ bound; 5 of 5 excluded | `test_recorded_headline`, `test_lp2_statistics_and_analytic_means_recompute` | 30 |
 | C27 | The key is not the base-29 expansion of π, e, φ, √2, √3, ln 2 or √3301, nor the base-29 concatenation of the primes, the integers or φ(p), from any start < 1000, any mode and shift, per section or continuous, drift-tolerant | best real decode −56.0 (π) vs pass +30; all 270 testable cells ≤ −10; controls ≥ +194.9 | `test_recorded_headline`, `test_best_real_decode_recomputes` | 31 |
 | C28 | The key is not φ(n), σ(n), Σφ(k), the prime gaps, φ(φ(n)) or n·φ(n) mod 29, raw or chained, from any start < 1000, any mode and shift, per section or continuous, drift-tolerant | best real decode −47.9 vs pass +30; all 324 testable cells ≤ −10; controls ≥ +189.7 | `test_recorded_headline`, `test_best_real_decode_recomputes` | 32 |
+| C29 | No alphabet chosen by two earlier cipher runes (c_{i−a}, c_{i−b}), 1 ≤ a < b ≤ 12, or by the three runes (c_{i−1}, c_{i−2}, c_{i−3}), under any alphabets (so no c = p + f(c_{i−a}, c_{i−b}) for any table f); no key of each unit's own with period L = 1–40 (any alphabets) for sections, paragraphs, clauses, pages and the stretches between survivors, nor for lines with L = 1–17 or 19 | 0 of 307 labels fire (max z 3.29 vs 5); 285 excluded at K ≤ positive mean − 5 sd; positive controls z ≥ 9.2 | `test_recorded_verdicts`, `test_headline_k_recomputes_from_the_corpus` | 35 |
 
 **The leak** (how the 86 survivors are spread, §7):
 
@@ -1579,3 +1580,65 @@ The smallest p, T9 at 0.011, is what 16 tests produce by chance and is not read.
 **What this does not cover.** M3 at small mixtures (φ < 0.5), any word-class effect (T4 untestable; C1 covers within
 vs across words), and seams that ignore layout. M5 (doublets as deliberate marks) is untouched: it predicts structure
 in the text between survivors, which is stage AK's unit-membership label.
+
+## 35. No two- or three-rune context and no per-unit key picks the alphabet (2026-11-14, TODO stage AK)
+
+Declared in `TODO.md` (`59c5b56`) before any K was computed on LP2. The runner was committed before LP2 was scored
+(`729d34f`; its `--quick` runs the controls only). Run: `python -m tools.run_stage_ak` (several minutes). Rows are in
+[`stage_ak_labels.tsv`](stage_ak_labels.tsv), and the negative control's z per draw and label in
+[`stage_ak_negative.tsv`](stage_ak_negative.tsv). Tests: `tests/test_stage_ak.py`.
+
+**The question.** If the alphabet at position i is any function of a label u(i), every class of equal labels is a
+monoalphabetic sample of the plaintext. Equal runes inside a class then pair up about 1.79 times as often as in a flat
+stream, whatever the alphabets are. C12 (§10) tested this for one earlier cipher rune and left two-rune contexts
+open as too sparse for χ². Pair counts are not sparse. C22 and C26 tested a key *shared* by every unit; a key of each
+unit's own was open.
+
+**Labels** (307): the context (c_{i−a}, c_{i−b}) for 1 ≤ a < b ≤ 12 (66), the context (c_{i−1}, c_{i−2}, c_{i−3}), and
+unit × (i mod L) for L = 1–40 and six units: section, paragraph, clause, written line, page, and the stretch between
+two survivors (M5). The unit labels model each unit having its own period-L key. L = 1 is one alphabet per unit.
+
+**Statistic and null.** K = the number of position pairs with the same label and the same rune. A flat null is
+biased here: two positions with the same c_{i−1} both avoid that rune under the doublet rule, which adds about 3.5 % to
+K. The null is therefore simulated. 1,000 streams of iid runes from LP2's unigram are passed through stage Z's
+anti-doublet rule (keep 0.19) at LP2's segment sizes, and each label gets its own mean, sd and maximum. A label fires at
+z ≥ 5 above every null value. It is excluded if its positive control (Emerson under the label's own model, 20 draws)
+fires in at least 18 of 20 and LP2's K is at least 5 positive sds below the positive mean.
+
+**Controls.** The negative (Emerson under an iid flat key, 20 draws × 307 labels) never fires; its largest z is 3.60.
+Positive mean z runs from 9.2 (the three-rune context) to 48.8 for contexts, and from 19.5 to 470.7 for units other
+than lines. Lines are short (594 of them), so per-line keys are testable only up to L = 19. L = 20–25 fail their control
+(untestable), and for L = 26–40 no two runes of a line share a class (no pairs).
+
+**Result: nothing fires.**
+
+| Family | Labels | Excluded | LP2 z range | Positive mean z |
+|---|---|---|---|---|
+| Two-rune contexts, lags ≤ 12 | 66 | 66 | −2.06 to 2.10 | 41.1 to 48.8 |
+| Three-rune context (1, 2, 3) | 1 | 1 | −0.01 (K 127 vs 127.2) | 9.2 |
+| Section × L | 40 | 40 | −2.02 to 3.29 | ≥ 79.9 |
+| Paragraph × L | 40 | 40 | −1.65 to 2.29 | ≥ 69.9 |
+| Clause × L | 40 | 40 | −2.01 to 1.70 | ≥ 19.5 |
+| Page × L | 40 | 40 | −2.29 to 1.36 | ≥ 27.3 |
+| Survivor stretch × L | 40 | 40 | −2.48 to 0.98 | ≥ 27.4 |
+| Line × L | 40 | 18 (L = 1–17, 19) | −1.77 to 1.39 | −0.1 to 46.9 |
+
+The largest z, 3.29 for section × (i mod 30), is the size of maximum that the 292 labels with a z produce by chance. For
+the main context, (c_{i−1}, c_{i−2}): K = 3,569 against a null of 3,600.5 ± 64.5 and a positive mean of 6,751.6.
+Line × (i mod 18) is the one testable label left open: its K of 86 sits 0.7 above its exclusion line (148.8 − 5 × 12.71).
+
+**Reading.**
+- **No two earlier cipher runes choose the alphabet,** at any pair of lags up to 12, and neither do the last three.
+  This covers c_i = p_i + f(c_{i−a}, c_{i−b}) for any secret table f, a Fibonacci-lag autokey, and any running sum
+  of ciphertext. It also turns the "considered and dropped" argument against keys updated linearly from the previous
+  rune into a test. It closes the two-rune half of catalog row 12. The plaintext half is C21's.
+- **No unit has its own short key.** No section, paragraph, clause, page or survivor stretch has a key of its own with
+  period ≤ 40 (including one alphabet per unit), and no line has one with period ≤ 17 or 19. M5 (the doublets as key
+  changes) loses its simplest form: the text between two survivors is not enciphered with a short key of its own.
+- Together with C12, C22, C25 and C26: whatever chooses each rune's alphabet does not depend on the last one to three
+  cipher runes, on the unit, or on a short period inside the unit. That fits a long non-repeating stream once more.
+
+**What this does not cover.** A flat stream key on top of any of these models: the classes are then flat, and this test
+cannot see them (catalog row 3). Contexts of four or more runes, or lags above 12. Per-unit keys with period above 40
+(above 19 for lines). Offsets counted from the end of a unit. A per-unit key that re-keys by consuming key values: such
+a key slips against i mod L, which smears the classes.
