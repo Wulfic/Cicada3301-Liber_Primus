@@ -28,7 +28,7 @@ The snapshot below goes stale. These files do not:
 | Tier | Source | How to cite |
 |---|---|---|
 | ★ Proven | `data/canonical/` through `tools/lpcore`, asserted by `tests/` | "test `test_x` shows…" |
-| Tested here | findings doc C1–Cn, L1–L5, stage runners `tools/run_stage_*.py` | "C12 (findings §10)" |
+| Tested here | findings doc C1–Cn, L1–Ln, stage runners `tools/run_stage_*.py` | "C12 (findings §10)" |
 | Ledger | Leo-Y-Zhang and Dukotah 2026 exclusion ledgers (findings §1) | "excluded by the Leo-Y-Zhang ledger, not re-run here" |
 | Unverified | `reference/community/*` (incl. `community_research.md` §1–§9), wiki, IRC logs, Discord | "community-reported, unverified" |
 | Artifact | anything before 2026-09-29, `tools/legacy/`, `data/archive/`, tracker §4.3 | don't cite as evidence; say why it is invalid |

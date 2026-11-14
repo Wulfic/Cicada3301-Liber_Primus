@@ -4,7 +4,7 @@
 and what to do next. Every claim on it is backed by a test or a linked document. If something here
 disagrees with the tests, the tests win, and this page needs fixing.
 
-**Last updated:** 2026-11-13 · **Tests:** 278, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
+**Last updated:** 2026-11-14 · **Tests:** 289, all green · **Check it yourself:** `python -m unittest discover -s tests -t . -v`
 
 ---
 
@@ -96,6 +96,9 @@ Stage AI (findings §33) looks at the three OutGuess payloads, which share a hea
 differing middles are related (bits agree 51.5 % of the time, z ≥ 20), but the agreement is the same at every bit
 position. So they are not a depth of text, hex, base64 or any byte-oriented messages. That is the signature of a
 default-key extraction from same-size scans, and there is nothing to crib.
+Stage AJ (findings §34) asks what the 86 surviving doublets are. They are a uniform sample of the pairs: no rune is
+favoured, and word, line, page and clause position, neighbours and triples all match chance (16 statistics silent,
+min p = 0.011). A rule blind to 5 or 6 runes (M3, including the five two-spelling runes) is excluded (L6).
 
 **Next actions, in order** (all low prior; detail in [findings §6–§32](reference/findings/lp2_logic_findings_2026-09-29.md)):
 
@@ -244,7 +247,8 @@ text, of word structure, or of any plaintext letter.
 
 **The leak (findings §7, `tests/test_leak.py`).** The 86 survivors look like independent random events at one
 constant rate, about 19 % of would-be doublets. That rate holds across lines and pages (L2), periods (L3), and
-sections and windows (L4). The suppressed doublets are spread evenly over all other differences (L1).
+sections and windows (L4). The suppressed doublets are spread evenly over all other differences (L1). The survivors
+themselves favour no rune, no word, line, page or clause position, and no neighbour (L6, findings §34).
 **C8:** a rule that re-keys a would-be doublet keeps it exactly when the replacement key value equals the original.
 So a re-keying rule needs agreement at ≈ 19 % of those positions (independent keys give 3.4 %). A check
 applied by hand with ≈ 81 % reliability also fits. These data cannot tell the two apart.
@@ -278,6 +282,8 @@ RANDOM.ORG and RAND archives (~14.5 billion offsets). Both conclude "OTP-class" 
   per ~2,900 runes, which scales to λ ≈ 27–45 against the 86 observed (P ≤ 3 × 10⁻⁸). Its literal code gives 0.35 %,
   not the 0.69 % the picture claims (L5, findings §7).
 - A per-line check, a "nudge" rule (c ± 1), and a periodic gap in checking are all excluded (L1–L3).
+- A rule blind to some runes (M3): no 5 or 6 runes hold the survivors, and the two-spelling runes ᚢ ᚳ ᛋ ᛝ ᛡ hold 10
+  against 14.9 by chance (L6, findings §34). Mixtures with under half the survivors on such runes remain **open**.
 - **Riddle-derived keys (stage I, findings §8):** primes p(n) in every mode and constant shift (so also φ(p), p ± 1 and
   3301 − p), the solved text's word sums, and its rune values, each per section and continuous. That is 2,610
   drift-tolerant decodes, with the best on a real section at −65 nats against a pass mark of +30. The scan-32 square's
@@ -393,6 +399,7 @@ The ordered list is in §1. These questions are also open and cheap to state:
 
 | Date | What happened | Commits |
 |---|---|---|
+| 2026-11-14 | **Anatomy of the 86 survivors** (TODO AJ): 17 statistics (identity, M3 concentration, the two-spelling runes, word / line / page / clause position, neighbours) against 10⁶ uniform draws of 86 pairs, family α = 10⁻³. Controls valid; T4 (word class) untestable by its planted control. **Nothing fires** (min p = 0.011). M3 excluded; survivors ignore layout; no local signature. **L6** | `45bc943` `8e31dc6` + this commit |
 | 2026-11-13 | **OutGuess payload depth** (TODO AI): backlog renumbered AI–AT, with its C21–C28 overlaps marked (`2680879`). The draft uniformity test was replaced before the run, because a default-key extraction from same-size scans also fails uniformity. Declared discriminator: bit-phase homogeneity of P_a ⊕ P_b. 248 controls classed as declared. **RELATED**: S2/S3 fire (z ≥ 20), S1 silent (p ≥ 0.37). No byte-oriented depth, consistent with an extraction artefact | `9d79642` `2cfaa6d` + this commit |
 | 2026-10-12 | **Totient streams** (TODO AH): 6 arithmetic functions × raw / chain = 12 keys, sieves checked against definitions, stage AG's family (10,440 decodes). Controls ≥ +189.7 / ≤ −67.3. **No pass** (best real −47.9). **C28:** all 324 testable cells excluded | `17cba27` `ce81da6` + this commit |
 | 2026-10-12 | **Base-29 constants** (TODO AG): exact base-29 digits (`keys.constant_digits`, `keys.concatenated_digits`, verified to 60 decimals) of 7 constants and 3 concatenated streams as running keys, uniform prior over starts < 1000, stage R's drift-tolerant family (8,700 decodes). Controls ≥ +194.9 / ≤ −68.2. **No pass** (best real −56.0). **C27:** all 270 testable cells excluded. `--quick` scored 120 declared decodes before the runner commit (disclosed) | `7c83e52` `5e8c507` + this commit |

@@ -50,6 +50,7 @@ One row per constraint, with the test that pins it. **This is the index. The sec
 | L3 | Survivors fall on no period, m = 2–32 | best p = 0.036 vs 1.6 × 10⁻⁴ | `test_l3_no_period_in_survivor_positions` |
 | L4 | Survivors are homogeneous and unclustered | dispersion 1.02 | `test_l4_survivors_are_homogeneous_and_unclustered` |
 | L5 | The community key-switch leaves too few doublets | λ = 27 / 45 vs 86; P ≤ 3 × 10⁻⁸ | `test_l5_key_switch_cannot_leave_86_doublets` |
+| L6 | The survivors are a uniform sample of the pairs: no rune identity (no rule blind to 5–6 runes, M3), no word, line, page or clause position, no neighbour or triple signature (§34) | 16 testable statistics silent, min p = 0.011 vs 5.9 × 10⁻⁵; top-6 identity sum 32 (null median); M3 control 100 / 100 at φ ≥ 0.5 | `test_nothing_fires`, `test_counts_recompute_from_the_corpus` |
 
 **Named key families scored and failed** (each a declared, recorded family):
 
@@ -1500,3 +1501,81 @@ simulated H-raw pairs are RELATED, with S1 p ≥ 0.086.
 **What this does not cover.** Messages in depth with no byte phase. A different key per file (that is not a depth at
 all). Whether these files came from scans 17, 21 and 43, or from LP pages with those numbers. `data/outguess/` has no
 provenance record (TODO stage AP, item 1).
+
+## 34. The survivors are a uniform sample of the pairs (2026-11-14, TODO stage AJ)
+
+Declared in `TODO.md` (`45bc943`) before any survivor statistic was computed. The runner was committed before LP2
+was scored (`8e31dc6`; its `--quick` runs the controls only). Run: `python -m tools.run_stage_aj` (about a minute).
+Rows are in [`stage_aj_tests.tsv`](stage_aj_tests.tsv) and [`stage_aj_controls.tsv`](stage_aj_controls.tsv). Tests:
+`tests/test_stage_aj.py`.
+
+**The question.** Stage H (§7) asked where and when the 86 survivors fall. AJ asks what they are: which runes are
+doubled, where in the word, line, page and clause they sit, and what their neighbours look like. Two mechanisms make
+predictions here. M3: the rule cannot see some runes (447 / 29 = 15.4 would-be doublets per rune, so 86 survivors is
+5.6 runes' worth). The named instance is a check that compared Latin spellings and missed the five two-spelling
+runes ᚢ ᚳ ᛋ ᛝ ᛡ, which predicts about 77 survivors on those five. M4: a perfect rule followed by seams, which would
+show at whatever layout feature makes the seams.
+
+**Design.** Null (M1 and M2): with a flat key every pair is equally likely to be a would-be doublet, so the survivors
+are a uniform sample of the 12,947 pairs. Seventeen statistics of the survivors, each with its tail from 10⁶ seeded
+draws of 86 distinct pairs: T1 doubled rune (χ², 29 cells); T2 the sum of the six largest identity counts (M3); T3 the
+count on ᚢ ᚳ ᛋ ᛝ ᛡ; T4–T7 word class, word length and index in the word from each end; T8–T9 column in the written
+line from each end; T10 line on the page; T11–T12 index in the clause from each end; T13–T14 the runes before and
+after; T15–T16 Δ in and Δ out (Δ = 0 is a triple); T17 page. Family α = 10⁻³, so a test fires at p ≤ 5.9 × 10⁻⁵.
+
+**Not blind.** §15 had published the word classes (23 / 44 / 19 / 0), C1 the within- and across-word rates, and L2
+the line-break count. T4 was kept at the owner's request and reproduces the §15 counts exactly, which also checks the
+layout code.
+
+**Controls**, all run before LP2 was scored:
+
+| Control | Requirement | Fires (of 100) |
+|---|---|---|
+| Null draws, all 17 tests | ≤ 1 in 1,700 | 0 |
+| Pure M3 on a random 6-rune set (T2) | ≥ 80 | 100 |
+| Pure M3 on ᚢ ᚳ ᛋ ᛝ ᛡ (T3) | ≥ 80 | 100 |
+| M3 mixture, φ = 0.5 of survivors on 6 runes (T1, T2) | reported | 100, 100 |
+| M3 mixture, φ = 0.25 (T1, T2) | reported | 4, 3 |
+| Planted cell (pair share + 0.25), 15 χ² tests | ≥ 80, else untestable | 90–100 for 14; **T4: 1** |
+
+**T4 is untestable**, by the declared rule. Its `sole` cell expects only 0.55 survivors, so the null's Pearson tail
+is set by draws with several single-rune-word doublets: six of them alone score (6 − 0.55)² / 0.55 = 54. A planted
+excess of 21 initial survivors (40 against 18.6) scores only about 32, below that tail, so 1 of 100 planted draws
+fires. The statistic was not changed after the controls were seen.
+
+**Result: nothing fires.**
+
+| Test | Observed | p |
+|---|---|---|
+| T1 doubled rune | counts 0–7, χ² 26.6 | 0.53 |
+| T2 top-6 sum | 32 (the null median is 32) | 0.62 |
+| T3 on ᚢ ᚳ ᛋ ᛝ ᛡ | 10 (null 14.9; named M3 predicts ≈ 77) | 0.95 |
+| T4 word class (untestable) | 23 / 44 / 19 / 0 vs 18.6 / 48.1 / 18.7 / 0.55 | 0.54 |
+| T5–T7 word length, index from start, from end | χ² 3.5, 6.5, 2.8 | 0.83, 0.37, 0.83 |
+| T8–T9 column in line, from start, from end | χ² 11.1, 21.3 | 0.27, **0.011** |
+| T10 line on page | χ² 8.0 | 0.53 |
+| T11–T12 index in clause, from start, from end | χ² 6.1, 5.0 | 0.73, 0.83 |
+| T13–T14 rune before, rune after | χ² 23.8, 32.4 | 0.68, 0.24 |
+| T15–T16 Δ in, Δ out | χ² 27.7, 28.9; no triples (0 vs 0.57) | 0.47, 0.40 |
+| T17 page | χ² 58.5 on 55 scans | 0.29 |
+
+The smallest p, T9 at 0.011, is what 16 tests produce by chance and is not read.
+
+**Reading.**
+- **M3 is excluded.** No rune is favoured: the six most-doubled runes hold 32 survivors, the null's own level, and
+  the five two-spelling runes hold 10, below the null's 14.9. A rule that cannot see 5 or 6 runes is out, and so is
+  any mixture with at least half the survivors on such runes (power 100 / 100). Below φ ≈ 0.25 this test has no power.
+- **The survivors ignore layout.** Word length and position, column in the line, line on the page, place in the
+  clause and the page itself all match a uniform sample. With L2–L4 this leaves M4 only seams that ignore word,
+  line, page and clause position, such as nulls or a second layer at random places. Stage AN's word-shape test is
+  the next check on nulls.
+- **No local signature.** The runes and differences around a survivor look like those around any pair, and there
+  are no triples. A rule that also changes the next rune (a skip that consumes key, say) would shift Δ out, and does
+  not.
+- Together with L1–L4, every observable of the 86 survivors measured so far matches a uniform 0.66 % sample of the
+  pairs. That is what M1 (a re-key whose replacement equals the original ≈ 19 % of the time) and M2 (a hand check
+  that is ≈ 81 % reliable) predict, and these data cannot separate the two. **L6** records it.
+
+**What this does not cover.** M3 at small mixtures (φ < 0.5), any word-class effect (T4 untestable; C1 covers within
+vs across words), and seams that ignore layout. M5 (doublets as deliberate marks) is untouched: it predicts structure
+in the text between survivors, which is stage AK's unit-membership label.

@@ -8,7 +8,7 @@ AGENTS.md (shared across tools) — imported below so they apply every session.
 ## Claude-specific orientation
 
 **Start of a session:** read `MASTER_TRACKER.md` §1, then `TODO.md` "Active". Treat the tracker as stale if its test
-count differs from `python -m unittest discover -s tests -t .`. To look up any constraint (C1…Cn, L1–L5) with its
+count differs from `python -m unittest discover -s tests -t .`. To look up any constraint (C1…Cn, L1…Ln) with its
 test, use the register in `reference/findings/lp2_logic_findings_2026-09-29.md` §0.
 
 **Skills** (`.claude/skills/`, tracked; `.gitignore` lists the ones this repo enables):

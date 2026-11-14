@@ -1,0 +1,41 @@
+control	test	fires_of_100	required
+negative null	T1	0	
+negative null	T2	0	
+negative null	T3	0	
+negative null	T4	0	
+negative null	T5	0	
+negative null	T6	0	
+negative null	T7	0	
+negative null	T8	0	
+negative null	T9	0	
+negative null	T10	0	
+negative null	T11	0	
+negative null	T12	0	
+negative null	T13	0	
+negative null	T14	0	
+negative null	T15	0	
+negative null	T16	0	
+negative null	T17	0	
+negative null	all	0	<= 1
+M3 pure, random 6 runes	T2	100	>= 80
+M3 pure, random 6 runes	T1	100	
+M3 pure, named 5 runes	T3	100	>= 80
+M3 mixture phi=0.5	T1	100	
+M3 mixture phi=0.5	T2	100	
+M3 mixture phi=0.25	T1	4	
+M3 mixture phi=0.25	T2	3	
+planted cell 0 (0), share +0.25	T1	100	>= 80 else untestable
+planted cell 0 (initial), share +0.25	T4	1	>= 80 else untestable
+planted cell 0 (1), share +0.25	T5	100	>= 80 else untestable
+planted cell 0 (0), share +0.25	T6	100	>= 80 else untestable
+planted cell 0 (0), share +0.25	T7	100	>= 80 else untestable
+planted cell 0 (0-2), share +0.25	T8	100	>= 80 else untestable
+planted cell 0 (0-2), share +0.25	T9	100	>= 80 else untestable
+planted cell 0 (0-1), share +0.25	T10	90	>= 80 else untestable
+planted cell 0 (0-7), share +0.25	T11	100	>= 80 else untestable
+planted cell 0 (0-7), share +0.25	T12	100	>= 80 else untestable
+planted cell 0 (0), share +0.25	T13	100	>= 80 else untestable
+planted cell 0 (0), share +0.25	T14	100	>= 80 else untestable
+planted cell 0 (0), share +0.25	T15	100	>= 80 else untestable
+planted cell 0 (0), share +0.25	T16	100	>= 80 else untestable
+planted cell 0 (17), share +0.25	T17	100	>= 80 else untestable

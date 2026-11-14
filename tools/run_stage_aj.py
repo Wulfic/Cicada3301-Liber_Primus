@@ -186,6 +186,8 @@ def statistics(tests: list[Test], draws: np.ndarray) -> np.ndarray:
 
 def distinct_draws(rng: np.random.Generator, pool: np.ndarray, size: int, n: int) -> np.ndarray:
     """`n` rows of `size` distinct elements of `pool`, uniformly (rejection of rows with a repeat)."""
+    if size * size > 2 * len(pool):     # acceptance ≈ exp(−size² / 2·pool) would fall below e^−1
+        raise ValueError(f"rejection sampling of {size} from {len(pool)} would rarely accept a row")
     out: list[np.ndarray] = []
     have = 0
     while have < n:

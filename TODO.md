@@ -39,22 +39,21 @@ control measurements then.
 4. The authors make mistakes (WIDSOM), so nothing may depend on perfect sync.
 
 **What the one anomaly could be.** 86 doublets survive where 447 are expected. Five mechanisms fit L1–L4. M1 and M2 are
-in [findings §7](reference/findings/lp2_logic_findings_2026-09-29.md). M3–M5 are new, and each makes a prediction nobody
-has checked.
+in [findings §7](reference/findings/lp2_logic_findings_2026-09-29.md). M3–M5 are new, and each made a prediction nobody
+had checked. Stage AJ (findings §34) has since excluded M3 and confined M4 to seams that ignore layout.
 
 | | Mechanism | Predicts | Stage |
 |---|---|---|---|
 | M1 | A re-key whose replacement equals the original 19 % of the time (C8) | nothing further | — |
 | M2 | A hand check that is 81 % reliable | nothing further | — |
-| M3 | The rule cannot see some runes. 447 / 29 = 15.4 would-be doublets per rune, so 86 survivors is 5.6 runes' worth | The survivors sit on 5 or 6 rune identities, not 29. Named instance: a script that compared Latin spellings would miss the five runes with two spellings (U/V, C/K, S/Z, NG/ING, IA/IO), which gives 77 | AJ |
-| M4 | A perfect rule, then seams. The stream had no doublets at all, and a later step put unrelated runes side by side at 19 % of positions: inserted nulls, a second key layer that changes value there, or a transposition that keeps 81 % of neighbours | The seams are not at word ends (C1), line ends (L2) or a fixed period ≤ 32 (L3). Nulls at the needed rate would also stretch the words (stage AN) | AJ, AN |
+| M3 | The rule cannot see some runes. 447 / 29 = 15.4 would-be doublets per rune, so 86 survivors is 5.6 runes' worth | The survivors sit on 5 or 6 rune identities, not 29. Named instance: a script that compared Latin spellings would miss the five runes with two spellings (U/V, C/K, S/Z, NG/ING, IA/IO), which gives 77 | **Excluded by AJ** (L6, findings §34): 32 on the top six, 10 on the five |
+| M4 | A perfect rule, then seams. The stream had no doublets at all, and a later step put unrelated runes side by side at 19 % of positions: inserted nulls, a second key layer that changes value there, or a transposition that keeps 81 % of neighbours | The seams are not at word ends (C1), line ends (L2) or a fixed period ≤ 32 (L3). Nulls at the needed rate would also stretch the words (stage AN) | AN. AJ (§34): the survivors ignore word, line, page and clause position |
 | M5 | The doublets are deliberate marks, such as key changes, and every accidental one was removed | The text between two marks has structure of its own | AK |
 
 **The backlog, in the order I would run it.**
 
 | Stage | What | New sources? | Cost | Why this rank |
 |---|---|---|---|---|
-| AJ | Anatomy of the 86 survivors: which runes, where in the word and line | no | 1 session | Separates M3 and M4 from M1 and M2 |
 | AK | Label coincidences: alphabets fixed by two or three earlier runes, by offset in a line, page or clause, or by unit | no | 1 session | Key-free, and closes catalog row 12 and every key restart except per word |
 | AL | Linear filters: keystreams that obey a recurrence mod 29 | no | 1 session | Key-free and immune to drift. Closes the community's LFSR lead up to order 3 |
 | AM | Is any cipher rune tied to one plaintext letter (multiplicative or affine streams) | no | half a session | Key-free, for every multiplier key at once |
@@ -65,90 +64,6 @@ has checked.
 | AR | The square as a generator: Fibonacci mod M as a prime index | no | 1 hour | The only recipe printed inside LP2. Low prior |
 | AS | Grid as an RC4 key on the payloads' shared head; digest census against the AN END hash | no | half a session | Exact tests, so no false positives. Low prior |
 | AT | Seeded hash chains and PRNGs (catalog row 22) | after AP | — | Cannot say what it adds until the ledgers' seed lists are read |
-
-#### AJ: anatomy of the 86 survivors
-
-Stage H asked where and when the survivors fall. Nobody has asked which runes they are. Tests on `leak.adjacent_pairs`:
-
-1. Identity of the doubled rune: 29 cells with expectation 2.97, exact tail by simulation. M3 predicts 5 or 6 cells near 15.
-2. The named M3 instance: every survivor on ᚢ ᚳ ᛋ ᛝ ᛡ.
-3. Position: index in the word from each end, lengths of the words involved, column in the line from each end, line
-   on the page, place in the clause.
-4. Neighbours: the rune before and after each survivor against flat, and triples.
-
-About 10 tests, Bonferroni. A hit names the mechanism. A clean miss removes M3 and narrows M4 to seams that ignore layout.
-
-### AJ — anatomy of the 86 survivors (declared 2026-11-14, before any survivor statistic below was computed)
-
-**Not blind, stated up front.** Findings §15 published the survivors' word classes (initial 23, medial 44, final 19,
-sole 0), C1 their within/across-word rates, and L2 their line-break count (4 of 585). T4 re-tests word class
-anyway (owner decision 2026-11-14), and the write-up flags it. Nothing else below has been looked at: not the
-identities, not the neighbours, not the columns, lines or clauses.
-
-**Data.** `leak.adjacent_pairs(corpus)`: 12,947 pairs (c_i, c_{i+1}) in segments 7–15, 86 of them doublets
-(`tests/test_leak.py`). "The survivor's position" means that of its second rune, c_{i+1}.
-
-**Null (M1 and M2).** With a flat key, every pair is equally likely to be a would-be doublet, and the rule keeps a
-random 19 % of them. So the 86 survivors are a uniform sample of the 12,947 pairs, without replacement. Every tail
-below is simulated from this null: 10⁶ seeded draws of 86 distinct pairs, with each statistic computed on each
-draw. Expected cell counts are 86 × (the cell's share of all pairs), so LP2's own rune and layout frequencies are
-built in. p = (1 + #draws ≥ observed) / (1 + 10⁶).
-
-**Variables and statistics** (17 tests). Each χ² is Pearson against the null expectation, with the tail simulated.
-A neighbour test drops survivors without that neighbour inside the segment, and its null draws drop the same way.
-
-| # | Variable | Cells | Statistic |
-|---|---|---|---|
-| T1 | doubled rune c_i | 29 runes | χ² |
-| T2 | doubled rune, M3 concentration | — | sum of the 6 largest of T1's counts, upper tail |
-| T3 | doubled rune in {ᚢ ᚳ ᛋ ᛝ ᛡ} (two Latin spellings) | — | count, upper tail. Null ≈ 86 × 5/29, named M3 predicts ≈ 77 |
-| T4 | word class of c_{i+1} (`leak.word_class`) | initial, medial, final, sole | χ² |
-| T5 | length of c_{i+1}'s word | 1 … 7, 8+ | χ² |
-| T6 | index of c_{i+1} in its word, from the start | 0 … 5, 6+ | χ² |
-| T7 | the same, from the end | 0 … 5, 6+ | χ² |
-| T8 | column of c_{i+1} in its written line, from the start | deciles* | χ² |
-| T9 | the same, from the end | deciles* | χ² |
-| T10 | line of c_{i+1} on its page (scan), from the top | deciles* | χ² |
-| T11 | index of c_{i+1} in its clause, from the start | deciles* | χ² |
-| T12 | the same, from the end | deciles* | χ² |
-| T13 | rune before, c_{i−1} | 29 runes | χ² |
-| T14 | rune after, c_{i+2} | 29 runes | χ² |
-| T15 | Δ in, (c_i − c_{i−1}) mod 29 | 0 … 28 (0 is a triple) | χ² |
-| T16 | Δ out, (c_{i+2} − c_{i+1}) mod 29 | 0 … 28 (0 is a triple) | χ² |
-| T17 | page of c_{i+1}, by scan | one cell per LP2 scan | χ² |
-
-\* Decile edges come from the variable over all 12,947 pairs, with ties kept in one cell. They are computed before
-the survivors are read. Lines and pages come from `Corpus.rune_units()`, and clauses from `Word.clause`. T17 adds
-per-page homogeneity: L4 (by section and 500-pair windows) did not cover pages.
-
-**Thresholds.** Family α = 10⁻³ over the 17 tests, so a test fires at p ≤ 5.9 × 10⁻⁵.
-
-**Verdict, declared now:**
-- **M3 supported:** T1, T2 or T3 fires. The named instance is supported if T3 fires. The write-up lists the
-  over-represented runes. **M3 excluded:** none of T1–T3 fires. Pure M3 (all survivors on 5 or 6 runes) is then
-  excluded at the control's power, and the write-up gives the power for a mixture φ (φ of the survivors on 6 blind
-  runes, the rest null) at φ = 0.5 and 0.25.
-- **Layout-bound:** any of T4–T12 or T17 fires. The test names the unit, and M4 seams (or a hand check) tied to that
-  feature. **Layout-free:** none fires. M4 narrows to seams that ignore word, line, page and clause position.
-- **Local signature:** T13–T16 fire. T15 or T16 at Δ = 0 means triples, and a shifted Δ out means a rule that also
-  touches the next rune. **None:** survivors' neighbours look like any pair's.
-- Whatever fires, no mechanism is "confirmed". AJ only removes or keeps M3 and M4.
-
-**Controls** (seeded, run before LP2 is scored; `--quick` runs only these with 10⁵ null draws):
-- **Negative:** 100 draws from the null itself. Across all 1,700 test results at most 1 may fire (expected 0.1). This
-  checks the code, since the null is exact by construction.
-- **Positive, M3:** 100 draws of 86 pairs whose c_i lies in a random 6-rune set (pure M3). T2 must fire in ≥ 80. The
-  same for the named set {ᚢ ᚳ ᛋ ᛝ ᛡ}, where T3 must fire in ≥ 80. Power at φ = 0.5 and 0.25 is reported, not required.
-- **Positive, planted cell:** for each χ² test, 100 draws where cell 0's share of survivors is its pair share + 0.25
-  and the rest are null. That cell is ᚠ for T1, T13 and T14, Δ = 0 for T15 and T16, and the first cell otherwise.
-  A test that fires in < 80 of 100 is **untestable**. Its LP2 value is reported but not read.
-
-If the negative control or either M3 control fails, the stage is void and no verdict is drawn.
-
-**Not doing:** fitting a mechanism to whatever fires, any variable or binning not in this table, and re-running with
-a changed family. **Blast radius:** additive only. A new runner tools/run_stage_aj.py, a test
-tests/test_stage_aj.py, TSVs under `reference/findings/`, then the doc updates. **Rollback:** `git revert` the
-stage's commits.
 
 #### AK: label coincidences
 
@@ -313,6 +228,7 @@ the power of `detect.log_lr` per rune. Worth doing before AQ and AR.
 
 | Date | Stage | Result | Commits |
 |---|---|---|---|
+| 2026-11-14 | **AJ** anatomy of the 86 survivors | Declared first (`45bc943`); runner committed before LP2 was scored (`8e31dc6`). 17 statistics against 10⁶ uniform draws of 86 pairs, family α = 10⁻³. Controls valid; T4 (word class, not blind) untestable by its planted control. **Nothing fires** (min p = 0.011). M3 excluded (power 100 / 100 at φ ≥ 0.5), survivors ignore layout, no neighbour or triple signature → **L6**, findings §34 | `45bc943` `8e31dc6` + this |
 | 2026-11-13 | **AI** OutGuess payload depth | Backlog renumbered AI–AT, C21–C28 overlaps marked (`2680879`). Declared first (`9d79642`), replacing the draft's uniformity test, which an extraction artefact also fails. Runner committed before the payloads were scored (`2cfaa6d`). 248 controls valid. **RELATED**: bits agree 51.5 % (z ≥ 20) but flat by bit phase (S1 p ≥ 0.37). No byte-oriented depth, so nothing to crib; AP item 2 demoted, 2a added → findings §33 | `9d79642` `2cfaa6d` + this |
 | 2026-10-12 | **AH** totient and arithmetic-function keys | Declared first (`17cba27`); runner committed before LP2 was scored (`ce81da6`). 12 keys (φ(n), σ(n), Σφ, prime gaps, φ(φ(n)), n·φ(n); raw and chain), stage AG's family, 10,440 decodes. Controls pass for all 12. **No pass** (best real −47.9). **C28:** all 324 testable cells excluded. Prediction met → findings §32 | `17cba27` `ce81da6` + this |
 | 2026-10-12 | **AG** base-29 constants as the key | Declared first (`7c83e52`); digit generators and runner committed before the full run (`5e8c507`; its `--quick` had scored 120 declared decodes, disclosed). 10 sources × 3 modes × 29 shifts × 10 alignments, starts < 1000. Controls pass for all 10. **No pass** (best real −56.0). **C27:** all 270 testable cells excluded; only segment 10 (9 runes) untestable. Prediction met → findings §31 | `7c83e52` `5e8c507` + this |
