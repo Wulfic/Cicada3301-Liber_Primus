@@ -89,6 +89,65 @@ figure) whatever the function or the tables. Stage Z used this for words and blo
 **Limits:** a flat stream on top hides everything, and offset labels lose power when a re-key consumes key, so they
 are good for short units only.
 
+### AK — label coincidences (declared 2026-11-14, before any K was computed on LP2)
+
+**Draft changes.** (1) The draft's "flat null, exact mean and variance" is biased. Two positions that share the
+context c_{i−1} both avoid that rune (the doublet rule), so they agree at about 1/28, not 1/29. That is +3.5 % of K,
+about 2σ at 90,000 pairs. The null is simulated instead (below). (2) Lines and sections are added to the unit list:
+C22 and C26 cover a key *shared* by every unit, but not a key of each unit's own.
+
+**Models.** u(i) is a label and σ_u any family of alphabets (additive shifts, Quagmire, random tables).
+- **Context:** c_i = σ_{u(i)}(p_i) with u(i) = (c_{i−a}, c_{i−b}) for 1 ≤ a < b ≤ 12 (66 labels), or
+  (c_{i−1}, c_{i−2}, c_{i−3}) (1 label). This covers c_i = p_i + f(c_{i−a}, c_{i−b}) for any f, including a
+  Fibonacci-lag autokey and any secret two-rune table. A position whose context reaches back past its segment's
+  start gets no label.
+- **Unit × period:** c_i = p_i + k_U[t mod L] (or any σ), where U is the unit holding i, t its offset in U, and
+  each unit has its **own** key of period L. The units are section, paragraph, clause, written line, page (scan),
+  and the stretch between two survivors (M5: each doublet's second rune starts a new stretch). Every unit is cut
+  at segment ends. L = 1 … 40, where L = 1 is one alphabet per unit. That gives 6 × 40 = 240 labels. Within a unit,
+  t mod L and i mod L define the same classes, so restart and no-restart are one test.
+- **Family size:** 66 + 1 + 240 = **307 labels**.
+
+**Not already excluded because:** C12 covers a single earlier rune only, and §10 left contexts of two or more runes
+open. C11 and C24 are single-lag autokeys. C21 is plaintext context. C22 and C26 cover a key or shift *shared* by
+every unit. C25 covers one global period. A per-unit key whose period or values vary by unit spreads its agreement
+over lags and units, and C25's lag count sees only a diluted share of it.
+
+**Statistic.** K_u = Σ over classes and runes of C(n, 2): the number of position pairs with the same label and the
+same rune. Under any of the models each class is a monoalphabetic sample of the plaintext, so pairs agree at about
+1.79 / 29 instead of 1 / 29.
+
+**Null.** 1,000 seeded streams at LP2's segment sizes: iid runes from LP2's own unigram, then stage Z's
+`anti_doublet` at keep = 0.19 within each segment. Context labels are recomputed from each simulated stream. Unit
+labels are LP2's own layout. μ₀, σ₀ and the null maximum are taken per label. z = (K − μ₀) / σ₀.
+
+**Rules, declared now:**
+- **Fires:** z ≥ 5 and K above all 1,000 null values. A fire is a lead, and the next stage declares a decode. It is
+  not a solution.
+- **Testable:** the label's positive control fires in ≥ 18 of 20 draws. Otherwise the label is **untestable**: its
+  value is reported but not read.
+- **Excluded:** testable, does not fire, and K ≤ K̄₊ − 5·s₊, where K̄₊ and s₊ are the mean and sd of the 20 positive
+  draws.
+
+**Controls** (seeded; `--quick` runs them with 200 null streams and does not score LP2):
+- **Positive, per label, 20 draws.** Emerson in runes (stage Z's `emerson_words`, a contiguous window cut to LP2's
+  segment sizes). Context labels: c_i = p_i + f(context) with a fresh random table f each draw, computed left to
+  right. A would-be doublet is re-keyed with probability 0.81 by adding a random nonzero shift, and the chain
+  continues from the new rune. Unit labels: a fresh random period-L key for each unit, then `anti_doublet`.
+- **Negative:** 20 draws of Emerson under an iid flat key, then `anti_doublet` (the OTP-class reading of LP2). At most
+  1 fire is allowed across all 20 × 307 results.
+- If the negative control fails, or fewer than half the labels are testable, the stage is **void** and LP2 is not read.
+
+**Expected.** If true, the positive controls predict z in the tens for the two-rune contexts and short units. The
+draft estimated 40σ for two runes and 9σ for three. If false, which is the prediction (OTP-class), every label
+has |z| < 5 and most are excluded.
+
+**Not doing:** contexts with more than three runes, plaintext contexts (C21), lags above 12, offsets from the end of
+a unit, and any label added after the run. A flat stream on top of a context or unit key makes the classes flat
+again, and this stage cannot see that. **Blast radius:** additive only. New runner tools/run_stage_ak.py, test
+tests/test_stage_ak.py, TSVs under `reference/findings/`, then the doc updates. **Rollback:** `git revert` the stage's
+commits.
+
 #### AL: linear filters
 
 If k_i = a_1·k_{i−1} + … + a_m·k_{i−m} (mod 29), then y_i = c_i − Σ a_j·c_{i−j} is the same filter applied to the
